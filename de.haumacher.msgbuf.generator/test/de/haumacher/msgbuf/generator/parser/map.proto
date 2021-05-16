@@ -1,5 +1,0 @@
-package test.map;
-
-message MyMessage {
-  map<string, Project> projects = 3;
-}

@@ -1,0 +1,10 @@
+package test.maptype;
+
+message Project {
+	string name;
+	double cost;
+}
+
+message MyMessage {
+  map<string, Project> projects = 3;
+}
