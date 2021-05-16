@@ -1,0 +1,374 @@
+/**
+ * JavaCC Grammar File
+ */
+options
+{
+    JDK_VERSION = "1.8";
+    STATIC = false;
+    UNICODE_INPUT = true;
+    JAVA_UNICODE_ESCAPE = false;
+}
+
+PARSER_BEGIN(ProtobufParser)
+package de.haumacher.msgbuf.generator.parser;
+
+import de.haumacher.msgbuf.generator.ast.*;
+
+/**
+ * Parser for protobuf definition files..
+ */
+public class ProtobufParser {
+   
+}
+PARSER_END(ProtobufParser)
+
+<DEFAULT>
+
+SKIP :
+{
+  < SPACE :  " " >
+| < TAB : "\t" >
+| < CR : "\r" >
+| < NL : "\n" >
+| < BLOCK_COMMENT : "/*" ( ~[ "*" ] | "*" ~[ "/" ] )* "*/" >
+| < LINE_COMMENT : "//" ( ~[ "\r", "\n" ] )* [ "\r", "\n" ] >
+}
+
+<DEFAULT>
+
+TOKEN :
+{
+  < PACKAGE : "package" >
+| < SYNTAX : "syntax" >
+| < MESSAGE : "message" >
+| < ENUM : "enum" >
+| < MAP : "map" >
+| < ONEOF : "oneof" >
+| < REPEATED : "repeated" >
+| < OPTION : "option" >
+| < EXTENDS : "extends" >
+| < ABSTRACT : "abstract" >
+| < RESERVED : "reserved" >
+| < TO : "to" >
+| < MAX : "max" >
+| < TRUE : "true" >
+| < FALSE : "false" >
+| < TYPE :
+    "double" |
+    "float" |
+    "int32" |
+    "int64" |
+    "uint32" |
+    "uint64" |
+    "sint32" |
+    "sint64" |
+    "fixed32" |
+    "fixed64" |
+    "sfixed32" |
+    "sfixed64" |
+    "bool" |
+    "string" |
+    "bytes"
+  >
+| < NUMBER : ("0" | ( [ "1"-"9" ] ([ "0"-"9" ])* )) ("." ([ "0"-"9" ])+)? >
+| < STRING : "'" (~[ "'", "\\" ] | < QUOTE > )* "'" | "\"" (~[ "\"", "\\" ] | < QUOTE > )* "\"" >
+| < #QUOTE : "\\\\" | "\\'" | "\\\"" >
+| < NAME : [ "A"-"Z", "a"-"z", "_" ] ([ "A"-"Z", "a"-"z", "_", "0"-"9"])* >
+}
+
+DefinitionFile file() :
+{
+  DefinitionFile result = new DefinitionFile();
+  QName pkgName;
+  Definition def;
+}
+{
+  (    < SYNTAX > "=" < STRING > ";"
+  )?
+  
+  (    < PACKAGE > pkgName = qName() ";"
+    {
+		result.setPackage(pkgName);
+    }
+  )?
+  
+  (    option()
+  )*
+  
+  (    def = definition()
+    {
+      result.addDefinition(def);
+    }
+  )*
+  {
+    return result;
+  }
+}
+
+void option() :
+{
+}
+{
+  < OPTION > < NAME > "=" value() ";"
+}
+
+void value() :
+{
+}
+{
+  (    < STRING >
+  | < NUMBER >
+  | < TRUE >
+  | < FALSE >
+  )
+}
+
+Definition definition() :
+{
+  Definition result;
+}
+{
+  (    result = message()
+  | result = enumeration()
+  )
+  {
+    return result;
+  }
+}
+
+EnumDef enumeration() :
+{
+  EnumDef result = new EnumDef();
+  String name;
+  Constant constant;
+}
+{
+  < ENUM > name = name() "{"
+  {
+    result.setName(name);
+  }
+  (
+    option()
+  )*
+  (
+    constant=constant()
+    {
+      result.addConstant(constant);
+    }
+  | reserved()
+  )*
+  "}"
+  {
+    return result;
+  }
+}
+
+Constant constant() :
+{
+  Constant result = new Constant();
+  String name;
+  Token index;
+}
+{
+  name=name()
+  {
+    result.setName(name);
+  }
+  (
+    "=" index=< NUMBER >
+    {
+      result.setIndex(Integer.parseInt(index.image));
+    }
+  )?
+  ";"
+  {
+    return result;
+  }
+}
+
+MessageDef message() :
+{
+  MessageDef result = new MessageDef();
+  String name;
+  QName generalization;
+  Definition def;
+  Field field;
+}
+{
+  (    < ABSTRACT >
+    {
+      result.setAbstract(true);
+    }
+  )?
+  < MESSAGE > name=name()
+  {
+    result.setName(name);
+  }
+  (
+    < EXTENDS > generalization=qName()
+    {
+		result.setExtends(generalization);
+    }
+  )?
+  "{"
+  (
+    field=field()
+    {
+      result.addField(field);
+    }
+  | oneof()
+  | reserved()
+  | def = definition()
+    {
+      result.addDefinition(def);
+    } 
+  )*
+  "}"
+  {
+    return result;
+  }
+}
+
+Field field() :
+{
+  Field result = new Field();
+  Type type;
+  String name;
+  Token index;
+}
+{
+  (
+    < REPEATED >
+    {
+      result.setRepeated(true);
+    }
+  )?
+  type=type()
+  {
+    result.setType(type);
+  }
+  name=name()
+  {
+    result.setName(name);
+  }
+  (
+    "=" index=< NUMBER >
+    {
+      result.setIndex(Integer.parseInt(index.image));
+    }
+  )?
+  ";"
+  {
+    return result;  }}
+
+void reserved() :
+{
+}
+{
+ < RESERVED > reservation() ( "," reservation() )* ";"
+}
+
+void reservation() : 
+{
+}
+{
+  (
+    < NUMBER > ( < TO > ( < NUMBER > | < MAX > ) )?
+  | < STRING >
+  )
+}
+
+void oneof() :
+{
+}
+{
+  < ONEOF > < NAME > "{"
+	(	  type() < NAME > ( "=" < NUMBER > )? ";"
+	)+
+  "}"
+}
+
+Type type() :
+{
+  Type result;
+}
+{
+  (    result=primitiveType()
+  | result=messageType()
+  | result=map()
+  )
+  {
+    return result;
+  }
+}
+
+PrimitiveType primitiveType() :
+{
+  Token t;
+}
+{
+  t=< TYPE >
+  {
+    return new PrimitiveType(t.image);
+  }
+}
+
+MessageType messageType() :
+{
+  QName name;  
+}
+{
+  name=qName()
+  {
+    return new MessageType(name);
+  }
+}
+
+MapType map() :
+{
+  Type keyType;
+  Type valueType;
+}
+{
+  < MAP > "<" keyType=type() "," valueType=type() ">"
+  {
+    return new MapType(keyType, valueType);
+  }
+}
+
+QName qName() :
+{
+  QName result = new QName();
+  String name;
+}
+{
+  name = name()
+  {
+    result.add(name);
+  }
+  (
+    "." name = name()
+    {
+      result.add(name);
+    }
+  )*
+  {
+    return result;
+  }
+}
+
+String name() :
+{
+  Token result;
+}
+{
+  (
+    result = < NAME >
+  | result = < TO >
+  | result = < MAX >
+  )
+  {
+    return result.image;
+  }
+}
+

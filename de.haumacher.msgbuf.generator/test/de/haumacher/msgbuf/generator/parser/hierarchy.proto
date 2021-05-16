@@ -1,0 +1,33 @@
+package test.hierarchy;
+
+syntax = "msgbuf";
+
+/** 
+ * An abstract base class for all shapes 
+ */
+abstract message Shape {
+  int32 xCoordinate;
+  int32 yCoordinate;
+}
+
+/** 
+ * A circle. 
+ */
+message Circle extends Shape {
+  int32 radius;
+}
+
+/** 
+ * A rectangle.
+ */
+message Rectangle extends Shape {
+  int32 width;
+  int32 height;
+}
+
+/**
+ * A group of shapes.
+ */
+message Group extends Shape {
+  repeated Shape shapes;
+}
