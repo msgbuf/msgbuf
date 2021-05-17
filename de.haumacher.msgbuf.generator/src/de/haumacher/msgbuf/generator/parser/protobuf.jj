@@ -53,18 +53,21 @@ TOKEN :
 | < MAX : "max" >
 | < TRUE : "true" >
 | < FALSE : "false" >
+| < INT_TYPE : "int" >
+| < LONG_TYPE : "long" >
+| < BOOLEAN_TYPE : "boolean" >
 | < TYPE :
     "double" |
     "float" |
     "int32" |
-    "int64" |
     "uint32" |
-    "uint64" |
     "sint32" |
-    "sint64" |
     "fixed32" |
-    "fixed64" |
     "sfixed32" |
+    "int64" |
+    "uint64" |
+    "sint64" |
+    "fixed64" |
     "sfixed64" |
     "bool" |
     "string" |
@@ -72,6 +75,7 @@ TOKEN :
   >
 | < NUMBER : ("0" | ( [ "1"-"9" ] ([ "0"-"9" ])* )) ("." ([ "0"-"9" ])+)? >
 | < STRING : "'" (~[ "'", "\\" ] | < QUOTE > )* "'" | "\"" (~[ "\"", "\\" ] | < QUOTE > )* "\"" >
+| < XNAME : "`" (~[ "`" ] )+ "`" >
 | < #QUOTE : "\\\\" | "\\'" | "\\\"" >
 | < NAME : [ "A"-"Z", "a"-"z", "_" ] ([ "A"-"Z", "a"-"z", "_", "0"-"9"])* >
 }
@@ -305,12 +309,19 @@ Type type() :
 PrimitiveType primitiveType() :
 {
   Token t;
+  PrimitiveType result;
 }
 {
-  t=< TYPE >
-  {
-    return new PrimitiveType(t.image);
-  }
+  (
+	t=< TYPE >    { result = new PrimitiveType(t.image); }
+  | t=< INT_TYPE >
+    { result = new PrimitiveType("int32"); }
+  | t=< LONG_TYPE >
+    { result = new PrimitiveType("int64"); }
+  | t=< BOOLEAN_TYPE >
+    { result = new PrimitiveType("bool"); }
+  )
+  { return result; }
 }
 
 MessageType messageType() :
@@ -359,16 +370,22 @@ QName qName() :
 
 String name() :
 {
-  Token result;
+  Token t;
+  String result;
 }
 {
   (
-    result = < NAME >
-  | result = < TO >
-  | result = < MAX >
+    t = < NAME >
+    { result = t.image; }
+  | t = < TO >
+    { result = t.image; }
+  | t = < MAX >
+    { result = t.image; }
+  | t = < XNAME >
+    { result = t.image.substring(1, t.image.length() - 1); }
   )
   {
-    return result.image;
+    return result;
   }
 }
 
