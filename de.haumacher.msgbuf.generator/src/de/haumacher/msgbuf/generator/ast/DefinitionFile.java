@@ -34,6 +34,13 @@ public class DefinitionFile {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getPackage()} has a value.
+	 */
+	public final boolean hasPackage() {
+		return _package != null;
+	}
+
 	public final java.util.List<Definition> getDefinitions() {
 		return _definitions;
 	}
@@ -97,8 +104,10 @@ public class DefinitionFile {
 
 	/** Writes all fields of this instance to the given output. */
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.name("package");
-		getPackage().writeTo(out);
+		if (hasPackage()) {
+			out.name("package");
+			getPackage().writeTo(out);
+		}
 		out.name("definitions");
 		out.beginArray();
 		for (Definition x : getDefinitions()) {

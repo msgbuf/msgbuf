@@ -53,7 +53,7 @@ public class Generator {
 		load(parse(in));
 	}
 
-	private DefinitionFile parse(InputStream in) throws ParseException {
+	public static DefinitionFile parse(InputStream in) throws ParseException {
 		ProtobufParser parser = new ProtobufParser(in, "utf-8");
 		DefinitionFile definition = parser.file();
 		Token nextToken = parser.getNextToken();

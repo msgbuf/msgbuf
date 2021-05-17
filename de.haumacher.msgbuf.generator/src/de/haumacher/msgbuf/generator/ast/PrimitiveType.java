@@ -77,6 +77,13 @@ public class PrimitiveType extends Type {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getKind()} has a value.
+	 */
+	public final boolean hasKind() {
+		return _kind != null;
+	}
+
 	private static final int[] FIELDS = {0, };
 
 	/** Reads a new instance from the given reader. */
@@ -105,8 +112,10 @@ public class PrimitiveType extends Type {
 	@Override
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeContent(out);
-		out.name("kind");
-		getKind().writeTo(out);
+		if (hasKind()) {
+			out.name("kind");
+			getKind().writeTo(out);
+		}
 	}
 
 	@Override

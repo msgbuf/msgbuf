@@ -32,6 +32,13 @@ public class MessageType extends Type {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getName()} has a value.
+	 */
+	public final boolean hasName() {
+		return _name != null;
+	}
+
 	private static final int[] FIELDS = {0, };
 
 	/** Reads a new instance from the given reader. */
@@ -60,8 +67,10 @@ public class MessageType extends Type {
 	@Override
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeContent(out);
-		out.name("name");
-		getName().writeTo(out);
+		if (hasName()) {
+			out.name("name");
+			getName().writeTo(out);
+		}
 	}
 
 	@Override

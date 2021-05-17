@@ -50,6 +50,13 @@ public abstract class Definition {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getFile()} has a value.
+	 */
+	public final boolean hasFile() {
+		return _file != null;
+	}
+
 	private static final int[] FIELDS = {0, 0, };
 
 	/** Reads a new instance from the given reader. */
@@ -102,8 +109,10 @@ public abstract class Definition {
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.name("name");
 		out.value(getName());
-		out.name("file");
-		getFile().writeTo(out);
+		if (hasFile()) {
+			out.name("file");
+			getFile().writeTo(out);
+		}
 	}
 
 	/** Reads the given field from the given input. */

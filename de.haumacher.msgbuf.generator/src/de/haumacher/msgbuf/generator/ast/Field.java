@@ -50,6 +50,13 @@ public class Field {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getType()} has a value.
+	 */
+	public final boolean hasType() {
+		return _type != null;
+	}
+
 	public final String getName() {
 		return _name;
 	}
@@ -123,8 +130,10 @@ public class Field {
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.name("repeated");
 		out.value(isRepeated());
-		out.name("type");
-		getType().writeTo(out);
+		if (hasType()) {
+			out.name("type");
+			getType().writeTo(out);
+		}
 		out.name("name");
 		out.value(getName());
 		out.name("index");

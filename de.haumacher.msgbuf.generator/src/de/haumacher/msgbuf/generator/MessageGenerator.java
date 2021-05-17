@@ -292,6 +292,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					line("// No fields.");
 				} else {
 					for (Field field : fields) {
+						boolean nullable = isNullable(field);
+						if (nullable) {
+							line("if (" + hasName(field) + "()" + ") {");
+						}
 						line("out.name(" + fieldNameString(field) + ");");
 						if (field.isRepeated()) {
 							line("out.beginArray();");
@@ -303,6 +307,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 							line("out.endArray();");
 						} else {
 							line(jsonOut(field.getType(), getterName(field) + "()") + ";");
+						}
+						if (nullable) {
+							line("}");
 						}
 					}
 				}
@@ -535,12 +542,32 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("_" + name(field) + ".add(value);");
 			line("}");
 		}
+		
+		if (isNullable(field)) {
+			nl();
+			line("/**");
+			line(" * Checks, whether {@link #" + getterName(field) + "()"+ "} has a value.");
+			line(" */");
+			line("public final " + "boolean" + " " + hasName(field) + "()" + " {");
+			{
+				line("return _" + name(field) + " != null;");
+			}
+			line("}");
+		}
+	}
+
+	private boolean isNullable(Field field) {
+		return field.getType() instanceof MessageType && !field.isRepeated();
 	}
 
 	private String setterName(Field field) {
 		return "set" + suffix(field);
 	}
 
+	private String hasName(Field field) {
+		return "has" + suffix(field);
+	}
+	
 	private String adderName(Field field) {
 		String suffix = suffix(field);
 		if (suffix.endsWith("s")) {

@@ -34,6 +34,13 @@ public class MapType extends Type {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getKeyType()} has a value.
+	 */
+	public final boolean hasKeyType() {
+		return _keyType != null;
+	}
+
 	public final Type getValueType() {
 		return _valueType;
 	}
@@ -44,6 +51,13 @@ public class MapType extends Type {
 	public final MapType setValueType(Type value) {
 		_valueType = value;
 		return this;
+	}
+
+	/**
+	 * Checks, whether {@link #getValueType()} has a value.
+	 */
+	public final boolean hasValueType() {
+		return _valueType != null;
 	}
 
 	private static final int[] FIELDS = {0, 0, };
@@ -76,10 +90,14 @@ public class MapType extends Type {
 	@Override
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeContent(out);
-		out.name("keyType");
-		getKeyType().writeTo(out);
-		out.name("valueType");
-		getValueType().writeTo(out);
+		if (hasKeyType()) {
+			out.name("keyType");
+			getKeyType().writeTo(out);
+		}
+		if (hasValueType()) {
+			out.name("valueType");
+			getValueType().writeTo(out);
+		}
 	}
 
 	@Override

@@ -54,6 +54,13 @@ public class MessageDef extends Definition {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getExtends()} has a value.
+	 */
+	public final boolean hasExtends() {
+		return _extends != null;
+	}
+
 	public final java.util.List<Definition> getDefinitions() {
 		return _definitions;
 	}
@@ -126,6 +133,13 @@ public class MessageDef extends Definition {
 		return this;
 	}
 
+	/**
+	 * Checks, whether {@link #getExtendedDef()} has a value.
+	 */
+	public final boolean hasExtendedDef() {
+		return _extendedDef != null;
+	}
+
 	private static final int[] FIELDS = {0, 0, 0, 0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
@@ -166,8 +180,10 @@ public class MessageDef extends Definition {
 		super.writeContent(out);
 		out.name("abstract");
 		out.value(isAbstract());
-		out.name("extends");
-		getExtends().writeTo(out);
+		if (hasExtends()) {
+			out.name("extends");
+			getExtends().writeTo(out);
+		}
 		out.name("definitions");
 		out.beginArray();
 		for (Definition x : getDefinitions()) {
@@ -186,8 +202,10 @@ public class MessageDef extends Definition {
 			x.writeTo(out);
 		}
 		out.endArray();
-		out.name("extendedDef");
-		getExtendedDef().writeTo(out);
+		if (hasExtendedDef()) {
+			out.name("extendedDef");
+			getExtendedDef().writeTo(out);
+		}
 	}
 
 	@Override
