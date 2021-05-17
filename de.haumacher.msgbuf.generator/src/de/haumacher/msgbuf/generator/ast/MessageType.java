@@ -3,6 +3,8 @@
  */
 package de.haumacher.msgbuf.generator.ast;
 
+import de.haumacher.msgbuf.generator.Util;
+
 /**
  * TODO
  */
@@ -23,7 +25,7 @@ public class MessageType extends Type {
 	
 	@Override
 	public String toString() {
-		return _name.qName();
+		return Util.qName(_name);
 	}
 	
 	@Override

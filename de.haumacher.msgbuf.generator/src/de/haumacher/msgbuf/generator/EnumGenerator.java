@@ -30,7 +30,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 		if (file != null) {
 			QName packageName = file.getPackage();
 			if (packageName != null) {
-				line("package " + packageName.qName() + ";");
+				line("package " + Util.qName(packageName) + ";");
 			}
 		}
 		nl();

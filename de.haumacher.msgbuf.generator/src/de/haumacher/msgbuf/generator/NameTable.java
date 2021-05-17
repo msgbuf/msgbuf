@@ -43,7 +43,7 @@ public class NameTable  {
 		if (qName == null) {
 			name = "";
 		} else {
-			name = qName.qName();
+			name = Util.qName(qName);
 		}
 		Package result = _packageByName.get(name);
 		if (result == null) {
@@ -94,6 +94,6 @@ public class NameTable  {
 	 * TODO
 	 */
 	public Definition lookup(MessageDef context, QName name) {
-		return _definitionByName.get(name.last());
+		return _definitionByName.get(Util.last(name));
 	}
 }

@@ -91,7 +91,7 @@ public class Generator {
 				QName generalizationName = def.getExtends();
 				if (generalizationName != null) {
 					MessageDef ref = (MessageDef) _table.lookup(def, generalizationName);
-					def.setExtendsDef(ref);
+					def.setExtendedDef(ref);
 					ref.addSpecialization(def);
 				}
 				

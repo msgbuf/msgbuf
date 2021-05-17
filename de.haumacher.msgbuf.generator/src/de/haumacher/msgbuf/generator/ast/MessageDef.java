@@ -16,7 +16,7 @@ public class MessageDef extends Definition {
 	private List<Definition> _definitions = new ArrayList<Definition>();
 	private final List<Field> _fields = new ArrayList<>();
 	private List<MessageDef> _specializations = new ArrayList<>();
-	private MessageDef _extendsDef;
+	private MessageDef _extendedDef;
 
 	public QName getExtends() {
 		return _extends;
@@ -66,14 +66,14 @@ public class MessageDef extends Definition {
 		return _specializations;
 	}
 
-	public void setExtendsDef(MessageDef extendsDef) {
-		_extendsDef = extendsDef;
+	public void setExtendedDef(MessageDef extendsDef) {
+		_extendedDef = extendsDef;
 	}
 	
 	/** 
 	 * TODO
 	 */
-	public MessageDef getExtendDef() {
-		return _extendsDef;
+	public MessageDef getExtendedDef() {
+		return _extendedDef;
 	}
 }

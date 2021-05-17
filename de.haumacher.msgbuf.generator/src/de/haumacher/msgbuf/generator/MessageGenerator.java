@@ -38,7 +38,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (_def.getFile() != null) {
 			QName packageName = _def.getFile().getPackage();
 			if (packageName != null) {
-				line("package " + packageName.qName() + ";");
+				line("package " + Util.qName(packageName) + ";");
 				nl();
 			}
 			modifier = "";
@@ -56,7 +56,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String getExtends() {
-		return _def.getExtends() == null ? "" : " extends " + _def.getExtends().qName();
+		return _def.getExtends() == null ? "" : " extends " + Util.qName(_def.getExtends());
 	}
 
 	private void generateContents() {
@@ -97,6 +97,30 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		for (Definition def : _def.getDefinitions()) {
 			def.visit(this, null);
 		}
+		
+		if (!_def.isAbstract()) {
+			nl();
+			line("/**");
+			line(" * Creates a {@link " + _def.getName() + "} instance.");
+			line(" */");
+			line("public static " + _def.getName() + " " + firstLowerCase(_def.getName()) + "() {");
+			{
+				line("return new " + _def.getName() + "();");
+			}
+			line("}");
+		}
+		
+		nl();
+		line("/**");
+		line(" * Creates a {@link " + _def.getName() + "} instance.");
+		line(" *");
+		line(" * @see #" + firstLowerCase(_def.getName()) + "()");
+		line(" */");
+		line("protected " + _def.getName() + "() {");
+		{
+			line("super();");
+		}
+		line("}");
 
 		for (Field field : _def.getFields()) {
 			generateFieldDef(field);
@@ -133,7 +157,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	private MessageDef abstractGeneralizations(MessageDef def) {
 		while (true) {
-			MessageDef extendsDef = def.getExtendDef();
+			MessageDef extendsDef = def.getExtendedDef();
 			if (extendsDef == null) {
 				break;
 			}
@@ -365,7 +389,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		else if (type instanceof MessageType) {
 			MessageType messageType = (MessageType) type;
 			QName name = messageType.getName();
-			return name.qName() + "." + readerName(name.last()) +  "(in)";
+			return Util.qName(name) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
@@ -448,7 +472,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	@Override
 	public String visit(MessageType type, Void arg) {
-		return type.getName().qName();
+		return Util.qName(type.getName());
 	}
 	
 	@Override
@@ -490,12 +514,15 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		line("/**");
 		line(" * @see #" + getterName(field) + "()");
 		line(" */");
-		line("public final " + "void" + " " + setterName(field) + "(" + getType(field) + " " + "value" + ")" + " {");
-		if (field.isRepeated()) {
-			line("_" + name(field) + ".clear();");
-			line("_" + name(field) + ".addAll(value);");
-		} else {
-			line("_" + name(field) + " = " + "value" + ";");
+		line("public final " + _def.getName() + " " + setterName(field) + "(" + getType(field) + " " + "value" + ")" + " {");
+		{
+			if (field.isRepeated()) {
+				line("_" + name(field) + ".clear();");
+				line("_" + name(field) + ".addAll(value);");
+			} else {
+				line("_" + name(field) + " = " + "value" + ";");
+			}
+			line("return this;");
 		}
 		line("}");
 		
@@ -515,11 +542,20 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String adderName(Field field) {
-		return "add" + suffix(field);
+		String suffix = suffix(field);
+		if (suffix.endsWith("s")) {
+			suffix = suffix.substring(0, suffix.length() - 1);
+		}
+		return "add" + suffix;
 	}
 	
 	private String getterName(Field field) {
-		return "get" + suffix(field);
+		Type type = field.getType();
+		if (type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BOOL) {
+			return "is" + suffix(field);
+		} else {
+			return "get" + suffix(field);
+		}
 	}
 
 	private String name(Field field) {

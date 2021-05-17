@@ -18,19 +18,8 @@ public class QName {
 		return _names;
 	}
 	
-	public void add(String name) {
+	public void addName(String name) {
 		_names.add(name);
-	}
-
-	public String qName() {
-		return _names.stream().collect(Collectors.joining("."));
-	}
-
-	/** 
-	 * TODO
-	 */
-	public String last() {
-		return _names.get(_names.size() - 1);
 	}
 
 }

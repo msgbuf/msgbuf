@@ -355,12 +355,12 @@ QName qName() :
 {
   name = name()
   {
-    result.add(name);
+    result.addName(name);
   }
   (
     "." name = name()
     {
-      result.add(name);
+      result.addName(name);
     }
   )*
   {
