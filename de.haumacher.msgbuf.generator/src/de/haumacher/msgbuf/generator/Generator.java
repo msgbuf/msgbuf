@@ -5,6 +5,7 @@ package de.haumacher.msgbuf.generator;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,8 @@ import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
+import de.haumacher.msgbuf.generator.parser.ProtobufParserConstants;
+import de.haumacher.msgbuf.generator.parser.Token;
 
 /**
  * Main entry point to the <code>msgbuf</code> generator.
@@ -33,6 +36,33 @@ public class Generator {
 	
 	public void setOut(File out) {
 		_out = out;
+	}
+
+	public void load(String fileName) throws IOException, ParseException {
+		load(new File(fileName));
+	}
+
+	public void load(File file)
+			throws ParseException, IOException, FileNotFoundException {
+		try (InputStream in = new FileInputStream(file)) {
+			load(in);
+		}
+	}
+
+	public void load(InputStream in) throws ParseException {
+		load(parse(in));
+	}
+
+	private DefinitionFile parse(InputStream in) throws ParseException {
+		ProtobufParser parser = new ProtobufParser(in, "utf-8");
+		DefinitionFile definition = parser.file();
+		Token nextToken = parser.getNextToken();
+		if (nextToken.kind != ProtobufParserConstants.EOF) {
+			throw new ParseException("Unexpected token '" + nextToken
+					+ "' at line " + nextToken.beginLine + " column "
+					+ nextToken.beginColumn + " .");
+		}
+		return definition;
 	}
 
 	public void load(DefinitionFile file) {
@@ -138,10 +168,7 @@ public class Generator {
 			if (arg.equals("-out")) {
 				generator.setOut(new File(args[n++]));
 			} else {
-				try (InputStream in = new FileInputStream(new File(arg))) {
-					ProtobufParser parser = new ProtobufParser(in, "utf-8");
-					generator.load(parser.file());
-				}
+				generator.load(arg);
 			}
 		}
 		generator.generate();

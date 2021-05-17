@@ -4,10 +4,8 @@
 package de.haumacher.msgbuf.generator.parser;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import de.haumacher.msgbuf.generator.Generator;
-import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -37,8 +35,7 @@ public class TestParser extends TestCase {
 	protected void runTest() throws Throwable {
 		Generator generator = new Generator();
 		generator.setOut(testDir());
-		DefinitionFile definition = new ProtobufParser(new FileInputStream(_proto)).file();
-		generator.load(definition);
+		generator.load(_proto);
 		generator.generate();
 	}
 

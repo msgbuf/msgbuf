@@ -1,6 +1,6 @@
-package test.hierarchy;
-
 syntax = "msgbuf";
+
+package test.hierarchy;
 
 /** 
  * An abstract base class for all shapes 

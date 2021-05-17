@@ -1,6 +1,6 @@
-package test.types;
-
 syntax = "proto3";
+
+package test.types;
 
 message SearchRequest {
   string query = 1;
