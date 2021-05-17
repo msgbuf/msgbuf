@@ -26,9 +26,9 @@ public class MessageDef extends Definition {
 
 	private final java.util.List<Field> _fields = new java.util.ArrayList<>();
 
-	private final java.util.List<MessageDef> _specializations = new java.util.ArrayList<>();
+	private transient final java.util.List<MessageDef> _specializations = new java.util.ArrayList<>();
 
-	private MessageDef _extendedDef;
+	private transient MessageDef _extendedDef;
 
 	public final boolean isAbstract() {
 		return _abstract;

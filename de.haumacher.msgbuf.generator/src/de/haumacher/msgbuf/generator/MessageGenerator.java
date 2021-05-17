@@ -459,7 +459,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 	private void generateFieldDef(Field field) {
 		nl();
-		line("private" + getFinal(field) +  " " + getType(field) + " " + "_" + name(field) + getInitializer(field) + ";");
+		line("private" + getTransient(field) + getFinal(field) +  " " + getType(field) + " " + "_" + name(field) + getInitializer(field) + ";");
+	}
+
+	private String getTransient(Field field) {
+		return field.isTransient() ? " transient" : "";
 	}
 
 	private String getFinal(Field field) {

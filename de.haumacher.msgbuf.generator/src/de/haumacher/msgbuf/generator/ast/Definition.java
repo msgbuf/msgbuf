@@ -24,7 +24,7 @@ public abstract class Definition {
 
 	private String _name;
 
-	private DefinitionFile _file;
+	private transient DefinitionFile _file;
 
 	public final String getName() {
 		return _name;

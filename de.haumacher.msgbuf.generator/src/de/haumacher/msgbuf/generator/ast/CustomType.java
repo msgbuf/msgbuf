@@ -20,7 +20,7 @@ public class CustomType extends Type {
 
 	private QName _name;
 
-	private Definition _definition;
+	private transient Definition _definition;
 
 	public final QName getName() {
 		return _name;
