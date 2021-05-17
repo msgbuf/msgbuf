@@ -82,7 +82,7 @@ TOKEN :
 
 DefinitionFile file() :
 {
-  DefinitionFile result = new DefinitionFile();
+  DefinitionFile result = DefinitionFile.definitionFile();
   QName pkgName;
   Definition def;
 }
@@ -142,7 +142,7 @@ Definition definition() :
 
 EnumDef enumeration() :
 {
-  EnumDef result = new EnumDef();
+  EnumDef result = EnumDef.enumDef();
   String name;
   Constant constant;
 }
@@ -169,7 +169,7 @@ EnumDef enumeration() :
 
 Constant constant() :
 {
-  Constant result = new Constant();
+  Constant result = Constant.constant();
   String name;
   Token index;
 }
@@ -192,7 +192,7 @@ Constant constant() :
 
 MessageDef message() :
 {
-  MessageDef result = new MessageDef();
+  MessageDef result = MessageDef.messageDef();
   String name;
   QName generalization;
   Definition def;
@@ -235,7 +235,7 @@ MessageDef message() :
 
 Field field() :
 {
-  Field result = new Field();
+  Field result = Field.field();
   Type type;
   String name;
   Token index;
@@ -313,13 +313,13 @@ PrimitiveType primitiveType() :
 }
 {
   (
-	t=< TYPE >    { result = new PrimitiveType(t.image); }
+	t=< TYPE >    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image)); }
   | t=< INT_TYPE >
-    { result = new PrimitiveType("int32"); }
+    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT32); }
   | t=< LONG_TYPE >
-    { result = new PrimitiveType("int64"); }
+    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT64); }
   | t=< BOOLEAN_TYPE >
-    { result = new PrimitiveType("bool"); }
+    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.BOOL); }
   )
   { return result; }
 }
@@ -331,7 +331,7 @@ MessageType messageType() :
 {
   name=qName()
   {
-    return new MessageType(name);
+    return MessageType.messageType().setName(name);
   }
 }
 
@@ -343,13 +343,13 @@ MapType map() :
 {
   < MAP > "<" keyType=type() "," valueType=type() ">"
   {
-    return new MapType(keyType, valueType);
+    return MapType.mapType().setKeyType(keyType).setValueType(valueType);
   }
 }
 
 QName qName() :
 {
-  QName result = new QName();
+  QName result = QName.qName();
   String name;
 }
 {

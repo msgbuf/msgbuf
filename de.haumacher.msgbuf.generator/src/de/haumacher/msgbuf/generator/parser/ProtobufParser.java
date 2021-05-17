@@ -9,7 +9,7 @@ import de.haumacher.msgbuf.generator.ast.*;
 public class ProtobufParser implements ProtobufParserConstants {
 
   final public DefinitionFile file() throws ParseException {
-  DefinitionFile result = new DefinitionFile();
+  DefinitionFile result = DefinitionFile.definitionFile();
   QName pkgName;
   Definition def;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -114,7 +114,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public EnumDef enumeration() throws ParseException {
-  EnumDef result = new EnumDef();
+  EnumDef result = EnumDef.enumDef();
   String name;
   Constant constant;
     jj_consume_token(ENUM);
@@ -170,7 +170,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public Constant constant() throws ParseException {
-  Constant result = new Constant();
+  Constant result = Constant.constant();
   String name;
   Token index;
     name = name();
@@ -191,7 +191,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public MessageDef message() throws ParseException {
-  MessageDef result = new MessageDef();
+  MessageDef result = MessageDef.messageDef();
   String name;
   QName generalization;
   Definition def;
@@ -281,7 +281,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public Field field() throws ParseException {
-  Field result = new Field();
+  Field result = Field.field();
   Type type;
   String name;
   Token index;
@@ -438,19 +438,19 @@ public class ProtobufParser implements ProtobufParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TYPE:
       t = jj_consume_token(TYPE);
-      result = new PrimitiveType(t.image);
+      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image));
       break;
     case INT_TYPE:
       t = jj_consume_token(INT_TYPE);
-      result = new PrimitiveType("int32");
+      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT32);
       break;
     case LONG_TYPE:
       t = jj_consume_token(LONG_TYPE);
-      result = new PrimitiveType("int64");
+      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT64);
       break;
     case BOOLEAN_TYPE:
       t = jj_consume_token(BOOLEAN_TYPE);
-      result = new PrimitiveType("bool");
+      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.BOOL);
       break;
     default:
       jj_la1[23] = jj_gen;
@@ -464,7 +464,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   final public MessageType messageType() throws ParseException {
   QName name;
     name = qName();
-    {if (true) return new MessageType(name);}
+    {if (true) return MessageType.messageType().setName(name);}
     throw new Error("Missing return statement in function");
   }
 
@@ -477,12 +477,12 @@ public class ProtobufParser implements ProtobufParserConstants {
     jj_consume_token(35);
     valueType = type();
     jj_consume_token(37);
-    {if (true) return new MapType(keyType, valueType);}
+    {if (true) return MapType.mapType().setKeyType(keyType).setValueType(valueType);}
     throw new Error("Missing return statement in function");
   }
 
   final public QName qName() throws ParseException {
-  QName result = new QName();
+  QName result = QName.qName();
   String name;
     name = name();
     result.addName(name);

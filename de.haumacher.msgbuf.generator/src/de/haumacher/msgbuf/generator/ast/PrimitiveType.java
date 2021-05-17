@@ -1,52 +1,125 @@
-/*
- * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
- */
 package de.haumacher.msgbuf.generator.ast;
 
-/**
- * TODO
- */
 public class PrimitiveType extends Type {
-	
+
 	public enum Kind {
-	    DOUBLE,
-	    FLOAT,
-	    INT32,
-	    INT64,
-	    UINT32,
-	    UINT64,
-	    SINT32,
-	    SINT64,
-	    FIXED32,
-	    FIXED64,
-	    SFIXED32,
-	    SFIXED64,
-	    BOOL,
-	    STRING,
-	    BYTES,
-	    ;
+
+		DOUBLE,
+
+		FLOAT,
+
+		INT32,
+
+		UINT32,
+
+		SINT32,
+
+		FIXED32,
+
+		SFIXED32,
+
+		INT64,
+
+		UINT64,
+
+		SINT64,
+
+		FIXED64,
+
+		SFIXED64,
+
+		BOOL,
+
+		STRING,
+
+		BYTES,
+
+		;
+
+		/** Writes this instance to the given output. */
+		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+			out.value(name());
+		}
+
+		/** Reads a new instance from the given reader. */
+		public static Kind readKind(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+			return valueOf(in.nextString());
+		}
+	}
+
+	/**
+	 * Creates a {@link PrimitiveType} instance.
+	 */
+	public static PrimitiveType primitiveType() {
+		return new PrimitiveType();
+	}
+
+	/**
+	 * Creates a {@link PrimitiveType} instance.
+	 *
+	 * @see #primitiveType()
+	 */
+	protected PrimitiveType() {
+		super();
 	}
 
 	private Kind _kind;
-	
-	/** 
-	 * Creates a {@link PrimitiveType}.
-	 */
-	public PrimitiveType(String name) {
-		_kind = Kind.valueOf(name.toUpperCase());
-	}
-	
-	public Kind getKind() {
+
+	public final Kind getKind() {
 		return _kind;
 	}
-	
-	@Override
-	public String toString() {
-		return _kind.name();
+
+	/**
+	 * @see #getKind()
+	 */
+	public final PrimitiveType setKind(Kind value) {
+		_kind = value;
+		return this;
+	}
+
+	private static final int[] FIELDS = {0, };
+
+	/** Reads a new instance from the given reader. */
+	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		PrimitiveType result = new PrimitiveType();
+		result.readContent(in);
+		return result;
 	}
 
 	@Override
-	public <R, A> R visit(Visitor<R, A> visitor, A arg) {
-		return visitor.visit(this, arg);
+	public Object get(String field) {
+		switch (field) {
+			case "kind": return getKind();
+			default: return super.get(field);
+		}
 	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case "kind": setKind((Kind) value); break;
+			default: super.set(field, value); break;
+		}
+	}
+
+	@Override
+	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeContent(out);
+		out.name("kind");
+		getKind().writeTo(out);
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case "kind": setKind(Kind.readKind(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public <R,A> R visit(Type.Visitor<R,A> v, A arg) {
+		return v.visit(this, arg);
+	}
+
 }

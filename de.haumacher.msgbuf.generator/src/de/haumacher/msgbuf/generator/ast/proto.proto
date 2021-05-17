@@ -1,0 +1,81 @@
+package de.haumacher.msgbuf.generator.ast;
+
+message Constant {
+	string name;
+	int index;
+}
+
+message DefinitionFile {
+	QName `package`;
+	repeated Definition definitions;
+}
+
+abstract message Definition {
+	string name;
+
+	// TODO: transient.
+	DefinitionFile file;
+}
+
+message EnumDef extends Definition {
+	repeated Constant constants;
+}
+
+message MessageDef extends Definition {
+	boolean `abstract`;
+	QName `extends`;
+	repeated Definition definitions;
+	repeated Field fields;
+	
+	// TODO: transient.
+	repeated MessageDef specializations;
+
+	// TODO: transient.
+	MessageDef extendedDef;
+}
+
+message Field {
+	boolean `repeated`;
+	Type type;
+	string name;
+	int index;
+}
+
+abstract message Type {
+	// Pure base class.
+}
+
+message MessageType extends Type {
+	QName name;
+}
+
+message PrimitiveType extends Type {
+	enum Kind {
+	    DOUBLE;
+	    FLOAT;
+	    INT32;
+	    UINT32;
+	    SINT32;
+	    FIXED32;
+	    SFIXED32;
+	    INT64;
+	    UINT64;
+	    SINT64;
+	    FIXED64;
+	    SFIXED64;
+	    BOOL;
+	    STRING;
+	    BYTES;
+	}
+
+	Kind kind;
+}
+
+message MapType extends Type {
+	Type keyType;
+	Type valueType;
+}
+
+message QName {
+	repeated string names;
+}
