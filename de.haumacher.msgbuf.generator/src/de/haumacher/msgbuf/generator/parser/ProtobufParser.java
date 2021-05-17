@@ -438,7 +438,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TYPE:
       t = jj_consume_token(TYPE);
-      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image));
+      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase()));
       break;
     case INT_TYPE:
       t = jj_consume_token(INT_TYPE);

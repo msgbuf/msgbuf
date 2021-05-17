@@ -313,7 +313,7 @@ PrimitiveType primitiveType() :
 }
 {
   (
-	t=< TYPE >    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image)); }
+	t=< TYPE >    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase())); }
   | t=< INT_TYPE >
     { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT32); }
   | t=< LONG_TYPE >
