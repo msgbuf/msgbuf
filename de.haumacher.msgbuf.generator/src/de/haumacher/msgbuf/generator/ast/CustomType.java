@@ -1,20 +1,20 @@
 package de.haumacher.msgbuf.generator.ast;
 
-public class MessageType extends Type {
+public class CustomType extends Type {
 
 	/**
-	 * Creates a {@link MessageType} instance.
+	 * Creates a {@link CustomType} instance.
 	 */
-	public static MessageType messageType() {
-		return new MessageType();
+	public static CustomType customType() {
+		return new CustomType();
 	}
 
 	/**
-	 * Creates a {@link MessageType} instance.
+	 * Creates a {@link CustomType} instance.
 	 *
-	 * @see #messageType()
+	 * @see #customType()
 	 */
-	protected MessageType() {
+	protected CustomType() {
 		super();
 	}
 
@@ -27,7 +27,7 @@ public class MessageType extends Type {
 	/**
 	 * @see #getName()
 	 */
-	public final MessageType setName(QName value) {
+	public final CustomType setName(QName value) {
 		_name = value;
 		return this;
 	}
@@ -42,8 +42,8 @@ public class MessageType extends Type {
 	private static final int[] FIELDS = {0, };
 
 	/** Reads a new instance from the given reader. */
-	public static MessageType readMessageType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		MessageType result = new MessageType();
+	public static CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		CustomType result = new CustomType();
 		result.readContent(in);
 		return result;
 	}

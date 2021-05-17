@@ -5,8 +5,8 @@ public abstract class Type {
 	/** Visitor interface for the {@link Type} hierarchy.*/
 	public interface Visitor<R,A> {
 
-		/** Visit case for {@link MessageType}.*/
-		R visit(MessageType self, A arg);
+		/** Visit case for {@link CustomType}.*/
+		R visit(CustomType self, A arg);
 
 		/** Visit case for {@link PrimitiveType}.*/
 		R visit(PrimitiveType self, A arg);
@@ -33,7 +33,7 @@ public abstract class Type {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "MessageType": result = MessageType.readMessageType(in); break;
+			case "CustomType": result = CustomType.readCustomType(in); break;
 			case "PrimitiveType": result = PrimitiveType.readPrimitiveType(in); break;
 			case "MapType": result = MapType.readMapType(in); break;
 			default: in.skipValue(); result = null; break;

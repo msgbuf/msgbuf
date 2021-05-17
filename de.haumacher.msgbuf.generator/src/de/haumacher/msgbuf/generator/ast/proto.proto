@@ -42,7 +42,7 @@ abstract message Type {
 	// Pure base class.
 }
 
-message MessageType extends Type {
+message CustomType extends Type {
 	QName name;
 }
 

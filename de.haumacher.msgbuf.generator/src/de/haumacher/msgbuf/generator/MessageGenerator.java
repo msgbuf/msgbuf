@@ -11,7 +11,7 @@ import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
-import de.haumacher.msgbuf.generator.ast.MessageType;
+import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.Type;
@@ -379,7 +379,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	private String jsonOut(Type type, String x) {
 		if (type instanceof PrimitiveType) {
 			return "out.value(" + x + ")";
-		} else if (type instanceof MessageType) {
+		} else if (type instanceof CustomType) {
 			return x + ".writeTo(out)";
 		} else {
 			throw new RuntimeException("Unsupported: " + type);
@@ -399,8 +399,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (type instanceof PrimitiveType) {
 			return jsonType(((PrimitiveType) type).getKind());
 		}
-		else if (type instanceof MessageType) {
-			MessageType messageType = (MessageType) type;
+		else if (type instanceof CustomType) {
+			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
 			return Util.qName(name) + "." + readerName(Util.last(name)) +  "(in)";
 		}
@@ -484,7 +484,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 	
 	@Override
-	public String visit(MessageType type, Void arg) {
+	public String visit(CustomType type, Void arg) {
 		return Util.qName(type.getName());
 	}
 	
@@ -563,7 +563,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private boolean isNullable(Field field) {
-		return field.getType() instanceof MessageType && !field.isRepeated();
+		return field.getType() instanceof CustomType && !field.isRepeated();
 	}
 
 	private String setterName(Field field) {

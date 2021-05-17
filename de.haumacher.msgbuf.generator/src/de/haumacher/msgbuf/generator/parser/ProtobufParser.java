@@ -429,7 +429,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     case MAX:
     case XNAME:
     case NAME:
-      result = messageType();
+      result = customType();
       break;
     case MAP:
       result = map();
@@ -472,10 +472,10 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public MessageType messageType() throws ParseException {
+  final public CustomType customType() throws ParseException {
   QName name;
     name = qName();
-    {if (true) return MessageType.messageType().setName(name);}
+    {if (true) return CustomType.customType().setName(name);}
     throw new Error("Missing return statement in function");
   }
 

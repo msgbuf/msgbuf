@@ -305,7 +305,7 @@ Type type() :
 }
 {
   (    result=primitiveType()
-  | result=messageType()
+  | result=customType()
   | result=map()
   )
   {
@@ -331,14 +331,14 @@ PrimitiveType primitiveType() :
   { return result; }
 }
 
-MessageType messageType() :
+CustomType customType() :
 {
   QName name;  
 }
 {
   name=qName()
   {
-    return MessageType.messageType().setName(name);
+    return CustomType.customType().setName(name);
   }
 }
 
