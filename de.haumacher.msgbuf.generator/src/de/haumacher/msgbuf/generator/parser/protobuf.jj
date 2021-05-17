@@ -45,6 +45,7 @@ TOKEN :
 | < MAP : "map" >
 | < ONEOF : "oneof" >
 | < REPEATED : "repeated" >
+| < TRANSIENT : "transient" >
 | < OPTION : "option" >
 | < EXTENDS : "extends" >
 | < ABSTRACT : "abstract" >
@@ -241,6 +242,12 @@ Field field() :
   Token index;
 }
 {
+  (
+    < TRANSIENT >
+    {
+      result.setTransient(true);
+    }
+  )?
   (
     < REPEATED >
     {

@@ -109,17 +109,12 @@ public abstract class Definition {
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.name("name");
 		out.value(getName());
-		if (hasFile()) {
-			out.name("file");
-			getFile().writeTo(out);
-		}
 	}
 
 	/** Reads the given field from the given input. */
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "name": setName(in.nextString()); break;
-			case "file": setFile(DefinitionFile.readDefinitionFile(in)); break;
 			default: in.skipValue();
 		}
 	}

@@ -13,8 +13,7 @@ message DefinitionFile {
 abstract message Definition {
 	string name;
 
-	// TODO: transient.
-	DefinitionFile file;
+	transient DefinitionFile file;
 }
 
 message EnumDef extends Definition {
@@ -27,14 +26,12 @@ message MessageDef extends Definition {
 	repeated Definition definitions;
 	repeated Field fields;
 	
-	// TODO: transient.
-	repeated MessageDef specializations;
-
-	// TODO: transient.
-	MessageDef extendedDef;
+	transient repeated MessageDef specializations;
+	transient MessageDef extendedDef;
 }
 
 message Field {
+	boolean `transient`;
 	boolean `repeated`;
 	Type type;
 	string name;

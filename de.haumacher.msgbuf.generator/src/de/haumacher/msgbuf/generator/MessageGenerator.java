@@ -292,6 +292,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					line("// No fields.");
 				} else {
 					for (Field field : fields) {
+						if (field.isTransient()) {
+							continue;
+						}
 						boolean nullable = isNullable(field);
 						if (nullable) {
 							line("if (" + hasName(field) + "()" + ") {");
@@ -326,6 +329,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			{
 				line("switch (field) {");
 				for (Field field : fields) {
+					if (field.isTransient()) {
+						continue;
+					}
 					if (field.isRepeated()) {
 						line("case " + fieldNameString(field) + ": {");
 						{

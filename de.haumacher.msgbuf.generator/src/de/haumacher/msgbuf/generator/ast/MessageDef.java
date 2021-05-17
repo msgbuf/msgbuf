@@ -196,16 +196,6 @@ public class MessageDef extends Definition {
 			x.writeTo(out);
 		}
 		out.endArray();
-		out.name("specializations");
-		out.beginArray();
-		for (MessageDef x : getSpecializations()) {
-			x.writeTo(out);
-		}
-		out.endArray();
-		if (hasExtendedDef()) {
-			out.name("extendedDef");
-			getExtendedDef().writeTo(out);
-		}
 	}
 
 	@Override
@@ -229,15 +219,6 @@ public class MessageDef extends Definition {
 				in.endArray();
 			}
 			break;
-			case "specializations": {
-				in.beginArray();
-				while (in.hasNext()) {
-					addSpecialization(MessageDef.readMessageDef(in));
-				}
-				in.endArray();
-			}
-			break;
-			case "extendedDef": setExtendedDef(MessageDef.readMessageDef(in)); break;
 			default: super.readField(in, field);
 		}
 	}

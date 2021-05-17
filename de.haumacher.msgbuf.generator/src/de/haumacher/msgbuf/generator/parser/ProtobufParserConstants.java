@@ -37,39 +37,41 @@ public interface ProtobufParserConstants {
   /** RegularExpression Id. */
   int REPEATED = 13;
   /** RegularExpression Id. */
-  int OPTION = 14;
+  int TRANSIENT = 14;
   /** RegularExpression Id. */
-  int EXTENDS = 15;
+  int OPTION = 15;
   /** RegularExpression Id. */
-  int ABSTRACT = 16;
+  int EXTENDS = 16;
   /** RegularExpression Id. */
-  int RESERVED = 17;
+  int ABSTRACT = 17;
   /** RegularExpression Id. */
-  int TO = 18;
+  int RESERVED = 18;
   /** RegularExpression Id. */
-  int MAX = 19;
+  int TO = 19;
   /** RegularExpression Id. */
-  int TRUE = 20;
+  int MAX = 20;
   /** RegularExpression Id. */
-  int FALSE = 21;
+  int TRUE = 21;
   /** RegularExpression Id. */
-  int INT_TYPE = 22;
+  int FALSE = 22;
   /** RegularExpression Id. */
-  int LONG_TYPE = 23;
+  int INT_TYPE = 23;
   /** RegularExpression Id. */
-  int BOOLEAN_TYPE = 24;
+  int LONG_TYPE = 24;
   /** RegularExpression Id. */
-  int TYPE = 25;
+  int BOOLEAN_TYPE = 25;
   /** RegularExpression Id. */
-  int NUMBER = 26;
+  int TYPE = 26;
   /** RegularExpression Id. */
-  int STRING = 27;
+  int NUMBER = 27;
   /** RegularExpression Id. */
-  int XNAME = 28;
+  int STRING = 28;
   /** RegularExpression Id. */
-  int QUOTE = 29;
+  int XNAME = 29;
   /** RegularExpression Id. */
-  int NAME = 30;
+  int QUOTE = 30;
+  /** RegularExpression Id. */
+  int NAME = 31;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -90,6 +92,7 @@ public interface ProtobufParserConstants {
     "\"map\"",
     "\"oneof\"",
     "\"repeated\"",
+    "\"transient\"",
     "\"option\"",
     "\"extends\"",
     "\"abstract\"",

@@ -18,6 +18,8 @@ public class Field {
 		super();
 	}
 
+	private boolean _transient;
+
 	private boolean _repeated;
 
 	private Type _type;
@@ -25,6 +27,18 @@ public class Field {
 	private String _name;
 
 	private int _index;
+
+	public final boolean isTransient() {
+		return _transient;
+	}
+
+	/**
+	 * @see #isTransient()
+	 */
+	public final Field setTransient(boolean value) {
+		_transient = value;
+		return this;
+	}
 
 	public final boolean isRepeated() {
 		return _repeated;
@@ -81,7 +95,7 @@ public class Field {
 		return this;
 	}
 
-	private static final int[] FIELDS = {0, 0, 0, 0, };
+	private static final int[] FIELDS = {0, 0, 0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
@@ -108,6 +122,7 @@ public class Field {
 	/** Retrieves value of the field with the given index. */
 	public Object get(String field) {
 		switch (field) {
+			case "transient": return isTransient();
 			case "repeated": return isRepeated();
 			case "type": return getType();
 			case "name": return getName();
@@ -119,6 +134,7 @@ public class Field {
 	/** Sets the value of the field with the given index. */
 	public void set(String field, Object value) {
 		switch (field) {
+			case "transient": setTransient((boolean) value); break;
 			case "repeated": setRepeated((boolean) value); break;
 			case "type": setType((Type) value); break;
 			case "name": setName((String) value); break;
@@ -128,6 +144,8 @@ public class Field {
 
 	/** Writes all fields of this instance to the given output. */
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		out.name("transient");
+		out.value(isTransient());
 		out.name("repeated");
 		out.value(isRepeated());
 		if (hasType()) {
@@ -143,6 +161,7 @@ public class Field {
 	/** Reads the given field from the given input. */
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
+			case "transient": setTransient(in.nextBoolean()); break;
 			case "repeated": setRepeated(in.nextBoolean()); break;
 			case "type": setType(Type.readType(in)); break;
 			case "name": setName(in.nextString()); break;
