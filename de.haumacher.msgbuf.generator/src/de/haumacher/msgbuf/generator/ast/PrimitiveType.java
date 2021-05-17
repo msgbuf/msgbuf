@@ -4,10 +4,6 @@ public class PrimitiveType extends Type {
 
 	public enum Kind {
 
-		DOUBLE,
-
-		FLOAT,
-
 		INT32,
 
 		UINT32,
@@ -31,6 +27,10 @@ public class PrimitiveType extends Type {
 		BOOL,
 
 		STRING,
+
+		FLOAT,
+
+		DOUBLE,
 
 		BYTES,
 
@@ -63,7 +63,7 @@ public class PrimitiveType extends Type {
 		super();
 	}
 
-	private Kind _kind;
+	private Kind _kind = Kind.INT32;
 
 	public final Kind getKind() {
 		return _kind;

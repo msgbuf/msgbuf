@@ -6,12 +6,12 @@ package de.haumacher.msgbuf.generator;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
-import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.Type;
@@ -467,7 +467,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 	
 	private String getInitializer(Field field) {
-		return field.isRepeated() ? " = new java.util.ArrayList<>()" : "";
+		if (field.isRepeated()) {
+			return " = new java.util.ArrayList<>()";
+		}
+		Type type = field.getType();
+		if (type instanceof CustomType) {
+			Definition definition = ((CustomType) type).getDefinition();
+			if (definition instanceof EnumDef) {
+				return " = " + definition.getName() + "." + ((EnumDef) definition).getConstants().get(0).getName();
+			}
+		}
+		
+		return "";
 	}
 
 	private String getType(Field field) {

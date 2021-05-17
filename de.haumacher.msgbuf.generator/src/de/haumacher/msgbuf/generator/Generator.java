@@ -14,12 +14,17 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Definition.Visitor;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
+import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
+import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
+import de.haumacher.msgbuf.generator.ast.Type;
 import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
 import de.haumacher.msgbuf.generator.parser.ProtobufParserConstants;
@@ -85,18 +90,46 @@ public class Generator {
 	}
 	
 	private void buildSpecializations(DefinitionFile file) {
+		NameTable table = _table;
+		
+		Type.Visitor<Void, MessageDef> typeResolver = new Type.Visitor<Void, MessageDef>() {
+
+			@Override
+			public Void visit(CustomType self, MessageDef context) {
+				self.setDefinition(table.lookup(context, self.getName()));
+				return null;
+			}
+
+			@Override
+			public Void visit(PrimitiveType self, MessageDef context) {
+				return null;
+			}
+
+			@Override
+			public Void visit(MapType self, MessageDef context) {
+				self.getKeyType().visit(this, context);
+				self.getValueType().visit(this, context);
+				return null;
+			}
+			
+		};
+		
 		Visitor<Void, Void> indexer = new Visitor<Void, Void>() {
 			@Override
 			public Void visit(MessageDef def, Void arg) {
 				QName generalizationName = def.getExtends();
 				if (generalizationName != null) {
-					MessageDef ref = (MessageDef) _table.lookup(def, generalizationName);
+					MessageDef ref = (MessageDef) table.lookup(def, generalizationName);
 					def.setExtendedDef(ref);
 					ref.addSpecialization(def);
 				}
 				
 				for (Definition inner : def.getDefinitions()) {
 					inner.visit(this, arg);
+				}
+				
+				for (Field field : def.getFields()) {
+					field.getType().visit(typeResolver, def);
 				}
 				return null;
 			}

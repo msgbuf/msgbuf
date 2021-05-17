@@ -20,6 +20,8 @@ public class CustomType extends Type {
 
 	private QName _name;
 
+	private Definition _definition;
+
 	public final QName getName() {
 		return _name;
 	}
@@ -39,7 +41,26 @@ public class CustomType extends Type {
 		return _name != null;
 	}
 
-	private static final int[] FIELDS = {0, };
+	public final Definition getDefinition() {
+		return _definition;
+	}
+
+	/**
+	 * @see #getDefinition()
+	 */
+	public final CustomType setDefinition(Definition value) {
+		_definition = value;
+		return this;
+	}
+
+	/**
+	 * Checks, whether {@link #getDefinition()} has a value.
+	 */
+	public final boolean hasDefinition() {
+		return _definition != null;
+	}
+
+	private static final int[] FIELDS = {0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
@@ -52,6 +73,7 @@ public class CustomType extends Type {
 	public Object get(String field) {
 		switch (field) {
 			case "name": return getName();
+			case "definition": return getDefinition();
 			default: return super.get(field);
 		}
 	}
@@ -60,6 +82,7 @@ public class CustomType extends Type {
 	public void set(String field, Object value) {
 		switch (field) {
 			case "name": setName((QName) value); break;
+			case "definition": setDefinition((Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
