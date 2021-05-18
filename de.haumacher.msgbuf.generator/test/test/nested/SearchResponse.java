@@ -1,7 +1,7 @@
 package test.nested;
 
-public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
-	public static class Result implements de.haumacher.msgbuf.data.DataObject {
+public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject {
+	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 		/**
 		 * Creates a {@link Result} instance.
@@ -81,36 +81,13 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 			writeContent(out);
 		}
 
-		/**
-		 * Writes a JSON object containing keys for all fields of this object.
-		 *
-		 * @param out The writer to write to.
-		 */
-		protected final void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-			out.beginObject();
-			writeFields(out);
-			out.endObject();
-		}
-
-		/**
-		 * Reads all fields of this instance from the given input.
-		 *
-		 * @param in The reader to take the input from.
-		 */
-		protected final void readFields(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			while (in.hasNext()) {
-				String field = in.nextName();
-				readField(in, field);
-			}
-		}
-
 		@Override
 		public Object get(String field) {
 			switch (field) {
 				case "url": return getUrl();
 				case "title": return getTitle();
 				case "snippets": return getSnippets();
-				default: return null;
+				default: return super.get(field);
 			}
 		}
 
@@ -123,8 +100,9 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 			}
 		}
 
-		/** Writes all fields of this instance to the given output. */
+		@Override
 		protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+			super.writeFields(out);
 			out.name("url");
 			out.value(getUrl());
 			out.name("title");
@@ -137,7 +115,7 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 			out.endArray();
 		}
 
-		/** Reads the given field from the given input. */
+		@Override
 		protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 			switch (field) {
 				case "url": setUrl(in.nextString()); break;
@@ -150,7 +128,7 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 					in.endArray();
 				}
 				break;
-				default: in.skipValue();
+				default: super.readField(in, field);
 			}
 		}
 
@@ -206,34 +184,11 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 		writeContent(out);
 	}
 
-	/**
-	 * Writes a JSON object containing keys for all fields of this object.
-	 *
-	 * @param out The writer to write to.
-	 */
-	protected final void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	/**
-	 * Reads all fields of this instance from the given input.
-	 *
-	 * @param in The reader to take the input from.
-	 */
-	protected final void readFields(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		while (in.hasNext()) {
-			String field = in.nextName();
-			readField(in, field);
-		}
-	}
-
 	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "results": return getResults();
-			default: return null;
+			default: return super.get(field);
 		}
 	}
 
@@ -244,8 +199,9 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 		}
 	}
 
-	/** Writes all fields of this instance to the given output. */
+	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		out.name("results");
 		out.beginArray();
 		for (Result x : getResults()) {
@@ -254,7 +210,7 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 		out.endArray();
 	}
 
-	/** Reads the given field from the given input. */
+	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "results": {
@@ -265,7 +221,7 @@ public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
 				in.endArray();
 			}
 			break;
-			default: in.skipValue();
+			default: super.readField(in, field);
 		}
 	}
 
