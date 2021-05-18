@@ -12,6 +12,7 @@ options
 PARSER_BEGIN(ProtobufParser)
 package de.haumacher.msgbuf.generator.parser;
 
+import de.haumacher.msgbuf.generator.Util;
 import de.haumacher.msgbuf.generator.ast.*;
 
 /**
@@ -30,7 +31,7 @@ SKIP :
 | < TAB : "\t" >
 | < CR : "\r" >
 | < NL : "\n" >
-| < BLOCK_COMMENT : "/*" ( ~[ "*" ] | "*" ~[ "/" ] )* "*/" >
+| < BLOCK_COMMENT : "/*" ~["*"] ( ~[ "*" ] | "*" ~[ "/" ] )* "*/" | "/**/" >
 | < LINE_COMMENT : "//" ( ~[ "\r", "\n" ] )* [ "\r", "\n" ] >
 }
 
@@ -79,6 +80,7 @@ TOKEN :
 | < XNAME : "`" (~[ "`" ] )+ "`" >
 | < #QUOTE : "\\\\" | "\\'" | "\\\"" >
 | < NAME : [ "A"-"Z", "a"-"z", "_" ] ([ "A"-"Z", "a"-"z", "_", "0"-"9"])* >
+| < DOC_COMMENT : "/**" ( ~[ "*" ] | "*" ~[ "/" ] )* "*/" | "/**/" >
 }
 
 DefinitionFile file() :
@@ -86,12 +88,14 @@ DefinitionFile file() :
   DefinitionFile result = DefinitionFile.definitionFile();
   QName pkgName;
   Definition def;
+  Token comment;
 }
 {
   (    < SYNTAX > "=" < STRING > ";"
   )?
   
-  (    < PACKAGE > pkgName = qName() ";"
+  (
+    < PACKAGE > pkgName = qName() ";"
     {
 		result.setPackage(pkgName);
     }
@@ -100,8 +104,16 @@ DefinitionFile file() :
   (    option()
   )*
   
-  (    def = definition()
+  (    (
+      comment = < DOC_COMMENT >
+    |
+      { comment = null; } 
+    )
+    def = definition()
     {
+      if (comment != null) {
+        def.setComment(Util.stripComment(comment.image));
+      }
       result.addDefinition(def);
     }
   )*
@@ -173,8 +185,13 @@ Constant constant() :
   Constant result = Constant.constant();
   String name;
   Token index;
+  Token comment;
 }
 {
+  (
+    comment=< DOC_COMMENT >
+    { result.setComment(Util.stripComment(comment.image)); }
+  )?
   name=name()
   {
     result.setName(name);
@@ -240,8 +257,13 @@ Field field() :
   Type type;
   String name;
   Token index;
+  Token comment;
 }
 {
+  (
+    comment=< DOC_COMMENT >
+    { result.setComment(Util.stripComment(comment.image)); }
+  )?
   (
     < TRANSIENT >
     {

@@ -72,6 +72,8 @@ public interface ProtobufParserConstants {
   int QUOTE = 30;
   /** RegularExpression Id. */
   int NAME = 31;
+  /** RegularExpression Id. */
+  int DOC_COMMENT = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -110,6 +112,7 @@ public interface ProtobufParserConstants {
     "<XNAME>",
     "<QUOTE>",
     "<NAME>",
+    "<DOC_COMMENT>",
     "\"=\"",
     "\";\"",
     "\"{\"",

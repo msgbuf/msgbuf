@@ -5,6 +5,8 @@ package de.haumacher.msgbuf.generator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -46,10 +48,37 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		} else {
 			modifier = " static";
 		}
+		docComment(_def.getComment());
 		line("public" + modifier + getAbstract() + " class " + camelCase(_def.getName()) + getExtends() + " {");
 		generateContents();
 		nl();
 		line("}");
+	}
+	
+	@Override
+	protected void docComment(String comment) {
+		Pattern ref = Pattern.compile("#([a-zA-Z_][a-zA-Z_0-9]*)");
+		Matcher matcher = ref.matcher(comment);
+		StringBuffer buffer = new StringBuffer();
+		while (matcher.find()) {
+			String name = matcher.group(1);
+			Field field = getField(name);
+			String replacement;
+			if (field == null) {
+				replacement = "#" + name;
+			} else {
+				replacement = "#" + getterName(field) + "()";
+			}
+			
+			matcher.appendReplacement(buffer, replacement);
+		}
+		matcher.appendTail(buffer);
+		
+		super.docComment(buffer.toString());
+	}
+
+	private Field getField(String name) {
+		return _def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
 	}
 
 	private String getAbstract() {
@@ -670,6 +699,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 	private void generateFieldAccessor(Field field) {
 		nl();
+		docComment(field.getComment());
 		line("public final " + getType(field) + " " + getterName(field) + "()" + " {");
 		line("return " + "_" + name(field) + ";");
 		line("}");

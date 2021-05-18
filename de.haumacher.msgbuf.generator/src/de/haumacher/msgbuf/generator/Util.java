@@ -28,4 +28,7 @@ public class Util {
 		return qName.getNames().stream().collect(Collectors.joining("."));
 	}
 
+	public static String stripComment(String comment) {
+		return comment.replaceAll("^/\\*+(?:\\s+\\r?\\n)?", "").replaceAll("(?:\\s*\\r?\\n)?\\s*\\*+/$", "").replaceAll("(?m)^\\s*\\*+", "");
+	}
 }

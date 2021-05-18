@@ -34,6 +34,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 			}
 		}
 		nl();
+		docComment(_def.getComment());
 		line("public enum " + _def.getName() + " {");
 		generateConstants();
 		

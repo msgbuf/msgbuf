@@ -18,15 +18,41 @@ public class Field {
 		super();
 	}
 
+	private String _comment = "";
+
+	private String _name = "";
+
 	private boolean _transient = false;
 
 	private boolean _repeated = false;
 
 	private Type _type = null;
 
-	private String _name = "";
-
 	private int _index = 0;
+
+	public final String getComment() {
+		return _comment;
+	}
+
+	/**
+	 * @see #getComment()
+	 */
+	public final Field setComment(String value) {
+		_comment = value;
+		return this;
+	}
+
+	public final String getName() {
+		return _name;
+	}
+
+	/**
+	 * @see #getName()
+	 */
+	public final Field setName(String value) {
+		_name = value;
+		return this;
+	}
 
 	public final boolean isTransient() {
 		return _transient;
@@ -71,18 +97,6 @@ public class Field {
 		return _type != null;
 	}
 
-	public final String getName() {
-		return _name;
-	}
-
-	/**
-	 * @see #getName()
-	 */
-	public final Field setName(String value) {
-		_name = value;
-		return this;
-	}
-
 	public final int getIndex() {
 		return _index;
 	}
@@ -95,7 +109,7 @@ public class Field {
 		return this;
 	}
 
-	private static final int[] FIELDS = {0, 0, 0, 0, 0, };
+	private static final int[] FIELDS = {0, 0, 0, 0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
@@ -122,10 +136,11 @@ public class Field {
 	/** Retrieves value of the field with the given index. */
 	public Object get(String field) {
 		switch (field) {
+			case "comment": return getComment();
+			case "name": return getName();
 			case "transient": return isTransient();
 			case "repeated": return isRepeated();
 			case "type": return getType();
-			case "name": return getName();
 			case "index": return getIndex();
 			default: return null;
 		}
@@ -134,16 +149,21 @@ public class Field {
 	/** Sets the value of the field with the given index. */
 	public void set(String field, Object value) {
 		switch (field) {
+			case "comment": setComment((String) value); break;
+			case "name": setName((String) value); break;
 			case "transient": setTransient((boolean) value); break;
 			case "repeated": setRepeated((boolean) value); break;
 			case "type": setType((Type) value); break;
-			case "name": setName((String) value); break;
 			case "index": setIndex((int) value); break;
 		}
 	}
 
 	/** Writes all fields of this instance to the given output. */
 	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		out.name("comment");
+		out.value(getComment());
+		out.name("name");
+		out.value(getName());
 		out.name("transient");
 		out.value(isTransient());
 		out.name("repeated");
@@ -152,8 +172,6 @@ public class Field {
 			out.name("type");
 			getType().writeTo(out);
 		}
-		out.name("name");
-		out.value(getName());
 		out.name("index");
 		out.value(getIndex());
 	}
@@ -161,10 +179,11 @@ public class Field {
 	/** Reads the given field from the given input. */
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
+			case "comment": setComment(in.nextString()); break;
+			case "name": setName(in.nextString()); break;
 			case "transient": setTransient(in.nextBoolean()); break;
 			case "repeated": setRepeated(in.nextBoolean()); break;
 			case "type": setType(Type.readType(in)); break;
-			case "name": setName(in.nextString()); break;
 			case "index": setIndex(in.nextInt()); break;
 			default: in.skipValue();
 		}

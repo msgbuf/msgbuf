@@ -1,10 +1,28 @@
 package test.comments;
 
-/* SearchRequest represents a search query, with pagination options to
- * indicate which results to include in the response. */
-
+/**
+ * SearchRequest represents a search query, with {@link #page_number pagination options} to
+ * indicate which results to include in the response. 
+ */
 message SearchRequest {
+  /** The query string to interpret */
   string query = 1;
+  
+  /** 
+   * The page of results to return. 
+   * 
+   * <p>
+   * The number of entries in each page is specified by {@link #result_per_page}.
+   * </p>
+   *
+   * @see #result_per_page   
+   */
   int32 page_number = 2;  // Which page number do we want?
+  
+  /** 
+   * The number of results to return at once.
+   *
+   * @see #page_number
+   */
   int32 result_per_page = 3;  // Number of results to return per page.
 }
