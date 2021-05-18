@@ -24,7 +24,7 @@ public class StringW implements Writer {
 
 	@Override
 	public void write(String str, int start, int length) throws IOException {
-		_buffer.append(str, start, length);
+		_buffer.append(str, start, start + length);
 	}
 
 	@Override
