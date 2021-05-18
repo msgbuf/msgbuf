@@ -58,7 +58,7 @@ public abstract class AbstractFileGenerator implements FileGenerator {
 		if (!comment.isEmpty()) {
 			line("/**");
 			for (String line : comment.split("\n")) {
-				line(" *" + line);
+				line(" *" + (line.isEmpty() ? "" : " " + line));
 			}
 			line(" */");
 		}

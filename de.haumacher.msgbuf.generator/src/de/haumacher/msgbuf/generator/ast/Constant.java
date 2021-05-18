@@ -2,7 +2,7 @@ package de.haumacher.msgbuf.generator.ast;
 
 /**
  * A constant of an {@link EnumDef}.
- * 
+ *
  * @see EnumDef#getConstants()
  */
 public class Constant {

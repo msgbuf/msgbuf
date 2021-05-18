@@ -34,6 +34,6 @@ public class Util {
 	}
 	
 	public static String stripComment(String comment) {
-		return comment.replaceAll("^/\\*+(?:\\s+\\r?\\n)?", "").replaceAll("(?:\\s*\\r?\\n)?\\s*\\*+/$", "").replaceAll("(?m)^\\s*\\*+", "");
+		return comment.replaceAll("^/\\*+ ?(?:\\s+\\r?\\n)?", "").replaceAll("(?:\\s*\\r?\\n)?\\s*\\*+/$", "").replaceAll("(?m)^\\s*\\*+ ?", "");
 	}
 }
