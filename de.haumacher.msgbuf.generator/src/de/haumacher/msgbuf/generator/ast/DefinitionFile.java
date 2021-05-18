@@ -18,7 +18,7 @@ public class DefinitionFile {
 		super();
 	}
 
-	private QName _package;
+	private QName _package = null;
 
 	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
 

@@ -18,9 +18,9 @@ public class Constant {
 		super();
 	}
 
-	private String _name;
+	private String _name = "";
 
-	private int _index;
+	private int _index = 0;
 
 	public final String getName() {
 		return _name;

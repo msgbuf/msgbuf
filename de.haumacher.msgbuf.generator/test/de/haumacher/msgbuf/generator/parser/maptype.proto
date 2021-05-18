@@ -7,4 +7,5 @@ message Project {
 
 message MyMessage {
   map<string, Project> projects = 3;
+  map<int, string> rating = 4;
 }

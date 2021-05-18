@@ -18,9 +18,9 @@ public class MapType extends Type {
 		super();
 	}
 
-	private Type _keyType;
+	private Type _keyType = null;
 
-	private Type _valueType;
+	private Type _valueType = null;
 
 	public final Type getKeyType() {
 		return _keyType;

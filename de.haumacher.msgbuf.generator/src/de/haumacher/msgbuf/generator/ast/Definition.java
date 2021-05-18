@@ -22,9 +22,9 @@ public abstract class Definition {
 		super();
 	}
 
-	private String _name;
+	private String _name = "";
 
-	private transient DefinitionFile _file;
+	private transient DefinitionFile _file = null;
 
 	public final String getName() {
 		return _name;

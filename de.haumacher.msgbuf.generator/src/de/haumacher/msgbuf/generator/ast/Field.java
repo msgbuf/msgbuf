@@ -18,15 +18,15 @@ public class Field {
 		super();
 	}
 
-	private boolean _transient;
+	private boolean _transient = false;
 
-	private boolean _repeated;
+	private boolean _repeated = false;
 
-	private Type _type;
+	private Type _type = null;
 
-	private String _name;
+	private String _name = "";
 
-	private int _index;
+	private int _index = 0;
 
 	public final boolean isTransient() {
 		return _transient;

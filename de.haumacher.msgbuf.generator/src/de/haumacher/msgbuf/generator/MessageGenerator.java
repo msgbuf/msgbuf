@@ -13,13 +13,14 @@ import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
+import de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.Type;
 
 /**
  * TODO
  */
-public class MessageGenerator extends AbstractFileGenerator implements Type.Visitor<String, Void>, Definition.Visitor<Void, Void> {
+public class MessageGenerator extends AbstractFileGenerator implements Type.Visitor<String, Boolean>, Definition.Visitor<Void, Void> {
 
 	private MessageDef _def;
 
@@ -304,12 +305,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 							line("out.beginArray();");
 							line("for (" + getType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
 							{
-								line(jsonOut(field.getType(), "x") + ";");
+								jsonOutValue(field.getType(), "x");
 							}
 							line("}");
 							line("out.endArray();");
 						} else {
-							line(jsonOut(field.getType(), getterName(field) + "()") + ";");
+							jsonOutValue(field.getType(), getterName(field) + "()");
 						}
 						if (nullable) {
 							line("}");
@@ -332,22 +333,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (field.isTransient()) {
 						continue;
 					}
-					if (field.isRepeated()) {
-						line("case " + fieldNameString(field) + ": {");
-						{
-							line("in.beginArray();");
-							line("while (in.hasNext()) {");
-							{
-								line(adderName(field) + "(" + jsonType(field) + ");");
-							}
-							line("}");
-							line("in.endArray();");
-						}
-						line("}");
-						line("break;");
-					} else {
-						line("case " + fieldNameString(field) + ": " + setterName(field) + "(" + jsonType(field) + "); break;");
-					}
+					jsonReadField(field);
 				}
 				if (baseClass) {
 					line("default: in.skipValue();");
@@ -360,42 +346,66 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 	}
 
-	/** 
-	 * TODO
-	 */
-	private List<MessageDef> transitiveSpecializations(MessageDef def) {
-		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
-		int n = 0;
-		while (n < result.size()) {
-			result.addAll(result.get(n++).getSpecializations());
-		}
-		return result;
-	}
-
-	private String fieldNameString(Field field) {
-		return "\"" + field.getName() + "\"";
-	}
-
-	private String jsonOut(Type type, String x) {
-		if (type instanceof PrimitiveType) {
-			return "out.value(" + x + ")";
-		} else if (type instanceof CustomType) {
-			return x + ".writeTo(out)";
-		} else {
-			throw new RuntimeException("Unsupported: " + type);
-		}
-	}
-
-	static String readerName(Definition def) {
-		return readerName(def.getName());
-	}
-
-	static String readerName(String name) {
-		return "read" + name;
-	}
-
-	private String jsonType(Field field) {
+	private void jsonReadField(Field field) {
 		Type type = field.getType();
+		if (field.isRepeated()) {
+			line("case " + fieldNameString(field) + ": {");
+			{
+				line("in.beginArray();");
+				line("while (in.hasNext()) {");
+				{
+					line(adderName(field) + "(" + jsonReadEntry(type) + ");");
+				}
+				line("}");
+				line("in.endArray();");
+			}
+			line("}");
+			line("break;");
+		} else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			line("case " + fieldNameString(field) + ": {");
+			{
+				Type keyType = mapType.getKeyType();
+				Type valueType = mapType.getValueType();
+				if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
+					line("in.beginObject();");
+					line("while (in.hasNext()) {");
+					{
+						line(adderName(field) + "(in.nextName(), " + jsonReadEntry(valueType) + ");");
+					}
+					line("}");
+					line("in.endObject();");
+				} else {
+					line("in.beginArray();");
+					line("while (in.hasNext()) {");
+					{
+						line("in.beginObject();");
+						line(getType(keyType) + " key = " + defaultValue(keyType) + ";");
+						line(getType(valueType) + " value = " + defaultValue(valueType) + ";");
+						line("while (in.hasNext()) {");
+						{
+							line("switch (in.nextName()) {");
+							line("case \"key\": key = " + jsonReadEntry(keyType) + "; break;");
+							line("case \"value\": value = " + jsonReadEntry(valueType) + "; break;");
+							line("default: in.skipValue(); break;");
+							line("}");
+						}
+						line("}");
+						line(adderName(field) + "(key, value);");
+						line("in.endObject();");
+					}
+					line("}");
+					line("in.endArray();");
+				}
+			}
+			line("break;");
+			line("}");
+		} else {
+			line("case " + fieldNameString(field) + ": " + setterName(field) + "(" + jsonReadEntry(type) + "); break;");
+		}
+	}
+
+	private String jsonReadEntry(Type type) {
 		if (type instanceof PrimitiveType) {
 			return jsonType(((PrimitiveType) type).getKind());
 		}
@@ -441,6 +451,85 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
+	/** 
+	 * TODO
+	 */
+	private List<MessageDef> transitiveSpecializations(MessageDef def) {
+		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
+		int n = 0;
+		while (n < result.size()) {
+			result.addAll(result.get(n++).getSpecializations());
+		}
+		return result;
+	}
+
+	private String fieldNameString(Field field) {
+		return "\"" + field.getName() + "\"";
+	}
+
+	private void jsonOutValue(Type type, String x) {
+		jsonOutValue(type, x, 0);
+	}
+	
+	private void jsonOutValue(Type type, String x, int depth) {
+		if (type instanceof PrimitiveType) {
+			line("out.value(" + x + ");");
+		} else if (type instanceof CustomType) {
+			line(x + ".writeTo(out);");
+		} else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			
+			Type keyType = mapType.getKeyType();
+			Type valueType = mapType.getValueType();
+			if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
+				line("out.beginObject();");
+				String entry = "entry";
+				if (depth > 0) {
+					entry += depth;
+				}
+				line("for (" + entryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
+				{
+					line("out.name(" + entry + ".getKey()" + ");");
+					jsonOutValue(valueType, entry + ".getValue()", depth + 1);
+				}
+				line("}");
+				line("out.endObject();");
+			} else {
+				line("out.beginArray();");
+				String entry = "entry";
+				if (depth > 0) {
+					entry += depth;
+				}
+				line("for (" + entryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
+				{
+					line("out.beginObject();");
+					line("out.name(\"key\");");
+					jsonOutValue(keyType, entry + ".getKey()", depth + 1);
+					line("out.name(\"value\");");
+					jsonOutValue(valueType, entry + ".getValue()", depth + 1);
+					line("out.endObject();");
+				}
+				line("}");
+				line("out.endArray();");
+			}
+		} else {
+			throw new RuntimeException("Unsupported: " + type);
+		}
+	}
+
+	private String entryType(MapType mapType) {
+		return "java.util.Map.Entry" + "<" + getTypeWrapped(mapType.getKeyType()) + "," + getTypeWrapped(mapType.getValueType()) + ">";
+	}
+
+	static String readerName(Definition def) {
+		return readerName(def.getName());
+	}
+
+	static String readerName(String name) {
+		return "read" + name;
+	}
+
+
 	private String cast(Field field, String var) {
 		return "(" + getType(field) + ") " + var;
 	}
@@ -471,61 +560,108 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 	
 	private String getInitializer(Field field) {
+		return " = " + defaultValue(field);
+	}
+	
+	private String defaultValue(Field field) {
 		if (field.isRepeated()) {
-			return " = new java.util.ArrayList<>()";
+			return "new java.util.ArrayList<>()";
+		} else {
+			return defaultValue(field.getType());
 		}
-		Type type = field.getType();
-		if (type instanceof CustomType) {
-			Definition definition = ((CustomType) type).getDefinition();
+	}
+	
+	static final Type.Visitor<String, Void> DEFAULT_VALUE = new Type.Visitor<String, Void>() {
+
+		@Override
+		public String visit(CustomType self, Void arg) {
+			Definition definition = self.getDefinition();
 			if (definition instanceof EnumDef) {
-				return " = " + definition.getName() + "." + ((EnumDef) definition).getConstants().get(0).getName();
+				return definition.getName() + "." + ((EnumDef) definition).getConstants().get(0).getName();
+			} else {
+				return "null";
 			}
 		}
-		
-		return "";
+
+		@Override
+		public String visit(PrimitiveType self, Void arg) {
+			switch (self.getKind()) {
+			case BOOL: return "false";
+			case BYTES: return "null";
+			case DOUBLE: return "0.0d";
+			case FLOAT: return "0.0f";
+			case STRING: return "\"\"";
+			case INT32:
+			case SINT32:
+			case UINT32:
+			case FIXED32: 
+			case SFIXED32:
+				return "0";
+			case INT64:
+			case SINT64:
+			case UINT64:
+			case FIXED64:
+			case SFIXED64:
+				return "0L";
+			}
+			throw new UnsupportedOperationException("Unsupported type: " + self.getKind());
+		}
+
+		@Override
+		public String visit(MapType self, Void arg) {
+			return "new java.util.HashMap<>()";
+		}
+	};
+	
+	private String defaultValue(Type type) {
+		return type.visit(DEFAULT_VALUE, null);
 	}
 
 	private String getType(Field field) {
-		return field.isRepeated() ? "java.util.List<" + getType(field.getType()) + ">" : getType(field.getType());
+		return field.isRepeated() ? "java.util.List<" + getTypeWrapped(field.getType()) + ">" : getType(field.getType());
 	}
 
 	private String getType(Type type) {
-		return type.visit(this, null);
+		return type.visit(this, Boolean.FALSE);
+	}
+	
+	private String getTypeWrapped(Type type) {
+		return type.visit(this, Boolean.TRUE);
 	}
 	
 	@Override
-	public String visit(MapType type, Void arg) {
-		return "java.util.Map<" + type.getKeyType().visit(this, null) + ", " + type.getValueType().visit(this, null) + ">";
+	public String visit(MapType type, Boolean wrapped) {
+		return "java.util.Map<" + getTypeWrapped(type.getKeyType()) + ", " + getTypeWrapped(type.getValueType()) + ">";
 	}
 	
 	@Override
-	public String visit(CustomType type, Void arg) {
+	public String visit(CustomType type, Boolean wrapped) {
 		return Util.qName(type.getName());
 	}
 	
 	@Override
-	public String visit(PrimitiveType type, Void arg) {
+	public String visit(PrimitiveType type, Boolean wrapped) {
 		switch (type.getKind()) {
 		case BOOL:
-			return "boolean";
+			return wrapped ? "Boolean" : "boolean";
 		case BYTES:
 			return "byte[]";
 		case FLOAT:
-			return "float";
+			return wrapped ? "Float" : "float";
 		case DOUBLE:
-			return "double";
+			return wrapped ? "Double" : "double";
 		case INT32:
 		case UINT32:
 		case FIXED32:
 		case SINT32:
 		case SFIXED32:
-			return "int";
+			return wrapped ? "Integer" : "int";
 		case INT64:
 		case UINT64:
 		case FIXED64:
 		case SINT64:
 		case SFIXED64:
-			return "long";
+			return wrapped ? "Long" : "long";
 		case STRING:
 			return "String";
 		}
@@ -543,10 +679,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		line(" * @see #" + getterName(field) + "()");
 		line(" */");
 		line("public final " + _def.getName() + " " + setterName(field) + "(" + getType(field) + " " + "value" + ")" + " {");
+		Type type = field.getType();
 		{
 			if (field.isRepeated()) {
 				line("_" + name(field) + ".clear();");
 				line("_" + name(field) + ".addAll(value);");
+			} else if (type instanceof MapType) {
+				line("_" + name(field) + ".clear();");
+				line("_" + name(field) + ".putAll(value);");
 			} else {
 				line("_" + name(field) + " = " + "value" + ";");
 			}
@@ -559,8 +699,25 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("/**");
 			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} list.");
 			line(" */");
-			line("public final " + "void" + " " + adderName(field) + "(" + getType(field.getType()) + " " + "value" + ")" + " {");
+			line("public final " + "void" + " " + adderName(field) + "(" + getType(type) + " " + "value" + ")" + " {");
 			line("_" + name(field) + ".add(value);");
+			line("}");
+		}
+		else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			nl();
+			line("/**");
+			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} map.");
+			line(" */");
+			line("public final " + "void" + " " + adderName(field) + "(" + getType(mapType.getKeyType()) + " key" + ", " + getType(mapType.getValueType()) + " value" + ")" + " {");
+			{
+				line("if (" + "_" + name(field) + ".containsKey(key)) {");
+				{
+					line("throw new IllegalArgumentException(\"Property '" + field.getName() + "' already contains a value for key '\" + key + \"'.\");");
+				}
+				line("}");
+				line("_" + name(field) + ".put(key, value);");
+			}
 			line("}");
 		}
 		

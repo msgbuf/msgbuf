@@ -18,9 +18,9 @@ public class CustomType extends Type {
 		super();
 	}
 
-	private QName _name;
+	private QName _name = null;
 
-	private transient Definition _definition;
+	private transient Definition _definition = null;
 
 	public final QName getName() {
 		return _name;

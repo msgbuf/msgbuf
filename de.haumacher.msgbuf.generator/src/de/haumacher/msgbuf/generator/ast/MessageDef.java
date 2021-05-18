@@ -18,9 +18,9 @@ public class MessageDef extends Definition {
 		super();
 	}
 
-	private boolean _abstract;
+	private boolean _abstract = false;
 
-	private QName _extends;
+	private QName _extends = null;
 
 	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
 
@@ -28,7 +28,7 @@ public class MessageDef extends Definition {
 
 	private transient final java.util.List<MessageDef> _specializations = new java.util.ArrayList<>();
 
-	private transient MessageDef _extendedDef;
+	private transient MessageDef _extendedDef = null;
 
 	public final boolean isAbstract() {
 		return _abstract;
