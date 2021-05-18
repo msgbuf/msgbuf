@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * Base class for possible {@link Field} types.
+ */
 public abstract class Type {
 
 	/** Visitor interface for the {@link Type} hierarchy.*/
@@ -18,14 +21,10 @@ public abstract class Type {
 
 	/**
 	 * Creates a {@link Type} instance.
-	 *
-	 * @see #type()
 	 */
 	protected Type() {
 		super();
 	}
-
-	private static final int[] FIELDS = {};
 
 	/** Reads a new instance from the given reader. */
 	public static Type readType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

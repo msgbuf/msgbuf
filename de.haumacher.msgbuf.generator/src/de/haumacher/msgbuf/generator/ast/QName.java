@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * A dot-separated qualified name.
+ */
 public class QName {
 
 	/**
@@ -20,6 +23,9 @@ public class QName {
 
 	private final java.util.List<String> _names = new java.util.ArrayList<>();
 
+	/**
+	 * The parts that compose this qualified name.
+	 */
 	public final java.util.List<String> getNames() {
 		return _names;
 	}
@@ -39,8 +45,6 @@ public class QName {
 	public final void addName(String value) {
 		_names.add(value);
 	}
-
-	private static final int[] FIELDS = {0, };
 
 	/** Reads a new instance from the given reader. */
 	public static QName readQName(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

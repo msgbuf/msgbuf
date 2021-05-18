@@ -21,8 +21,6 @@ public abstract class Shape {
 
 	/**
 	 * Creates a {@link Shape} instance.
-	 *
-	 * @see #shape()
 	 */
 	protected Shape() {
 		super();
@@ -55,8 +53,6 @@ public abstract class Shape {
 		_yCoordinate = value;
 		return this;
 	}
-
-	private static final int[] FIELDS = {0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

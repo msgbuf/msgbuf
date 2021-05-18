@@ -60,6 +60,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 	private void generateConstants() {
 		for (Constant constant : _def.getConstants()) {
 			nl();
+			docComment(constant.getComment());
 			line(constant.getName() + ",");
 		}
 		nl();

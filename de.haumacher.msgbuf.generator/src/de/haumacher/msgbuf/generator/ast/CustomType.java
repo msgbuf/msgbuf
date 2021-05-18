@@ -1,5 +1,10 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * Reference to a custom defined {@link Type}.
+ *
+ * A custom type is either a {@link EnumDef}, or a {@link MessageDef}.
+ */
 public class CustomType extends Type {
 
 	/**
@@ -22,6 +27,9 @@ public class CustomType extends Type {
 
 	private transient Definition _definition = null;
 
+	/**
+	 * The name of the reference type.
+	 */
 	public final QName getName() {
 		return _name;
 	}
@@ -41,6 +49,9 @@ public class CustomType extends Type {
 		return _name != null;
 	}
 
+	/**
+	 * Resolved reference of the {@link Definition} defining the {@link #getName() referenced type}.
+	 */
 	public final Definition getDefinition() {
 		return _definition;
 	}
@@ -59,8 +70,6 @@ public class CustomType extends Type {
 	public final boolean hasDefinition() {
 		return _definition != null;
 	}
-
-	private static final int[] FIELDS = {0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

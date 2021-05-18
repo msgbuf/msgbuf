@@ -18,8 +18,6 @@ public class SampleMessage {
 		super();
 	}
 
-	private static final int[] FIELDS = {};
-
 	/** Reads a new instance from the given reader. */
 	public static SampleMessage readSampleMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SampleMessage result = new SampleMessage();

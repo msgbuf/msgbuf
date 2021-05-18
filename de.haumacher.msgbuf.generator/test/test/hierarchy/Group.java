@@ -43,8 +43,6 @@ public class Group extends Shape {
 		_shapes.add(value);
 	}
 
-	private static final int[] FIELDS = {0, };
-
 	/** Reads a new instance from the given reader. */
 	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Group result = new Group();

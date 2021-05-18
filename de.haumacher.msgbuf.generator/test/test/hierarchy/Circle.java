@@ -35,8 +35,6 @@ public class Circle extends Shape {
 		return this;
 	}
 
-	private static final int[] FIELDS = {0, };
-
 	/** Reads a new instance from the given reader. */
 	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Circle result = new Circle();

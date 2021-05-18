@@ -1,5 +1,10 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * Representation of a <code>.proto</code> file with top-level {@link Definition}s.
+ *
+ * @see #getDefinitions()
+ */
 public class DefinitionFile {
 
 	/**
@@ -22,6 +27,9 @@ public class DefinitionFile {
 
 	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
 
+	/**
+	 * The package name for all types in this file.
+	 */
 	public final QName getPackage() {
 		return _package;
 	}
@@ -41,6 +49,9 @@ public class DefinitionFile {
 		return _package != null;
 	}
 
+	/**
+	 * All definitions in this file.
+	 */
 	public final java.util.List<Definition> getDefinitions() {
 		return _definitions;
 	}
@@ -60,8 +71,6 @@ public class DefinitionFile {
 	public final void addDefinition(Definition value) {
 		_definitions.add(value);
 	}
-
-	private static final int[] FIELDS = {0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static DefinitionFile readDefinitionFile(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

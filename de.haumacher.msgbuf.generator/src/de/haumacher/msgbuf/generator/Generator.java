@@ -158,7 +158,7 @@ public class Generator {
 		
 		@Override
 		public Void visit(MessageDef def, Void arg) {
-			return generateJava(def.getName(), new MessageGenerator(def));
+			return generateJava(def.getName(), new MessageGenerator(_table, def));
 		}
 		
 		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {

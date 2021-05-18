@@ -1,83 +1,186 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * A constant of an {@link EnumDef}.
+ * 
+ * @see EnumDef#constants
+ */
 message Constant {
+    /** The documentation comment for this constant. */
 	string comment;
+	
+    /** The name of this constant. */
 	string name;
+	
+    /** The numeric identifier for this constant.*/
 	int index;
 }
 
+/**
+ * Representation of a <code>.proto</code> file with top-level {@link Definition}s.
+ *
+ * @see #definitions
+ */
 message DefinitionFile {
+    /** The package name for all types in this file. */
 	QName `package`;
+	
+    /** All definitions in this file. */
 	repeated Definition definitions;
 }
 
+/**
+ * Base class of a definition in a {@link DefinitionFile}.
+ */
 abstract message Definition {
+    /** The documentation comment for this definition. */
 	string comment;
+	
+    /** The name of this definition. */
 	string name;
 
+    /** Reference back to the {@link DefinitionFile} that contains this definition. */
 	transient DefinitionFile file;
 }
 
+/**
+ * {@link Definition} of an enumeration.
+ */
 message EnumDef extends Definition {
+	/** All enum constants of this enumeration */
 	repeated Constant constants;
 }
 
+/**
+ * {@link Definition} of a data class.
+ */
 message MessageDef extends Definition {
+	/** Whether this class only serves as super type for other data classes. */
 	boolean `abstract`;
+	
+	/** Optional reference to another {@link MessageDef} whoes fields are inherited. */
 	QName `extends`;
+	
+	/** Ohter {@link Definition}s that are local to this data class. */
 	repeated Definition definitions;
+
+    /** 
+     * All {@link Field}s locally defined in this data class. 
+     *
+     * <p>
+     * This list does not contain {@link Field}s that are {@link #extends inherited} from other data classes.
+     * </p>
+     *
+     * @see #extends 
+     */
 	repeated Field fields;
 	
+	/** All {@link MessageDef data classes} that inherit from this data class. */
 	transient repeated MessageDef specializations;
+	
+	/** Reference to the {@link MessageDef data class definition} that is referenced by the {@link #extends} clause. */
 	transient MessageDef extendedDef;
 }
 
+/**
+ * A field definition of a {@link MessageDef}.
+ */
 message Field {
+    /** The documentation comment for this field. */
 	string comment;
+	
+    /** The name of this field. */
 	string name;
+	
+	/** Whether this field is not serialized when a message is created. */
 	boolean `transient`;
+	
+	/** Whether this field contains multiple values of its {@link #type}. */
 	boolean `repeated`;
+	
+	/** The type of values that can be stored in this field. */
 	Type type;
+	
+	/** The numerical ID of this field. */
 	int index;
 }
 
+/**
+ * Base class for possible {@link Field} types.
+ */
 abstract message Type {
 	// Pure base class.
 }
 
+/**
+ * Reference to a custom defined {@link Type}.
+ *
+ * A custom type is either a {@link EnumDef}, or a {@link MessageDef}.
+ */
 message CustomType extends Type {
+	/** The name of the reference type. */
 	QName name;
 	
+	/** Resolved reference of the {@link Definition} defining the {@link #name referenced type}. */
 	transient Definition definition;
 }
 
+/**
+ * A primitive built-in {@link Type}.
+ */
 message PrimitiveType extends Type {
+
+	/** Supported built-in types. */
 	enum Kind {
+		/** A 32 bit integer. */
 	    INT32;
 	    UINT32;
 	    SINT32;
 	    FIXED32;
 	    SFIXED32;
+	    
+		/** A 64 bit integer. */
 	    INT64;
 	    UINT64;
 	    SINT64;
 	    FIXED64;
 	    SFIXED64;
+
+		/** A boolean. */
 	    BOOL;
+	    
+		/** A string of characters. */
 	    STRING;
+	    
+		/** A 32 bit floating point number. */
 	    FLOAT;
+	    
+		/** A 64 bit floating point number. */
 	    DOUBLE;
+	    
+		/** A string of octets. */
 	    BYTES;
 	}
 
+    /** The type kind. */
 	Kind kind;
 }
 
+/**
+ * A {@link Type} that is composed of a key and a value.
+ */
 message MapType extends Type {
+    /** The key type of this map. */
 	Type keyType;
+	
+    /** The value type of this map. */
 	Type valueType;
 }
 
+/**
+ * A dot-separated qualified name.
+ */
 message QName {
+    /** The parts that compose this qualified name. */
 	repeated string names;
 }

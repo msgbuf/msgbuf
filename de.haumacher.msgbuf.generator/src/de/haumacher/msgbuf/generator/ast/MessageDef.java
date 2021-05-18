@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * {@link Definition} of a data class.
+ */
 public class MessageDef extends Definition {
 
 	/**
@@ -30,6 +33,9 @@ public class MessageDef extends Definition {
 
 	private transient MessageDef _extendedDef = null;
 
+	/**
+	 * Whether this class only serves as super type for other data classes.
+	 */
 	public final boolean isAbstract() {
 		return _abstract;
 	}
@@ -42,6 +48,9 @@ public class MessageDef extends Definition {
 		return this;
 	}
 
+	/**
+	 * Optional reference to another {@link MessageDef} whoes fields are inherited.
+	 */
 	public final QName getExtends() {
 		return _extends;
 	}
@@ -61,6 +70,9 @@ public class MessageDef extends Definition {
 		return _extends != null;
 	}
 
+	/**
+	 * Ohter {@link Definition}s that are local to this data class.
+	 */
 	public final java.util.List<Definition> getDefinitions() {
 		return _definitions;
 	}
@@ -81,6 +93,15 @@ public class MessageDef extends Definition {
 		_definitions.add(value);
 	}
 
+	/**
+	 * All {@link Field}s locally defined in this data class. 
+	 *
+	 * <p>
+	 * This list does not contain {@link Field}s that are {@link #getExtends() inherited} from other data classes.
+	 * </p>
+	 *
+	 * @see #getExtends()
+	 */
 	public final java.util.List<Field> getFields() {
 		return _fields;
 	}
@@ -101,6 +122,9 @@ public class MessageDef extends Definition {
 		_fields.add(value);
 	}
 
+	/**
+	 * All {@link MessageDef data classes} that inherit from this data class.
+	 */
 	public final java.util.List<MessageDef> getSpecializations() {
 		return _specializations;
 	}
@@ -121,6 +145,9 @@ public class MessageDef extends Definition {
 		_specializations.add(value);
 	}
 
+	/**
+	 * Reference to the {@link MessageDef data class definition} that is referenced by the {@link #getExtends()} clause.
+	 */
 	public final MessageDef getExtendedDef() {
 		return _extendedDef;
 	}
@@ -139,8 +166,6 @@ public class MessageDef extends Definition {
 	public final boolean hasExtendedDef() {
 		return _extendedDef != null;
 	}
-
-	private static final int[] FIELDS = {0, 0, 0, 0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static MessageDef readMessageDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

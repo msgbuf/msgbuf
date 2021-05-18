@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * A {@link Type} that is composed of a key and a value.
+ */
 public class MapType extends Type {
 
 	/**
@@ -22,6 +25,9 @@ public class MapType extends Type {
 
 	private Type _valueType = null;
 
+	/**
+	 * The key type of this map.
+	 */
 	public final Type getKeyType() {
 		return _keyType;
 	}
@@ -41,6 +47,9 @@ public class MapType extends Type {
 		return _keyType != null;
 	}
 
+	/**
+	 * The value type of this map.
+	 */
 	public final Type getValueType() {
 		return _valueType;
 	}
@@ -59,8 +68,6 @@ public class MapType extends Type {
 	public final boolean hasValueType() {
 		return _valueType != null;
 	}
-
-	private static final int[] FIELDS = {0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static MapType readMapType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

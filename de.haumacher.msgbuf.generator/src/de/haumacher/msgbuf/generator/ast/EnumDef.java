@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * {@link Definition} of an enumeration.
+ */
 public class EnumDef extends Definition {
 
 	/**
@@ -20,6 +23,9 @@ public class EnumDef extends Definition {
 
 	private final java.util.List<Constant> _constants = new java.util.ArrayList<>();
 
+	/**
+	 * All enum constants of this enumeration
+	 */
 	public final java.util.List<Constant> getConstants() {
 		return _constants;
 	}
@@ -39,8 +45,6 @@ public class EnumDef extends Definition {
 	public final void addConstant(Constant value) {
 		_constants.add(value);
 	}
-
-	private static final int[] FIELDS = {0, };
 
 	/** Reads a new instance from the given reader. */
 	public static EnumDef readEnumDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

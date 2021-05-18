@@ -49,8 +49,6 @@ public class Rectangle extends Shape {
 		return this;
 	}
 
-	private static final int[] FIELDS = {0, 0, };
-
 	/** Reads a new instance from the given reader. */
 	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Rectangle result = new Rectangle();

@@ -68,8 +68,6 @@ public class MyMessage {
 		_rating.put(key, value);
 	}
 
-	private static final int[] FIELDS = {3, 4, };
-
 	/** Reads a new instance from the given reader. */
 	public static MyMessage readMyMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MyMessage result = new MyMessage();

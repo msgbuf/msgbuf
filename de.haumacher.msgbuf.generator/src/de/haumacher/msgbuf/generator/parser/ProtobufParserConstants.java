@@ -23,57 +23,57 @@ public interface ProtobufParserConstants {
   /** RegularExpression Id. */
   int LINE_COMMENT = 6;
   /** RegularExpression Id. */
-  int PACKAGE = 7;
+  int DOC_COMMENT = 7;
   /** RegularExpression Id. */
-  int SYNTAX = 8;
+  int PACKAGE = 8;
   /** RegularExpression Id. */
-  int MESSAGE = 9;
+  int SYNTAX = 9;
   /** RegularExpression Id. */
-  int ENUM = 10;
+  int MESSAGE = 10;
   /** RegularExpression Id. */
-  int MAP = 11;
+  int ENUM = 11;
   /** RegularExpression Id. */
-  int ONEOF = 12;
+  int MAP = 12;
   /** RegularExpression Id. */
-  int REPEATED = 13;
+  int ONEOF = 13;
   /** RegularExpression Id. */
-  int TRANSIENT = 14;
+  int REPEATED = 14;
   /** RegularExpression Id. */
-  int OPTION = 15;
+  int TRANSIENT = 15;
   /** RegularExpression Id. */
-  int EXTENDS = 16;
+  int OPTION = 16;
   /** RegularExpression Id. */
-  int ABSTRACT = 17;
+  int EXTENDS = 17;
   /** RegularExpression Id. */
-  int RESERVED = 18;
+  int ABSTRACT = 18;
   /** RegularExpression Id. */
-  int TO = 19;
+  int RESERVED = 19;
   /** RegularExpression Id. */
-  int MAX = 20;
+  int TO = 20;
   /** RegularExpression Id. */
-  int TRUE = 21;
+  int MAX = 21;
   /** RegularExpression Id. */
-  int FALSE = 22;
+  int TRUE = 22;
   /** RegularExpression Id. */
-  int INT_TYPE = 23;
+  int FALSE = 23;
   /** RegularExpression Id. */
-  int LONG_TYPE = 24;
+  int INT_TYPE = 24;
   /** RegularExpression Id. */
-  int BOOLEAN_TYPE = 25;
+  int LONG_TYPE = 25;
   /** RegularExpression Id. */
-  int TYPE = 26;
+  int BOOLEAN_TYPE = 26;
   /** RegularExpression Id. */
-  int NUMBER = 27;
+  int TYPE = 27;
   /** RegularExpression Id. */
-  int STRING = 28;
+  int NUMBER = 28;
   /** RegularExpression Id. */
-  int XNAME = 29;
+  int STRING = 29;
   /** RegularExpression Id. */
-  int QUOTE = 30;
+  int XNAME = 30;
   /** RegularExpression Id. */
-  int NAME = 31;
+  int QUOTE = 31;
   /** RegularExpression Id. */
-  int DOC_COMMENT = 32;
+  int NAME = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -87,6 +87,7 @@ public interface ProtobufParserConstants {
     "\"\\n\"",
     "<BLOCK_COMMENT>",
     "<LINE_COMMENT>",
+    "<DOC_COMMENT>",
     "\"package\"",
     "\"syntax\"",
     "\"message\"",
@@ -112,7 +113,6 @@ public interface ProtobufParserConstants {
     "<XNAME>",
     "<QUOTE>",
     "<NAME>",
-    "<DOC_COMMENT>",
     "\"=\"",
     "\";\"",
     "\"{\"",

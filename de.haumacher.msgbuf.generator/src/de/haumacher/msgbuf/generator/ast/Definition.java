@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * Base class of a definition in a {@link DefinitionFile}.
+ */
 public abstract class Definition {
 
 	/** Visitor interface for the {@link Definition} hierarchy.*/
@@ -15,8 +18,6 @@ public abstract class Definition {
 
 	/**
 	 * Creates a {@link Definition} instance.
-	 *
-	 * @see #definition()
 	 */
 	protected Definition() {
 		super();
@@ -28,6 +29,9 @@ public abstract class Definition {
 
 	private transient DefinitionFile _file = null;
 
+	/**
+	 * The documentation comment for this definition.
+	 */
 	public final String getComment() {
 		return _comment;
 	}
@@ -40,6 +44,9 @@ public abstract class Definition {
 		return this;
 	}
 
+	/**
+	 * The name of this definition.
+	 */
 	public final String getName() {
 		return _name;
 	}
@@ -52,6 +59,9 @@ public abstract class Definition {
 		return this;
 	}
 
+	/**
+	 * Reference back to the {@link DefinitionFile} that contains this definition.
+	 */
 	public final DefinitionFile getFile() {
 		return _file;
 	}
@@ -70,8 +80,6 @@ public abstract class Definition {
 	public final boolean hasFile() {
 		return _file != null;
 	}
-
-	private static final int[] FIELDS = {0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static Definition readDefinition(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

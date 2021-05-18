@@ -1,9 +1,18 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * A primitive built-in {@link Type}.
+ */
 public class PrimitiveType extends Type {
 
+	/**
+	 * Supported built-in types.
+	 */
 	public enum Kind {
 
+		/**
+		 * A 32 bit integer.
+		 */
 		INT32,
 
 		UINT32,
@@ -14,6 +23,9 @@ public class PrimitiveType extends Type {
 
 		SFIXED32,
 
+		/**
+		 * A 64 bit integer.
+		 */
 		INT64,
 
 		UINT64,
@@ -24,14 +36,29 @@ public class PrimitiveType extends Type {
 
 		SFIXED64,
 
+		/**
+		 * A boolean.
+		 */
 		BOOL,
 
+		/**
+		 * A string of characters.
+		 */
 		STRING,
 
+		/**
+		 * A 32 bit floating point number.
+		 */
 		FLOAT,
 
+		/**
+		 * A 64 bit floating point number.
+		 */
 		DOUBLE,
 
+		/**
+		 * A string of octets.
+		 */
 		BYTES,
 
 		;
@@ -65,6 +92,9 @@ public class PrimitiveType extends Type {
 
 	private Kind _kind = Kind.INT32;
 
+	/**
+	 * The type kind.
+	 */
 	public final Kind getKind() {
 		return _kind;
 	}
@@ -83,8 +113,6 @@ public class PrimitiveType extends Type {
 	public final boolean hasKind() {
 		return _kind != null;
 	}
-
-	private static final int[] FIELDS = {0, };
 
 	/** Reads a new instance from the given reader. */
 	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

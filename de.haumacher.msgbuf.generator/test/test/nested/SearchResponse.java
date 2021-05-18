@@ -69,8 +69,6 @@ public class SearchResponse {
 			_snippets.add(value);
 		}
 
-		private static final int[] FIELDS = {1, 2, 3, };
-
 		/** Reads a new instance from the given reader. */
 		public static Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			Result result = new Result();
@@ -182,8 +180,6 @@ public class SearchResponse {
 	public final void addResult(Result value) {
 		_results.add(value);
 	}
-
-	private static final int[] FIELDS = {1, };
 
 	/** Reads a new instance from the given reader. */
 	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

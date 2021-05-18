@@ -24,14 +24,17 @@ import de.haumacher.msgbuf.generator.ast.Type;
  */
 public class MessageGenerator extends AbstractFileGenerator implements Type.Visitor<String, Boolean>, Definition.Visitor<Void, Void> {
 
-	private MessageDef _def;
+	private final NameTable _table;
+	private final MessageDef _def;
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
+	 * @param table 
 	 *
 	 * @param def
 	 */
-	public MessageGenerator(MessageDef def) {
+	public MessageGenerator(NameTable table, MessageDef def) {
+		_table = table;
 		_def = def;
 	}
 
@@ -57,17 +60,22 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	@Override
 	protected void docComment(String comment) {
-		Pattern ref = Pattern.compile("#([a-zA-Z_][a-zA-Z_0-9]*)");
+		Pattern ref = Pattern.compile("([a-zA-Z_][a-zA-Z_0-9]*)?#([a-zA-Z_][a-zA-Z_0-9]*)");
 		Matcher matcher = ref.matcher(comment);
 		StringBuffer buffer = new StringBuffer();
 		while (matcher.find()) {
-			String name = matcher.group(1);
-			Field field = getField(name);
-			String replacement;
+			String type = matcher.group(1);
+			String name = matcher.group(2);
+			Definition def = _def;
+			if (type != null) {
+				def = _table.lookup(_def, qName(type));
+			}
+			Field field = def instanceof MessageDef ? getField((MessageDef) def, name) : null;
+			String replacement = (type == null ? "" : type) + "#";
 			if (field == null) {
-				replacement = "#" + name;
+				replacement += name;
 			} else {
-				replacement = "#" + getterName(field) + "()";
+				replacement += getterName(field) + "()";
 			}
 			
 			matcher.appendReplacement(buffer, replacement);
@@ -77,8 +85,16 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		super.docComment(buffer.toString());
 	}
 
-	private Field getField(String name) {
-		return _def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
+	private QName qName(String name) {
+		QName result = QName.qName();
+		for (String part : name.split("\\.")) {
+			result.addName(part);
+		}
+		return result;
+	}
+
+	private Field getField(MessageDef def, String name) {
+		return def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
 	}
 
 	private String getAbstract() {
@@ -143,8 +159,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		nl();
 		line("/**");
 		line(" * Creates a {@link " + _def.getName() + "} instance.");
-		line(" *");
-		line(" * @see #" + firstLowerCase(_def.getName()) + "()");
+		if (!_def.isAbstract()) {
+			line(" *");
+			line(" * @see #" + firstLowerCase(_def.getName()) + "()");
+		}
 		line(" */");
 		line("protected " + _def.getName() + "() {");
 		{
@@ -201,15 +219,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 	private void generateReflectionAccess() {
 		boolean baseClass = _def.getExtends() == null;
-		
-		nl();
-		lineStart("private static final int[] FIELDS = {");
 		List<Field> fields = _def.getFields();
-		for (Field field : fields) {
-			append(field.getIndex() + ", ");
-		}
-		append("};");
-		nl();
 		
 		nl();
 		line("/** Reads a new instance from the given reader. */");
@@ -571,7 +581,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	@Override
 	public Void visit(MessageDef def, Void arg) {
-		new MessageGenerator(def).generateInner(this);
+		new MessageGenerator(_table, def).generateInner(this);
 		return null;
 	}
 

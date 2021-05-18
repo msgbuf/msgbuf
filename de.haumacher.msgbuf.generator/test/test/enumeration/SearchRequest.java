@@ -110,8 +110,6 @@ public class SearchRequest {
 		return _corpus != null;
 	}
 
-	private static final int[] FIELDS = {1, 2, 3, 4, };
-
 	/** Reads a new instance from the given reader. */
 	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SearchRequest result = new SearchRequest();

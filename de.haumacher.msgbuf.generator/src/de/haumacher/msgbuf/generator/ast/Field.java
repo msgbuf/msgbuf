@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * A field definition of a {@link MessageDef}.
+ */
 public class Field {
 
 	/**
@@ -30,6 +33,9 @@ public class Field {
 
 	private int _index = 0;
 
+	/**
+	 * The documentation comment for this field.
+	 */
 	public final String getComment() {
 		return _comment;
 	}
@@ -42,6 +48,9 @@ public class Field {
 		return this;
 	}
 
+	/**
+	 * The name of this field.
+	 */
 	public final String getName() {
 		return _name;
 	}
@@ -54,6 +63,9 @@ public class Field {
 		return this;
 	}
 
+	/**
+	 * Whether this field is not serialized when a message is created.
+	 */
 	public final boolean isTransient() {
 		return _transient;
 	}
@@ -66,6 +78,9 @@ public class Field {
 		return this;
 	}
 
+	/**
+	 * Whether this field contains multiple values of its {@link #getType()}.
+	 */
 	public final boolean isRepeated() {
 		return _repeated;
 	}
@@ -78,6 +93,9 @@ public class Field {
 		return this;
 	}
 
+	/**
+	 * The type of values that can be stored in this field.
+	 */
 	public final Type getType() {
 		return _type;
 	}
@@ -97,6 +115,9 @@ public class Field {
 		return _type != null;
 	}
 
+	/**
+	 * The numerical ID of this field.
+	 */
 	public final int getIndex() {
 		return _index;
 	}
@@ -108,8 +129,6 @@ public class Field {
 		_index = value;
 		return this;
 	}
-
-	private static final int[] FIELDS = {0, 0, 0, 0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

@@ -39,8 +39,6 @@ public class MyMessage1 {
 		super();
 	}
 
-	private static final int[] FIELDS = {};
-
 	/** Reads a new instance from the given reader. */
 	public static MyMessage1 readMyMessage1(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MyMessage1 result = new MyMessage1();

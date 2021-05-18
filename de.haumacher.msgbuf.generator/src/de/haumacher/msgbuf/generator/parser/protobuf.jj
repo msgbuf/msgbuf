@@ -37,6 +37,11 @@ SKIP :
 
 <DEFAULT>
 
+SPECIAL_TOKEN:
+{
+  < DOC_COMMENT : "/**" ( ~[ "*" ] | "*" ~[ "/" ] )* "*/" | "/**/" >
+}
+
 TOKEN :
 {
   < PACKAGE : "package" >
@@ -80,7 +85,6 @@ TOKEN :
 | < XNAME : "`" (~[ "`" ] )+ "`" >
 | < #QUOTE : "\\\\" | "\\'" | "\\\"" >
 | < NAME : [ "A"-"Z", "a"-"z", "_" ] ([ "A"-"Z", "a"-"z", "_", "0"-"9"])* >
-| < DOC_COMMENT : "/**" ( ~[ "*" ] | "*" ~[ "/" ] )* "*/" | "/**/" >
 }
 
 DefinitionFile file() :
@@ -88,7 +92,6 @@ DefinitionFile file() :
   DefinitionFile result = DefinitionFile.definitionFile();
   QName pkgName;
   Definition def;
-  Token comment;
 }
 {
   (    < SYNTAX > "=" < STRING > ";"
@@ -104,16 +107,8 @@ DefinitionFile file() :
   (    option()
   )*
   
-  (    (
-      comment = < DOC_COMMENT >
-    |
-      { comment = null; } 
-    )
-    def = definition()
+  (    def = definition()
     {
-      if (comment != null) {
-        def.setComment(Util.stripComment(comment.image));
-      }
       result.addDefinition(def);
     }
   )*
@@ -145,7 +140,7 @@ Definition definition() :
   Definition result;
 }
 {
-  (    result = message()
+  ( result = message()
   | result = enumeration()
   )
   {
@@ -158,11 +153,13 @@ EnumDef enumeration() :
   EnumDef result = EnumDef.enumDef();
   String name;
   Constant constant;
+  Token d;
 }
 {
-  < ENUM > name = name() "{"
+  d=< ENUM > name = name() "{"
   {
     result.setName(name);
+    result.setComment(Util.stripComment(d));
   }
   (
     option()
@@ -185,13 +182,9 @@ Constant constant() :
   Constant result = Constant.constant();
   String name;
   Token index;
-  Token comment;
 }
 {
-  (
-    comment=< DOC_COMMENT >
-    { result.setComment(Util.stripComment(comment.image)); }
-  )?
+  { result.setComment(Util.stripComment(token.next)); }
   name=name()
   {
     result.setName(name);
@@ -215,8 +208,10 @@ MessageDef message() :
   QName generalization;
   Definition def;
   Field field;
+  Token comment;
 }
 {
+  { result.setComment(Util.stripComment(token.next)); }
   (    < ABSTRACT >
     {
       result.setAbstract(true);
@@ -233,8 +228,7 @@ MessageDef message() :
     }
   )?
   "{"
-  (
-    field=field()
+  ( field=field()
     {
       result.addField(field);
     }
@@ -260,10 +254,7 @@ Field field() :
   Token comment;
 }
 {
-  (
-    comment=< DOC_COMMENT >
-    { result.setComment(Util.stripComment(comment.image)); }
-  )?
+  { result.setComment(Util.stripComment(token.next)); }
   (
     < TRANSIENT >
     {

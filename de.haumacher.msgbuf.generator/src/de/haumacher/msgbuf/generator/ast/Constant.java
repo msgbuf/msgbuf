@@ -1,5 +1,10 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * A constant of an {@link EnumDef}.
+ * 
+ * @see EnumDef#getConstants()
+ */
 public class Constant {
 
 	/**
@@ -24,6 +29,9 @@ public class Constant {
 
 	private int _index = 0;
 
+	/**
+	 * The documentation comment for this constant.
+	 */
 	public final String getComment() {
 		return _comment;
 	}
@@ -36,6 +44,9 @@ public class Constant {
 		return this;
 	}
 
+	/**
+	 * The name of this constant.
+	 */
 	public final String getName() {
 		return _name;
 	}
@@ -48,6 +59,9 @@ public class Constant {
 		return this;
 	}
 
+	/**
+	 * The numeric identifier for this constant.
+	 */
 	public final int getIndex() {
 		return _index;
 	}
@@ -59,8 +73,6 @@ public class Constant {
 		_index = value;
 		return this;
 	}
-
-	private static final int[] FIELDS = {0, 0, 0, };
 
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
