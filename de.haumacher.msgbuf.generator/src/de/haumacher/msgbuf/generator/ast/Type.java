@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for possible {@link Field} types.
  */
-public abstract class Type {
+public abstract class Type implements de.haumacher.msgbuf.data.DataObject {
 
 	/** Visitor interface for the {@link Type} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -41,7 +41,7 @@ public abstract class Type {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -56,14 +56,14 @@ public abstract class Type {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			default: return null;
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		// No fields.
 	}

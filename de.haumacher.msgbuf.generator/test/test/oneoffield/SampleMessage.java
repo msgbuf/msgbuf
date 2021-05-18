@@ -1,6 +1,6 @@
 package test.oneoffield;
 
-public class SampleMessage {
+public class SampleMessage implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link SampleMessage} instance.
@@ -25,7 +25,7 @@ public class SampleMessage {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -40,14 +40,14 @@ public class SampleMessage {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			default: return null;
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		// No fields.
 	}

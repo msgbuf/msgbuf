@@ -3,7 +3,7 @@ package test.hierarchy;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape {
+public abstract class Shape implements de.haumacher.msgbuf.data.DataObject {
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -69,7 +69,7 @@ public abstract class Shape {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -84,7 +84,7 @@ public abstract class Shape {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "xCoordinate": return getXCoordinate();
@@ -93,7 +93,7 @@ public abstract class Shape {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "xCoordinate": setXCoordinate((int) value); break;

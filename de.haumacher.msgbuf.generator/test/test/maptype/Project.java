@@ -1,6 +1,6 @@
 package test.maptype;
 
-public class Project {
+public class Project implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link Project} instance.
@@ -53,7 +53,7 @@ public class Project {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -68,7 +68,7 @@ public class Project {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "name": return getName();
@@ -77,7 +77,7 @@ public class Project {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "name": setName((String) value); break;

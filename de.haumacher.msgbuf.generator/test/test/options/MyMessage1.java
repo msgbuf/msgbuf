@@ -1,6 +1,6 @@
 package test.options;
 
-public class MyMessage1 {
+public class MyMessage1 implements de.haumacher.msgbuf.data.DataObject {
 
 	public enum EnumAllowingAlias {
 
@@ -46,7 +46,7 @@ public class MyMessage1 {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -61,14 +61,14 @@ public class MyMessage1 {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			default: return null;
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		// No fields.
 	}

@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A dot-separated qualified name.
  */
-public class QName {
+public class QName implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link QName} instance.
@@ -53,7 +53,7 @@ public class QName {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -68,7 +68,7 @@ public class QName {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "names": return getNames();
@@ -76,7 +76,7 @@ public class QName {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "names": setNames((java.util.List<String>) value); break;

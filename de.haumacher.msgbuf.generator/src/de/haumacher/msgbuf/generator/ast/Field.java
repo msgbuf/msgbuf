@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A field definition of a {@link MessageDef}.
  */
-public class Field {
+public class Field implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -137,7 +137,7 @@ public class Field {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -152,7 +152,7 @@ public class Field {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "comment": return getComment();
@@ -165,7 +165,7 @@ public class Field {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "comment": setComment((String) value); break;

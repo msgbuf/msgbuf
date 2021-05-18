@@ -102,7 +102,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String getExtends() {
-		return _def.getExtends() == null ? "" : " extends " + Util.qName(_def.getExtends());
+		return _def.getExtends() == null ? " implements de.haumacher.msgbuf.data.DataObject" : " extends " + Util.qName(_def.getExtends());
 	}
 
 	private void generateContents() {
@@ -249,7 +249,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		
 		if (baseClass) {
 			nl();
-			line("/** Writes this instance to the given output. */");
+			line("@Override");
 			line("public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
 			{
 				line("out.beginObject();");
@@ -274,11 +274,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		
 		if (!fields.isEmpty() || baseClass) {
 			nl();
-			if (baseClass) {
-				line("/** Retrieves value of the field with the given index. */");
-			} else {
-				line("@Override");
-			}
+			line("@Override");
 			line("public Object get(String field) {");
 			{
 				line("switch (field) {");
@@ -295,11 +291,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("}");
 			
 			nl();
-			if (baseClass) {
-				line("/** Sets the value of the field with the given index. */");
-			} else {
-				line("@Override");
-			}
+			line("@Override");
 			line("public void set(String field, Object value) {");
 			{
 				if (fields.isEmpty()) {

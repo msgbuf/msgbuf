@@ -1,7 +1,7 @@
 package test.nested;
 
-public class SearchResponse {
-	public static class Result {
+public class SearchResponse implements de.haumacher.msgbuf.data.DataObject {
+	public static class Result implements de.haumacher.msgbuf.data.DataObject {
 
 		/**
 		 * Creates a {@link Result} instance.
@@ -76,7 +76,7 @@ public class SearchResponse {
 			return result;
 		}
 
-		/** Writes this instance to the given output. */
+		@Override
 		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 			out.beginObject();
 			writeContent(out);
@@ -91,7 +91,7 @@ public class SearchResponse {
 			}
 		}
 
-		/** Retrieves value of the field with the given index. */
+		@Override
 		public Object get(String field) {
 			switch (field) {
 				case "url": return getUrl();
@@ -101,7 +101,7 @@ public class SearchResponse {
 			}
 		}
 
-		/** Sets the value of the field with the given index. */
+		@Override
 		public void set(String field, Object value) {
 			switch (field) {
 				case "url": setUrl((String) value); break;
@@ -188,7 +188,7 @@ public class SearchResponse {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -203,7 +203,7 @@ public class SearchResponse {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "results": return getResults();
@@ -211,7 +211,7 @@ public class SearchResponse {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "results": setResults((java.util.List<Result>) value); break;

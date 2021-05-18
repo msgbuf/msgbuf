@@ -1,6 +1,6 @@
 package test.maptype;
 
-public class MyMessage {
+public class MyMessage implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link MyMessage} instance.
@@ -75,7 +75,7 @@ public class MyMessage {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -90,7 +90,7 @@ public class MyMessage {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "projects": return getProjects();
@@ -99,7 +99,7 @@ public class MyMessage {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "projects": setProjects((java.util.Map<String, Project>) value); break;

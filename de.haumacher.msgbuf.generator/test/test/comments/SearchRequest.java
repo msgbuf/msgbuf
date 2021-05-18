@@ -4,7 +4,7 @@ package test.comments;
  * SearchRequest represents a search query, with {@link #getPageNumber() pagination options} to
  * indicate which results to include in the response.
  */
-public class SearchRequest {
+public class SearchRequest implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link SearchRequest} instance.
@@ -45,7 +45,7 @@ public class SearchRequest {
 
 	/**
 	 * The page of results to return. 
-	 * 
+	 *
 	 * <p>
 	 * The number of entries in each page is specified by {@link #getResultPerPage()}.
 	 * </p>
@@ -88,7 +88,7 @@ public class SearchRequest {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -103,7 +103,7 @@ public class SearchRequest {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "query": return getQuery();
@@ -113,7 +113,7 @@ public class SearchRequest {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "query": setQuery((String) value); break;

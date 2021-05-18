@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see #getDefinitions()
  */
-public class DefinitionFile {
+public class DefinitionFile implements de.haumacher.msgbuf.data.DataObject {
 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
@@ -79,7 +79,7 @@ public class DefinitionFile {
 		return result;
 	}
 
-	/** Writes this instance to the given output. */
+	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeContent(out);
@@ -94,7 +94,7 @@ public class DefinitionFile {
 		}
 	}
 
-	/** Retrieves value of the field with the given index. */
+	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "package": return getPackage();
@@ -103,7 +103,7 @@ public class DefinitionFile {
 		}
 	}
 
-	/** Sets the value of the field with the given index. */
+	@Override
 	public void set(String field, Object value) {
 		switch (field) {
 			case "package": setPackage((QName) value); break;
