@@ -77,19 +77,32 @@ public class Constant implements de.haumacher.msgbuf.data.DataObject {
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Constant result = new Constant();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
 	}
 
 	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.beginObject();
 		writeContent(out);
+	}
+
+	/**
+	 * Writes a JSON object containing keys for all fields of this object.
+	 *
+	 * @param out The writer to write to.
+	 */
+	protected final void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
 		out.endObject();
 	}
 
-	/** Reads all fields of this instance from the given input. */
-	protected final void readContent(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	/**
+	 * Reads all fields of this instance from the given input.
+	 *
+	 * @param in The reader to take the input from.
+	 */
+	protected final void readFields(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		while (in.hasNext()) {
 			String field = in.nextName();
 			readField(in, field);
@@ -116,7 +129,7 @@ public class Constant implements de.haumacher.msgbuf.data.DataObject {
 	}
 
 	/** Writes all fields of this instance to the given output. */
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.name("comment");
 		out.value(getComment());
 		out.name("name");

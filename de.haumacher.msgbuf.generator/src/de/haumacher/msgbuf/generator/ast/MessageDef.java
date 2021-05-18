@@ -170,8 +170,13 @@ public class MessageDef extends Definition {
 	/** Reads a new instance from the given reader. */
 	public static MessageDef readMessageDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MessageDef result = new MessageDef();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "MessageDef";
 	}
 
 	@Override
@@ -201,8 +206,8 @@ public class MessageDef extends Definition {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		out.name("abstract");
 		out.value(isAbstract());
 		if (hasExtends()) {

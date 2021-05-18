@@ -117,8 +117,13 @@ public class PrimitiveType extends Type {
 	/** Reads a new instance from the given reader. */
 	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		PrimitiveType result = new PrimitiveType();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "PrimitiveType";
 	}
 
 	@Override
@@ -138,8 +143,8 @@ public class PrimitiveType extends Type {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		if (hasKind()) {
 			out.name("kind");
 			getKind().writeTo(out);

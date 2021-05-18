@@ -49,8 +49,13 @@ public class EnumDef extends Definition {
 	/** Reads a new instance from the given reader. */
 	public static EnumDef readEnumDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		EnumDef result = new EnumDef();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "EnumDef";
 	}
 
 	@Override
@@ -70,8 +75,8 @@ public class EnumDef extends Definition {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		out.name("constants");
 		out.beginArray();
 		for (Constant x : getConstants()) {

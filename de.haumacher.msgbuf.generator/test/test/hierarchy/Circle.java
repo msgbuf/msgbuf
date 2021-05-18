@@ -38,8 +38,13 @@ public class Circle extends Shape {
 	/** Reads a new instance from the given reader. */
 	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Circle result = new Circle();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "Circle";
 	}
 
 	@Override
@@ -59,8 +64,8 @@ public class Circle extends Shape {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		out.name("radius");
 		out.value(getRadius());
 	}

@@ -46,8 +46,13 @@ public class Group extends Shape {
 	/** Reads a new instance from the given reader. */
 	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Group result = new Group();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "Group";
 	}
 
 	@Override
@@ -67,8 +72,8 @@ public class Group extends Shape {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		out.name("shapes");
 		out.beginArray();
 		for (Shape x : getShapes()) {

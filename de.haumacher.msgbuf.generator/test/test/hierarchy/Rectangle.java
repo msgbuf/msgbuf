@@ -52,8 +52,13 @@ public class Rectangle extends Shape {
 	/** Reads a new instance from the given reader. */
 	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Rectangle result = new Rectangle();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "Rectangle";
 	}
 
 	@Override
@@ -75,8 +80,8 @@ public class Rectangle extends Shape {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		out.name("width");
 		out.value(getWidth());
 		out.name("height");

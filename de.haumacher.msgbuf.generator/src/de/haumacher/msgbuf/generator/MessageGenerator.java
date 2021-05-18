@@ -241,7 +241,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				line("in.endArray();");
 			} else {
 				line(_def.getName() + " result = new " + _def.getName() + "();");
-				line("result.readContent(in);");
+				line("result.readFields(in);");
 			}
 			line("return result;");
 		}
@@ -251,16 +251,55 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			nl();
 			line("@Override");
 			line("public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
+			if (_def.isAbstract()) {
+				line("out.beginArray();");
+				line("out.value(jsonType());");
+				line("writeContent(out);");
+				line("out.endArray();");
+			} else {
+				line("writeContent(out);");
+			}
+			line("}");
+			
+			if (_def.isAbstract()) {
+				nl();
+				line("/** The type identifier for this concrete subtype. */");
+				line("protected abstract String jsonType();");
+			}
+		}
+		
+		if (_def.getExtendedDef() != null) {
+			nl();
+			line("@Override");
+			line("protected String jsonType() {");
+			{
+				line("return \"" + _def.getName() + "\";");
+			}
+			line("}");
+		}
+		
+		if (baseClass) {
+			nl();
+			line("/**");
+			line(" * Writes a JSON object containing keys for all fields of this object.");
+			line(" *");
+			line(" * @param out The writer to write to.");
+			line(" */");
+			line("protected final void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
 			{
 				line("out.beginObject();");
-				line("writeContent(out);");
+				line("writeFields(out);");
 				line("out.endObject();");
 			}
 			line("}");
 			
 			nl();
-			line("/** Reads all fields of this instance from the given input. */");
-			line("protected final void readContent(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
+			line("/**");
+			line(" * Reads all fields of this instance from the given input.");
+			line(" *");
+			line(" * @param in The reader to take the input from.");
+			line(" */");
+			line("protected final void readFields(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
 			{
 				line("while (in.hasNext()) {");
 				{
@@ -315,10 +354,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			} else {
 				line("@Override");
 			}
-			line("protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
+			line("protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
 			{
 				if (!baseClass) {
-					line("super.writeContent(out);");
+					line("super.writeFields(out);");
 				}
 				if (fields.isEmpty()) {
 					line("// No fields.");

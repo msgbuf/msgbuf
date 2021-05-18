@@ -72,8 +72,13 @@ public class MapType extends Type {
 	/** Reads a new instance from the given reader. */
 	public static MapType readMapType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MapType result = new MapType();
-		result.readContent(in);
+		result.readFields(in);
 		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "MapType";
 	}
 
 	@Override
@@ -95,8 +100,8 @@ public class MapType extends Type {
 	}
 
 	@Override
-	protected void writeContent(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeContent(out);
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
 		if (hasKeyType()) {
 			out.name("keyType");
 			getKeyType().writeTo(out);
