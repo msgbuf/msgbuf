@@ -241,7 +241,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				line("in.endArray();");
 			} else {
 				line(_def.getName() + " result = new " + _def.getName() + "();");
+				line("in.beginObject();");
 				line("result.readFields(in);");
+				line("in.endObject();");
 			}
 			line("return result;");
 		}
@@ -713,8 +715,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("/**");
 			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} list.");
 			line(" */");
-			line("public final " + "void" + " " + adderName(field) + "(" + getType(type) + " " + "value" + ")" + " {");
-			line("_" + name(field) + ".add(value);");
+			line("public final " + _def.getName() + " " + adderName(field) + "(" + getType(type) + " " + "value" + ")" + " {");
+			{
+				line("_" + name(field) + ".add(value);");
+				line("return this;");
+			}
 			line("}");
 		}
 		else if (type instanceof MapType) {
