@@ -3,8 +3,10 @@
  */
 package de.haumacher.msgbuf.data;
 
+import java.io.IOError;
 import java.io.IOException;
 
+import de.haumacher.msgbuf.io.StringW;
 import de.haumacher.msgbuf.json.JsonReader;
 import de.haumacher.msgbuf.json.JsonWriter;
 
@@ -75,4 +77,18 @@ public abstract class AbstractDataObject implements DataObject {
 		in.skipValue();
 	}
 
+	@Override
+	public String toString() {
+		return toJson();
+	}
+
+	private String toJson() {
+		StringW out = new StringW();
+		try {
+			writeTo(new JsonWriter(out));
+		} catch (IOException ex) {
+			throw new IOError(ex);
+		}
+		return out.toString();
+	}
 }
