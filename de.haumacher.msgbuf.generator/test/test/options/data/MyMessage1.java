@@ -1,4 +1,4 @@
-package test.options;
+package test.options.data;
 
 public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject {
 
@@ -42,7 +42,9 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static MyMessage1 readMyMessage1(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MyMessage1 result = new MyMessage1();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

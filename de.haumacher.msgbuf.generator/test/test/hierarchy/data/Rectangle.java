@@ -1,4 +1,4 @@
-package test.hierarchy;
+package test.hierarchy.data;
 
 /**
  * A rectangle.
@@ -52,7 +52,9 @@ public class Rectangle extends Shape {
 	/** Reads a new instance from the given reader. */
 	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Rectangle result = new Rectangle();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

@@ -1,4 +1,4 @@
-package test.oneoffield;
+package test.oneoffield.data;
 
 message SampleMessage {
   oneof test_oneof {

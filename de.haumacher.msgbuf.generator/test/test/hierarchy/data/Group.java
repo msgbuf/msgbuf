@@ -1,4 +1,4 @@
-package test.hierarchy;
+package test.hierarchy.data;
 
 /**
  * A group of shapes.
@@ -39,14 +39,17 @@ public class Group extends Shape {
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	public final void addShape(Shape value) {
+	public final Group addShape(Shape value) {
 		_shapes.add(value);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Group result = new Group();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

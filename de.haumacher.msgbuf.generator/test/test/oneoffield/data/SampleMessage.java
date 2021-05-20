@@ -1,4 +1,4 @@
-package test.oneoffield;
+package test.oneoffield.data;
 
 public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject {
 
@@ -21,7 +21,9 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static SampleMessage readSampleMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SampleMessage result = new SampleMessage();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

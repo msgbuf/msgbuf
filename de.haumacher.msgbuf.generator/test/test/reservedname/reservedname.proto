@@ -1,4 +1,4 @@
-package test.reservedname;
+package test.reservedname.data;
 
 enum Foo {
   reserved 2, 15, 9 to 11, 40 to max;

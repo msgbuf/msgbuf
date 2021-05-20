@@ -1,4 +1,4 @@
-package test.nested;
+package test.nested.data;
 
 message SearchResponse {
 	message Result {

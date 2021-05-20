@@ -1,4 +1,4 @@
-package test.comments;
+package test.comments.data;
 
 /**
  * SearchRequest represents a search query, with {@link #page_number pagination options} to

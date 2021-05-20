@@ -1,4 +1,4 @@
-package test.enumeration;
+package test.enumeration.data;
 
 public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 
@@ -113,7 +113,9 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SearchRequest result = new SearchRequest();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

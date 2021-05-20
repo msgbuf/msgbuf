@@ -1,4 +1,4 @@
-package test.hierarchy;
+package test.hierarchy.data;
 
 /**
  * An abstract base class for all shapes

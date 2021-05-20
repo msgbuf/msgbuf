@@ -1,4 +1,4 @@
-package test.reservedname;
+package test.reservedname.data;
 
 public enum Foo {
 

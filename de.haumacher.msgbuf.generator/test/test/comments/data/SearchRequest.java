@@ -1,5 +1,9 @@
-package test.types;
+package test.comments.data;
 
+/**
+ * SearchRequest represents a search query, with {@link #getPageNumber() pagination options} to
+ * indicate which results to include in the response.
+ */
 public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/**
@@ -24,6 +28,9 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	private int _resultPerPage = 0;
 
+	/**
+	 * The query string to interpret
+	 */
 	public final String getQuery() {
 		return _query;
 	}
@@ -36,6 +43,15 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return this;
 	}
 
+	/**
+	 * The page of results to return. 
+	 *
+	 * <p>
+	 * The number of entries in each page is specified by {@link #getResultPerPage()}.
+	 * </p>
+	 *
+	 * @see #getResultPerPage()
+	 */
 	public final int getPageNumber() {
 		return _pageNumber;
 	}
@@ -48,6 +64,11 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return this;
 	}
 
+	/**
+	 * The number of results to return at once.
+	 *
+	 * @see #getPageNumber()
+	 */
 	public final int getResultPerPage() {
 		return _resultPerPage;
 	}
@@ -63,7 +84,9 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SearchRequest result = new SearchRequest();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

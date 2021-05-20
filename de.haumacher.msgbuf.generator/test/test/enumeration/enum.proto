@@ -1,4 +1,4 @@
-package test.enumeration;
+package test.enumeration.data;
 
 message SearchRequest {
   string query = 1;

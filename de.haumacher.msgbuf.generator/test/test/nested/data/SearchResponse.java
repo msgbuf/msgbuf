@@ -1,4 +1,4 @@
-package test.nested;
+package test.nested.data;
 
 public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject {
 	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject {
@@ -65,14 +65,17 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/**
 		 * Adds a value to the {@link #getSnippets()} list.
 		 */
-		public final void addSnippet(String value) {
+		public final Result addSnippet(String value) {
 			_snippets.add(value);
+			return this;
 		}
 
 		/** Reads a new instance from the given reader. */
 		public static Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			Result result = new Result();
+			in.beginObject();
 			result.readFields(in);
+			in.endObject();
 			return result;
 		}
 
@@ -168,14 +171,17 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * Adds a value to the {@link #getResults()} list.
 	 */
-	public final void addResult(Result value) {
+	public final SearchResponse addResult(Result value) {
 		_results.add(value);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SearchResponse result = new SearchResponse();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

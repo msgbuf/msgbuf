@@ -1,4 +1,4 @@
-package test.hierarchy;
+package test.hierarchy.data;
 
 /**
  * A circle.
@@ -38,7 +38,9 @@ public class Circle extends Shape {
 	/** Reads a new instance from the given reader. */
 	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Circle result = new Circle();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

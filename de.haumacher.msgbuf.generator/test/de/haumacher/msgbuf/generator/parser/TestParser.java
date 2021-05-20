@@ -45,10 +45,12 @@ public class TestParser extends TestCase {
 	
 	public static Test suite() {
 		TestSuite result = new TestSuite();
-		File fixturesDir = new File(testDir(), TestParser.class.getPackage().getName().replace('.', File.separatorChar));
-		File[] testFiles = fixturesDir.listFiles(f -> f.getName().endsWith(".proto"));
-		for (File proto : testFiles) {
-			result.addTest(new TestParser(proto));
+		File fixturesDir = new File(testDir(), "test");
+		for (File testPkg : fixturesDir.listFiles(f -> f.isDirectory())) {
+			File[] testFiles = testPkg.listFiles(f -> f.getName().endsWith(".proto"));
+			for (File proto : testFiles) {
+				result.addTest(new TestParser(proto));
+			}
 		}
 		return result;
 	}

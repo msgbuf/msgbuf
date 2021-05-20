@@ -1,4 +1,4 @@
-package test.maptype;
+package test.maptype.data;
 
 public class Project extends de.haumacher.msgbuf.data.AbstractDataObject {
 
@@ -49,7 +49,9 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static Project readProject(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Project result = new Project();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 
