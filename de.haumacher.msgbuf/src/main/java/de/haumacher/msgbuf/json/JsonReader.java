@@ -770,7 +770,7 @@ public class JsonReader implements Closeable {
   }
 
   /**
-   * Returns the next token, a {@link com.top_logic.common.json.gstream.JsonToken#NAME property name}, and
+   * Returns the next token, a {@link de.haumacher.msgbuf.json.JsonToken#NAME property name}, and
    * consumes it.
    *
    * @throws java.io.IOException if the next token in the stream is not a property
@@ -797,7 +797,7 @@ public class JsonReader implements Closeable {
   }
 
   /**
-   * Returns the {@link com.top_logic.common.json.gstream.JsonToken#STRING string} value of the next token,
+   * Returns the {@link de.haumacher.msgbuf.json.JsonToken#STRING string} value of the next token,
    * consuming it. If the next token is a number, this method will return its
    * string form.
    *
@@ -833,7 +833,7 @@ public class JsonReader implements Closeable {
   }
 
   /**
-   * Returns the {@link com.top_logic.common.json.gstream.JsonToken#BOOLEAN boolean} value of the next token,
+   * Returns the {@link de.haumacher.msgbuf.json.JsonToken#BOOLEAN boolean} value of the next token,
    * consuming it.
    *
    * @throws IllegalStateException if the next token is not a boolean or if
@@ -877,7 +877,7 @@ public class JsonReader implements Closeable {
   }
 
   /**
-   * Returns the {@link com.top_logic.common.json.gstream.JsonToken#NUMBER double} value of the next token,
+   * Returns the {@link de.haumacher.msgbuf.json.JsonToken#NUMBER double} value of the next token,
    * consuming it. If the next token is a string, this method will attempt to
    * parse it as a double using {@link Double#parseDouble(String)}.
    *
@@ -921,7 +921,7 @@ public class JsonReader implements Closeable {
   }
 
   /**
-   * Returns the {@link com.top_logic.common.json.gstream.JsonToken#NUMBER long} value of the next token,
+   * Returns the {@link de.haumacher.msgbuf.json.JsonToken#NUMBER long} value of the next token,
    * consuming it. If the next token is a string, this method will attempt to
    * parse it as a long. If the next token's numeric value cannot be exactly
    * represented by a Java {@code long}, this method throws.
@@ -1153,7 +1153,7 @@ public class JsonReader implements Closeable {
   }
 
   /**
-   * Returns the {@link com.top_logic.common.json.gstream.JsonToken#NUMBER int} value of the next token,
+   * Returns the {@link de.haumacher.msgbuf.json.JsonToken#NUMBER int} value of the next token,
    * consuming it. If the next token is a string, this method will attempt to
    * parse it as an int. If the next token's numeric value cannot be exactly
    * represented by a Java {@code int}, this method throws.
