@@ -3,7 +3,6 @@
  */
 package de.haumacher.msgbuf.data;
 
-import java.io.IOError;
 import java.io.IOException;
 
 import de.haumacher.msgbuf.io.StringW;
@@ -87,7 +86,7 @@ public abstract class AbstractDataObject implements DataObject {
 		try {
 			writeTo(new JsonWriter(out));
 		} catch (IOException ex) {
-			throw new IOError(ex);
+			throw new RuntimeException(ex);
 		}
 		return out.toString();
 	}
