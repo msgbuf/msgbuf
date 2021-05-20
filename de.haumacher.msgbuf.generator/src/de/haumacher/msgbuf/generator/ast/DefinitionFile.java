@@ -68,14 +68,17 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
 	 */
-	public final void addDefinition(Definition value) {
+	public final DefinitionFile addDefinition(Definition value) {
 		_definitions.add(value);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static DefinitionFile readDefinitionFile(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		DefinitionFile result = new DefinitionFile();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

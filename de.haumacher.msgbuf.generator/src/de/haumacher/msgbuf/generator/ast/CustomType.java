@@ -74,7 +74,9 @@ public class CustomType extends Type {
 	/** Reads a new instance from the given reader. */
 	public static CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		CustomType result = new CustomType();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

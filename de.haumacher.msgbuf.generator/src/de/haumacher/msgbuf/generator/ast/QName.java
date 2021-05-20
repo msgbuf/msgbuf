@@ -42,14 +42,17 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/**
 	 * Adds a value to the {@link #getNames()} list.
 	 */
-	public final void addName(String value) {
+	public final QName addName(String value) {
 		_names.add(value);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static QName readQName(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		QName result = new QName();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

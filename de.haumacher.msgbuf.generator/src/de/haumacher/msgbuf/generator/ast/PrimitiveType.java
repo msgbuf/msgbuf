@@ -117,7 +117,9 @@ public class PrimitiveType extends Type {
 	/** Reads a new instance from the given reader. */
 	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		PrimitiveType result = new PrimitiveType();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

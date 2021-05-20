@@ -42,14 +42,17 @@ public class EnumDef extends Definition {
 	/**
 	 * Adds a value to the {@link #getConstants()} list.
 	 */
-	public final void addConstant(Constant value) {
+	public final EnumDef addConstant(Constant value) {
 		_constants.add(value);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static EnumDef readEnumDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		EnumDef result = new EnumDef();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

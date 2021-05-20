@@ -72,7 +72,9 @@ public class MapType extends Type {
 	/** Reads a new instance from the given reader. */
 	public static MapType readMapType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MapType result = new MapType();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

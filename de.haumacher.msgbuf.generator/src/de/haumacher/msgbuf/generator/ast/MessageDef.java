@@ -89,8 +89,9 @@ public class MessageDef extends Definition {
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
 	 */
-	public final void addDefinition(Definition value) {
+	public final MessageDef addDefinition(Definition value) {
 		_definitions.add(value);
+		return this;
 	}
 
 	/**
@@ -118,8 +119,9 @@ public class MessageDef extends Definition {
 	/**
 	 * Adds a value to the {@link #getFields()} list.
 	 */
-	public final void addField(Field value) {
+	public final MessageDef addField(Field value) {
 		_fields.add(value);
+		return this;
 	}
 
 	/**
@@ -141,8 +143,9 @@ public class MessageDef extends Definition {
 	/**
 	 * Adds a value to the {@link #getSpecializations()} list.
 	 */
-	public final void addSpecialization(MessageDef value) {
+	public final MessageDef addSpecialization(MessageDef value) {
 		_specializations.add(value);
+		return this;
 	}
 
 	/**
@@ -170,7 +173,9 @@ public class MessageDef extends Definition {
 	/** Reads a new instance from the given reader. */
 	public static MessageDef readMessageDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MessageDef result = new MessageDef();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

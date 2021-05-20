@@ -133,7 +133,9 @@ public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Field result = new Field();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 

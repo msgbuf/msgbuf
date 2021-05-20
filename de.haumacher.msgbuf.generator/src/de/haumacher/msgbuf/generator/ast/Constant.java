@@ -77,7 +77,9 @@ public class Constant extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Constant result = new Constant();
+		in.beginObject();
 		result.readFields(in);
+		in.endObject();
 		return result;
 	}
 
