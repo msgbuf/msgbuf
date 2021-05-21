@@ -47,7 +47,8 @@ message Group extends Shape {
 }
 ```
 
-Passing these definitions to the `msgbuf` compiler gives you a class hierarchy with classes `Shape`, `Circle`, `Rectangle`, and `Group`. 
+Passing these definitions to the `msgbuf` compiler gives you a class hierarchy with classes `Shape`, `Circle`, `Rectangle`, and `Group`. You can inspect the generation result in the package [test.hierarchy](de.haumacher.msgbuf.generator/test/test/hierarchy/data) of the compiler. The source of the example data class definitions can be seen in the [hierarchy.proto](de.haumacher.msgbuf.generator/test/test/hierarchy/hierarchy.proto) file.
+
 
 ## Features
 
