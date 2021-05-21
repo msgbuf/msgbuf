@@ -30,6 +30,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	private int _yCoordinate = 0;
 
+	/**
+	 * X coordinate of the origin of the coordinate system of this {@link Shape}.
+	 */
 	public final int getXCoordinate() {
 		return _xCoordinate;
 	}
@@ -42,6 +45,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		return this;
 	}
 
+	/**
+	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
+	 */
 	public final int getYCoordinate() {
 		return _yCoordinate;
 	}

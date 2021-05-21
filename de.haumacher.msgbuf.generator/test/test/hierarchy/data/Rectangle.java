@@ -25,6 +25,15 @@ public class Rectangle extends Shape {
 
 	private int _height = 0;
 
+	/**
+	 * The width of this {@link Rectangle}.
+	 *
+	 * <p>
+	 * The top left corner of this {@Rectangle} is at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
+	 * </p>
+	 *
+	 * @see #getHeight()
+	 */
 	public final int getWidth() {
 		return _width;
 	}
@@ -37,6 +46,11 @@ public class Rectangle extends Shape {
 		return this;
 	}
 
+	/**
+	 * The width of this {@link Rectangle}.
+	 *
+	 * @see #getWidth()
+	 */
 	public final int getHeight() {
 		return _height;
 	}

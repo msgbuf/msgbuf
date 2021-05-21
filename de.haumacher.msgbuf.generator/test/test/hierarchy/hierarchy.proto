@@ -6,28 +6,60 @@ package test.hierarchy.data;
  * An abstract base class for all shapes 
  */
 abstract message Shape {
-  int32 xCoordinate;
-  int32 yCoordinate;
+	/**
+	 * X coordinate of the origin of the coordinate system of this {@link Shape}.
+	 */
+	int32 xCoordinate;
+	
+	/**
+	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
+	 */
+	int32 yCoordinate;
 }
 
 /** 
- * A circle. 
+ * A circle {@link Shape}. 
  */
 message Circle extends Shape {
-  int32 radius;
+	/**
+	 * The radius of this {@link Circle} around its coordinate origin at ({@link #xCoordinate}, {@link #yCoordinate}).
+	 */
+	int32 radius;
 }
 
 /** 
  * A rectangle.
  */
 message Rectangle extends Shape {
-  int32 width;
-  int32 height;
+	/**
+	 * The width of this {@link Rectangle}.
+	 * 
+	 * <p>
+	 * The top left corner of this {@Rectangle} is at ({@link #xCoordinate}, {@link #yCoordinate}).
+	 * </p>
+	 *
+	 * @see #height
+	 */
+	int32 width;
+	
+	/**
+	 * The width of this {@link Rectangle}.
+	 *
+	 * @see #width
+	 */
+	int32 height;
 }
 
 /**
  * A group of shapes.
  */
 message Group extends Shape {
-  repeated Shape shapes;
+	/**
+	 * All {@link Shape}s in this {@link Group}.
+	 * 
+	 * <p>
+	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #xCoordinate}, {@link #yCoordinate}).
+	 * </p>
+	 */
+	repeated Shape shapes;
 }

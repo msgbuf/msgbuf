@@ -23,6 +23,13 @@ public class Group extends Shape {
 
 	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
 
+	/**
+	 * All {@link Shape}s in this {@link Group}.
+	 *
+	 * <p>
+	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
+	 * </p>
+	 */
 	public final java.util.List<Shape> getShapes() {
 		return _shapes;
 	}

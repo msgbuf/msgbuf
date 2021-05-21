@@ -1,7 +1,7 @@
 package test.hierarchy.data;
 
 /**
- * A circle.
+ * A circle {@link Shape}.
  */
 public class Circle extends Shape {
 
@@ -23,6 +23,9 @@ public class Circle extends Shape {
 
 	private int _radius = 0;
 
+	/**
+	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
+	 */
 	public final int getRadius() {
 		return _radius;
 	}
