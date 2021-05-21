@@ -17,7 +17,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 The `msgbuf` definition language is an extension of the [proto format](https://developers.google.com/protocol-buffers/docs/proto3) from `protobuf`. A defined message can `extend` another message type, or it can be marked `abstract`. 
 
 Assume, you want to describe shapes in a graphics application, you could define the data types as follows. You may start with an `abstract` shape class, defining coordinates of the origin of its coordinate system:
-```java
+```protobuf
 syntax = "msgbuf";
 
 abstract message Shape {
@@ -28,7 +28,7 @@ abstract message Shape {
 
 Based on that, you create concrete classes for circles and rectangles:
 
-```java
+```protobuf
 message Circle extends Shape {
   int32 radius;
 }
@@ -41,7 +41,7 @@ message Rectangle extends Shape {
 
 Finally, you could create a group class that allows combining arbitrary shapes by placing them into a new coordinate system:
 
-```java
+```protobuf
 message Group extends Shape {
   repeated Shape shapes;
 }
