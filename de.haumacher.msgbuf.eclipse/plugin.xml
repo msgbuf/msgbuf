@@ -29,13 +29,14 @@
          point="org.eclipse.ui.commands">
       <category
             id="de.haumacher.msgbuf.eclipse.nature.category"
-            name="MsgBuf Project Nature commands">
+            name="MsgBuf Nature commands">
       </category>
       <command
             categoryId="de.haumacher.msgbuf.eclipse.nature.category"
             defaultHandler="de.haumacher.msgbuf.eclipse.builder.AddRemoveMsgBufNatureHandler"
+            description="Adds/removes the MsgBuf project builder that automatically translates *.proto files when created or changed in an editor."
             id="de.haumacher.msgbuf.eclipse.addRemoveMsgBufNature"
-            name="Add/RemoveMsgBuf Project Nature">
+            name="Toggle MsgBuf Nature">
       </command>
    </extension>
    <extension
@@ -44,7 +45,7 @@
             locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
          <command
                commandId="de.haumacher.msgbuf.eclipse.addRemoveMsgBufNature"
-               label="Disable Sample builder"
+               label="Disable MsgBuf builder"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -58,7 +59,7 @@
                            type="org.eclipse.core.resources.IProject">
                         <test
                               property="org.eclipse.core.resources.projectNature"
-                              value="de.haumacher.msgbuf.eclipse.nature">
+                              value="de.haumacher.msgbuf.nature">
                         </test>
                      </adapt>
                   </iterate>
@@ -67,7 +68,7 @@
          </command>
          <command
                commandId="de.haumacher.msgbuf.eclipse.addRemoveMsgBufNature"
-               label="Enable Sample builder"
+               label="Enable MsgBuf builder"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -82,7 +83,7 @@
                         <not>
                            <test
                                  property="org.eclipse.core.resources.projectNature"
-                                 value="de.haumacher.msgbuf.eclipse.nature">
+                                 value="de.haumacher.msgbuf.nature">
                            </test>
                         </not>
                      </adapt>
