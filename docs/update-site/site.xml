@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202105212330.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202105212330" os="linux,macosx,win32" ws="cocoa,gtk,win32,wpf" nl="en" arch="x86,x86_64">
+      <category name="de.haumacher.msgbuf.site"/>
+   </feature>
+   <category-def name="de.haumacher.msgbuf.site" label="MsgBuf Project Builder"/>
+</site>
