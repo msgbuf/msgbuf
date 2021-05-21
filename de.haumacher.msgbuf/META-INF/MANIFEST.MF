@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Msgbuf
+Bundle-SymbolicName: de.haumacher.msgbuf
+Bundle-Version: 1.0.0.qualifier
+Export-Package: de.haumacher.msgbuf,
+ de.haumacher.msgbuf.coder,
+ de.haumacher.msgbuf.data,
+ de.haumacher.msgbuf.io,
+ de.haumacher.msgbuf.json
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

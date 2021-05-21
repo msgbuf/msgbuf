@@ -1,0 +1,2 @@
+eclipse.preferences.version=1
+selfhosting.binExcludes=/de.haumacher.msgbuf/target/test-classes
