@@ -17,7 +17,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 The `msgbuf` definition language is an extension of the [proto format](https://developers.google.com/protocol-buffers/docs/proto3) from `protobuf`. A defined message can `extend` another message type, or it can be marked `abstract`. 
 
 Assume, you want to describe shapes in a graphics application, you could define the data types as follows. You may start with an `abstract` shape class, defining coordinates of the origin of its coordinate system:
-```
+```java
 syntax = "msgbuf";
 
 abstract message Shape {
@@ -28,7 +28,7 @@ abstract message Shape {
 
 Based on that, you create concrete classes for circles and rectangles:
 
-```
+```java
 message Circle extends Shape {
   int32 radius;
 }
@@ -41,7 +41,7 @@ message Rectangle extends Shape {
 
 Finally, you could create a group class that allows combining arbitrary shapes by placing them into a new coordinate system:
 
-```
+```java
 message Group extends Shape {
   repeated Shape shapes;
 }
@@ -55,7 +55,7 @@ Passing these definitions to the `msgbuf` compiler gives you a class hierarchy w
 
 All of the generated data classes have get- and set-methods for their properties. Additionally, each class has methods for writing its contents to JSON format and reading it back:
 
-```
+```java
 /** Reads a new instance from the given reader. */
 public static Rectangle readRectangle(JsonReader in) throws IOException {
    ...
@@ -75,7 +75,7 @@ For processing polymorphic messages, generated classes provide support for the [
 
 A better alternative is the visitor pattern. This allows to separate processing code from the data class hierarchy without `instanceof` tests. An `abstract` base class provides a `Visitor` interface and a `visit(...)` method accepting such a visitor:
 
-```
+```java
 public abstract class Shape {
 
    /** Visitor interface for the {@link Shape} hierarchy.*/
@@ -101,7 +101,7 @@ public abstract class Shape {
 
 Each of the concrete sub-classes implement the `abstract` visit-method by delegating to the correspoinding case-method from the `Visitor` interface:
 
-```
+```java
 public class Rectangle extends Shape {
 
    ...
@@ -115,7 +115,7 @@ public class Rectangle extends Shape {
 
 This allow to creating e.g. a renderer implementation that is able to process all concrete types from the shape hierarchy by applying the appropriate code to them:
 
-```
+```java
 public class ShapeRenderer implements Shape.Visitor<Void, Graphics2D> {
    @Override
    public Void visit(Rectangle self, Graphics2D g2d) {
@@ -140,7 +140,7 @@ public class ShapeRenderer implements Shape.Visitor<Void, Graphics2D> {
 
 Having an arbitrary `Shape` instance and a renderer from above, you can render the shape to a `Graphics2D` with the following code:
 
-```
+```java
 Shape shape = ...;
 ShapeRenderer renderer = ...;
 Graphics2D g2d = ...;
