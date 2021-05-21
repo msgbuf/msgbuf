@@ -94,6 +94,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private Field getField(MessageDef def, String name) {
+		Field result = localField(def, name);
+		if (result != null) {
+			return result;
+		}
+		MessageDef extendedDef = def.getExtendedDef();
+		if (extendedDef != null) {
+			return getField(extendedDef, name);
+		}
+		return null;
+	}
+
+	private Field localField(MessageDef def, String name) {
 		return def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
 	}
 
