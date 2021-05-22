@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 /**
  * Test case for {@link Coder}.
  */
+@SuppressWarnings("javadoc")
 public class TestCoder extends TestCase {
 	
 	public void testInt() throws IOException {
