@@ -30,7 +30,9 @@
 	</licenses>
 	
 	<scm>
-		<url>https://github.com/haumacher/msgbuf.git</url>
+		<url>https://github.com/haumacher/msgbuf</url>
+		<connection>https://github.com/haumacher/msgbuf.git</connection>
+		<developerConnection>https://github.com/haumacher/msgbuf.git</developerConnection>
 	</scm>
 
 	<dependencies>
