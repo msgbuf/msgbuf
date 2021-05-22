@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.haumacher.msgbuf</groupId>
 	<artifactId>msgbuf-api</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 
 	<name>MsgBuf API</name>
 	<url>https://github.com/haumacher/msgbuf</url>
@@ -33,7 +31,8 @@
 		<url>https://github.com/haumacher/msgbuf</url>
 		<connection>scm:git:https://github.com/haumacher/msgbuf.git</connection>
 		<developerConnection>scm:git:https://github.com/haumacher/msgbuf.git</developerConnection>
-	</scm>
+	  <tag>v0.1.0</tag>
+  </scm>
 
 	<dependencies>
 		<dependency>
