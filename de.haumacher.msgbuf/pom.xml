@@ -31,8 +31,8 @@
 	
 	<scm>
 		<url>https://github.com/haumacher/msgbuf</url>
-		<connection>https://github.com/haumacher/msgbuf.git</connection>
-		<developerConnection>https://github.com/haumacher/msgbuf.git</developerConnection>
+		<connection>scm:git:https://github.com/haumacher/msgbuf.git</connection>
+		<developerConnection>scm:git:https://github.com/haumacher/msgbuf.git</developerConnection>
 	</scm>
 
 	<dependencies>
