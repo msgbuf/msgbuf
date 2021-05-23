@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -73,6 +73,20 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 		in.endArray();
 		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(0);
+		out.value(getXCoordinate());
+		out.name(0);
+		out.value(getYCoordinate());
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package test.maptype.data;
 
-public class Project extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class Project extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link Project} instance.
@@ -53,6 +53,20 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject {
 		result.readFields(in);
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(0);
+		out.value(getName());
+		out.name(0);
+		out.value(getCost());
 	}
 
 	@Override

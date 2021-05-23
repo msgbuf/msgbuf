@@ -4,7 +4,7 @@ package test.comments.data;
  * SearchRequest represents a search query, with {@link #getPageNumber() pagination options} to
  * indicate which results to include in the response.
  */
-public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link SearchRequest} instance.
@@ -88,6 +88,22 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 		result.readFields(in);
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getQuery());
+		out.name(2);
+		out.value(getPageNumber());
+		out.name(3);
+		out.value(getResultPerPage());
 	}
 
 	@Override

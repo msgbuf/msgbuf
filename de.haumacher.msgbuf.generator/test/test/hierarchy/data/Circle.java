@@ -48,6 +48,13 @@ public class Circle extends Shape {
 	}
 
 	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(0);
+		out.value(getRadius());
+	}
+
+	@Override
 	protected String jsonType() {
 		return "Circle";
 	}

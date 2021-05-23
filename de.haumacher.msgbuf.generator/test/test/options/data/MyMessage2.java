@@ -1,6 +1,6 @@
 package test.options.data;
 
-public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	public enum EnumNotAllowingAlias {
 
@@ -44,6 +44,16 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject {
 		result.readFields(in);
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 	}
 
 	@Override

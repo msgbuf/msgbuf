@@ -1,7 +1,7 @@
 package test.nested.data;
 
-public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject {
-	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 		/**
 		 * Creates a {@link Result} instance.
@@ -77,6 +77,27 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			result.readFields(in);
 			in.endObject();
 			return result;
+		}
+
+		@Override
+		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			out.beginObject();
+			writeFields(out);
+			out.endObject();
+		}
+
+		protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			out.name(1);
+			out.value(getUrl());
+			out.name(2);
+			out.value(getTitle());
+			out.name(3);
+			java.util.List<String> values = getSnippets();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.STRING, values.size());
+			for (String x : values) {
+				out.value(x);
+			}
+			out.endArray();
 		}
 
 		@Override
@@ -183,6 +204,23 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		result.readFields(in);
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		java.util.List<Result> values = getResults();
+		out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+		for (Result x : values) {
+			x.writeTo(out);
+		}
+		out.endArray();
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.haumacher.msgbuf.binary.DataType;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
@@ -26,6 +27,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 	private final NameTable _table;
 	private final MessageDef _def;
+	private boolean _binary = true;
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
@@ -114,7 +116,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String getExtends() {
-		return _def.getExtends() == null ? " extends de.haumacher.msgbuf.data.AbstractDataObject" : " extends " + Util.qName(_def.getExtends());
+		return _def.getExtends() == null ? " extends de.haumacher.msgbuf.data.AbstractDataObject" + (_binary ? " implements de.haumacher.msgbuf.binary.BinaryDataObject" : "") : " extends " + Util.qName(_def.getExtends());
 	}
 
 	private void generateContents() {
@@ -260,6 +262,59 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("return result;");
 		}
 		line("}");
+		
+		if (_binary) {
+			if (baseClass) {
+				nl();
+				line("@Override");
+				line("public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
+				{
+					line("out.beginObject();");
+					line("writeFields(out);");
+					line("out.endObject();");
+				}
+				line("}");
+			}
+			
+			nl();
+			if (!baseClass) {
+				line("@Override");
+			}
+			line("protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
+			{
+				if (!baseClass) {
+					line("super.writeFields(out);");
+				}
+				for (Field field : fields) {
+					if (field.isTransient()) {
+						continue;
+					}
+					boolean nullable = isNullable(field);
+					if (nullable) {
+						line("if (" + hasName(field) + "()" + ") {");
+					}
+					{
+						line("out.name(" + field.getIndex() + ");");
+						if (field.isRepeated()) {
+							line(getType(field) + " values = " + getterName(field) + "();");
+							line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
+							line("for (" + getType(field.getType()) +" x : values) {");
+							{
+								binaryOutValue(field.getType(), "x");
+							}
+							line("}");
+							line("out.endArray();");
+						} else {
+							binaryOutValue(field.getType(), getterName(field) + "()");
+						}
+					}
+					if (nullable) {
+						line("}");
+					}
+				}
+			}
+			line("}");
+		}
 		
 		if (baseClass) {
 			nl();
@@ -494,6 +549,74 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return "\"" + field.getName() + "\"";
 	}
 
+	private DataType binaryType(Type type) {
+		if (type instanceof PrimitiveType) {
+			return binaryType(((PrimitiveType) type).getKind());
+		} else if (type instanceof CustomType) {
+			Definition definition = ((CustomType) type).getDefinition();
+			if (definition instanceof EnumDef) {
+				return DataType.INT; 
+			} else {
+				return DataType.OBJECT;
+			}
+		} else {
+			return DataType.OBJECT;
+		}
+	}
+	
+	private DataType binaryType(PrimitiveType.Kind primitive) {
+		switch (primitive) {
+		case BOOL: 
+			return DataType.INT;
+
+		case FLOAT:
+			return DataType.FLOAT;
+		case DOUBLE: 
+			return DataType.DOUBLE;
+		
+		case INT32:
+		case UINT32:
+			return DataType.INT;
+		case SINT32:
+			return DataType.SINT;
+		case FIXED32: 
+		case SFIXED32:
+			return DataType.FINT;
+		
+		case INT64:
+		case UINT64:
+			return DataType.LONG;
+		case SINT64:
+			return DataType.SLONG;
+		case FIXED64: 
+		case SFIXED64: 
+			return DataType.FLONG;
+		
+		case STRING:
+			return DataType.STRING;
+			
+		case BYTES:
+			return DataType.BINARY;
+		}			
+		
+		throw new RuntimeException("No such type: " + primitive);
+	}
+
+	private void binaryOutValue(Type type, String x) {
+		if (type instanceof PrimitiveType) {
+			line("out.value(" + x + ");");
+		} else if (type instanceof CustomType) {
+			Definition definition = ((CustomType) type).getDefinition();
+			if (definition instanceof EnumDef) {
+				line("out.value(" + x + ".ordinal()" + ");");
+			} else {
+				line("x.writeTo(out);");
+			}
+		} else {
+			// TODO
+		}
+	}
+	
 	private void jsonOutValue(Type type, String x) {
 		jsonOutValue(type, x, 0);
 	}

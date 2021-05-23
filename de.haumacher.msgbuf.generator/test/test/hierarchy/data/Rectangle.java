@@ -73,6 +73,15 @@ public class Rectangle extends Shape {
 	}
 
 	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(0);
+		out.value(getWidth());
+		out.name(0);
+		out.value(getHeight());
+	}
+
+	@Override
 	protected String jsonType() {
 		return "Rectangle";
 	}

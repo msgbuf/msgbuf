@@ -1,6 +1,6 @@
 package test.enumeration.data;
 
-public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	public enum Corpus {
 
@@ -117,6 +117,26 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject {
 		result.readFields(in);
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getQuery());
+		out.name(2);
+		out.value(getPageNumber());
+		out.name(3);
+		out.value(getResultPerPage());
+		if (hasCorpus()) {
+			out.name(4);
+			out.value(getCorpus().ordinal());
+		}
 	}
 
 	@Override
