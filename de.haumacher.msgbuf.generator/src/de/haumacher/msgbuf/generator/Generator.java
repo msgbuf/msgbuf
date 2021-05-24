@@ -80,6 +80,11 @@ public class Generator {
 			buildSpecializations(file);
 		}
 		
+		TypeIdSynthesizer typeIdSynthesizer = new TypeIdSynthesizer();
+		for (DefinitionFile file : _files) {
+			typeIdSynthesizer.process(file);
+		}
+		
 		FieldIDSynthesizer synthesizer = new FieldIDSynthesizer();
 		for (DefinitionFile file : _files) {
 			synthesizer.process(file);

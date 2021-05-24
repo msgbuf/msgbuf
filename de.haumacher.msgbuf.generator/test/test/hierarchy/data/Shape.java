@@ -76,20 +76,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		out.value(getXCoordinate());
-		out.name(2);
-		out.value(getYCoordinate());
-	}
-
-	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		out.beginArray();
 		out.value(jsonType());
@@ -132,6 +118,56 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 			case "xCoordinate": setXCoordinate(in.nextInt()); break;
 			case "yCoordinate": setYCoordinate(in.nextInt()); break;
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		out.name(0);
+		out.value(typeId());
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
+	protected abstract int typeId();
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getXCoordinate());
+		out.name(2);
+		out.value(getYCoordinate());
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Shape result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = Circle.circle(); break;
+			case 2: result = Rectangle.rectangle(); break;
+			case 3: result = Group.group(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setXCoordinate(in.nextInt()); break;
+			case 2: setYCoordinate(in.nextInt()); break;
+			default: in.skipValue(); 
 		}
 	}
 

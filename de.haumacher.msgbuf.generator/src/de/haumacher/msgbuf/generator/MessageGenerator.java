@@ -163,7 +163,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("/**");
 			line(" * Creates a {@link " + _def.getName() + "} instance.");
 			line(" */");
-			line("public static " + _def.getName() + " " + firstLowerCase(_def.getName()) + "() {");
+			line("public static " + _def.getName() + " " + factoryName(_def) + "() {");
 			{
 				line("return new " + _def.getName() + "();");
 			}
@@ -175,7 +175,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		line(" * Creates a {@link " + _def.getName() + "} instance.");
 		if (!_def.isAbstract()) {
 			line(" *");
-			line(" * @see #" + firstLowerCase(_def.getName()) + "()");
+			line(" * @see #" + factoryName(_def) + "()");
 		}
 		line(" */");
 		line("protected " + _def.getName() + "() {");
@@ -193,6 +193,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 		
 		generateReflectionAccess();
+		
+		binaryIO();
 		
 		if (_def.isAbstract()) {
 			nl();
@@ -215,6 +217,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 			line("}");
 		}
+	}
+
+	private String factoryName(MessageDef def) {
+		return firstLowerCase(def.getName());
 	}
 	
 	private MessageDef abstractGeneralizations(MessageDef def) {
@@ -262,63 +268,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("return result;");
 		}
 		line("}");
-		
-		if (_binary) {
-			if (baseClass) {
-				nl();
-				line("@Override");
-				line("public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
-				{
-					line("out.beginObject();");
-					line("writeFields(out);");
-					line("out.endObject();");
-				}
-				line("}");
-			}
-			
-			nl();
-			if (!baseClass) {
-				line("@Override");
-			}
-			line("protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
-			{
-				if (!baseClass) {
-					line("super.writeFields(out);");
-				}
-				for (Field field : fields) {
-					if (field.isTransient()) {
-						continue;
-					}
-					boolean nullable = isNullable(field);
-					if (nullable) {
-						line("if (" + hasName(field) + "()" + ") {");
-					}
-					{
-						line("out.name(" + field.getIndex() + ");");
-						if (field.isRepeated()) {
-							line("{");
-							{
-								line(getType(field) + " values = " + getterName(field) + "();");
-								line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
-								line("for (" + getType(field.getType()) +" x : values) {");
-								{
-									binaryOutValue(field.getType(), "x");
-								}
-								line("}");
-								line("out.endArray();");
-							}
-							line("}");
-						} else {
-							binaryOutValue(field.getType(), getterName(field) + "()");
-						}
-					}
-					if (nullable) {
-						line("}");
-					}
-				}
-			}
-			line("}");
-		}
 		
 		if (baseClass) {
 			nl();
@@ -537,6 +486,262 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
+	private void binaryIO() {
+		if (!_binary) {
+			return;
+		}
+		
+		boolean baseClass = _def.getExtends() == null;
+		List<Field> fields = _def.getFields();
+		
+		if (baseClass) {
+			nl();
+			line("@Override");
+			line("public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
+			{
+				line("out.beginObject();");
+				if (_def.isAbstract()) {
+					line("out.name(0);");
+					line("out.value(typeId());");
+				}
+				line("writeFields(out);");
+				line("out.endObject();");
+			}
+			line("}");
+		}
+		
+		if (baseClass) {
+			if (_def.isAbstract()) {
+				nl();
+				line("/** The binary identifier for this concrete type in the polymorphic {@link " + _def.getName() + "} hierarchy. */");
+				line("protected abstract int typeId();");
+			}
+		} else {
+			if (!_def.isAbstract() && root(_def).isAbstract()) {
+				nl();
+				line("@Override");
+				line("protected int typeId() {");
+				{
+					line("return " + _def.getId() + ";");				
+				}
+				line("}");
+			}
+		}
+		
+		nl();
+		if (baseClass) {
+			line("/** Serializes all fields of this instance to the given binary output. */");
+		} else {
+			line("@Override");
+		}
+		line("protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
+		{
+			if (!baseClass) {
+				line("super.writeFields(out);");
+			}
+			for (Field field : fields) {
+				if (field.isTransient()) {
+					continue;
+				}
+				boolean nullable = isNullable(field);
+				if (nullable) {
+					line("if (" + hasName(field) + "()" + ") {");
+				}
+				{
+					line("out.name(" + field.getIndex() + ");");
+					if (field.isRepeated()) {
+						line("{");
+						{
+							line(getType(field) + " values = " + getterName(field) + "();");
+							line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
+							line("for (" + getType(field.getType()) +" x : values) {");
+							{
+								binaryOutValue(field.getType(), "x");
+							}
+							line("}");
+							line("out.endArray();");
+						}
+						line("}");
+					} else {
+						binaryOutValue(field.getType(), getterName(field) + "()");
+					}
+				}
+				if (nullable) {
+					line("}");
+				}
+			}
+		}
+		line("}");
+		
+		nl();
+		line("/** Reads a new instance from the given reader. */");
+		line("public static " + _def.getName() + " " + readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
+		{
+			line("in.beginObject();");
+			if (_def.isAbstract()) {
+				line(_def.getName() + " result;");
+				line("int typeField = in.nextName();");
+				line("assert typeField == 0;");
+				line("int type = in.nextInt();");
+				line("switch (type) {");
+				for (MessageDef specialization : transitiveSpecializations(_def)) {
+					if (specialization.isAbstract()) {
+						continue;
+					}
+					line("case " + specialization.getId() + ": result = " + specialization.getName() + "." + factoryName(specialization) + "(); break;");
+				}
+				line("default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;");
+				line("}");
+			} else {
+				line(_def.getName() + " result = new " + _def.getName() + "();");
+			}
+			
+			line("while (in.hasNext()) {");
+			{
+				line("int field = in.nextName();");
+				line("result.readField(in, field);");
+			}
+			line("}");
+
+			line("in.endObject();");
+			line("return result;");
+		}
+		line("}");
+		
+		nl();
+		if (baseClass) {
+			line("/** Consumes the value for the field with the given ID and assigns its value. */");
+		} else {
+			line("@Override");
+		}
+		line("protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {");
+		{
+			line("switch (field) {");
+			for (Field field : fields) {
+				if (field.isTransient()) {
+					continue;
+				}
+				binaryReadField(field);
+			}
+			if (baseClass) {
+				line("default: in.skipValue(); ");
+			} else {
+				line("default: super.readField(in, field);");
+			}
+			line("}");
+		}
+		line("}");
+	}
+
+	private void binaryReadField(Field field) {
+		Type type = field.getType();
+		if (field.isRepeated()) {
+			line("case " + field.getIndex() + ": {");
+			{
+				line("in.beginArray();");
+				line("while (in.hasNext()) {");
+				{
+					line(adderName(field) + "(" + binaryReadEntry(type) + ");");
+				}
+				line("}");
+				line("in.endArray();");
+			}
+			line("}");
+			line("break;");
+		} else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			line("case " + field.getIndex() + ": {");
+			{
+				Type keyType = mapType.getKeyType();
+				Type valueType = mapType.getValueType();
+				
+				line("in.beginArray();");
+				line("while (in.hasNext()) {");
+				{
+					line("in.beginObject();");
+					line(getType(keyType) + " key = " + defaultValue(keyType) + ";");
+					line(getType(valueType) + " value = " + defaultValue(valueType) + ";");
+					line("while (in.hasNext()) {");
+					{
+						line("switch (in.nextName()) {");
+						line("case 1: key = " + binaryReadEntry(keyType) + "; break;");
+						line("case 2: value = " + binaryReadEntry(valueType) + "; break;");
+						line("default: in.skipValue(); break;");
+						line("}");
+					}
+					line("}");
+					line(adderName(field) + "(key, value);");
+					line("in.endObject();");
+				}
+				line("}");
+				line("in.endArray();");
+			}
+			line("break;");
+			line("}");
+		} else {
+			line("case " + field.getIndex() + ": " + setterName(field) + "(" + binaryReadEntry(type) + "); break;");
+		}
+	}
+
+	private String binaryReadEntry(Type type) {
+		if (type instanceof PrimitiveType) {
+			return binaryReadValue(((PrimitiveType) type).getKind());
+		}
+		else if (type instanceof CustomType) {
+			CustomType messageType = (CustomType) type;
+			QName name = messageType.getName();
+			return Util.qName(name) + "." + readerName(Util.last(name)) +  "(in)";
+		}
+		throw new RuntimeException("Unsupported: " + type);
+	}
+
+	private String binaryReadValue(Kind kind) {
+		switch (kind) {
+		case BOOL: 
+			return "in.nextBoolean()";
+		case FLOAT:
+			return "in.nextFloat()";
+		case DOUBLE: 
+			return "in.nextDouble()";
+		case INT32:
+		case UINT32:
+			return "in.nextInt()";
+		case SINT32:
+			return "in.nextIntSigned()";
+		case FIXED32: 
+		case SFIXED32:
+			return "in.nextIntFixed()";
+		
+		case INT64:
+		case UINT64:
+			return "in.nextLong()";
+			
+		case SINT64:
+			return "in.nextLongSigned()";
+
+		case FIXED64: 
+		case SFIXED64: 
+			return "in.nextLongFixed()";
+		
+		case STRING:
+			return "in.nextString()";
+			
+		case BYTES:
+			return "in.nextBinary()";
+		}			
+		
+		throw new RuntimeException("No such type: " + kind);
+	}
+
+	private static MessageDef root(MessageDef def) {
+		MessageDef extendedDef = def.getExtendedDef();
+		if (extendedDef == null) {
+			return def;
+		} else {
+			return root(extendedDef);
+		}
+	}
+
 	/** 
 	 * TODO
 	 */
@@ -610,12 +815,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (type instanceof PrimitiveType) {
 			line("out.value(" + x + ");");
 		} else if (type instanceof CustomType) {
-			Definition definition = ((CustomType) type).getDefinition();
-			if (definition instanceof EnumDef) {
-				line("out.value(" + x + ".ordinal()" + ");");
-			} else {
-				line(x + ".writeTo(out);");
-			}
+			line(x + ".writeTo(out);");
 		} else {
 			// TODO
 		}

@@ -33,6 +33,8 @@ public class MessageDef extends Definition {
 
 	private transient MessageDef _extendedDef = null;
 
+	private transient int _id = 0;
+
 	/**
 	 * Whether this class only serves as super type for other data classes.
 	 */
@@ -170,6 +172,21 @@ public class MessageDef extends Definition {
 		return _extendedDef != null;
 	}
 
+	/**
+	 * The ID used for distinguishing an instance of this type from instances of other types in the same polymorphic hierarchy.
+	 */
+	public final int getId() {
+		return _id;
+	}
+
+	/**
+	 * @see #getId()
+	 */
+	public final MessageDef setId(int value) {
+		_id = value;
+		return this;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static MessageDef readMessageDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MessageDef result = new MessageDef();
@@ -193,6 +210,7 @@ public class MessageDef extends Definition {
 			case "fields": return getFields();
 			case "specializations": return getSpecializations();
 			case "extendedDef": return getExtendedDef();
+			case "id": return getId();
 			default: return super.get(field);
 		}
 	}
@@ -206,6 +224,7 @@ public class MessageDef extends Definition {
 			case "fields": setFields((java.util.List<Field>) value); break;
 			case "specializations": setSpecializations((java.util.List<MessageDef>) value); break;
 			case "extendedDef": setExtendedDef((MessageDef) value); break;
+			case "id": setId((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -247,6 +266,77 @@ public class MessageDef extends Definition {
 			}
 			break;
 			case "fields": {
+				in.beginArray();
+				while (in.hasNext()) {
+					addField(Field.readField(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 2;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(6);
+		out.value(isAbstract());
+		if (hasExtends()) {
+			out.name(7);
+			getExtends().writeTo(out);
+		}
+		out.name(8);
+		{
+			java.util.List<Definition> values = getDefinitions();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Definition x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+		out.name(9);
+		{
+			java.util.List<Field> values = getFields();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Field x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static MessageDef readMessageDef(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		MessageDef result = new MessageDef();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 6: setAbstract(in.nextBoolean()); break;
+			case 7: setExtends(QName.readQName(in)); break;
+			case 8: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addDefinition(Definition.readDefinition(in));
+				}
+				in.endArray();
+			}
+			break;
+			case 9: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addField(Field.readField(in));

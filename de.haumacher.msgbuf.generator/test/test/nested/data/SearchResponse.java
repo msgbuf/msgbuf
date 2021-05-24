@@ -80,27 +80,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 
 		@Override
-		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-			out.beginObject();
-			writeFields(out);
-			out.endObject();
-		}
-
-		protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-			out.name(1);
-			out.value(getUrl());
-			out.name(2);
-			out.value(getTitle());
-			out.name(3);
-			java.util.List<String> values = getSnippets();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.STRING, values.size());
-			for (String x : values) {
-				out.value(x);
-			}
-			out.endArray();
-		}
-
-		@Override
 		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 			writeContent(out);
 		}
@@ -156,6 +135,59 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			}
 		}
 
+		@Override
+		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			out.beginObject();
+			writeFields(out);
+			out.endObject();
+		}
+
+		/** Serializes all fields of this instance to the given binary output. */
+		protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			out.name(1);
+			out.value(getUrl());
+			out.name(2);
+			out.value(getTitle());
+			out.name(3);
+			{
+				java.util.List<String> values = getSnippets();
+				out.beginArray(de.haumacher.msgbuf.binary.DataType.STRING, values.size());
+				for (String x : values) {
+					out.value(x);
+				}
+				out.endArray();
+			}
+		}
+
+		/** Reads a new instance from the given reader. */
+		public static Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+			in.beginObject();
+			Result result = new Result();
+			while (in.hasNext()) {
+				int field = in.nextName();
+				result.readField(in, field);
+			}
+			in.endObject();
+			return result;
+		}
+
+		/** Consumes the value for the field with the given ID and assigns its value. */
+		protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+			switch (field) {
+				case 1: setUrl(in.nextString()); break;
+				case 2: setTitle(in.nextString()); break;
+				case 3: {
+					in.beginArray();
+					while (in.hasNext()) {
+						addSnippet(in.nextString());
+					}
+					in.endArray();
+				}
+				break;
+				default: in.skipValue(); 
+			}
+		}
+
 	}
 
 	/**
@@ -207,23 +239,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		java.util.List<Result> values = getResults();
-		out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-		for (Result x : values) {
-			x.writeTo(out);
-		}
-		out.endArray();
-	}
-
-	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		writeContent(out);
 	}
@@ -266,6 +281,53 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			}
 			break;
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		{
+			java.util.List<Result> values = getResults();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Result x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		SearchResponse result = new SearchResponse();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addResult(Result.readResult(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: in.skipValue(); 
 		}
 	}
 

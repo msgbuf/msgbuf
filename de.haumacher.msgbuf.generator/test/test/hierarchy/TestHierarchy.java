@@ -7,9 +7,13 @@ import static test.hierarchy.data.Circle.*;
 import static test.hierarchy.data.Group.*;
 import static test.hierarchy.data.Rectangle.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import de.haumacher.msgbuf.binary.OctetDataReader;
+import de.haumacher.msgbuf.binary.OctetDataWriter;
 import de.haumacher.msgbuf.io.StringR;
 import de.haumacher.msgbuf.json.JsonReader;
 import junit.framework.TestCase;
@@ -33,13 +37,26 @@ public class TestHierarchy extends TestCase {
 					.addShape(circle())
 					.addShape(rectangle()));
 		
-		String data = shape.toString();
-		Shape copy = Shape.readShape(new JsonReader(new StringR(data)));
-		
+		checkCopy(writeAndReadBackJson(shape));
+		checkCopy(writeAndReadBackBinary(shape));
+	}
+
+	private void checkCopy(Shape copy) {
 		assertTrue(copy instanceof Group);
 		List<Shape> contentsCopy = ((Group) copy).getShapes();
 		assertEquals(3, contentsCopy.size());
 		assertTrue(contentsCopy.get(0) instanceof Circle);
+	}
+
+	private Shape writeAndReadBackJson(Shape shape) throws IOException {
+		String data = shape.toString();
+		return Shape.readShape(new JsonReader(new StringR(data)));
+	}
+	
+	private Shape writeAndReadBackBinary(Shape shape) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		shape.writeTo(new OctetDataWriter(buffer));
+		return Shape.readShape(new OctetDataReader(new ByteArrayInputStream(buffer.toByteArray())));
 	}
 	
 }

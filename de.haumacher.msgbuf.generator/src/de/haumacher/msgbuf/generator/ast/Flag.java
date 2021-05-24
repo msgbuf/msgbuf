@@ -84,6 +84,38 @@ public class Flag extends Option {
 	}
 
 	@Override
+	protected int typeId() {
+		return 3;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		out.value(isValue());
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Flag readFlag(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Flag result = new Flag();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setValue(in.nextBoolean()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
 	public <R,A> R visit(Option.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}

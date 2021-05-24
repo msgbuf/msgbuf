@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Member of a {@link Definition}.
  */
-public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -204,6 +204,75 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 			}
 			break;
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		out.name(0);
+		out.value(typeId());
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** The binary identifier for this concrete type in the polymorphic {@link Part} hierarchy. */
+	protected abstract int typeId();
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getComment());
+		out.name(2);
+		out.value(getName());
+		out.name(3);
+		out.value(getIndex());
+		out.name(4);
+		{
+			java.util.List<Option> values = getOptions();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Option x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Part readPart(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Part result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = Constant.constant(); break;
+			case 2: result = Field.field(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setComment(in.nextString()); break;
+			case 2: setName(in.nextString()); break;
+			case 3: setIndex(in.nextInt()); break;
+			case 4: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addOption(Option.readOption(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: in.skipValue(); 
 		}
 	}
 

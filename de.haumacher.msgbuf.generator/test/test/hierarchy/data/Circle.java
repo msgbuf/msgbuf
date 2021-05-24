@@ -48,13 +48,6 @@ public class Circle extends Shape {
 	}
 
 	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		out.name(3);
-		out.value(getRadius());
-	}
-
-	@Override
 	protected String jsonType() {
 		return "Circle";
 	}
@@ -86,6 +79,38 @@ public class Circle extends Shape {
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "radius": setRadius(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 1;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(3);
+		out.value(getRadius());
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Circle result = new Circle();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 3: setRadius(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

@@ -29,6 +29,34 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		public static Corpus readCorpus(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			return valueOf(in.nextString());
 		}
+
+		/** Writes this instance to the given binary output. */
+		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			switch (this) {
+				case UNIVERSAL: out.value(0); break;
+				case WEB: out.value(1); break;
+				case IMAGES: out.value(2); break;
+				case LOCAL: out.value(3); break;
+				case NEWS: out.value(4); break;
+				case PRODUCTS: out.value(5); break;
+				case VIDEO: out.value(6); break;
+				default: out.value(0);
+			}
+		}
+
+		/** Reads a new instance from the given binary reader. */
+		public static Corpus readCorpus(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+			switch (in.nextInt()) {
+				case 0: return UNIVERSAL;
+				case 1: return WEB;
+				case 2: return IMAGES;
+				case 3: return LOCAL;
+				case 4: return NEWS;
+				case 5: return PRODUCTS;
+				case 6: return VIDEO;
+				default: return UNIVERSAL;
+			}
+		}
 	}
 
 	/**
@@ -120,26 +148,6 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		out.value(getQuery());
-		out.name(2);
-		out.value(getPageNumber());
-		out.name(3);
-		out.value(getResultPerPage());
-		if (hasCorpus()) {
-			out.name(4);
-			out.value(getCorpus().ordinal());
-		}
-	}
-
-	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		writeContent(out);
 	}
@@ -188,6 +196,50 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 			case "result_per_page": setResultPerPage(in.nextInt()); break;
 			case "corpus": setCorpus(Corpus.readCorpus(in)); break;
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getQuery());
+		out.name(2);
+		out.value(getPageNumber());
+		out.name(3);
+		out.value(getResultPerPage());
+		if (hasCorpus()) {
+			out.name(4);
+			getCorpus().writeTo(out);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		SearchRequest result = new SearchRequest();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setQuery(in.nextString()); break;
+			case 2: setPageNumber(in.nextInt()); break;
+			case 3: setResultPerPage(in.nextInt()); break;
+			case 4: setCorpus(Corpus.readCorpus(in)); break;
+			default: in.skipValue(); 
 		}
 	}
 

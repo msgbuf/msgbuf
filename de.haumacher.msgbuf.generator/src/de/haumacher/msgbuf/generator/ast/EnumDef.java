@@ -104,6 +104,52 @@ public class EnumDef extends Definition {
 	}
 
 	@Override
+	protected int typeId() {
+		return 1;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(6);
+		{
+			java.util.List<Constant> values = getConstants();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Constant x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static EnumDef readEnumDef(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		EnumDef result = new EnumDef();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 6: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addConstant(Constant.readConstant(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
 	public <R,A> R visit(Definition.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}

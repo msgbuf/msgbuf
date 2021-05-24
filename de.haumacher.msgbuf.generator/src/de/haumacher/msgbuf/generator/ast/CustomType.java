@@ -121,6 +121,40 @@ public class CustomType extends Type {
 	}
 
 	@Override
+	protected int typeId() {
+		return 1;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		if (hasName()) {
+			out.name(1);
+			getName().writeTo(out);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static CustomType readCustomType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		CustomType result = new CustomType();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setName(QName.readQName(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
 	public <R,A> R visit(Type.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}

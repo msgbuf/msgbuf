@@ -56,20 +56,6 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		out.value(getName());
-		out.name(2);
-		out.value(getCost());
-	}
-
-	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		writeContent(out);
 	}
@@ -106,6 +92,42 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 			case "name": setName(in.nextString()); break;
 			case "cost": setCost(in.nextDouble()); break;
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getName());
+		out.name(2);
+		out.value(getCost());
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Project readProject(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Project result = new Project();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setName(in.nextString()); break;
+			case 2: setCost(in.nextDouble()); break;
+			default: in.skipValue(); 
 		}
 	}
 

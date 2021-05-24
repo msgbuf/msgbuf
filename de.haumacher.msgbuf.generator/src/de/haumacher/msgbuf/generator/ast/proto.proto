@@ -108,6 +108,9 @@ message MessageDef extends Definition {
 	
 	/** Reference to the {@link MessageDef data class definition} that is referenced by the {@link #extends} clause. */
 	transient MessageDef extendedDef;
+	
+	/** The ID used for distinguishing an instance of this type from instances of other types in the same polymorphic hierarchy. */
+	transient int id;
 }
 
 /**

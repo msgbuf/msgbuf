@@ -78,18 +78,6 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(3);
-		out.name(4);
-	}
-
-	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		writeContent(out);
 	}
@@ -165,6 +153,76 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 				break;
 			}
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(3);
+		out.name(4);
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static MyMessage readMyMessage(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		MyMessage result = new MyMessage();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 3: {
+				in.beginArray();
+				while (in.hasNext()) {
+					in.beginObject();
+					String key = "";
+					Project value = null;
+					while (in.hasNext()) {
+						switch (in.nextName()) {
+							case 1: key = in.nextString(); break;
+							case 2: value = Project.readProject(in); break;
+							default: in.skipValue(); break;
+						}
+					}
+					addProject(key, value);
+					in.endObject();
+				}
+				in.endArray();
+				break;
+			}
+			case 4: {
+				in.beginArray();
+				while (in.hasNext()) {
+					in.beginObject();
+					int key = 0;
+					String value = "";
+					while (in.hasNext()) {
+						switch (in.nextName()) {
+							case 1: key = in.nextInt(); break;
+							case 2: value = in.nextString(); break;
+							default: in.skipValue(); break;
+						}
+					}
+					addRating(key, value);
+					in.endObject();
+				}
+				in.endArray();
+				break;
+			}
+			default: in.skipValue(); 
 		}
 	}
 

@@ -72,6 +72,36 @@ public class PrimitiveType extends Type {
 		public static Kind readKind(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			return valueOf(in.nextString());
 		}
+
+		/** Writes this instance to the given binary output. */
+		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			switch (this) {
+				case INT32: out.value(0); break;
+				case UINT32: out.value(0); break;
+				case SINT32: out.value(0); break;
+				case FIXED32: out.value(0); break;
+				case SFIXED32: out.value(0); break;
+				case INT64: out.value(0); break;
+				case UINT64: out.value(0); break;
+				case SINT64: out.value(0); break;
+				case FIXED64: out.value(0); break;
+				case SFIXED64: out.value(0); break;
+				case BOOL: out.value(0); break;
+				case STRING: out.value(0); break;
+				case FLOAT: out.value(0); break;
+				case DOUBLE: out.value(0); break;
+				case BYTES: out.value(0); break;
+				default: out.value(0);
+			}
+		}
+
+		/** Reads a new instance from the given binary reader. */
+		public static Kind readKind(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+			switch (in.nextInt()) {
+				case 0: return INT32;
+				default: return INT32;
+			}
+		}
 	}
 
 	/**
@@ -157,6 +187,40 @@ public class PrimitiveType extends Type {
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "kind": setKind(Kind.readKind(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 2;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		if (hasKind()) {
+			out.name(1);
+			getKind().writeTo(out);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		PrimitiveType result = new PrimitiveType();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setKind(Kind.readKind(in)); break;
 			default: super.readField(in, field);
 		}
 	}

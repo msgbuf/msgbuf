@@ -70,22 +70,6 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		out.value(getQuery());
-		out.name(2);
-		out.value(getPageNumber());
-		out.name(3);
-		out.value(getResultPerPage());
-	}
-
-	@Override
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		writeContent(out);
 	}
@@ -127,6 +111,45 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 			case "page_number": setPageNumber(in.nextInt()); break;
 			case "result_per_page": setResultPerPage(in.nextInt()); break;
 			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getQuery());
+		out.name(2);
+		out.value(getPageNumber());
+		out.name(3);
+		out.value(getResultPerPage());
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		SearchRequest result = new SearchRequest();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setQuery(in.nextString()); break;
+			case 2: setPageNumber(in.nextInt()); break;
+			case 3: setResultPerPage(in.nextInt()); break;
+			default: in.skipValue(); 
 		}
 	}
 

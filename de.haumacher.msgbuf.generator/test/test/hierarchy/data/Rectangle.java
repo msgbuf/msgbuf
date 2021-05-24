@@ -73,15 +73,6 @@ public class Rectangle extends Shape {
 	}
 
 	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		out.name(3);
-		out.value(getWidth());
-		out.name(4);
-		out.value(getHeight());
-	}
-
-	@Override
 	protected String jsonType() {
 		return "Rectangle";
 	}
@@ -118,6 +109,41 @@ public class Rectangle extends Shape {
 		switch (field) {
 			case "width": setWidth(in.nextInt()); break;
 			case "height": setHeight(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 2;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(3);
+		out.value(getWidth());
+		out.name(4);
+		out.value(getHeight());
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Rectangle result = new Rectangle();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 3: setWidth(in.nextInt()); break;
+			case 4: setHeight(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
