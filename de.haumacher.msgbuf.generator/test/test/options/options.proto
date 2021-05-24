@@ -1,10 +1,16 @@
 package test.options.data;
 
 message MyMessage1 {
+  option some_int = 13;
+  option some_double = -13.42;
+  option some_string = "Foo with \"bar\"!";
+  option cool = true;
+  option boring = false;
+  
   enum EnumAllowingAlias {
     option allow_alias = true;
     UNKNOWN = 0;
-    STARTED = 1;
+    STARTED = 1 [preferred = true];
     RUNNING = 1;
   }
 }

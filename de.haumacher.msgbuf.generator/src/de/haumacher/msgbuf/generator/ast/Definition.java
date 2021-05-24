@@ -27,6 +27,8 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	private String _name = "";
 
+	private final java.util.List<Option> _options = new java.util.ArrayList<>();
+
 	private transient DefinitionFile _file = null;
 
 	private transient MessageDef _outer = null;
@@ -58,6 +60,30 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	 */
 	public final Definition setName(String value) {
 		_name = value;
+		return this;
+	}
+
+	/**
+	 * Annotations to this {@link Definition}
+	 */
+	public final java.util.List<Option> getOptions() {
+		return _options;
+	}
+
+	/**
+	 * @see #getOptions()
+	 */
+	public final Definition setOptions(java.util.List<Option> value) {
+		_options.clear();
+		_options.addAll(value);
+		return this;
+	}
+
+	/**
+	 * Adds a value to the {@link #getOptions()} list.
+	 */
+	public final Definition addOption(Option value) {
+		_options.add(value);
 		return this;
 	}
 
@@ -139,6 +165,7 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		switch (field) {
 			case "comment": return getComment();
 			case "name": return getName();
+			case "options": return getOptions();
 			case "file": return getFile();
 			case "outer": return getOuter();
 			default: return super.get(field);
@@ -150,6 +177,7 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		switch (field) {
 			case "comment": setComment((String) value); break;
 			case "name": setName((String) value); break;
+			case "options": setOptions((java.util.List<Option>) value); break;
 			case "file": setFile((DefinitionFile) value); break;
 			case "outer": setOuter((MessageDef) value); break;
 		}
@@ -162,6 +190,12 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		out.value(getComment());
 		out.name("name");
 		out.value(getName());
+		out.name("options");
+		out.beginArray();
+		for (Option x : getOptions()) {
+			x.writeTo(out);
+		}
+		out.endArray();
 	}
 
 	@Override
@@ -169,6 +203,14 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		switch (field) {
 			case "comment": setComment(in.nextString()); break;
 			case "name": setName(in.nextString()); break;
+			case "options": {
+				in.beginArray();
+				while (in.hasNext()) {
+					addOption(Option.readOption(in));
+				}
+				in.endArray();
+			}
+			break;
 			default: super.readField(in, field);
 		}
 	}

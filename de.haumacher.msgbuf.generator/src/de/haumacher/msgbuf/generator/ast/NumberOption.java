@@ -1,0 +1,91 @@
+package de.haumacher.msgbuf.generator.ast;
+
+/**
+ * {@link Option} annotating an int value
+ */
+public class NumberOption extends Option {
+
+	/**
+	 * Creates a {@link NumberOption} instance.
+	 */
+	public static NumberOption numberOption() {
+		return new NumberOption();
+	}
+
+	/**
+	 * Creates a {@link NumberOption} instance.
+	 *
+	 * @see #numberOption()
+	 */
+	protected NumberOption() {
+		super();
+	}
+
+	private double _value = 0.0d;
+
+	/**
+	 * The number assigned to the option {@link #getName()}.
+	 */
+	public final double getValue() {
+		return _value;
+	}
+
+	/**
+	 * @see #getValue()
+	 */
+	public final NumberOption setValue(double value) {
+		_value = value;
+		return this;
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static NumberOption readNumberOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		NumberOption result = new NumberOption();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	protected String jsonType() {
+		return "NumberOption";
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case "value": return getValue();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case "value": setValue((double) value); break;
+			default: super.set(field, value); break;
+		}
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name("value");
+		out.value(getValue());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case "value": setValue(in.nextDouble()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public <R,A> R visit(Option.Visitor<R,A> v, A arg) {
+		return v.visit(this, arg);
+	}
+
+}

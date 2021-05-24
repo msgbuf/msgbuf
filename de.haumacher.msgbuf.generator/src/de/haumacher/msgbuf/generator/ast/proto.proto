@@ -13,6 +13,9 @@ abstract message Part {
     /** The numeric identifier for this member.*/
 	int index;
 	
+	/** Annotations to this {@link Part} */
+	repeated Option options;
+	
 	/** The {@link Definition} definint this {@link Part}. */
 	transient Definition owner;
 }
@@ -35,6 +38,9 @@ message DefinitionFile {
     /** The package name for all types in this file. */
 	QName `package`;
 	
+	/** Annotations to this {@link DefinitionFile} */
+	repeated Option options;
+	
     /** All definitions in this file. */
 	repeated Definition definitions;
 }
@@ -48,6 +54,9 @@ abstract message Definition {
 	
     /** The name of this definition. */
 	string name;
+	
+	/** Annotations to this {@link Definition} */
+	repeated Option options;
 
     /** Reference back to the {@link DefinitionFile} that contains this definition. */
 	transient DefinitionFile file;
@@ -187,6 +196,30 @@ message MapType extends Type {
 	
     /** The value type of this map. */
 	Type valueType;
+}
+
+/** An option annotation. */
+abstract message Option {
+	/** The name of this option. */
+	string name;
+}
+
+/** {@link Option} annotating a string value */
+message StringOption extends Option {
+	/** The string value assigned to the option {@link #name}. */
+	string value;
+}
+
+/** {@link Option} annotating an int value */
+message NumberOption extends Option {
+	/** The number assigned to the option {@link #name}. */
+	double value;
+}
+
+/** {@link Option} annotating a boolean value */
+message Flag extends Option {
+	/** The boolean value assigned to the option {@link #name}. */
+	boolean value;
 }
 
 /**

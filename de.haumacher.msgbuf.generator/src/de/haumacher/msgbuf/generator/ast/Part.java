@@ -29,6 +29,8 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	private int _index = 0;
 
+	private final java.util.List<Option> _options = new java.util.ArrayList<>();
+
 	private transient Definition _owner = null;
 
 	/**
@@ -73,6 +75,30 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 	 */
 	public final Part setIndex(int value) {
 		_index = value;
+		return this;
+	}
+
+	/**
+	 * Annotations to this {@link Part}
+	 */
+	public final java.util.List<Option> getOptions() {
+		return _options;
+	}
+
+	/**
+	 * @see #getOptions()
+	 */
+	public final Part setOptions(java.util.List<Option> value) {
+		_options.clear();
+		_options.addAll(value);
+		return this;
+	}
+
+	/**
+	 * Adds a value to the {@link #getOptions()} list.
+	 */
+	public final Part addOption(Option value) {
+		_options.add(value);
 		return this;
 	}
 
@@ -129,6 +155,7 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 			case "comment": return getComment();
 			case "name": return getName();
 			case "index": return getIndex();
+			case "options": return getOptions();
 			case "owner": return getOwner();
 			default: return super.get(field);
 		}
@@ -140,6 +167,7 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 			case "comment": setComment((String) value); break;
 			case "name": setName((String) value); break;
 			case "index": setIndex((int) value); break;
+			case "options": setOptions((java.util.List<Option>) value); break;
 			case "owner": setOwner((Definition) value); break;
 		}
 	}
@@ -153,6 +181,12 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 		out.value(getName());
 		out.name("index");
 		out.value(getIndex());
+		out.name("options");
+		out.beginArray();
+		for (Option x : getOptions()) {
+			x.writeTo(out);
+		}
+		out.endArray();
 	}
 
 	@Override
@@ -161,6 +195,14 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 			case "comment": setComment(in.nextString()); break;
 			case "name": setName(in.nextString()); break;
 			case "index": setIndex(in.nextInt()); break;
+			case "options": {
+				in.beginArray();
+				while (in.hasNext()) {
+					addOption(Option.readOption(in));
+				}
+				in.endArray();
+			}
+			break;
 			default: super.readField(in, field);
 		}
 	}

@@ -25,6 +25,8 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	private QName _package = null;
 
+	private final java.util.List<Option> _options = new java.util.ArrayList<>();
+
 	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
 
 	/**
@@ -47,6 +49,30 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 */
 	public final boolean hasPackage() {
 		return _package != null;
+	}
+
+	/**
+	 * Annotations to this {@link DefinitionFile}
+	 */
+	public final java.util.List<Option> getOptions() {
+		return _options;
+	}
+
+	/**
+	 * @see #getOptions()
+	 */
+	public final DefinitionFile setOptions(java.util.List<Option> value) {
+		_options.clear();
+		_options.addAll(value);
+		return this;
+	}
+
+	/**
+	 * Adds a value to the {@link #getOptions()} list.
+	 */
+	public final DefinitionFile addOption(Option value) {
+		_options.add(value);
+		return this;
 	}
 
 	/**
@@ -91,6 +117,7 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 	public Object get(String field) {
 		switch (field) {
 			case "package": return getPackage();
+			case "options": return getOptions();
 			case "definitions": return getDefinitions();
 			default: return super.get(field);
 		}
@@ -100,6 +127,7 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 	public void set(String field, Object value) {
 		switch (field) {
 			case "package": setPackage((QName) value); break;
+			case "options": setOptions((java.util.List<Option>) value); break;
 			case "definitions": setDefinitions((java.util.List<Definition>) value); break;
 		}
 	}
@@ -111,6 +139,12 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 			out.name("package");
 			getPackage().writeTo(out);
 		}
+		out.name("options");
+		out.beginArray();
+		for (Option x : getOptions()) {
+			x.writeTo(out);
+		}
+		out.endArray();
 		out.name("definitions");
 		out.beginArray();
 		for (Definition x : getDefinitions()) {
@@ -123,6 +157,14 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "package": setPackage(QName.readQName(in)); break;
+			case "options": {
+				in.beginArray();
+				while (in.hasNext()) {
+					addOption(Option.readOption(in));
+				}
+				in.endArray();
+			}
+			break;
 			case "definitions": {
 				in.beginArray();
 				while (in.hasNext()) {

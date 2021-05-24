@@ -80,7 +80,7 @@ TOKEN :
     "string" |
     "bytes"
   >
-| < NUMBER : ("0" | ( [ "1"-"9" ] ([ "0"-"9" ])* )) ("." ([ "0"-"9" ])+)? >
+| < NUMBER : ( "-" )? ("0" | ( [ "1"-"9" ] ([ "0"-"9" ])* )) ("." ([ "0"-"9" ])+)? >
 | < STRING : "'" (~[ "'", "\\" ] | < QUOTE > )* "'" | "\"" (~[ "\"", "\\" ] | < QUOTE > )* "\"" >
 | < XNAME : "`" (~[ "`" ] )+ "`" >
 | < #QUOTE : "\\\\" | "\\'" | "\\\"" >
@@ -92,6 +92,7 @@ DefinitionFile file() :
   DefinitionFile result = DefinitionFile.definitionFile();
   QName pkgName;
   Definition def;
+  Option option;
 }
 {
   (    < SYNTAX > "=" < STRING > ";"
@@ -104,7 +105,8 @@ DefinitionFile file() :
     }
   )?
   
-  (    option()
+  (    option=optionStatement()
+    { result.addOption(option); }
   )*
   
   (    def = definition()
@@ -117,22 +119,48 @@ DefinitionFile file() :
   }
 }
 
-void option() :
+Option optionStatement() :
 {
+  Option result;
 }
 {
-  < OPTION > < NAME > "=" value() ";"
+  < OPTION > result=optionAssignment() ";"
+  {
+    return result;
+  }
 }
 
-void value() :
+Option optionAssignment() :
 {
+  Option result;
+  Token t;
 }
 {
-  (    < STRING >
-  | < NUMBER >
+  t=<  NAME > "=" result=value()
+  {
+    result.setName(t.image);
+    return result;
+  }
+}
+
+Option value() :
+{
+  Option result;
+  Token t;
+}
+{
+  (    t=< STRING >
+    { result = StringOption.stringOption().setValue(Util.stringContent(t.image)); }
+  | t=< NUMBER >
+    { result = NumberOption.numberOption().setValue(Double.parseDouble(t.image)); }
   | < TRUE >
+    { result = Flag.flag().setValue(true); }
   | < FALSE >
+    { result = Flag.flag().setValue(false); }
   )
+  {
+    return result;
+  }
 }
 
 Definition definition() :
@@ -154,6 +182,7 @@ EnumDef enumeration() :
   String name;
   Constant constant;
   Token d;
+  Option option;
 }
 {
   d=< ENUM > name = name() "{"
@@ -162,7 +191,8 @@ EnumDef enumeration() :
     result.setComment(Util.stripComment(d));
   }
   (
-    option()
+    option=optionStatement()
+    { result.addOption(option); }
   )*
   (
     constant=constant()
@@ -195,6 +225,7 @@ Constant constant() :
       result.setIndex(Integer.parseInt(index.image));
     }
   )?
+  partOptions(result)
   ";"
   {
     return result;
@@ -209,6 +240,7 @@ MessageDef message() :
   Definition def;
   Field field;
   Token comment;
+  Option option;
 }
 {
   { result.setComment(Util.stripComment(token.next)); }
@@ -228,7 +260,9 @@ MessageDef message() :
     }
   )?
   "{"
-  ( field=field()
+  ( option=optionStatement()
+    { result.addOption(option); }
+  | field=field()
     {
       result.addField(field);
     }
@@ -281,9 +315,27 @@ Field field() :
       result.setIndex(Integer.parseInt(index.image));
     }
   )?
+  partOptions(result)
   ";"
   {
     return result;  }}
+
+void partOptions(Part part) :
+{
+  Option option;
+}
+{
+  (
+    "["
+	option=optionAssignment()
+	{ part.addOption(option); }
+	( ","
+	  option=optionAssignment()
+      { part.addOption(option); }
+	)*
+    "]"
+  )? 
+}
 
 void reserved() :
 {
