@@ -63,7 +63,7 @@ public class Group extends Shape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(0);
+		out.name(3);
 		java.util.List<Shape> values = getShapes();
 		out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
 		for (Shape x : values) {

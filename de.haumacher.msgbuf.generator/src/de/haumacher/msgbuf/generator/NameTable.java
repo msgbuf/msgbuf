@@ -6,15 +6,18 @@ package de.haumacher.msgbuf.generator;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.haumacher.msgbuf.generator.ast.Constant;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
+import de.haumacher.msgbuf.generator.ast.EnumDef;
+import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.QName;
 
 /**
  * TODO
  */
-public class NameTable  {
+public class NameTable implements Definition.Visitor<Void, Void> {
 	
 	private final Map<String, Package> _packageByName = new HashMap<>();
 	private final Map<String, Definition> _definitionByName = new HashMap<>();
@@ -24,18 +27,34 @@ public class NameTable  {
 		
 		for (Definition def : file.getDefinitions()) {
 			pkg.enter(file, def);
-			enterDef(def);
+			def.visit(this, null);
 		}
+	}
+	
+	@Override
+	public Void visit(EnumDef self, Void arg) {
+		enterDef(self);
+		for (Constant part : self.getConstants()) {
+			part.setOwner(self);
+		}
+		return null;
+	}
+	
+	@Override
+	public Void visit(MessageDef self, Void arg) {
+		enterDef(self);
+		for (Field part : self.getFields()) {
+			part.setOwner(self);
+		}
+		for (Definition inner : self.getDefinitions()) {
+			inner.setOuter(self);
+			enterDef(inner);
+		}
+		return null;
 	}
 
 	private void enterDef(Definition def) {
 		_definitionByName.put(def.getName(), def);
-		
-		if (def instanceof MessageDef) {
-			for (Definition inner : ((MessageDef) def).getDefinitions()) {
-				enterDef(inner);
-			}
-		}
 	}
 	
 	private Package mkPackage(QName qName) {

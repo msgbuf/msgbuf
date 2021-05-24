@@ -79,6 +79,12 @@ public class Generator {
 		for (DefinitionFile file : _files) {
 			buildSpecializations(file);
 		}
+		
+		FieldIDSynthesizer synthesizer = new FieldIDSynthesizer();
+		for (DefinitionFile file : _files) {
+			synthesizer.process(file);
+		}
+		
 		for (DefinitionFile file : _files) {
 			File dir = mkdir(file.getPackage());
 			
@@ -120,8 +126,12 @@ public class Generator {
 				QName generalizationName = def.getExtends();
 				if (generalizationName != null) {
 					MessageDef ref = (MessageDef) table.lookup(def, generalizationName);
-					def.setExtendedDef(ref);
-					ref.addSpecialization(def);
+					if (ref ==  null) {
+						error("Referenced type '" + Util.qName(generalizationName) + "' not found.");
+					} else {
+						def.setExtendedDef(ref);
+						ref.addSpecialization(def);
+					}
 				}
 				
 				for (Definition inner : def.getDefinitions()) {
@@ -186,12 +196,15 @@ public class Generator {
 		return result;
 	}
 
-	/** 
-	 * TODO
-	 */
-	public void error(String string, IOException ex) {
-		//  TODO: Automatically created
-		
+	protected void error(String message) {
+		error(message, null);
+	}
+	
+	protected void error(String message, IOException ex) {
+		System.out.println(message);
+		if (ex != null) {
+			ex.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) throws ParseException, IOException {

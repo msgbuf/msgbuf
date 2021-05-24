@@ -83,9 +83,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(0);
+		out.name(1);
 		out.value(getXCoordinate());
-		out.name(0);
+		out.name(2);
 		out.value(getYCoordinate());
 	}
 

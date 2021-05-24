@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A field definition of a {@link MessageDef}.
  */
-public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class Field extends Part {
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -21,47 +21,11 @@ public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
 		super();
 	}
 
-	private String _comment = "";
-
-	private String _name = "";
-
 	private boolean _transient = false;
 
 	private boolean _repeated = false;
 
 	private Type _type = null;
-
-	private int _index = 0;
-
-	/**
-	 * The documentation comment for this field.
-	 */
-	public final String getComment() {
-		return _comment;
-	}
-
-	/**
-	 * @see #getComment()
-	 */
-	public final Field setComment(String value) {
-		_comment = value;
-		return this;
-	}
-
-	/**
-	 * The name of this field.
-	 */
-	public final String getName() {
-		return _name;
-	}
-
-	/**
-	 * @see #getName()
-	 */
-	public final Field setName(String value) {
-		_name = value;
-		return this;
-	}
 
 	/**
 	 * Whether this field is not serialized when a message is created.
@@ -115,21 +79,6 @@ public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return _type != null;
 	}
 
-	/**
-	 * The numerical ID of this field.
-	 */
-	public final int getIndex() {
-		return _index;
-	}
-
-	/**
-	 * @see #getIndex()
-	 */
-	public final Field setIndex(int value) {
-		_index = value;
-		return this;
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Field result = new Field();
@@ -140,19 +89,16 @@ public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		writeContent(out);
+	protected String jsonType() {
+		return "Field";
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "comment": return getComment();
-			case "name": return getName();
 			case "transient": return isTransient();
 			case "repeated": return isRepeated();
 			case "type": return getType();
-			case "index": return getIndex();
 			default: return super.get(field);
 		}
 	}
@@ -160,22 +106,16 @@ public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "comment": setComment((String) value); break;
-			case "name": setName((String) value); break;
 			case "transient": setTransient((boolean) value); break;
 			case "repeated": setRepeated((boolean) value); break;
 			case "type": setType((Type) value); break;
-			case "index": setIndex((int) value); break;
+			default: super.set(field, value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("comment");
-		out.value(getComment());
-		out.name("name");
-		out.value(getName());
 		out.name("transient");
 		out.value(isTransient());
 		out.name("repeated");
@@ -184,21 +124,21 @@ public class Field extends de.haumacher.msgbuf.data.AbstractDataObject {
 			out.name("type");
 			getType().writeTo(out);
 		}
-		out.name("index");
-		out.value(getIndex());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "comment": setComment(in.nextString()); break;
-			case "name": setName(in.nextString()); break;
 			case "transient": setTransient(in.nextBoolean()); break;
 			case "repeated": setRepeated(in.nextBoolean()); break;
 			case "type": setType(Type.readType(in)); break;
-			case "index": setIndex(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public <R,A> R visit(Part.Visitor<R,A> v, A arg) {
+		return v.visit(this, arg);
 	}
 
 }

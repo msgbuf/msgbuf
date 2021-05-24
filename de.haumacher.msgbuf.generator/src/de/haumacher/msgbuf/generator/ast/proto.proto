@@ -1,19 +1,29 @@
 package de.haumacher.msgbuf.generator.ast;
 
 /**
+ * Member of a {@link Definition}.
+ */
+abstract message Part {
+    /** The documentation comment for this member. */
+	string comment;
+	
+    /** The name of this member. */
+	string name;
+	
+    /** The numeric identifier for this member.*/
+	int index;
+	
+	/** The {@link Definition} definint this {@link Part}. */
+	transient Definition owner;
+}
+
+/**
  * A constant of an {@link EnumDef}.
  * 
  * @see EnumDef#constants
  */
-message Constant {
-    /** The documentation comment for this constant. */
-	string comment;
-	
-    /** The name of this constant. */
-	string name;
-	
-    /** The numeric identifier for this constant.*/
-	int index;
+message Constant extends Part {
+	// No additional members.
 }
 
 /**
@@ -41,6 +51,15 @@ abstract message Definition {
 
     /** Reference back to the {@link DefinitionFile} that contains this definition. */
 	transient DefinitionFile file;
+	
+	/** 
+	 * The {@link MessageDef} that contains this inner {@Definition}.
+	 *
+	 * <p>
+	 * The value is <code>null</code> for top-level defintions, see {@link #file}.
+	 * </p> 
+	 */
+	transient MessageDef outer;
 }
 
 /**
@@ -85,12 +104,7 @@ message MessageDef extends Definition {
 /**
  * A field definition of a {@link MessageDef}.
  */
-message Field {
-    /** The documentation comment for this field. */
-	string comment;
-	
-    /** The name of this field. */
-	string name;
+message Field extends Part {
 	
 	/** Whether this field is not serialized when a message is created. */
 	boolean `transient`;
@@ -101,8 +115,6 @@ message Field {
 	/** The type of values that can be stored in this field. */
 	Type type;
 	
-	/** The numerical ID of this field. */
-	int index;
 }
 
 /**

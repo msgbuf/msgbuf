@@ -63,9 +63,9 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	}
 
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(0);
+		out.name(1);
 		out.value(getName());
-		out.name(0);
+		out.name(2);
 		out.value(getCost());
 	}
 

@@ -6,6 +6,9 @@ package de.haumacher.msgbuf.generator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.haumacher.msgbuf.generator.ast.Definition;
+import de.haumacher.msgbuf.generator.ast.MessageDef;
+import de.haumacher.msgbuf.generator.ast.Part;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.parser.Token;
 
@@ -36,4 +39,29 @@ public class Util {
 	public static String stripComment(String comment) {
 		return comment.replaceAll("^/\\*+ ?(?:\\s+\\r?\\n)?", "").replaceAll("(?:\\s*\\r?\\n)?\\s*\\*+/$", "").replaceAll("(?m)^\\s*\\*+ ?", "");
 	}
+
+	/** 
+	 * TODO
+	 */
+	public static String toString(Part part) {
+		return toString(part.getOwner()) + "#" + part.getName();
+	}
+
+	/** 
+	 * TODO
+	 */
+	public static String toString(Definition def) {
+		MessageDef outer = def.getOuter();
+		if (outer == null) {
+			QName pkg = def.getFile().getPackage();
+			if (pkg == null) {
+				return def.getName();
+			} else {
+				return qName(pkg) + "." + def.getName();
+			}
+		} else {
+			return toString(outer) + "." + def.getName();
+		}
+	}
+
 }

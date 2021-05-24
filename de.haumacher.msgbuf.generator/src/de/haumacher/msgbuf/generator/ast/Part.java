@@ -1,25 +1,25 @@
 package de.haumacher.msgbuf.generator.ast;
 
 /**
- * Base class of a definition in a {@link DefinitionFile}.
+ * Member of a {@link Definition}.
  */
-public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject {
 
-	/** Visitor interface for the {@link Definition} hierarchy.*/
+	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
 
-		/** Visit case for {@link EnumDef}.*/
-		R visit(EnumDef self, A arg);
+		/** Visit case for {@link Constant}.*/
+		R visit(Constant self, A arg);
 
-		/** Visit case for {@link MessageDef}.*/
-		R visit(MessageDef self, A arg);
+		/** Visit case for {@link Field}.*/
+		R visit(Field self, A arg);
 
 	}
 
 	/**
-	 * Creates a {@link Definition} instance.
+	 * Creates a {@link Part} instance.
 	 */
-	protected Definition() {
+	protected Part() {
 		super();
 	}
 
@@ -27,12 +27,12 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	private String _name = "";
 
-	private transient DefinitionFile _file = null;
+	private int _index = 0;
 
-	private transient MessageDef _outer = null;
+	private transient Definition _owner = null;
 
 	/**
-	 * The documentation comment for this definition.
+	 * The documentation comment for this member.
 	 */
 	public final String getComment() {
 		return _comment;
@@ -41,13 +41,13 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	/**
 	 * @see #getComment()
 	 */
-	public final Definition setComment(String value) {
+	public final Part setComment(String value) {
 		_comment = value;
 		return this;
 	}
 
 	/**
-	 * The name of this definition.
+	 * The name of this member.
 	 */
 	public final String getName() {
 		return _name;
@@ -56,67 +56,56 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	/**
 	 * @see #getName()
 	 */
-	public final Definition setName(String value) {
+	public final Part setName(String value) {
 		_name = value;
 		return this;
 	}
 
 	/**
-	 * Reference back to the {@link DefinitionFile} that contains this definition.
+	 * The numeric identifier for this member.
 	 */
-	public final DefinitionFile getFile() {
-		return _file;
+	public final int getIndex() {
+		return _index;
 	}
 
 	/**
-	 * @see #getFile()
+	 * @see #getIndex()
 	 */
-	public final Definition setFile(DefinitionFile value) {
-		_file = value;
+	public final Part setIndex(int value) {
+		_index = value;
 		return this;
 	}
 
 	/**
-	 * Checks, whether {@link #getFile()} has a value.
+	 * The {@link Definition} definint this {@link Part}.
 	 */
-	public final boolean hasFile() {
-		return _file != null;
+	public final Definition getOwner() {
+		return _owner;
 	}
 
 	/**
-	 * The {@link MessageDef} that contains this inner {@Definition}.
-	 *
-	 * <p>
-	 * The value is <code>null</code> for top-level defintions, see {@link #getFile()}.
-	 * </p>
+	 * @see #getOwner()
 	 */
-	public final MessageDef getOuter() {
-		return _outer;
-	}
-
-	/**
-	 * @see #getOuter()
-	 */
-	public final Definition setOuter(MessageDef value) {
-		_outer = value;
+	public final Part setOwner(Definition value) {
+		_owner = value;
 		return this;
 	}
 
 	/**
-	 * Checks, whether {@link #getOuter()} has a value.
+	 * Checks, whether {@link #getOwner()} has a value.
 	 */
-	public final boolean hasOuter() {
-		return _outer != null;
+	public final boolean hasOwner() {
+		return _owner != null;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Definition readDefinition(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Definition result;
+	public static Part readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Part result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "EnumDef": result = EnumDef.readEnumDef(in); break;
-			case "MessageDef": result = MessageDef.readMessageDef(in); break;
+			case "Constant": result = Constant.readConstant(in); break;
+			case "Field": result = Field.readField(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -139,8 +128,8 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		switch (field) {
 			case "comment": return getComment();
 			case "name": return getName();
-			case "file": return getFile();
-			case "outer": return getOuter();
+			case "index": return getIndex();
+			case "owner": return getOwner();
 			default: return super.get(field);
 		}
 	}
@@ -150,8 +139,8 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		switch (field) {
 			case "comment": setComment((String) value); break;
 			case "name": setName((String) value); break;
-			case "file": setFile((DefinitionFile) value); break;
-			case "outer": setOuter((MessageDef) value); break;
+			case "index": setIndex((int) value); break;
+			case "owner": setOwner((Definition) value); break;
 		}
 	}
 
@@ -162,6 +151,8 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		out.value(getComment());
 		out.name("name");
 		out.value(getName());
+		out.name("index");
+		out.value(getIndex());
 	}
 
 	@Override
@@ -169,6 +160,7 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		switch (field) {
 			case "comment": setComment(in.nextString()); break;
 			case "name": setName(in.nextString()); break;
+			case "index": setIndex(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

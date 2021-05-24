@@ -50,7 +50,7 @@ public class Circle extends Shape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(0);
+		out.name(3);
 		out.value(getRadius());
 	}
 
