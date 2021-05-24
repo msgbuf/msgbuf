@@ -38,6 +38,13 @@ public interface DataWriter {
 	 * Writes an identifier of a field fo the currently written object.
 	 */
 	void name(int id) throws IOException;
+	
+	/**
+	 * Writes a <code>boolean</code> value.
+	 */
+	default void value(boolean value) throws IOException {
+		value(value ? 1 : 0);
+	}
 
 	/**
 	 * Writes an unsigned <code>int</code> value.

@@ -296,14 +296,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					{
 						line("out.name(" + field.getIndex() + ");");
 						if (field.isRepeated()) {
-							line(getType(field) + " values = " + getterName(field) + "();");
-							line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
-							line("for (" + getType(field.getType()) +" x : values) {");
+							line("{");
 							{
-								binaryOutValue(field.getType(), "x");
+								line(getType(field) + " values = " + getterName(field) + "();");
+								line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
+								line("for (" + getType(field.getType()) +" x : values) {");
+								{
+									binaryOutValue(field.getType(), "x");
+								}
+								line("}");
+								line("out.endArray();");
 							}
 							line("}");
-							line("out.endArray();");
 						} else {
 							binaryOutValue(field.getType(), getterName(field) + "()");
 						}
@@ -610,7 +614,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			if (definition instanceof EnumDef) {
 				line("out.value(" + x + ".ordinal()" + ");");
 			} else {
-				line("x.writeTo(out);");
+				line(x + ".writeTo(out);");
 			}
 		} else {
 			// TODO

@@ -54,6 +54,13 @@ public interface DataReader {
 	int nextName() throws IOException;
 
 	/**
+	 * Reads a boolean value.
+	 */
+	default boolean nextBoolean() throws IOException {
+		return nextInt() == 0 ? false : true;
+	}
+	
+	/**
 	 * Reads an (unsigned) integer value.
 	 */
 	int nextInt() throws IOException;
