@@ -43,19 +43,19 @@ public class Generator {
 		_out = out;
 	}
 
-	public void load(String fileName) throws IOException, ParseException {
-		load(new File(fileName));
+	public DefinitionFile load(String fileName) throws IOException, ParseException {
+		return load(new File(fileName));
 	}
 
-	public void load(File file)
+	public DefinitionFile load(File file)
 			throws ParseException, IOException, FileNotFoundException {
 		try (InputStream in = new FileInputStream(file)) {
-			load(in);
+			return load(in);
 		}
 	}
 
-	public void load(InputStream in) throws ParseException {
-		load(parse(in));
+	public DefinitionFile load(InputStream in) throws ParseException {
+		return load(parse(in));
 	}
 
 	public static DefinitionFile parse(InputStream in) throws ParseException {
@@ -70,9 +70,10 @@ public class Generator {
 		return definition;
 	}
 
-	public void load(DefinitionFile file) {
+	public DefinitionFile load(DefinitionFile file) {
 		_files.add(file);
 		_table.enter(file);
+		return file;
 	}
 	
 	public void generate() {
@@ -213,16 +214,34 @@ public class Generator {
 	}
 	
 	public static void main(String[] args) throws ParseException, IOException {
+		File out = null;
 		Generator generator = new Generator();
 		for (int n = 0, cnt = args.length; n < cnt; ) {
 			String arg = args[n++];
 			if (arg.equals("-out")) {
-				generator.setOut(new File(args[n++]));
+				out = new File(args[n++]);
 			} else {
-				generator.load(arg);
+				File file = new File(arg);
+				DefinitionFile content = generator.load(file);
+				if (out == null) {
+					out = findBase(file, content);
+				}
 			}
 		}
+		if (out != null) {
+			generator.setOut(out);
+		}
 		generator.generate();
+	}
+
+	private static File findBase(File protoFile, DefinitionFile content) {
+		File result = protoFile.getParentFile();
+		if (content.getPackage() != null) {
+			for (int n = 0, cnt = content.getPackage().getNames().size(); n < cnt; n++) {
+				result = result.getParentFile();
+			}
+		}
+		return result;
 	}
 
 }
