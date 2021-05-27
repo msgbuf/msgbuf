@@ -214,12 +214,19 @@ public class Generator {
 	}
 	
 	public static void main(String[] args) throws ParseException, IOException {
+		if (args.length == 0) {
+			printHelp();
+			return;
+		}
 		File out = null;
 		Generator generator = new Generator();
 		for (int n = 0, cnt = args.length; n < cnt; ) {
 			String arg = args[n++];
 			if (arg.equals("-out")) {
 				out = new File(args[n++]);
+			} else if (arg.equals("-h")) {
+				printHelp();
+				return;
 			} else {
 				File file = new File(arg);
 				DefinitionFile content = generator.load(file);
@@ -232,6 +239,10 @@ public class Generator {
 			generator.setOut(out);
 		}
 		generator.generate();
+	}
+
+	private static void printHelp() {
+		System.err.println("Usage: java -jar " + Generator.class.getName() + " -out <java-output-dir> <protocol-definition.proto>*");
 	}
 
 	private static File findBase(File protoFile, DefinitionFile content) {
