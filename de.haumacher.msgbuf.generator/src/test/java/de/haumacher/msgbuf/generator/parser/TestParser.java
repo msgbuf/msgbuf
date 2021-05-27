@@ -40,7 +40,7 @@ public class TestParser extends TestCase {
 	}
 
 	private static File testDir() {
-		return new File("test");
+		return new File("src" + File.separator + "test" + File.separator + "java");
 	}
 	
 	public static Test suite() {
