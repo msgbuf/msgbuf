@@ -3,7 +3,6 @@
  */
 package de.haumacher.msgbuf.binary;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -275,7 +274,7 @@ public class OctetDataReader implements DataReader {
 		while (true) {
 			int data = _in.read();
 			if (data < 0) {
-				throw new EOFException("End of stream received, while reading var int.");
+				throw new IOException("End of stream received, while reading var int.");
 			}
 			result |= (data & MASK_7) << shift;
 			if ((data & BIT_8) == 0) {
@@ -291,7 +290,7 @@ public class OctetDataReader implements DataReader {
 		while (true) {
 			int data = _in.read();
 			if (data < 0) {
-				throw new EOFException("End of stream received, while reading var int.");
+				throw new IOException("End of stream received, while reading var int.");
 			}
 			result |= (data & MASK_7) << shift;
 			if ((data & BIT_8) == 0) {
@@ -306,7 +305,7 @@ public class OctetDataReader implements DataReader {
 		for (int n = 0; n < 4; n++) {
 			int data = _in.read();
 			if (data < 0) {
-				throw new EOFException("End of stream received, while reading fixed int.");
+				throw new IOException("End of stream received, while reading fixed int.");
 			}
 			result <<= 8;
 			result |= data;
@@ -319,7 +318,7 @@ public class OctetDataReader implements DataReader {
 		for (int n = 0; n < 8; n++) {
 			int data = _in.read();
 			if (data < 0) {
-				throw new EOFException("End of stream received, while reading fixed int.");
+				throw new IOException("End of stream received, while reading fixed int.");
 			}
 			result <<= 8;
 			result |= data;
@@ -327,13 +326,13 @@ public class OctetDataReader implements DataReader {
 		return result;
 	}
 	
-	private byte[] readBinary(int size) throws IOException, EOFException {
+	private byte[] readBinary(int size) throws IOException {
 		byte[] result = new byte[size];
 		int offset = 0;
 		while (offset < size) {
 			int direct = _in.read(result, offset, size - offset);
 			if (direct < 0) {
-				throw new EOFException("Received end of stream while receiving a binary string of size '" + size + "'.");
+				throw new IOException("Received end of stream while receiving a binary string of size '" + size + "'.");
 			}
 			offset += direct;
 		}
