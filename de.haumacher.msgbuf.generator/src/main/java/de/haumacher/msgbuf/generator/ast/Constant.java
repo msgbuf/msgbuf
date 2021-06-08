@@ -10,14 +10,14 @@ public class Constant extends Part {
 	/**
 	 * Creates a {@link Constant} instance.
 	 */
-	public static Constant constant() {
+	public static Constant create() {
 		return new Constant();
 	}
 
 	/**
 	 * Creates a {@link Constant} instance.
 	 *
-	 * @see #constant()
+	 * @see #create()
 	 */
 	protected Constant() {
 		super();
@@ -42,11 +42,6 @@ public class Constant extends Part {
 		return 1;
 	}
 
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -57,13 +52,6 @@ public class Constant extends Part {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

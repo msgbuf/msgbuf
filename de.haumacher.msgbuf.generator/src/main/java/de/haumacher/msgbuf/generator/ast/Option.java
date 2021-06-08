@@ -117,6 +117,14 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 		out.value(getName());
 	}
 
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setName(in.nextString()); break;
+			default: in.skipValue(); 
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Option readOption(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -125,9 +133,9 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case 1: result = StringOption.stringOption(); break;
-			case 2: result = NumberOption.numberOption(); break;
-			case 3: result = Flag.flag(); break;
+			case 1: result = StringOption.create(); break;
+			case 2: result = NumberOption.create(); break;
+			case 3: result = Flag.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {
@@ -136,14 +144,6 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 		}
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setName(in.nextString()); break;
-			default: in.skipValue(); 
-		}
 	}
 
 	/** Accepts the given visitor. */

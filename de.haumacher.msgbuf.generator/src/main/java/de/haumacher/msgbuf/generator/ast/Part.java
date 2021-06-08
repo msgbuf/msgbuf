@@ -238,26 +238,6 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 		}
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Part readPart(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Part result;
-		int typeField = in.nextName();
-		assert typeField == 0;
-		int type = in.nextInt();
-		switch (type) {
-			case 1: result = Constant.constant(); break;
-			case 2: result = Field.field(); break;
-			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
-		}
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
-
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -274,6 +254,26 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 			break;
 			default: in.skipValue(); 
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Part readPart(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Part result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = Constant.create(); break;
+			case 2: result = Field.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

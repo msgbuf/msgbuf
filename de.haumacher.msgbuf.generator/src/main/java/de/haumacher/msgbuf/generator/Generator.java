@@ -181,6 +181,7 @@ public class Generator {
 			File out = new File(_dir, name + ".java");
 			try (FileOutputStream os = new FileOutputStream(out)) {
 				try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
+					System.out.println("Generating '" + out + "'.");
 					generator.generate(w);
 				}
 			} catch (IOException ex) {

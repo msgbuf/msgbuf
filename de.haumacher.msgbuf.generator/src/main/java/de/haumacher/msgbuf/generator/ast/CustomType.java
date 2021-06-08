@@ -10,14 +10,14 @@ public class CustomType extends Type {
 	/**
 	 * Creates a {@link CustomType} instance.
 	 */
-	public static CustomType customType() {
+	public static CustomType create() {
 		return new CustomType();
 	}
 
 	/**
 	 * Creates a {@link CustomType} instance.
 	 *
-	 * @see #customType()
+	 * @see #create()
 	 */
 	protected CustomType() {
 		super();
@@ -134,6 +134,14 @@ public class CustomType extends Type {
 		}
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setName(QName.readQName(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static CustomType readCustomType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -144,14 +152,6 @@ public class CustomType extends Type {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setName(QName.readQName(in)); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

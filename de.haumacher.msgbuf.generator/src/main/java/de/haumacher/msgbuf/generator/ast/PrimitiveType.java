@@ -107,14 +107,14 @@ public class PrimitiveType extends Type {
 	/**
 	 * Creates a {@link PrimitiveType} instance.
 	 */
-	public static PrimitiveType primitiveType() {
+	public static PrimitiveType create() {
 		return new PrimitiveType();
 	}
 
 	/**
 	 * Creates a {@link PrimitiveType} instance.
 	 *
-	 * @see #primitiveType()
+	 * @see #create()
 	 */
 	protected PrimitiveType() {
 		super();
@@ -205,6 +205,14 @@ public class PrimitiveType extends Type {
 		}
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setKind(Kind.readKind(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -215,14 +223,6 @@ public class PrimitiveType extends Type {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setKind(Kind.readKind(in)); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

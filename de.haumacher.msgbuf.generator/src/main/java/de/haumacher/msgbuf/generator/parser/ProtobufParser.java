@@ -10,7 +10,7 @@ import de.haumacher.msgbuf.generator.ast.*;
 public class ProtobufParser implements ProtobufParserConstants {
 
   final public DefinitionFile file() throws ParseException {
-  DefinitionFile result = DefinitionFile.definitionFile();
+  DefinitionFile result = DefinitionFile.create();
   QName pkgName;
   Definition def;
   Option option;
@@ -94,19 +94,19 @@ public class ProtobufParser implements ProtobufParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STRING:
       t = jj_consume_token(STRING);
-      result = StringOption.stringOption().setValue(Util.stringContent(t.image));
+      result = StringOption.create().setValue(Util.stringContent(t.image));
       break;
     case NUMBER:
       t = jj_consume_token(NUMBER);
-      result = NumberOption.numberOption().setValue(Double.parseDouble(t.image));
+      result = NumberOption.create().setValue(Double.parseDouble(t.image));
       break;
     case TRUE:
       jj_consume_token(TRUE);
-      result = Flag.flag().setValue(true);
+      result = Flag.create().setValue(true);
       break;
     case FALSE:
       jj_consume_token(FALSE);
-      result = Flag.flag().setValue(false);
+      result = Flag.create().setValue(false);
       break;
     default:
       jj_la1[4] = jj_gen;
@@ -137,7 +137,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public EnumDef enumeration() throws ParseException {
-  EnumDef result = EnumDef.enumDef();
+  EnumDef result = EnumDef.create();
   String name;
   Constant constant;
   Token d;
@@ -197,7 +197,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public Constant constant() throws ParseException {
-  Constant result = Constant.constant();
+  Constant result = Constant.create();
   String name;
   Token index;
     result.setComment(Util.stripComment(token.next));
@@ -220,7 +220,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public MessageDef message() throws ParseException {
-  MessageDef result = MessageDef.messageDef();
+  MessageDef result = MessageDef.create();
   String name;
   QName generalization;
   Definition def;
@@ -320,7 +320,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public Field field() throws ParseException {
-  Field result = Field.field();
+  Field result = Field.create();
   Type type;
   String name;
   Token index;
@@ -518,19 +518,19 @@ public class ProtobufParser implements ProtobufParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TYPE:
       t = jj_consume_token(TYPE);
-      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase()));
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase()));
       break;
     case INT_TYPE:
       t = jj_consume_token(INT_TYPE);
-      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT32);
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT32);
       break;
     case LONG_TYPE:
       t = jj_consume_token(LONG_TYPE);
-      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT64);
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT64);
       break;
     case BOOLEAN_TYPE:
       t = jj_consume_token(BOOLEAN_TYPE);
-      result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.BOOL);
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.BOOL);
       break;
     default:
       jj_la1[26] = jj_gen;
@@ -544,7 +544,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   final public CustomType customType() throws ParseException {
   QName name;
     name = qName();
-    {if (true) return CustomType.customType().setName(name);}
+    {if (true) return CustomType.create().setName(name);}
     throw new Error("Missing return statement in function");
   }
 
@@ -557,12 +557,12 @@ public class ProtobufParser implements ProtobufParserConstants {
     jj_consume_token(38);
     valueType = type();
     jj_consume_token(41);
-    {if (true) return MapType.mapType().setKeyType(keyType).setValueType(valueType);}
+    {if (true) return MapType.create().setKeyType(keyType).setValueType(valueType);}
     throw new Error("Missing return statement in function");
   }
 
   final public QName qName() throws ParseException {
-  QName result = QName.qName();
+  QName result = QName.create();
   String name;
     name = name();
     result.addName(name);

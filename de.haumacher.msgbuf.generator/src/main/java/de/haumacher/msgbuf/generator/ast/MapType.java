@@ -8,14 +8,14 @@ public class MapType extends Type {
 	/**
 	 * Creates a {@link MapType} instance.
 	 */
-	public static MapType mapType() {
+	public static MapType create() {
 		return new MapType();
 	}
 
 	/**
 	 * Creates a {@link MapType} instance.
 	 *
-	 * @see #mapType()
+	 * @see #create()
 	 */
 	protected MapType() {
 		super();
@@ -141,6 +141,15 @@ public class MapType extends Type {
 		}
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setKeyType(Type.readType(in)); break;
+			case 2: setValueType(Type.readType(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static MapType readMapType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -151,15 +160,6 @@ public class MapType extends Type {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setKeyType(Type.readType(in)); break;
-			case 2: setValueType(Type.readType(in)); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

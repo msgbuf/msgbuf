@@ -244,26 +244,6 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 		}
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Definition readDefinition(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Definition result;
-		int typeField = in.nextName();
-		assert typeField == 0;
-		int type = in.nextInt();
-		switch (type) {
-			case 1: result = EnumDef.enumDef(); break;
-			case 2: result = MessageDef.messageDef(); break;
-			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
-		}
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
-
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -279,6 +259,26 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 			break;
 			default: in.skipValue(); 
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Definition readDefinition(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Definition result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = EnumDef.create(); break;
+			case 2: result = MessageDef.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

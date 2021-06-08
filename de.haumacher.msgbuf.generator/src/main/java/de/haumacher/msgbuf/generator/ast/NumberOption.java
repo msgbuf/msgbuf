@@ -8,14 +8,14 @@ public class NumberOption extends Option {
 	/**
 	 * Creates a {@link NumberOption} instance.
 	 */
-	public static NumberOption numberOption() {
+	public static NumberOption create() {
 		return new NumberOption();
 	}
 
 	/**
 	 * Creates a {@link NumberOption} instance.
 	 *
-	 * @see #numberOption()
+	 * @see #create()
 	 */
 	protected NumberOption() {
 		super();
@@ -95,6 +95,14 @@ public class NumberOption extends Option {
 		out.value(getValue());
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setValue(in.nextDouble()); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static NumberOption readNumberOption(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -105,14 +113,6 @@ public class NumberOption extends Option {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 2: setValue(in.nextDouble()); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

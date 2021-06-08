@@ -68,6 +68,13 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 	}
 
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			default: in.skipValue(); 
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Type readType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -76,9 +83,9 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case 1: result = CustomType.customType(); break;
-			case 2: result = PrimitiveType.primitiveType(); break;
-			case 3: result = MapType.mapType(); break;
+			case 1: result = CustomType.create(); break;
+			case 2: result = PrimitiveType.create(); break;
+			case 3: result = MapType.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {
@@ -87,13 +94,6 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 		}
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
 	}
 
 	/** Accepts the given visitor. */

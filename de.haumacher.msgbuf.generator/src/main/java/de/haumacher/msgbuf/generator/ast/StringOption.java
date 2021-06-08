@@ -8,14 +8,14 @@ public class StringOption extends Option {
 	/**
 	 * Creates a {@link StringOption} instance.
 	 */
-	public static StringOption stringOption() {
+	public static StringOption create() {
 		return new StringOption();
 	}
 
 	/**
 	 * Creates a {@link StringOption} instance.
 	 *
-	 * @see #stringOption()
+	 * @see #create()
 	 */
 	protected StringOption() {
 		super();
@@ -95,6 +95,14 @@ public class StringOption extends Option {
 		out.value(getValue());
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setValue(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static StringOption readStringOption(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -105,14 +113,6 @@ public class StringOption extends Option {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 2: setValue(in.nextString()); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

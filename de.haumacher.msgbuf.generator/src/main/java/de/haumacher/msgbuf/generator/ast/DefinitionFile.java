@@ -10,14 +10,14 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
 	 */
-	public static DefinitionFile definitionFile() {
+	public static DefinitionFile create() {
 		return new DefinitionFile();
 	}
 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
 	 *
-	 * @see #definitionFile()
+	 * @see #create()
 	 */
 	protected DefinitionFile() {
 		super();
@@ -210,18 +210,6 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static DefinitionFile readDefinitionFile(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		DefinitionFile result = new DefinitionFile();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
-
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -244,6 +232,18 @@ public class DefinitionFile extends de.haumacher.msgbuf.data.AbstractDataObject 
 			break;
 			default: in.skipValue(); 
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static DefinitionFile readDefinitionFile(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		DefinitionFile result = new DefinitionFile();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

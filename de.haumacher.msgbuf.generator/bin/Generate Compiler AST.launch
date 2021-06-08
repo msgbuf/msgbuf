@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <stringAttribute key="bad_container_name" value="/de.haumacher.msgbuf.generator/bin"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/de.haumacher.msgbuf.generator/src/de/haumacher/msgbuf/generator/Generator.java"/>
+<listEntry value="/de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/Generator.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -11,7 +11,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="de.haumacher.msgbuf.generator.Generator"/>
 <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="de.haumacher.protobuf"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out src&#10;src/de/haumacher/msgbuf/generator/ast/proto.proto"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out src/main/java&#10;src/main/java/de/haumacher/msgbuf/generator/ast/proto.proto"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="de.haumacher.msgbuf.generator"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>

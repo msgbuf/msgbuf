@@ -89,7 +89,7 @@ TOKEN :
 
 DefinitionFile file() :
 {
-  DefinitionFile result = DefinitionFile.definitionFile();
+  DefinitionFile result = DefinitionFile.create();
   QName pkgName;
   Definition def;
   Option option;
@@ -150,13 +150,13 @@ Option value() :
 }
 {
   (    t=< STRING >
-    { result = StringOption.stringOption().setValue(Util.stringContent(t.image)); }
+    { result = StringOption.create().setValue(Util.stringContent(t.image)); }
   | t=< NUMBER >
-    { result = NumberOption.numberOption().setValue(Double.parseDouble(t.image)); }
+    { result = NumberOption.create().setValue(Double.parseDouble(t.image)); }
   | < TRUE >
-    { result = Flag.flag().setValue(true); }
+    { result = Flag.create().setValue(true); }
   | < FALSE >
-    { result = Flag.flag().setValue(false); }
+    { result = Flag.create().setValue(false); }
   )
   {
     return result;
@@ -178,7 +178,7 @@ Definition definition() :
 
 EnumDef enumeration() :
 {
-  EnumDef result = EnumDef.enumDef();
+  EnumDef result = EnumDef.create();
   String name;
   Constant constant;
   Token d;
@@ -209,7 +209,7 @@ EnumDef enumeration() :
 
 Constant constant() :
 {
-  Constant result = Constant.constant();
+  Constant result = Constant.create();
   String name;
   Token index;
 }
@@ -234,7 +234,7 @@ Constant constant() :
 
 MessageDef message() :
 {
-  MessageDef result = MessageDef.messageDef();
+  MessageDef result = MessageDef.create();
   String name;
   QName generalization;
   Definition def;
@@ -281,7 +281,7 @@ MessageDef message() :
 
 Field field() :
 {
-  Field result = Field.field();
+  Field result = Field.create();
   Type type;
   String name;
   Token index;
@@ -385,13 +385,13 @@ PrimitiveType primitiveType() :
 }
 {
   (
-	t=< TYPE >    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase())); }
+	t=< TYPE >    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase())); }
   | t=< INT_TYPE >
-    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT32); }
+    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT32); }
   | t=< LONG_TYPE >
-    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.INT64); }
+    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT64); }
   | t=< BOOLEAN_TYPE >
-    { result = PrimitiveType.primitiveType().setKind(PrimitiveType.Kind.BOOL); }
+    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.BOOL); }
   )
   { return result; }
 }
@@ -403,7 +403,7 @@ CustomType customType() :
 {
   name=qName()
   {
-    return CustomType.customType().setName(name);
+    return CustomType.create().setName(name);
   }
 }
 
@@ -415,13 +415,13 @@ MapType map() :
 {
   < MAP > "<" keyType=type() "," valueType=type() ">"
   {
-    return MapType.mapType().setKeyType(keyType).setValueType(valueType);
+    return MapType.create().setKeyType(keyType).setValueType(valueType);
   }
 }
 
 QName qName() :
 {
-  QName result = QName.qName();
+  QName result = QName.create();
   String name;
 }
 {

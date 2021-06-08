@@ -88,7 +88,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private QName qName(String name) {
-		QName result = QName.qName();
+		QName result = QName.create();
 		for (String part : name.split("\\.")) {
 			result.addName(part);
 		}

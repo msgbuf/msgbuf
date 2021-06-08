@@ -8,14 +8,14 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	/**
 	 * Creates a {@link QName} instance.
 	 */
-	public static QName qName() {
+	public static QName create() {
 		return new QName();
 	}
 
 	/**
 	 * Creates a {@link QName} instance.
 	 *
-	 * @see #qName()
+	 * @see #create()
 	 */
 	protected QName() {
 		super();
@@ -122,18 +122,6 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 		}
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static QName readQName(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		QName result = new QName();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
-
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -147,6 +135,18 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 			break;
 			default: in.skipValue(); 
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static QName readQName(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		QName result = new QName();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

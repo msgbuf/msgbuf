@@ -8,14 +8,14 @@ public class Field extends Part {
 	/**
 	 * Creates a {@link Field} instance.
 	 */
-	public static Field field() {
+	public static Field create() {
 		return new Field();
 	}
 
 	/**
 	 * Creates a {@link Field} instance.
 	 *
-	 * @see #field()
+	 * @see #create()
 	 */
 	protected Field() {
 		super();
@@ -154,6 +154,16 @@ public class Field extends Part {
 		}
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 6: setTransient(in.nextBoolean()); break;
+			case 7: setRepeated(in.nextBoolean()); break;
+			case 8: setType(Type.readType(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -164,16 +174,6 @@ public class Field extends Part {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 6: setTransient(in.nextBoolean()); break;
-			case 7: setRepeated(in.nextBoolean()); break;
-			case 8: setType(Type.readType(in)); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override
