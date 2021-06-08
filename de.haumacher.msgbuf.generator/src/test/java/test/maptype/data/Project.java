@@ -110,6 +110,15 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 		out.value(getCost());
 	}
 
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setName(in.nextString()); break;
+			case 2: setCost(in.nextDouble()); break;
+			default: in.skipValue(); 
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Project readProject(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -120,15 +129,6 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 		}
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setName(in.nextString()); break;
-			case 2: setCost(in.nextDouble()); break;
-			default: in.skipValue(); 
-		}
 	}
 
 }

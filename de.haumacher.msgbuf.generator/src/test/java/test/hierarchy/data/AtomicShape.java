@@ -37,11 +37,6 @@ public abstract class AtomicShape extends Shape {
 		return result;
 	}
 
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -60,13 +55,6 @@ public abstract class AtomicShape extends Shape {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: super.readField(in, field);
-		}
 	}
 
 	/** Accepts the given visitor. */

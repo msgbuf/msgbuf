@@ -220,6 +220,17 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		}
 	}
 
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setQuery(in.nextString()); break;
+			case 2: setPageNumber(in.nextInt()); break;
+			case 3: setResultPerPage(in.nextInt()); break;
+			case 4: setCorpus(Corpus.readCorpus(in)); break;
+			default: in.skipValue(); 
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -230,17 +241,6 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		}
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setQuery(in.nextString()); break;
-			case 2: setPageNumber(in.nextInt()); break;
-			case 3: setResultPerPage(in.nextInt()); break;
-			case 4: setCorpus(Corpus.readCorpus(in)); break;
-			default: in.skipValue(); 
-		}
 	}
 
 }

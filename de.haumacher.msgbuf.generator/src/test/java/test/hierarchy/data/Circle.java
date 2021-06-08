@@ -95,6 +95,14 @@ public class Circle extends AtomicShape {
 		out.value(getRadius());
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 3: setRadius(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -105,14 +113,6 @@ public class Circle extends AtomicShape {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 3: setRadius(in.nextInt()); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override

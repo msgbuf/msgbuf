@@ -135,6 +135,15 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		out.value(getYCoordinate());
 	}
 
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setXCoordinate(in.nextInt()); break;
+			case 2: setYCoordinate(in.nextInt()); break;
+			default: in.skipValue(); 
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -154,15 +163,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setXCoordinate(in.nextInt()); break;
-			case 2: setYCoordinate(in.nextInt()); break;
-			default: in.skipValue(); 
-		}
 	}
 
 	/** Accepts the given visitor. */

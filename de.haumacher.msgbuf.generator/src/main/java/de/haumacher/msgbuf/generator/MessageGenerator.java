@@ -528,50 +528,76 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 		}
 		
-		nl();
-		if (baseClass) {
-			line("/** Serializes all fields of this instance to the given binary output. */");
-		} else {
-			line("@Override");
-		}
-		line("protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
-		{
-			if (!baseClass) {
-				line("super.writeFields(out);");
+		if (baseClass || !fields.isEmpty()) {
+			nl();
+			if (baseClass) {
+				line("/** Serializes all fields of this instance to the given binary output. */");
+			} else {
+				line("@Override");
 			}
-			for (Field field : fields) {
-				if (field.isTransient()) {
-					continue;
+			line("protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
+			{
+				if (!baseClass) {
+					line("super.writeFields(out);");
 				}
-				boolean nullable = isNullable(field);
-				if (nullable) {
-					line("if (" + hasName(field) + "()" + ") {");
-				}
-				{
-					line("out.name(" + field.getIndex() + ");");
-					if (field.isRepeated()) {
-						line("{");
-						{
-							line(getType(field) + " values = " + getterName(field) + "();");
-							line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
-							line("for (" + getType(field.getType()) +" x : values) {");
+				for (Field field : fields) {
+					if (field.isTransient()) {
+						continue;
+					}
+					boolean nullable = isNullable(field);
+					if (nullable) {
+						line("if (" + hasName(field) + "()" + ") {");
+					}
+					{
+						line("out.name(" + field.getIndex() + ");");
+						if (field.isRepeated()) {
+							line("{");
 							{
-								binaryOutValue(field.getType(), "x");
+								line(getType(field) + " values = " + getterName(field) + "();");
+								line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
+								line("for (" + getType(field.getType()) +" x : values) {");
+								{
+									binaryOutValue(field.getType(), "x");
+								}
+								line("}");
+								line("out.endArray();");
 							}
 							line("}");
-							line("out.endArray();");
+						} else {
+							binaryOutValue(field.getType(), getterName(field) + "()");
 						}
+					}
+					if (nullable) {
 						line("}");
-					} else {
-						binaryOutValue(field.getType(), getterName(field) + "()");
 					}
 				}
-				if (nullable) {
-					line("}");
-				}
 			}
+			line("}");
+			
+			nl();
+			if (baseClass) {
+				line("/** Consumes the value for the field with the given ID and assigns its value. */");
+			} else {
+				line("@Override");
+			}
+			line("protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {");
+			{
+				line("switch (field) {");
+				for (Field field : fields) {
+					if (field.isTransient()) {
+						continue;
+					}
+					binaryReadField(field);
+				}
+				if (baseClass) {
+					line("default: in.skipValue(); ");
+				} else {
+					line("default: super.readField(in, field);");
+				}
+				line("}");
+			}
+			line("}");
 		}
-		line("}");
 		
 		nl();
 		line("/** Reads a new instance from the given reader. */");
@@ -605,30 +631,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 			line("in.endObject();");
 			line("return result;");
-		}
-		line("}");
-		
-		nl();
-		if (baseClass) {
-			line("/** Consumes the value for the field with the given ID and assigns its value. */");
-		} else {
-			line("@Override");
-		}
-		line("protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {");
-		{
-			line("switch (field) {");
-			for (Field field : fields) {
-				if (field.isTransient()) {
-					continue;
-				}
-				binaryReadField(field);
-			}
-			if (baseClass) {
-				line("default: in.skipValue(); ");
-			} else {
-				line("default: super.readField(in, field);");
-			}
-			line("}");
 		}
 		line("}");
 	}

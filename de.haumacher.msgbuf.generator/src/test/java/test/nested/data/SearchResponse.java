@@ -159,18 +159,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			}
 		}
 
-		/** Reads a new instance from the given reader. */
-		public static Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-			in.beginObject();
-			Result result = new Result();
-			while (in.hasNext()) {
-				int field = in.nextName();
-				result.readField(in, field);
-			}
-			in.endObject();
-			return result;
-		}
-
 		/** Consumes the value for the field with the given ID and assigns its value. */
 		protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 			switch (field) {
@@ -186,6 +174,18 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 				break;
 				default: in.skipValue(); 
 			}
+		}
+
+		/** Reads a new instance from the given reader. */
+		public static Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+			in.beginObject();
+			Result result = new Result();
+			while (in.hasNext()) {
+				int field = in.nextName();
+				result.readField(in, field);
+			}
+			in.endObject();
+			return result;
 		}
 
 	}
@@ -304,18 +304,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		SearchResponse result = new SearchResponse();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
-
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -329,6 +317,18 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			break;
 			default: in.skipValue(); 
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		SearchResponse result = new SearchResponse();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

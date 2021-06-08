@@ -83,6 +83,13 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 	}
 
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			default: in.skipValue(); 
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static MyMessage1 readMyMessage1(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -93,13 +100,6 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 		}
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
 	}
 
 }

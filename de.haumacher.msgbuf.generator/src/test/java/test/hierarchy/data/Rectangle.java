@@ -127,6 +127,15 @@ public class Rectangle extends AtomicShape {
 		out.value(getHeight());
 	}
 
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 3: setWidth(in.nextInt()); break;
+			case 4: setHeight(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -137,15 +146,6 @@ public class Rectangle extends AtomicShape {
 		}
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 3: setWidth(in.nextInt()); break;
-			case 4: setHeight(in.nextInt()); break;
-			default: super.readField(in, field);
-		}
 	}
 
 	@Override
