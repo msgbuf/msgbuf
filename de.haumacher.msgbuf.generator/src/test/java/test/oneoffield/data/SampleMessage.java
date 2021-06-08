@@ -5,14 +5,14 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/**
 	 * Creates a {@link SampleMessage} instance.
 	 */
-	public static SampleMessage sampleMessage() {
+	public static SampleMessage create() {
 		return new SampleMessage();
 	}
 
 	/**
 	 * Creates a {@link SampleMessage} instance.
 	 *
-	 * @see #sampleMessage()
+	 * @see #create()
 	 */
 	protected SampleMessage() {
 		super();

@@ -8,14 +8,14 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * Creates a {@link Rectangle} instance.
 	 */
-	public static Rectangle rectangle() {
+	public static Rectangle create() {
 		return new Rectangle();
 	}
 
 	/**
 	 * Creates a {@link Rectangle} instance.
 	 *
-	 * @see #rectangle()
+	 * @see #create()
 	 */
 	protected Rectangle() {
 		super();

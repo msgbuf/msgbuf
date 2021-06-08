@@ -8,14 +8,14 @@ public class Group extends Shape {
 	/**
 	 * Creates a {@link Group} instance.
 	 */
-	public static Group group() {
+	public static Group create() {
 		return new Group();
 	}
 
 	/**
 	 * Creates a {@link Group} instance.
 	 *
-	 * @see #group()
+	 * @see #create()
 	 */
 	protected Group() {
 		super();

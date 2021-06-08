@@ -219,8 +219,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 	}
 
+	/**
+	 * Name of the factory method for the given {@link MessageDef}.
+	 * 
+	 * @param def
+	 *        The {@link MessageDef} to produce a factory name for.
+	 */
 	private String factoryName(MessageDef def) {
-		return firstLowerCase(def.getName());
+		return "create";
 	}
 	
 	private MessageDef abstractGeneralizations(MessageDef def) {

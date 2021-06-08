@@ -152,9 +152,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case 3: result = Group.group(); break;
-			case 1: result = Circle.circle(); break;
-			case 2: result = Rectangle.rectangle(); break;
+			case 3: result = Group.create(); break;
+			case 1: result = Circle.create(); break;
+			case 2: result = Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

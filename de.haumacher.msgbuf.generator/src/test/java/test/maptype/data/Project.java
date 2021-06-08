@@ -5,14 +5,14 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	/**
 	 * Creates a {@link Project} instance.
 	 */
-	public static Project project() {
+	public static Project create() {
 		return new Project();
 	}
 
 	/**
 	 * Creates a {@link Project} instance.
 	 *
-	 * @see #project()
+	 * @see #create()
 	 */
 	protected Project() {
 		super();

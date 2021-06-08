@@ -5,14 +5,14 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	/**
 	 * Creates a {@link MyMessage} instance.
 	 */
-	public static MyMessage myMessage() {
+	public static MyMessage create() {
 		return new MyMessage();
 	}
 
 	/**
 	 * Creates a {@link MyMessage} instance.
 	 *
-	 * @see #myMessage()
+	 * @see #create()
 	 */
 	protected MyMessage() {
 		super();

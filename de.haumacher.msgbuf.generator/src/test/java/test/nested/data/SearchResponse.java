@@ -6,14 +6,14 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/**
 		 * Creates a {@link Result} instance.
 		 */
-		public static Result result() {
+		public static Result create() {
 			return new Result();
 		}
 
 		/**
 		 * Creates a {@link Result} instance.
 		 *
-		 * @see #result()
+		 * @see #create()
 		 */
 		protected Result() {
 			super();
@@ -193,14 +193,14 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * Creates a {@link SearchResponse} instance.
 	 */
-	public static SearchResponse searchResponse() {
+	public static SearchResponse create() {
 		return new SearchResponse();
 	}
 
 	/**
 	 * Creates a {@link SearchResponse} instance.
 	 *
-	 * @see #searchResponse()
+	 * @see #create()
 	 */
 	protected SearchResponse() {
 		super();

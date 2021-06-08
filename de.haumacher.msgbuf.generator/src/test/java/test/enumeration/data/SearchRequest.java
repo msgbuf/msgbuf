@@ -62,14 +62,14 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/**
 	 * Creates a {@link SearchRequest} instance.
 	 */
-	public static SearchRequest searchRequest() {
+	public static SearchRequest create() {
 		return new SearchRequest();
 	}
 
 	/**
 	 * Creates a {@link SearchRequest} instance.
 	 *
-	 * @see #searchRequest()
+	 * @see #create()
 	 */
 	protected SearchRequest() {
 		super();

@@ -8,14 +8,14 @@ public class Circle extends AtomicShape {
 	/**
 	 * Creates a {@link Circle} instance.
 	 */
-	public static Circle circle() {
+	public static Circle create() {
 		return new Circle();
 	}
 
 	/**
 	 * Creates a {@link Circle} instance.
 	 *
-	 * @see #circle()
+	 * @see #create()
 	 */
 	protected Circle() {
 		super();

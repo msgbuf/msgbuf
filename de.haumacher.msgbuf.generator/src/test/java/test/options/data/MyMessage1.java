@@ -45,14 +45,14 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	/**
 	 * Creates a {@link MyMessage1} instance.
 	 */
-	public static MyMessage1 myMessage1() {
+	public static MyMessage1 create() {
 		return new MyMessage1();
 	}
 
 	/**
 	 * Creates a {@link MyMessage1} instance.
 	 *
-	 * @see #myMessage1()
+	 * @see #create()
 	 */
 	protected MyMessage1() {
 		super();

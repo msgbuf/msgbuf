@@ -3,10 +3,6 @@
  */
 package test.hierarchy;
 
-import static test.hierarchy.data.Circle.*;
-import static test.hierarchy.data.Group.*;
-import static test.hierarchy.data.Rectangle.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,6 +15,7 @@ import de.haumacher.msgbuf.json.JsonReader;
 import junit.framework.TestCase;
 import test.hierarchy.data.Circle;
 import test.hierarchy.data.Group;
+import test.hierarchy.data.Rectangle;
 import test.hierarchy.data.Shape;
 
 /**
@@ -28,14 +25,14 @@ import test.hierarchy.data.Shape;
 public class TestHierarchy extends TestCase {
 
 	public void testPolymorphism() throws IOException {
-		Shape shape = group()
-			.addShape(circle().setRadius(5).setXCoordinate(1).setYCoordinate(2))
-			.addShape(rectangle().setWidth(10).setHeight(3).setXCoordinate(2).setYCoordinate(3))
+		Shape shape = Group.create()
+			.addShape(Circle.create().setRadius(5).setXCoordinate(1).setYCoordinate(2))
+			.addShape(Rectangle.create().setWidth(10).setHeight(3).setXCoordinate(2).setYCoordinate(3))
 			.addShape(
-				group()
-					.addShape(circle())
-					.addShape(circle())
-					.addShape(rectangle()));
+				Group.create()
+					.addShape(Circle.create())
+					.addShape(Circle.create())
+					.addShape(Rectangle.create()));
 		
 		checkCopy(writeAndReadBackJson(shape));
 		checkCopy(writeAndReadBackBinary(shape));

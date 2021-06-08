@@ -42,14 +42,14 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	/**
 	 * Creates a {@link MyMessage2} instance.
 	 */
-	public static MyMessage2 myMessage2() {
+	public static MyMessage2 create() {
 		return new MyMessage2();
 	}
 
 	/**
 	 * Creates a {@link MyMessage2} instance.
 	 *
-	 * @see #myMessage2()
+	 * @see #create()
 	 */
 	protected MyMessage2() {
 		super();
