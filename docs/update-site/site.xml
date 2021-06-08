@@ -3,10 +3,7 @@
    <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202105220002.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202105220002">
       <category name="de.haumacher.msgbuf.site.builderCategory"/>
    </feature>
-   <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202106082115.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202106082115">
-      <category name="de.haumacher.msgbuf.site.builderCategory"/>
-   </feature>
-   <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202106082133.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202106082133">
+   <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202106082144.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202106082144">
       <category name="de.haumacher.msgbuf.site.builderCategory"/>
    </feature>
    <category-def name="de.haumacher.msgbuf.site.builderCategory" label="MsgBuf Project Builder">
