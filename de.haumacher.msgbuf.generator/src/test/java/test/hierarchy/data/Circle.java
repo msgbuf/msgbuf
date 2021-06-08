@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * A circle {@link Shape}.
  */
-public class Circle extends Shape {
+public class Circle extends AtomicShape {
 
 	/**
 	 * Creates a {@link Circle} instance.
@@ -116,7 +116,7 @@ public class Circle extends Shape {
 	}
 
 	@Override
-	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

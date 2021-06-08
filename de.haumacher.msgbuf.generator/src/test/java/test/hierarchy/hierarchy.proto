@@ -17,10 +17,15 @@ abstract message Shape {
 	int32 yCoordinate;
 }
 
+/** A {@link Shape} that has no sub-shapes. */
+abstract message AtomicShape extends Shape {
+
+}
+
 /** 
  * A circle {@link Shape}. 
  */
-message Circle extends Shape {
+message Circle extends AtomicShape {
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #xCoordinate}, {@link #yCoordinate}).
 	 */
@@ -30,7 +35,7 @@ message Circle extends Shape {
 /** 
  * A rectangle.
  */
-message Rectangle extends Shape {
+message Rectangle extends AtomicShape {
 	/**
 	 * The width of this {@link Rectangle}.
 	 * 

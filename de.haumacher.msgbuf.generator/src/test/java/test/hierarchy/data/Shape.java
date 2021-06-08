@@ -6,13 +6,7 @@ package test.hierarchy.data;
 public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A> {
-
-		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg);
-
-		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg);
+	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
 
 		/** Visit case for {@link Group}.*/
 		R visit(Group self, A arg);
@@ -66,9 +60,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
+			case "Group": result = Group.readGroup(in); break;
 			case "Circle": result = Circle.readCircle(in); break;
 			case "Rectangle": result = Rectangle.readRectangle(in); break;
-			case "Group": result = Group.readGroup(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -149,9 +143,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
+			case 3: result = Group.group(); break;
 			case 1: result = Circle.circle(); break;
 			case 2: result = Rectangle.rectangle(); break;
-			case 3: result = Group.group(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

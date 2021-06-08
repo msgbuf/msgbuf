@@ -290,7 +290,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 		}
 		
-		if (_def.getExtendedDef() != null) {
+		if (_def.getExtendedDef() != null && !_def.isAbstract()) {
 			nl();
 			line("@Override");
 			line("protected String jsonType() {");
