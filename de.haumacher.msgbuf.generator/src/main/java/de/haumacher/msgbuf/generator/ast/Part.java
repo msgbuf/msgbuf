@@ -1,5 +1,7 @@
 package de.haumacher.msgbuf.generator.ast;
 
+import java.util.Collections;
+
 /**
  * Member of a {@link Definition}.
  */
@@ -219,7 +221,13 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/** The binary identifier for this concrete type in the polymorphic {@link Part} hierarchy. */
 	protected abstract int typeId();
 
-	/** Serializes all fields of this instance to the given binary output. */
+	/**
+	 * Serializes all fields of this instance to the given binary output.
+	 *
+	 * @param out
+	 *        The binary output to write to.
+	 * @throws java.io.IOException If writing fails.
+	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		out.name(1);
 		out.value(getComment());

@@ -537,7 +537,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (baseClass || !fields.isEmpty()) {
 			nl();
 			if (baseClass) {
-				line("/** Serializes all fields of this instance to the given binary output. */");
+				line("/**");
+				line(" * Serializes all fields of this instance to the given binary output.");
+				line(" *");
+				line(" * @param out");
+				line(" *        The binary output to write to.");
+				line(" * @throws java.io.IOException If writing fails.");
+				line(" */");
 			} else {
 				line("@Override");
 			}
@@ -546,35 +552,39 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				if (!baseClass) {
 					line("super.writeFields(out);");
 				}
-				for (Field field : fields) {
-					if (field.isTransient()) {
-						continue;
-					}
-					boolean nullable = isNullable(field);
-					if (nullable) {
-						line("if (" + hasName(field) + "()" + ") {");
-					}
-					{
-						line("out.name(" + field.getIndex() + ");");
-						if (field.isRepeated()) {
-							line("{");
-							{
-								line(getType(field) + " values = " + getterName(field) + "();");
-								line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
-								line("for (" + getType(field.getType()) +" x : values) {");
+				if (fields.isEmpty()) {
+					line("// No fields to write, hook for subclasses.");
+				} else {
+					for (Field field : fields) {
+						if (field.isTransient()) {
+							continue;
+						}
+						boolean nullable = isNullable(field);
+						if (nullable) {
+							line("if (" + hasName(field) + "()" + ") {");
+						}
+						{
+							line("out.name(" + field.getIndex() + ");");
+							if (field.isRepeated()) {
+								line("{");
 								{
-									binaryOutValue(field.getType(), "x");
+									line(getType(field) + " values = " + getterName(field) + "();");
+									line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
+									line("for (" + getType(field.getType()) +" x : values) {");
+									{
+										binaryOutValue(field.getType(), "x");
+									}
+									line("}");
+									line("out.endArray();");
 								}
 								line("}");
-								line("out.endArray();");
+							} else {
+								binaryOutValue(field.getType(), getterName(field) + "()");
 							}
-							line("}");
-						} else {
-							binaryOutValue(field.getType(), getterName(field) + "()");
 						}
-					}
-					if (nullable) {
-						line("}");
+						if (nullable) {
+							line("}");
+						}
 					}
 				}
 			}

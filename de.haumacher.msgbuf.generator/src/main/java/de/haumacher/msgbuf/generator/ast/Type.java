@@ -64,8 +64,15 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/** The binary identifier for this concrete type in the polymorphic {@link Type} hierarchy. */
 	protected abstract int typeId();
 
-	/** Serializes all fields of this instance to the given binary output. */
+	/**
+	 * Serializes all fields of this instance to the given binary output.
+	 *
+	 * @param out
+	 *        The binary output to write to.
+	 * @throws java.io.IOException If writing fails.
+	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		// No fields to write, hook for subclasses.
 	}
 
 	/** Consumes the value for the field with the given ID and assigns its value. */
