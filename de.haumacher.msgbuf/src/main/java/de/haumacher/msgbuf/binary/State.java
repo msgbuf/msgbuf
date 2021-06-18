@@ -25,5 +25,12 @@ enum State {
 	/**
 	 * An array has started, the array length is initialized, expecting a value to be written.
 	 */
-	ARRAY_VALUE;
+	ARRAY_VALUE,
+	
+	/**
+	 * A chunked array value has been started but not yet finished.
+	 */
+	CHUNKED_VALUE
+	
+	;
 }

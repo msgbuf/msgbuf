@@ -3,7 +3,7 @@
  */
 package de.haumacher.msgbuf.binary;
 
-import static de.haumacher.msgbuf.binary.Tag.*;
+import static de.haumacher.msgbuf.binary.FieldTag.*;
 
 /**
  * Declaration of the content-type of an array value.
@@ -109,21 +109,23 @@ public enum DataType {
 	 * All array entries must be written with the {@link DataWriter#beginObject()} / {@link DataWriter#endObject()} pair of methods.
 	 * </p>
 	 */
-	OBJECT(OBJ);
+	OBJECT(OBJ),
+	
+	;
 
-	private Tag _tag;
+	private FieldTag _tag;
 
 	/** 
 	 * Creates a {@link DataType}.
 	 */
-	DataType(Tag tag) {
+	DataType(FieldTag tag) {
 		_tag = tag;
 	}
 
 	/** 
 	 * The internal representation of this {@link DataType}.
 	 */
-	Tag tag() {
+	FieldTag tag() {
 		return _tag;
 	}
 

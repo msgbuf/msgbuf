@@ -22,11 +22,11 @@ public class OctetDataReader implements DataReader {
 	private static final int NO_NAME = -1;
 	private static final int END_OF_OBJECT = -2;
 
-	private final InputStream _in;
+	final InputStream _in;
 	
-	private State _state = State.START;
+	State _state = State.START;
 	
-	private Tag _content = Tag.OBJ;
+	private FieldTag _content = FieldTag.OBJ;
 
 	private int _length;
 	
@@ -43,7 +43,7 @@ public class OctetDataReader implements DataReader {
 	@Override
 	public void beginObject() throws IOException {
 		State before = _state;
-		consumeValue(Tag.OBJ);
+		consumeValue(FieldTag.OBJ);
 		
 		_stack.add(new SFrame(before, _length, _content));
 		_state = State.FIELD;
@@ -52,7 +52,7 @@ public class OctetDataReader implements DataReader {
 
 	@Override
 	public void endObject() throws IOException {
-		require(State.FIELD);
+		requireState(State.FIELD);
 		
 		fetchName();
 		assert _name == END_OF_OBJECT : "There are more fields to read.";
@@ -80,7 +80,7 @@ public class OctetDataReader implements DataReader {
 
 	@Override
 	public int nextName() throws IOException {
-		require(State.FIELD);
+		requireState(State.FIELD);
 		fetchName();
 		assert _name >= 0 : "No more fields left";
 		_state = State.FIELD_VALUE;
@@ -94,7 +94,7 @@ public class OctetDataReader implements DataReader {
 		if (_name == NO_NAME) {
 			int nameAndTag = readVarInt();
 			_content = tag(nameAndTag);
-			if (_content == Tag.STOP) {
+			if (_content == FieldTag.STOP) {
 				_name = END_OF_OBJECT;
 			} else {
 				_name = name(nameAndTag);
@@ -104,58 +104,58 @@ public class OctetDataReader implements DataReader {
 
 	@Override
 	public int nextInt() throws IOException {
-		consumeValue(Tag.VAR);
+		consumeValue(FieldTag.VAR);
 		return readVarInt();
 	}
 
 	@Override
 	public int nextIntSigned() throws IOException {
-		consumeValue(Tag.VAR);
+		consumeValue(FieldTag.VAR);
 		return BinaryUtil.zigzagDecode(readVarInt());
 	}
 
 	@Override
 	public int nextIntFixed() throws IOException {
-		consumeValue(Tag.F32);
+		consumeValue(FieldTag.F32);
 		return readFixedInt();
 	}
 
 	@Override
 	public long nextLong() throws IOException {
-		consumeValue(Tag.VAR);
+		consumeValue(FieldTag.VAR);
 		return readVarLong();
 	}
 
 	@Override
 	public long nextLongSigned() throws IOException {
-		consumeValue(Tag.VAR);
+		consumeValue(FieldTag.VAR);
 		return BinaryUtil.zigzagDecode(readVarLong());
 	}
 
 	@Override
 	public long nextLongFixed() throws IOException {
-		consumeValue(Tag.F64);
+		consumeValue(FieldTag.F64);
 		return readFixedLong();
 	}
 
 	@Override
 	public float nextFloat() throws IOException {
-		consumeValue(Tag.F32);
+		consumeValue(FieldTag.F32);
 		return Float.intBitsToFloat(readFixedInt());
 	}
 
 	@Override
 	public double nextDouble() throws IOException {
-		consumeValue(Tag.F64);
+		consumeValue(FieldTag.F64);
 		return Double.longBitsToDouble(readFixedLong());
 	}
 
 	@Override
 	public String nextString() throws IOException {
-		consumeValue(Tag.REPEATED);
+		consumeValue(FieldTag.REPEATED);
 		long sizeAndTag = readVarLong();
-		Tag tag = tag(sizeAndTag);
-		assert tag == Tag.CHAR : "Received character string but '" + tag + "' was requested.";
+		ContentTag tag = tag(sizeAndTag);
+		assert tag == ContentTag.CHAR : "Received '" + tag + "' but character string was requested.";
 		int size = size(sizeAndTag);
 		
 		return new String(readBinary(size), "utf-8");
@@ -163,22 +163,190 @@ public class OctetDataReader implements DataReader {
 
 	@Override
 	public byte[] nextBinary() throws IOException {
-		consumeValue(Tag.REPEATED);
-		long sizeAndTag = readVarLong();
-		Tag tag = tag(sizeAndTag);
-		assert tag == Tag.F8 : "Received '" + tag + "' array but binary string was requested.";
-		int size = size(sizeAndTag);
+		switch (_content) {
+		case REPEATED: {
+			consumeValue(FieldTag.REPEATED);
+			
+			long sizeAndTag = readVarLong();
+			ContentTag tag = tag(sizeAndTag);
+			assert tag == ContentTag.F8: "Received '" + tag + "' but binary string was requested.";
+			int size = size(sizeAndTag);
+			
+			return readBinary(size);
+		}
 		
-		return readBinary(size);
+		case CHUNKED: {
+			consumeValue(FieldTag.CHUNKED);
+			
+			long sizeAndTag = readVarLong();
+			ContentTag tag = tag(sizeAndTag);
+			assert tag == ContentTag.F8: "Received '" + tag + "' but binary string was requested.";
+			
+			try (InputStream in = new ChunkedInputStream()) {
+				byte[] result = new byte[0];
+				while (true) {
+					int available = in.available();
+					if (available == 0) {
+						return result;
+					}
+					int currentLength = result.length;
+					byte[] next = new byte[currentLength + available];
+					System.arraycopy(result, 0, next, 0, currentLength);
+					in.read(next, currentLength, available);
+					result = next;
+				}
+			}
+		}
+
+		default:
+			throw unexpectedContent(FieldTag.REPEATED);
+		}
+	}
+	
+	@Override
+	public InputStream nextBinaryStream() throws IOException {
+		switch (_content) {
+		case REPEATED: {
+			consumeValue(FieldTag.REPEATED);
+			
+			long sizeAndTag = readVarLong();
+			ContentTag tag = tag(sizeAndTag);
+			assert tag == ContentTag.F8: "Received '" + tag + "' but binary string was requested.";
+			
+			int size = size(sizeAndTag);
+			return new LimitedInputStream(size);
+		}
+		case CHUNKED: {
+			consumeValue(FieldTag.CHUNKED);
+			
+			long sizeAndTag = readVarLong();
+			ContentTag tag = tag(sizeAndTag);
+			assert tag == ContentTag.F8: "Received '" + tag + "' but binary string was requested.";
+			
+			return new ChunkedInputStream();
+		}
+		default:
+			throw unexpectedContent(FieldTag.REPEATED);
+		}
+	}
+	
+	private class LimitedInputStream extends InputStream {
+
+		private int _available;
+
+		public LimitedInputStream(int size) {
+			_available = size;
+		}
+		
+		@Override
+		public int read() throws IOException {
+			if (_available == 0) {
+				return -1;
+			}
+			_available--;
+			return _in.read();
+		}
+		
+		@Override
+		public int read(byte[] buffer, int off, int len) throws IOException {
+			if (_available == 0) {
+				return -1;
+			}
+			
+			int direct = Math.min(_available, len);
+			_available -= direct;
+			_in.read(buffer, off, direct);
+			return direct;
+		}
+		
+		@Override
+		public int available() throws IOException {
+			return _available;
+		}
+		
+		@Override
+		public void close() throws IOException {
+			if (_available > 0) {
+				_in.skip(_available);
+			}
+		}
+		
+	}
+	
+	private class ChunkedInputStream extends InputStream {
+		
+		private final State _before;
+		int _chunkSize;
+		int _pos;
+		
+		/** 
+		 * Creates a {@link OctetDataReader.ChunkedInputStream}.
+		 */
+		public ChunkedInputStream() throws IOException {
+			_before = _state;
+			_state = State.CHUNKED_VALUE;
+			
+			fetchChunkSize();
+		}
+
+		@Override
+		public int read() throws IOException {
+			ensureData();
+			if (_chunkSize == 0) {
+				return -1;
+			}
+			_pos++;
+			return _in.read();
+		}
+
+		@Override
+		public int read(byte[] buffer, int off, int len) throws IOException {
+			int available = available();
+			if (_chunkSize == 0) {
+				return -1;
+			}
+			int direct = Math.min(available, len);
+			_in.read(buffer, off, direct);
+			_pos += direct;
+			return direct;
+		}
+		
+		@Override
+		public int available() throws IOException {
+			ensureData();
+			return _chunkSize - _pos;
+		}
+		
+		@Override
+		public void close() throws IOException {
+			while (_chunkSize > 0) {
+				int available = available();
+				_pos += available;
+				_in.skip(available);
+			}
+			_state = _before;
+		}
+
+		private void ensureData() throws IOException {
+			if (_pos == _chunkSize && _chunkSize > 0) {
+				fetchChunkSize();
+			}
+		}
+		
+		private void fetchChunkSize() throws IOException {
+			_chunkSize = readVarInt();
+			_pos = 0;
+		}
+
 	}
 
 	@Override
 	public int beginArray() throws IOException {
-		require(State.FIELD_VALUE);
+		requireState(State.FIELD_VALUE);
 		_state = State.ARRAY_VALUE;
 
 		long sizeAndTag = readVarLong();
-		_content = tag(sizeAndTag);
+		_content = tag(sizeAndTag).toFieldTag();
 		_length = size(sizeAndTag);
 		
 		return _length;
@@ -186,14 +354,14 @@ public class OctetDataReader implements DataReader {
 
 	@Override
 	public void endArray() throws IOException {
-		require(State.ARRAY_VALUE);
+		requireState(State.ARRAY_VALUE);
 		assert _length == 0 : "Received array value (" + _length + " remaining) while end of array was requested.";
 		_state = State.FIELD;
 	}
 	
 	@Override
 	public void skipValue() throws IOException {
-		Tag tag = _content;
+		FieldTag tag = _content;
 		switch (tag) {
 		case VAR:
 			nextLong();
@@ -204,7 +372,6 @@ public class OctetDataReader implements DataReader {
 		case F64:
 			nextLongFixed();
 			break;
-		case CHAR:
 		case F8:
 			consumeValue(tag);
 			_in.read();
@@ -219,14 +386,14 @@ public class OctetDataReader implements DataReader {
 			break;
 		case REPEATED:
 			beginArray();
-			if (_content == Tag.REPEATED) {
+			if (_content == FieldTag.REPEATED) {
 				while (hasNext()) {
 					// Inner string or byte array.
 					long sizeAndTag = readVarLong();
-					Tag content = tag(sizeAndTag);
+					ContentTag content = tag(sizeAndTag);
 					int innerLength = size(sizeAndTag);
 					
-					assert content == Tag.F8 || content == Tag.CHAR : "Invalid nested array: " + content;
+					assert content == ContentTag.F8 || content == ContentTag.CHAR : "Invalid nested array: " + content;
 					_in.skip(innerLength);
 					
 					_length--;
@@ -238,20 +405,39 @@ public class OctetDataReader implements DataReader {
 			}
 			endArray();
 			break;
+		case CHUNKED:
+			requireState(State.FIELD_VALUE);
+			
+			long sizeAndTag = readVarLong();
+			_content = tag(sizeAndTag).toFieldTag();
+			
+			while (true) {
+				int chunkSize = readVarInt();
+				if (chunkSize == 0) {
+					break;
+				}
+				
+				_in.skip(chunkSize);
+			}
+			
+			_state = State.FIELD;
+			break;
 		case STOP:
 			assert false : "No value to skip, end of object reached.";
 			break;
 		}
 	}
 
-	private void require(State requested) {
+	private void requireState(State requested) {
 		assert _state == requested : "Expecting '" +_state + "' but received '" + requested + "'.";
 	}
 
-	private void consumeValue(Tag requested) {
+	private void consumeValue(FieldTag requested) throws IOException {
+		assert _content == requested : "Received '" + _content + "' while '" + requested + "' was requested.";
+		
 		switch (_state) {
 		case START:
-			assert requested == Tag.OBJ : "Data starts always with an object, '" + requested + "' was requested.";
+			assert requested == FieldTag.OBJ : "Data starts always with an object, '" + requested + "' was requested.";
 			_state = State.FIELD;
 			break;
 		case FIELD_VALUE:
@@ -262,13 +448,15 @@ public class OctetDataReader implements DataReader {
 			_length--;
 			break;
 		default: 
-			assert false : "Cannot read '" + requested + "' in state '" + _state + "'.";
+			throw unexpectedContent(requested);
 		}
-		
-		assert _content == requested : "Received '" + _content + "' while '" + requested + "' was requested."; 
 	}
 
-	private int readVarInt() throws IOException {
+	private IOException unexpectedContent(FieldTag requested) throws IOException {
+		throw new IOException("Cannot read '" + requested + "' in state '" + _state + "'.");
+	}
+
+	final int readVarInt() throws IOException {
 		int result = 0;
 		int shift = 0;
 		while (true) {
@@ -343,29 +531,29 @@ public class OctetDataReader implements DataReader {
 		return nameAndTag >>> 3;
 	}
 
-	private static Tag tag(int nameAndTag) {
-		return Tag.values()[nameAndTag & MASK_3];
+	private static FieldTag tag(int nameAndTag) {
+		return FieldTag.values()[nameAndTag & MASK_3];
 	}
 
 	private static int size(long sizeAndTag) {
 		return ((int) (sizeAndTag >>> 3));
 	}
 
-	private static Tag tag(long sizeAndTag) {
-		return Tag.values()[((int) sizeAndTag) & MASK_3];
+	private static ContentTag tag(long sizeAndTag) {
+		return ContentTag.values()[((int) sizeAndTag) & MASK_3];
 	}
 
 	private static final class SFrame {
 
 		private final State _state;
 		private final int _length;
-		private Tag _content;
+		private FieldTag _content;
 
 		/** 
 		 * Creates a {@link SFrame}.
 		 * @param expected 
 		 */
-		public SFrame(State state, int length, Tag expected) {
+		public SFrame(State state, int length, FieldTag expected) {
 			_state = state;
 			_length = length;
 			_content = expected;
@@ -379,7 +567,7 @@ public class OctetDataReader implements DataReader {
 			return _length;
 		}
 		
-		public Tag getContent() {
+		public FieldTag getContent() {
 			return _content;
 		}
 	}

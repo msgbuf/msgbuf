@@ -4,6 +4,7 @@
 package de.haumacher.msgbuf.binary;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Input interface for reading binary messages into data objects.
@@ -95,6 +96,18 @@ public interface DataWriter {
 	 * Writes a binary string value.
 	 */
 	void value(byte[] value) throws IOException;
+	
+	/**
+	 * Starts writing a binary value of arbitrary length in chunked mode.
+	 * 
+	 * <p>
+	 * The binary contents must be written the the resulting
+	 * {@link OutputStream}. No other methods of this {@link DataWriter} must be
+	 * called before the resulting {@link OutputStream} has been
+	 * {@link OutputStream#close() closed}.
+	 * </p>
+	 */
+	OutputStream valueBinaryStream() throws IOException;
 
 	/**
 	 * Starts writing an array value with entries of the given type.

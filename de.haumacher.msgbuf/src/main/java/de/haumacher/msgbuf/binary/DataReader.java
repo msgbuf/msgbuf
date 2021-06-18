@@ -4,6 +4,7 @@
 package de.haumacher.msgbuf.binary;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Output interface for creating binary messages out of data objects.
@@ -107,8 +108,27 @@ public interface DataReader {
 
 	/**
 	 * Reads a binary string value.
+	 * 
+	 * <p>
+	 * The value might have been produced by {@link DataWriter#value(byte[])},
+	 * or {@link DataWriter#valueBinaryStream()}. Best efficiency is achieved, if a
+	 * value produced with {@link DataWriter#valueBinaryStream()} is read by
+	 * {@link #nextBinaryStream()}.
+	 * </p>
 	 */
 	byte[] nextBinary() throws IOException;
+	
+	/**
+	 * Reads a binary stream value.
+	 * 
+	 * <p>
+	 * The value might have been produced by {@link DataWriter#value(byte[])},
+	 * or {@link DataWriter#valueBinaryStream()}. Best efficiency is achieved, if a
+	 * value produced with {@link DataWriter#valueBinaryStream()} is read by
+	 * {@link #nextBinaryStream()}.
+	 * </p>
+	 */
+	InputStream nextBinaryStream() throws IOException;
 
 	/**
 	 * Starts reading an array.

@@ -13,14 +13,17 @@ import java.util.List;
  */
 public class OctetDataWriter implements DataWriter {
 	
+	private static final int CHUNK_BUFFER_SIZE = 1024;
+	private static final int MIN_CHUNK_SIZE = CHUNK_BUFFER_SIZE / 2;
+	
 	private static final int MASK_7 = ~(0xFFFFFFFF << 7);
 	private static final int MASK_8 = ~(0xFFFFFFFF << 8);
 
 	private static final int BIT_8 = 1 << 7;
 	
-	private final OutputStream _out;
+	final OutputStream _out;
 	
-	private State _state = State.START;
+	State _state = State.START;
 	
 	private int _field;
 	private DataType _content;
@@ -57,7 +60,7 @@ public class OctetDataWriter implements DataWriter {
 	@Override
 	public void endObject() throws IOException {
 		expect(State.FIELD);
-		writeVarInt(Tag.STOP.ordinal());
+		writeVarInt(FieldTag.STOP.ordinal());
 		SFrame frame = _stack.remove(_stack.size() - 1);
 		_state = frame.getState();
 		_length = frame.getLength();
@@ -67,8 +70,8 @@ public class OctetDataWriter implements DataWriter {
 	@Override
 	public void beginArray(DataType type, int length) throws IOException {
 		expect(State.FIELD_VALUE);
-		writeVarInt(encodeId(Tag.REPEATED));
-		writeVarLong(encodeLength(type.tag(), length));
+		writeVarInt(encodeId(FieldTag.REPEATED));
+		writeVarLong(encodeLength(type.tag().asContent(), length));
 		_length = length;
 		_content = type;
 		_state = State.ARRAY_VALUE;
@@ -140,8 +143,70 @@ public class OctetDataWriter implements DataWriter {
 	@Override
 	public void value(byte[] value) throws IOException {
 		valueSeen(DataType.BINARY);
-		writeVarLong(encodeLength(Tag.F8, value.length));
+		writeVarLong(encodeLength(ContentTag.F8, value.length));
 		writeBinary(value);
+	}
+	
+	@Override
+	public OutputStream valueBinaryStream() throws IOException {
+		assert _state == State.FIELD_VALUE : "Chunked binary data can only be written as direct field contents.";
+		writeVarInt(encodeId(FieldTag.CHUNKED));
+		writeVarLong(encodeLength(ContentTag.F8, 0));
+		
+		_state = State.CHUNKED_VALUE;
+		
+		return new OutputStream() {
+			int _pos = 0;
+			byte[] _buffer;
+			
+			@Override
+			public void write(int data) throws IOException {
+				ensureBufferSize(1);
+				_buffer[_pos++] = (byte) data;
+			}
+			
+			@Override
+			public void write(byte[] buffer, int off, int len) throws IOException {
+				if (len >= MIN_CHUNK_SIZE) {
+					flush();
+					writeChunk(len, off, buffer);
+				} else {
+					ensureBufferSize(len);
+					System.arraycopy(buffer, off, _buffer, _pos, len);
+					_pos += len;
+				}
+			}
+
+			private void ensureBufferSize(int size) throws IOException {
+				if (_buffer == null) {
+					_buffer = new byte[CHUNK_BUFFER_SIZE];
+				}
+				if (_pos + size > CHUNK_BUFFER_SIZE) {
+					flush();
+				}
+			}
+			
+			@Override
+			public void flush() throws IOException {
+				if (_pos > 0) {
+					writeChunk(_pos, 0, _buffer);
+					_pos = 0;
+				}
+			}
+			
+			@Override
+			public void close() throws IOException {
+				flush();
+				writeVarInt(0);
+				
+				_state = State.FIELD;
+			}
+
+			private void writeChunk(int length, int start, byte[] buffer) throws IOException {
+				writeVarInt(length);
+				_out.write(buffer, start, length);
+			}
+		};
 	}
 	
 	@Override
@@ -149,7 +214,7 @@ public class OctetDataWriter implements DataWriter {
 		byte[] bytes = value.getBytes("utf-8");
 		
 		valueSeen(DataType.STRING);
-		writeVarLong(encodeLength(Tag.CHAR, bytes.length));
+		writeVarLong(encodeLength(ContentTag.CHAR, bytes.length));
 		writeBinary(bytes);
 	}
 
@@ -177,7 +242,7 @@ public class OctetDataWriter implements DataWriter {
 		_length--;
 	}
 
-	private void writeVarInt(int data) throws IOException {
+	final void writeVarInt(int data) throws IOException {
 		while (true) {
 			int octet = data & MASK_7;
 			data >>>= 7;
@@ -223,11 +288,11 @@ public class OctetDataWriter implements DataWriter {
 		_out.write(bytes);
 	}
 
-	private int encodeId(Tag tag) {
+	private int encodeId(FieldTag tag) {
 		return _field << 3 | tag.ordinal();
 	}
 
-	private static long encodeLength(Tag tag, int length) {
+	private static long encodeLength(ContentTag tag, int length) {
 		return (((long) length) << 3) | tag.ordinal();
 	}
 
