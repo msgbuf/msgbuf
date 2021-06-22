@@ -93,6 +93,10 @@ public class FieldIDSynthesizer implements Definition.Visitor<Map<Integer, Strin
 				field.setIndex(nextIndex);
 			}
 		}
+		
+		for (Definition inner : self.getDefinitions()) {
+			inner.visit(this, arg);
+		}
 
 		return partByIndex;
 	}
