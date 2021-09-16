@@ -18,20 +18,25 @@ public abstract class AbstractDataObject implements DataObject {
 	public Object get(String field) {
 		return null;
 	}
-	
+
 	@Override
 	public void set(String field, Object value) {
 		// Ignore.
 	}
-	
+
 	/**
 	 * Writes a JSON object containing keys for all fields of this object.
+	 * 
+	 * <p>
+	 * In contrast to {@link #writeTo(JsonWriter)}, the resulting object contains no type information. Therefore, this
+	 * method must only be called directly, if the reader knows the type of the object to read from the context. For
+	 * reading the data, a per-type generated <code>read[type-name]()</code> method must be called.
+	 * </p>
 	 *
 	 * @param out
 	 *        The writer to write to.
 	 */
-	protected final void writeContent(JsonWriter out)
-			throws java.io.IOException {
+	public final void writeContent(JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeFields(out);
 		out.endObject();
@@ -55,8 +60,7 @@ public abstract class AbstractDataObject implements DataObject {
 	 * @param in
 	 *        The reader to take the input from.
 	 */
-	protected final void readFields(JsonReader in)
-			throws java.io.IOException {
+	protected final void readFields(JsonReader in) throws java.io.IOException {
 		while (in.hasNext()) {
 			String field = in.nextName();
 			readField(in, field);
