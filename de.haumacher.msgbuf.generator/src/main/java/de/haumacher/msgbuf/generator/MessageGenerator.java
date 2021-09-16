@@ -55,7 +55,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 		docComment(_def.getComment());
 		line("public" + modifier + getAbstract() + " class " + camelCase(_def.getName()) + getExtends() + " {");
-		generateContents();
+		generateClassContents();
 		nl();
 		line("}");
 	}
@@ -119,7 +119,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return _def.getExtends() == null ? " extends de.haumacher.msgbuf.data.AbstractDataObject" + (_binary ? " implements de.haumacher.msgbuf.binary.BinaryDataObject" : "") : " extends " + Util.qName(_def.getExtends());
 	}
 
-	private void generateContents() {
+	private void generateClassContents() {
 		if (_def.isAbstract()) {
 			nl();
 			line("/** Visitor interface for the {@link " + _def.getName() + "} hierarchy.*/");
@@ -847,7 +847,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (type instanceof PrimitiveType) {
 			line("out.value(" + x + ");");
 		} else if (type instanceof CustomType) {
-			line(x + ".writeTo(out);");
+			CustomType customType = (CustomType) type;
+			if (isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
+				line(x + ".writeContent(out);");
+			} else {
+				line(x + ".writeTo(out);");
+			}
 		} else if (type instanceof MapType) {
 			MapType mapType = (MapType) type;
 			
@@ -887,6 +892,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		} else {
 			throw new RuntimeException("Unsupported: " + type);
 		}
+	}
+
+	private boolean isMonomorphicReferenceToTypeInPolymorphicHierarchy(CustomType customType) {
+		Definition definition = customType.getDefinition();
+		if (definition instanceof MessageDef) {
+			MessageDef messageDef = (MessageDef) definition;
+			
+			if (messageDef.getExtendedDef() != null && !messageDef.isAbstract()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private String entryType(MapType mapType) {

@@ -40,15 +40,15 @@ public class OctetDataWriter implements DataWriter {
 
 	@Override
 	public void beginObject() throws IOException {
+		valueSeen(DataType.OBJECT);
 		State before = _state;
 		switch (_state) {
 		case START:
+		case FIELD:
+		case ARRAY_VALUE:
 			break;
 		case FIELD_VALUE:
 			before = State.FIELD;
-			break;
-		case ARRAY_VALUE:
-			consumeArrayValue(DataType.OBJECT);
 			break;
 		default:
 			assert false : "Cannot start object in state '" + _state + "'.";
@@ -224,6 +224,8 @@ public class OctetDataWriter implements DataWriter {
 
 	private void valueSeen(DataType type) throws IOException {
 		switch (_state) {
+		case START:
+			break;
 		case FIELD_VALUE:
 			writeVarInt(encodeId(type.tag()));
 			_state = State.FIELD;

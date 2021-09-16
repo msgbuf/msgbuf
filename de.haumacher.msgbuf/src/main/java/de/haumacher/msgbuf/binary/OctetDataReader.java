@@ -42,20 +42,17 @@ public class OctetDataReader implements DataReader {
 
 	@Override
 	public void beginObject() throws IOException {
-		State before = _state;
 		consumeValue(FieldTag.OBJ);
 		
-		_stack.add(new SFrame(before, _length, _content));
+		_stack.add(new SFrame(_state, _length, _content));
 		_state = State.FIELD;
 		_name = NO_NAME;
 	}
 
 	@Override
 	public void endObject() throws IOException {
-		requireState(State.FIELD);
-		
 		fetchName();
-		assert _name == END_OF_OBJECT : "There are more fields to read.";
+		assert _name == END_OF_OBJECT : "There are more fields to read: " + _name;
 		
 		SFrame sFrame = _stack.remove(_stack.size() - 1);
 		
@@ -429,7 +426,7 @@ public class OctetDataReader implements DataReader {
 	}
 
 	private void requireState(State requested) {
-		assert _state == requested : "Expecting '" +_state + "' but received '" + requested + "'.";
+		assert _state == requested : "Expecting '" + requested + "' but received '" + _state + "'.";
 	}
 
 	private void consumeValue(FieldTag requested) throws IOException {

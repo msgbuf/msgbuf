@@ -68,3 +68,17 @@ message Group extends Shape {
 	 */
 	repeated Shape shapes;
 }
+
+/**
+ * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ */
+message Car extends Shape {
+    /** The front wheel. */
+	Circle wheel1;
+	
+    /** The back wheel. */
+	Circle wheel2;
+	
+    /** The car body. */
+	Rectangle body;
+}

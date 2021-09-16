@@ -11,6 +11,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/** Visit case for {@link Group}.*/
 		R visit(Group self, A arg);
 
+		/** Visit case for {@link Car}.*/
+		R visit(Car self, A arg);
+
 	}
 
 	/**
@@ -61,6 +64,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		String type = in.nextString();
 		switch (type) {
 			case "Group": result = Group.readGroup(in); break;
+			case "Car": result = Car.readCar(in); break;
 			case "Circle": result = Circle.readCircle(in); break;
 			case "Rectangle": result = Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
@@ -159,6 +163,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		int type = in.nextInt();
 		switch (type) {
 			case 3: result = Group.create(); break;
+			case 4: result = Car.create(); break;
 			case 1: result = Circle.create(); break;
 			case 2: result = Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;

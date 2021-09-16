@@ -7,12 +7,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 import de.haumacher.msgbuf.binary.OctetDataReader;
 import de.haumacher.msgbuf.binary.OctetDataWriter;
 import de.haumacher.msgbuf.io.StringR;
 import de.haumacher.msgbuf.json.JsonReader;
 import junit.framework.TestCase;
+import test.hierarchy.data.Car;
 import test.hierarchy.data.Circle;
 import test.hierarchy.data.Group;
 import test.hierarchy.data.Rectangle;
@@ -34,15 +36,35 @@ public class TestHierarchy extends TestCase {
 					.addShape(Circle.create())
 					.addShape(Rectangle.create()));
 		
-		checkCopy(writeAndReadBackJson(shape));
-		checkCopy(writeAndReadBackBinary(shape));
+		assertCopy(shape, this::checkCopyPolymorphic);
 	}
 
-	private void checkCopy(Shape copy) {
+	private void checkCopyPolymorphic(Shape copy) {
 		assertTrue(copy instanceof Group);
 		List<Shape> contentsCopy = ((Group) copy).getShapes();
 		assertEquals(3, contentsCopy.size());
 		assertTrue(contentsCopy.get(0) instanceof Circle);
+	}
+
+	public void testMonomorphicReferences() throws IOException {
+		Car shape = Car.create()
+			.setWheel1((Circle) Circle.create().setRadius(10).setXCoordinate(30).setYCoordinate(10))
+			.setWheel2((Circle) Circle.create().setRadius(10).setXCoordinate(50).setYCoordinate(10))
+			.setBody((Rectangle) Rectangle.create().setWidth(40).setHeight(20).setXCoordinate(20).setYCoordinate(5)); 
+
+		assertCopy(shape, this::checkCopyMonomorphic);
+	}
+
+	private void checkCopyMonomorphic(Shape copy) {
+		assertTrue(copy instanceof Car);
+		assertEquals(30, ((Car) copy).getWheel1().getXCoordinate());
+		assertEquals(50, ((Car) copy).getWheel2().getXCoordinate());
+		assertEquals(20, ((Car) copy).getBody().getXCoordinate());
+	}
+	
+	private void assertCopy(Shape shape, Consumer<Shape> check) throws IOException {
+		check.accept(writeAndReadBackJson(shape));
+		check.accept(writeAndReadBackBinary(shape));
 	}
 
 	private Shape writeAndReadBackJson(Shape shape) throws IOException {
@@ -55,5 +77,5 @@ public class TestHierarchy extends TestCase {
 		shape.writeTo(new OctetDataWriter(buffer));
 		return Shape.readShape(new OctetDataReader(new ByteArrayInputStream(buffer.toByteArray())));
 	}
-	
+
 }
