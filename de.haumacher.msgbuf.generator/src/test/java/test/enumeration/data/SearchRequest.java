@@ -191,7 +191,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "query": setQuery(in.nextString()); break;
+			case "query": setQuery(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case "page_number": setPageNumber(in.nextInt()); break;
 			case "result_per_page": setResultPerPage(in.nextInt()); break;
 			case "corpus": setCorpus(Corpus.readCorpus(in)); break;

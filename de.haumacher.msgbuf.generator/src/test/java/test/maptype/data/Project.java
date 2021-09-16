@@ -89,7 +89,7 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "name": setName(in.nextString()); break;
+			case "name": setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case "cost": setCost(in.nextDouble()); break;
 			default: super.readField(in, field);
 		}

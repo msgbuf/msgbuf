@@ -483,10 +483,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			return "in.nextLong()";
 		
 		case STRING:
-			return "in.nextString()";
+			return "de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)";
 			
 		case BYTES:
-			return "java.util.Base64.getDecoder().decode(in.nextString())";
+			return "de.haumacher.msgbuf.json.JsonUtil.nextBinaryOptional(in)";
 		}			
 		
 		throw new RuntimeException("No such type: " + primitive);
@@ -760,9 +760,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 	}
 
-	/** 
-	 * TODO
-	 */
 	private List<MessageDef> transitiveSpecializations(MessageDef def) {
 		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
 		int n = 0;
@@ -845,7 +842,16 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	private void jsonOutValue(Type type, String x, int depth) {
 		if (type instanceof PrimitiveType) {
-			line("out.value(" + x + ");");
+			switch (((PrimitiveType) type).getKind()) {
+			case BYTES: {
+				line("de.haumacher.msgbuf.json.JsonUtil.writeBinaryOptional(out, " + x + ");");
+				break;
+			}
+			default: {
+				line("out.value(" + x + ");");
+				break;
+			}
+			}
 		} else if (type instanceof CustomType) {
 			CustomType customType = (CustomType) type;
 			if (isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 

@@ -142,7 +142,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 					while (in.hasNext()) {
 						switch (in.nextName()) {
 							case "key": key = in.nextInt(); break;
-							case "value": value = in.nextString(); break;
+							case "value": value = de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in); break;
 							default: in.skipValue(); break;
 						}
 					}

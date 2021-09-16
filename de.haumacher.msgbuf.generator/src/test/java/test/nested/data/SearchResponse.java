@@ -121,12 +121,12 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		@Override
 		protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 			switch (field) {
-				case "url": setUrl(in.nextString()); break;
-				case "title": setTitle(in.nextString()); break;
+				case "url": setUrl(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+				case "title": setTitle(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 				case "snippets": {
 					in.beginArray();
 					while (in.hasNext()) {
-						addSnippet(in.nextString());
+						addSnippet(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
 					}
 					in.endArray();
 				}
