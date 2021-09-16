@@ -1,7 +1,10 @@
 package de.haumacher.msgbuf.eclipse.builder;
 
 import java.util.Iterator;
-import org.eclipse.core.commands.*;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -12,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 public class AddRemoveMsgBufNatureHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		//
