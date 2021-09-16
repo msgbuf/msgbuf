@@ -23,7 +23,7 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 		/** Writes this instance to the given binary output. */
 		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 			switch (this) {
-				case UNKNOWN: out.value(0); break;
+				case UNKNOWN: out.value(2); break;
 				case STARTED: out.value(1); break;
 				default: out.value(0);
 			}
@@ -32,7 +32,7 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 		/** Reads a new instance from the given binary reader. */
 		public static EnumNotAllowingAlias readEnumNotAllowingAlias(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 			switch (in.nextInt()) {
-				case 0: return UNKNOWN;
+				case 2: return UNKNOWN;
 				case 1: return STARTED;
 				default: return UNKNOWN;
 			}

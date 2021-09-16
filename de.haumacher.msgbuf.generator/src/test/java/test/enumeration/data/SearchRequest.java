@@ -33,7 +33,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		/** Writes this instance to the given binary output. */
 		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 			switch (this) {
-				case UNIVERSAL: out.value(0); break;
+				case UNIVERSAL: out.value(7); break;
 				case WEB: out.value(1); break;
 				case IMAGES: out.value(2); break;
 				case LOCAL: out.value(3); break;
@@ -47,7 +47,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		/** Reads a new instance from the given binary reader. */
 		public static Corpus readCorpus(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 			switch (in.nextInt()) {
-				case 0: return UNIVERSAL;
+				case 7: return UNIVERSAL;
 				case 1: return WEB;
 				case 2: return IMAGES;
 				case 3: return LOCAL;
