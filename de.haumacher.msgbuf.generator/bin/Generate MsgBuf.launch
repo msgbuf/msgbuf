@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
     <stringAttribute key="bad_container_name" value="/de.haumacher.msgbuf.generator/bin"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/de.haumacher.msgbuf.generator/src/de/haumacher/msgbuf/generator/Generator.java"/>
+        <listEntry value="/de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/Generator.java"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
