@@ -292,14 +292,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			if (_def.isAbstract()) {
 				nl();
 				line("/** The type identifier for this concrete subtype. */");
-				line("protected abstract String jsonType();");
+				line("public abstract String jsonType();");
 			}
 		}
 		
 		if (_def.getExtendedDef() != null && !_def.isAbstract()) {
 			nl();
 			line("@Override");
-			line("protected String jsonType() {");
+			line("public String jsonType() {");
 			{
 				line("return \"" + _def.getName() + "\";");
 			}
@@ -520,13 +520,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			if (_def.isAbstract()) {
 				nl();
 				line("/** The binary identifier for this concrete type in the polymorphic {@link " + _def.getName() + "} hierarchy. */");
-				line("protected abstract int typeId();");
+				line("public abstract int typeId();");
 			}
 		} else {
 			if (!_def.isAbstract() && root(_def).isAbstract()) {
 				nl();
 				line("@Override");
-				line("protected int typeId() {");
+				line("public int typeId() {");
 				{
 					line("return " + _def.getId() + ";");				
 				}
