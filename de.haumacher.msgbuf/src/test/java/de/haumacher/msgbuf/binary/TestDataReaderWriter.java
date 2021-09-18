@@ -19,14 +19,14 @@ import junit.framework.TestCase;
 public class TestDataReaderWriter extends TestCase {
 	
 	interface IOTest {
-		void wirteObject(OctetDataWriter out) throws IOException;
+		void writeObject(OctetDataWriter out) throws IOException;
 		void readObject(OctetDataReader in) throws IOException;
 	}
 	
 	public void testVarIntMessage() throws IOException {
 		doTest(new IOTest() {
 			@Override
-			public void wirteObject(OctetDataWriter out) throws IOException {
+			public void writeObject(OctetDataWriter out) throws IOException {
 				out.beginObject();
 				out.name(1);
 				out.value(42);
@@ -46,7 +46,7 @@ public class TestDataReaderWriter extends TestCase {
 	public void testStringMessage() throws IOException {
 		doTest(new IOTest() {
 			@Override
-			public void wirteObject(OctetDataWriter out) throws IOException {
+			public void writeObject(OctetDataWriter out) throws IOException {
 				out.beginObject();
 				out.name(1);
 				out.value("Hello world!");
@@ -66,7 +66,7 @@ public class TestDataReaderWriter extends TestCase {
 	public void testByteArrayAsStreamMessage() throws IOException {
 		doTest(new IOTest() {
 			@Override
-			public void wirteObject(OctetDataWriter out) throws IOException {
+			public void writeObject(OctetDataWriter out) throws IOException {
 				out.beginObject();
 				out.name(1);
 				out.value(new byte[] {1, 2, 3, 4, 5});
@@ -93,7 +93,7 @@ public class TestDataReaderWriter extends TestCase {
 	public void testChunkedStreamMessage() throws IOException {
 		doTest(new IOTest() {
 			@Override
-			public void wirteObject(OctetDataWriter out) throws IOException {
+			public void writeObject(OctetDataWriter out) throws IOException {
 				out.beginObject();
 				out.name(1);
 				try (OutputStream data = out.valueBinaryStream()) {
@@ -128,7 +128,7 @@ public class TestDataReaderWriter extends TestCase {
 	public void testComplexMessage() throws IOException {
 		doTest(new IOTest() {
 			@Override
-			public void wirteObject(OctetDataWriter out) throws IOException {
+			public void writeObject(OctetDataWriter out) throws IOException {
 				out.beginObject();
 				int wField = 0;
 
@@ -319,7 +319,7 @@ public class TestDataReaderWriter extends TestCase {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		OctetDataWriter out = new OctetDataWriter(buffer);
 		
-		io.wirteObject(out);
+		io.writeObject(out);
 		writeMarkerOject(out);
 		
 		return buffer.toByteArray();
@@ -357,7 +357,7 @@ public class TestDataReaderWriter extends TestCase {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		OctetDataWriter out = new OctetDataWriter(buffer);
 		
-		io.wirteObject(out);
+		io.writeObject(out);
 		writeMarkerOject(out);
 		
 		byte[] message = buffer.toByteArray();

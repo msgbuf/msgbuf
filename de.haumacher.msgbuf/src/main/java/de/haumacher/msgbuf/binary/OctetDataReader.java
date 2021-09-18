@@ -437,6 +437,8 @@ public class OctetDataReader implements DataReader {
 			assert requested == FieldTag.OBJ : "Data starts always with an object, '" + requested + "' was requested.";
 			_state = State.FIELD;
 			break;
+		case FIELD:
+			break;
 		case FIELD_VALUE:
 			_state = State.FIELD;
 			break;
