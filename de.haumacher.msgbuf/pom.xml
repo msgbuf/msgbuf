@@ -3,7 +3,7 @@
 
 	<groupId>de.haumacher.msgbuf</groupId>
 	<artifactId>msgbuf-api</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.1</version>
 
 	<name>MsgBuf API</name>
 	<url>https://github.com/haumacher/msgbuf</url>
@@ -31,7 +31,7 @@
 		<url>https://github.com/haumacher/msgbuf</url>
 		<connection>scm:git:https://github.com/haumacher/msgbuf.git</connection>
 		<developerConnection>scm:git:https://github.com/haumacher/msgbuf.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>msgbuf-api-0.2.1</tag>
   </scm>
 
 	<dependencies>
