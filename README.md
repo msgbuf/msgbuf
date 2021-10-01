@@ -56,7 +56,7 @@ There is an Eclipse plugin providing a project builder that automatically genera
 ### Add update site
 
  * Open the dialog `Help > Install new Software`.
- * Enter `msgbuf - https://haumacher.github.io/msgbuf/update-site/` in the `Work with` field, click the `Add...` button, and acknowledge the addition. 
+ * Enter `msgbuf - https://msgbuf.github.io/msgbuf/update-site/` in the `Work with` field, click the `Add...` button, and acknowledge the addition. 
  * Select the `MsgBuf Project Builder` checkbox and click `Finish`. 
  * Accept the license and the installation of unsigned content.
 
