@@ -60,10 +60,20 @@ There is an Eclipse plugin providing a project builder that automatically genera
  * Select the `MsgBuf Project Builder` checkbox and click `Finish`. 
  * Accept the license and the installation of unsigned content.
 
-### Enable the MsbBuf builder in your Project
+### Enable the MsgBuf builder in your Project
 
  * Select your project in the `Package Explorer`.
  * In the context menu, select `Configure > Enable MsgBuf Builder`.
+
+### Add project dependency to the MsgBuf runtime libary
+
+```
+<dependency>
+    <groupId>de.haumacher.msgbuf</groupId>
+    <artifactId>msgbuf-api</artifactId>
+    <version>0.2.1</version>
+</dependency>
+```
 
 ### Test the installtion
 
