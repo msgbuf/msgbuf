@@ -9,11 +9,13 @@ abstract message Shape {
 	/**
 	 * X coordinate of the origin of the coordinate system of this {@link Shape}.
 	 */
+	@Name("x")
 	int32 xCoordinate;
 	
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
 	 */
+	@Name("y")
 	int32 yCoordinate;
 }
 
@@ -29,6 +31,7 @@ message Circle extends AtomicShape {
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #xCoordinate}, {@link #yCoordinate}).
 	 */
+	@Name("r")
 	int32 radius;
 }
 
@@ -45,6 +48,7 @@ message Rectangle extends AtomicShape {
 	 *
 	 * @see #height
 	 */
+	@Name("w")
 	int32 width;
 	
 	/**
@@ -52,6 +56,7 @@ message Rectangle extends AtomicShape {
 	 *
 	 * @see #width
 	 */
+	@Name("h")
 	int32 height;
 }
 

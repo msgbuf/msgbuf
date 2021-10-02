@@ -24,10 +24,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** @see #getXCoordinate() */
-	public static final String XCOORDINATE = "xCoordinate";
+	public static final String XCOORDINATE = "x";
 
 	/** @see #getYCoordinate() */
-	public static final String YCOORDINATE = "yCoordinate";
+	public static final String YCOORDINATE = "y";
 
 	private int _xCoordinate = 0;
 

@@ -5,6 +5,7 @@ package de.haumacher.msgbuf.generator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +16,11 @@ import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
+import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind;
 import de.haumacher.msgbuf.generator.ast.QName;
+import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
 
 /**
@@ -423,11 +426,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 	}
 
-	/** 
-	 * TODO
-	 *
-	 * @param fields
-	 */
 	private void generateConstants(List<Field> fields) {
 		for (Field field : fields) {
 			nl();
@@ -819,7 +817,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String fieldNameString(Field field) {
-		return "\"" + field.getName() + "\"";
+		Optional<Option> fieldName = field.getOptions().stream().filter(opt -> opt.getName().equals("Name")).findFirst();
+		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
+		return "\"" + name + "\"";
 	}
 
 	private DataType binaryType(Type type) {

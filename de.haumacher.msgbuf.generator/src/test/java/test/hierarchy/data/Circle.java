@@ -22,7 +22,7 @@ public class Circle extends AtomicShape {
 	}
 
 	/** @see #getRadius() */
-	public static final String RADIUS = "radius";
+	public static final String RADIUS = "r";
 
 	private int _radius = 0;
 

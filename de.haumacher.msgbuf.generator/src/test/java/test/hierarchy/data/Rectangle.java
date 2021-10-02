@@ -22,10 +22,10 @@ public class Rectangle extends AtomicShape {
 	}
 
 	/** @see #getWidth() */
-	public static final String WIDTH = "width";
+	public static final String WIDTH = "w";
 
 	/** @see #getHeight() */
-	public static final String HEIGHT = "height";
+	public static final String HEIGHT = "h";
 
 	private int _width = 0;
 
