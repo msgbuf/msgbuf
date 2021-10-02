@@ -24,10 +24,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** @see #getXCoordinate() */
-	public static final String XCOORDINATE = "x";
+	public static final String X_COORDINATE = "x";
 
 	/** @see #getYCoordinate() */
-	public static final String YCOORDINATE = "y";
+	public static final String Y_COORDINATE = "y";
 
 	private int _xCoordinate = 0;
 
@@ -92,8 +92,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			XCOORDINATE, 
-			YCOORDINATE));
+			X_COORDINATE, 
+			Y_COORDINATE));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -103,8 +103,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case XCOORDINATE: return getXCoordinate();
-			case YCOORDINATE: return getYCoordinate();
+			case X_COORDINATE: return getXCoordinate();
+			case Y_COORDINATE: return getYCoordinate();
 			default: return super.get(field);
 		}
 	}
@@ -112,25 +112,25 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case XCOORDINATE: setXCoordinate((int) value); break;
-			case YCOORDINATE: setYCoordinate((int) value); break;
+			case X_COORDINATE: setXCoordinate((int) value); break;
+			case Y_COORDINATE: setYCoordinate((int) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(XCOORDINATE);
+		out.name(X_COORDINATE);
 		out.value(getXCoordinate());
-		out.name(YCOORDINATE);
+		out.name(Y_COORDINATE);
 		out.value(getYCoordinate());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case XCOORDINATE: setXCoordinate(in.nextInt()); break;
-			case YCOORDINATE: setYCoordinate(in.nextInt()); break;
+			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

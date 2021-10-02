@@ -28,6 +28,12 @@ import de.haumacher.msgbuf.generator.ast.Type;
  */
 public class MessageGenerator extends AbstractFileGenerator implements Type.Visitor<String, Boolean>, Definition.Visitor<Void, Void> {
 
+	private static final Pattern NAME_PART_PATTERN = Pattern.compile(
+		"(?<=\\p{javaLowerCase})(?=\\p{javaUpperCase})" + "|" + 
+		"(?<=\\p{javaLetter})(?=\\p{javaDigit})" + "|" + 
+		"(?<=\\p{javaDigit})(?=\\p{javaLetter})" + "|" + 
+		"_+");
+	
 	private final NameTable _table;
 	private final MessageDef _def;
 	private boolean _binary = true;
@@ -1226,7 +1232,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	private static String allUpperCase(String name) {
 		StringBuilder result = new StringBuilder();
 		boolean first = true;
-		for (String part : name.split("_+")) {
+		for (String part : NAME_PART_PATTERN.split(name)) {
 			if (first) {
 				first = false;
 			} else {
