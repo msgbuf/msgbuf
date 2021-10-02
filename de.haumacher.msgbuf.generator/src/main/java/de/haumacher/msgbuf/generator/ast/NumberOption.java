@@ -27,7 +27,7 @@ public class NumberOption extends Option {
 	private double _value = 0.0d;
 
 	/**
-	 * The number assigned to the option {@link #getName()}.
+	 * The number assigned to the option {@link #name}.
 	 */
 	public final double getValue() {
 		return _value;
@@ -55,31 +55,6 @@ public class NumberOption extends Option {
 		return "NumberOption";
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			VALUE));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case VALUE: return getValue();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case VALUE: setValue((double) value); break;
-			default: super.set(field, value); break;
-		}
-	}
-
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
@@ -93,38 +68,6 @@ public class NumberOption extends Option {
 			case VALUE: setValue(in.nextDouble()); break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public int typeId() {
-		return 2;
-	}
-
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		out.name(2);
-		out.value(getValue());
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 2: setValue(in.nextDouble()); break;
-			default: super.readField(in, field);
-		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static NumberOption readNumberOption(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		NumberOption result = new NumberOption();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 	@Override

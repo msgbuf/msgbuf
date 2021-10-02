@@ -108,7 +108,7 @@ public class TypeIdSynthesizer implements Definition.Visitor<Void, Void> {
 	}
 
 	private Optional<Option> getOption(String name, MessageDef def) {
-		return def.getOptions().stream().filter(o -> o.getName().equals(name)).findFirst();
+		return Optional.ofNullable(def.getOptions().get(name));
 	}
 
 }

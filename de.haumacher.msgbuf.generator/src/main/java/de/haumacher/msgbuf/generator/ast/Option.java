@@ -7,7 +7,7 @@ package de.haumacher.msgbuf.generator.ast;
  * @see NumberOption 
  * @see Flag
  */
-public abstract class Option extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/** Visitor interface for the {@link Option} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -28,26 +28,6 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractReflective
 	 */
 	protected Option() {
 		super();
-	}
-
-	/** @see #getName() */
-	public static final String NAME = "name";
-
-	private String _name = "";
-
-	/**
-	 * The name of this option.
-	 */
-	public final String getName() {
-		return _name;
-	}
-
-	/**
-	 * @see #getName()
-	 */
-	public final Option setName(String value) {
-		_name = value;
-		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
@@ -75,98 +55,6 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractReflective
 
 	/** The type identifier for this concrete subtype. */
 	public abstract String jsonType();
-
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			NAME));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case NAME: return getName();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case NAME: setName((String) value); break;
-		}
-	}
-
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		out.name(NAME);
-		out.value(getName());
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
-		switch (field) {
-			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			default: super.readField(in, field);
-		}
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		out.name(0);
-		out.value(typeId());
-		writeFields(out);
-		out.endObject();
-	}
-
-	/** The binary identifier for this concrete type in the polymorphic {@link Option} hierarchy. */
-	public abstract int typeId();
-
-	/**
-	 * Serializes all fields of this instance to the given binary output.
-	 *
-	 * @param out
-	 *        The binary output to write to.
-	 * @throws java.io.IOException If writing fails.
-	 */
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		out.value(getName());
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setName(in.nextString()); break;
-			default: in.skipValue(); 
-		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static Option readOption(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Option result;
-		int typeField = in.nextName();
-		assert typeField == 0;
-		int type = in.nextInt();
-		switch (type) {
-			case 1: result = StringOption.create(); break;
-			case 2: result = NumberOption.create(); break;
-			case 3: result = Flag.create(); break;
-			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
-		}
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
 
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);

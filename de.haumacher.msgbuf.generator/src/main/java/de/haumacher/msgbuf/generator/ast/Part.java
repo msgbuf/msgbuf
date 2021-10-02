@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Member of a {@link Definition}.
  */
-public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Part extends WithOptions {
 
 	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -32,9 +32,6 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	/** @see #getIndex() */
 	public static final String INDEX = "index";
 
-	/** @see #getOptions() */
-	public static final String OPTIONS = "options";
-
 	/** @see #getOwner() */
 	public static final String OWNER = "owner";
 
@@ -43,8 +40,6 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	private String _name = "";
 
 	private int _index = 0;
-
-	private final java.util.List<Option> _options = new java.util.ArrayList<>();
 
 	private transient Definition _owner = null;
 
@@ -94,30 +89,6 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	}
 
 	/**
-	 * Annotations to this {@link Part}
-	 */
-	public final java.util.List<Option> getOptions() {
-		return _options;
-	}
-
-	/**
-	 * @see #getOptions()
-	 */
-	public final Part setOptions(java.util.List<Option> value) {
-		_options.clear();
-		_options.addAll(value);
-		return this;
-	}
-
-	/**
-	 * Adds a value to the {@link #getOptions()} list.
-	 */
-	public final Part addOption(Option value) {
-		_options.add(value);
-		return this;
-	}
-
-	/**
 	 * The {@link Definition} definint this {@link Part}.
 	 */
 	public final Definition getOwner() {
@@ -154,53 +125,6 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	}
 
 	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.beginArray();
-		out.value(jsonType());
-		writeContent(out);
-		out.endArray();
-	}
-
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			COMMENT, 
-			NAME, 
-			INDEX, 
-			OPTIONS, 
-			OWNER));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case COMMENT: return getComment();
-			case NAME: return getName();
-			case INDEX: return getIndex();
-			case OPTIONS: return getOptions();
-			case OWNER: return getOwner();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case COMMENT: setComment((String) value); break;
-			case NAME: setName((String) value); break;
-			case INDEX: setIndex((int) value); break;
-			case OPTIONS: setOptions((java.util.List<Option>) value); break;
-			case OWNER: setOwner((Definition) value); break;
-		}
-	}
-
-	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		out.name(COMMENT);
@@ -209,12 +133,6 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		out.value(getName());
 		out.name(INDEX);
 		out.value(getIndex());
-		out.name(OPTIONS);
-		out.beginArray();
-		for (Option x : getOptions()) {
-			x.writeTo(out);
-		}
-		out.endArray();
 	}
 
 	@Override
@@ -223,95 +141,17 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 			case COMMENT: setComment(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case INDEX: setIndex(in.nextInt()); break;
-			case OPTIONS: {
-				in.beginArray();
-				while (in.hasNext()) {
-					addOption(Option.readOption(in));
-				}
-				in.endArray();
-			}
-			break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		out.name(0);
-		out.value(typeId());
-		writeFields(out);
-		out.endObject();
-	}
-
-	/** The binary identifier for this concrete type in the polymorphic {@link Part} hierarchy. */
-	public abstract int typeId();
-
-	/**
-	 * Serializes all fields of this instance to the given binary output.
-	 *
-	 * @param out
-	 *        The binary output to write to.
-	 * @throws java.io.IOException If writing fails.
-	 */
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		out.value(getComment());
-		out.name(2);
-		out.value(getName());
-		out.name(3);
-		out.value(getIndex());
-		out.name(4);
-		{
-			java.util.List<Option> values = getOptions();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (Option x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setComment(in.nextString()); break;
-			case 2: setName(in.nextString()); break;
-			case 3: setIndex(in.nextInt()); break;
-			case 4: {
-				in.beginArray();
-				while (in.hasNext()) {
-					addOption(Option.readOption(in));
-				}
-				in.endArray();
-			}
-			break;
-			default: in.skipValue(); 
-		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static Part readPart(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Part result;
-		int typeField = in.nextName();
-		assert typeField == 0;
-		int type = in.nextInt();
-		switch (type) {
-			case 1: result = Constant.create(); break;
-			case 2: result = Field.create(); break;
-			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
-		}
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
+
+	@Override
+	public final <R,A> R visit(WithOptions.Visitor<R,A> v, A arg) {
+		return visit((Visitor<R,A>) v, arg);
+	}
 
 }

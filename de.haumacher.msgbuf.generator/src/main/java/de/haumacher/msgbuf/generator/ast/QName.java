@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A dot-separated qualified name.
  */
-public class QName extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class QName extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/**
 	 * Creates a {@link QName} instance.
@@ -64,30 +64,6 @@ public class QName extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject
 		writeContent(out);
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			NAMES));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case NAMES: return getNames();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case NAMES: setNames((java.util.List<String>) value); break;
-		}
-	}
-
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
@@ -112,59 +88,6 @@ public class QName extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject
 			break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	/**
-	 * Serializes all fields of this instance to the given binary output.
-	 *
-	 * @param out
-	 *        The binary output to write to.
-	 * @throws java.io.IOException If writing fails.
-	 */
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
-		{
-			java.util.List<String> values = getNames();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.STRING, values.size());
-			for (String x : values) {
-				out.value(x);
-			}
-			out.endArray();
-		}
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: {
-				in.beginArray();
-				while (in.hasNext()) {
-					addName(in.nextString());
-				}
-				in.endArray();
-			}
-			break;
-			default: in.skipValue(); 
-		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static QName readQName(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		QName result = new QName();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 }

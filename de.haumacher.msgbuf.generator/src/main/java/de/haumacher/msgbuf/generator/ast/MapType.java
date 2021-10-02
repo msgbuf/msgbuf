@@ -89,34 +89,6 @@ public class MapType extends Type {
 		return "MapType";
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			KEY_TYPE, 
-			VALUE_TYPE));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case KEY_TYPE: return getKeyType();
-			case VALUE_TYPE: return getValueType();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case KEY_TYPE: setKeyType((Type) value); break;
-			case VALUE_TYPE: setValueType((Type) value); break;
-			default: super.set(field, value); break;
-		}
-	}
-
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
@@ -137,45 +109,6 @@ public class MapType extends Type {
 			case VALUE_TYPE: setValueType(Type.readType(in)); break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public int typeId() {
-		return 3;
-	}
-
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		if (hasKeyType()) {
-			out.name(1);
-			getKeyType().writeTo(out);
-		}
-		if (hasValueType()) {
-			out.name(2);
-			getValueType().writeTo(out);
-		}
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 1: setKeyType(Type.readType(in)); break;
-			case 2: setValueType(Type.readType(in)); break;
-			default: super.readField(in, field);
-		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static MapType readMapType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		MapType result = new MapType();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 	@Override

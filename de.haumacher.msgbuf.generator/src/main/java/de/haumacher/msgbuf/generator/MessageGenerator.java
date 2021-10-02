@@ -5,6 +5,7 @@ package de.haumacher.msgbuf.generator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.Flag;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
@@ -36,20 +38,30 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	private final NameTable _table;
 	private final MessageDef _def;
-	private boolean _binary = true;
-	private boolean _reflection = true;
+	private boolean _binary;
+	private boolean _reflection;
+
+	private Map<String, Option> _options;
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
 	 * @param table 
+	 * @param options 
 	 *
 	 * @param def
 	 */
-	public MessageGenerator(NameTable table, MessageDef def) {
+	public MessageGenerator(NameTable table, Map<String, Option> options, MessageDef def) {
 		_table = table;
+		_options = options;
 		_def = def;
+		_binary = !isTrue(options.get("NoBinary"), false);
+		_reflection = !isTrue(options.get("NoReflection"), false);
 	}
 	
+	private boolean isTrue(Option option, boolean defaultValue) {
+		return option == null ? defaultValue : ((Flag) option).isValue();
+	}
+
 	/**
 	 * Whether binary IO should be generated.
 	 */
@@ -245,7 +257,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			generateFieldAccessor(field);
 		}
 		
-		generateReflectionAccess();
+		if (_reflection) {
+			generateReflection();
+		}
+		
+		generateJson();
 		
 		binaryIO();
 		
@@ -296,7 +312,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return null;
 	}
 
-	private void generateReflectionAccess() {
+	private void generateJson() {
 		boolean baseClass = _def.getExtends() == null;
 		List<Field> fields = _def.getFields();
 		
@@ -361,6 +377,61 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		
 		if (!fields.isEmpty()) {
 			nl();
+			line("@Override");
+			line("protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
+			{
+				line("super.writeFields(out);");
+				for (Field field : fields) {
+					if (field.isTransient()) {
+						continue;
+					}
+					boolean nullable = isNullable(field);
+					if (nullable) {
+						line("if (" + hasName(field) + "()" + ") {");
+					}
+					line("out.name(" + constant(field) + ");");
+					if (field.isRepeated()) {
+						line("out.beginArray();");
+						line("for (" + getType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
+						{
+							jsonOutValue(field.getType(), "x");
+						}
+						line("}");
+						line("out.endArray();");
+					} else {
+						jsonOutValue(field.getType(), getter(field));
+					}
+					if (nullable) {
+						line("}");
+					}
+				}
+			}
+			line("}");
+		
+			nl();
+			line("@Override");
+			line("protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {");
+			{
+				line("switch (field) {");
+				for (Field field : fields) {
+					if (field.isTransient()) {
+						continue;
+					}
+					jsonReadField(field);
+				}
+				line("default: super.readField(in, field);");
+				line("}");
+			}
+			line("}");
+		}
+	}
+
+	private void generateReflection() {
+		boolean baseClass = _def.getExtends() == null;
+		List<Field> fields = _def.getFields();
+		
+		if (!fields.isEmpty()) {
+			nl();
 			line("private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(");
 			{
 				line("java.util.Arrays.asList(");
@@ -415,54 +486,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					}
 					line("}");
 				}
-			}
-			line("}");
-		
-			nl();
-			line("@Override");
-			line("protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
-			{
-				line("super.writeFields(out);");
-				for (Field field : fields) {
-					if (field.isTransient()) {
-						continue;
-					}
-					boolean nullable = isNullable(field);
-					if (nullable) {
-						line("if (" + hasName(field) + "()" + ") {");
-					}
-					line("out.name(" + constant(field) + ");");
-					if (field.isRepeated()) {
-						line("out.beginArray();");
-						line("for (" + getType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
-						{
-							jsonOutValue(field.getType(), "x");
-						}
-						line("}");
-						line("out.endArray();");
-					} else {
-						jsonOutValue(field.getType(), getter(field));
-					}
-					if (nullable) {
-						line("}");
-					}
-				}
-			}
-			line("}");
-		
-			nl();
-			line("@Override");
-			line("protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {");
-			{
-				line("switch (field) {");
-				for (Field field : fields) {
-					if (field.isTransient()) {
-						continue;
-					}
-					jsonReadField(field);
-				}
-				line("default: super.readField(in, field);");
-				line("}");
 			}
 			line("}");
 		}
@@ -859,7 +882,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String fieldNameString(Field field) {
-		Optional<Option> fieldName = field.getOptions().stream().filter(opt -> opt.getName().equals("Name")).findFirst();
+		Optional<Option> fieldName = Optional.ofNullable(field.getOptions().get("Name"));
 		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
 		return "\"" + name + "\"";
 	}
@@ -1028,7 +1051,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	@Override
 	public Void visit(MessageDef def, Void arg) {
-		new MessageGenerator(_table, def).generateInner(this);
+		new MessageGenerator(_table, _options, def).generateInner(this);
 		return null;
 	}
 

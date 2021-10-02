@@ -38,23 +38,6 @@ public class Constant extends Part {
 	}
 
 	@Override
-	public int typeId() {
-		return 1;
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static Constant readConstant(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Constant result = new Constant();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
-	}
-
-	@Override
 	public <R,A> R visit(Part.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}

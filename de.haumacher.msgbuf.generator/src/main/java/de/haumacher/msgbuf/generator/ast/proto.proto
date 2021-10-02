@@ -1,9 +1,17 @@
 package de.haumacher.msgbuf.generator.ast;
 
+option NoBinary;
+option NoReflection;
+
+abstract message WithOptions {
+	/** Annotations to this definition. */
+	map<string, Option> options;
+}
+
 /**
  * Member of a {@link Definition}.
  */
-abstract message Part {
+abstract message Part extends WithOptions {
     /** The documentation comment for this member. */
 	string comment;
 	
@@ -12,9 +20,6 @@ abstract message Part {
 	
     /** The numeric identifier for this member.*/
 	int index;
-	
-	/** Annotations to this {@link Part} */
-	repeated Option options;
 	
 	/** The {@link Definition} definint this {@link Part}. */
 	transient Definition owner;
@@ -34,12 +39,9 @@ message Constant extends Part {
  *
  * @see #definitions
  */
-message DefinitionFile {
+message DefinitionFile extends WithOptions {
     /** The package name for all types in this file. */
 	QName `package`;
-	
-	/** Annotations to this {@link DefinitionFile} */
-	repeated Option options;
 	
     /** All definitions in this file. */
 	repeated Definition definitions;
@@ -48,16 +50,13 @@ message DefinitionFile {
 /**
  * Base class of a definition in a {@link DefinitionFile}.
  */
-abstract message Definition {
+abstract message Definition extends WithOptions {
     /** The documentation comment for this definition. */
 	string comment;
 	
     /** The name of this definition. */
 	string name;
 	
-	/** Annotations to this {@link Definition} */
-	repeated Option options;
-
     /** Reference back to the {@link DefinitionFile} that contains this definition. */
 	transient DefinitionFile file;
 	
@@ -209,8 +208,6 @@ message MapType extends Type {
  * @see Flag 
  */
 abstract message Option {
-	/** The name of this option. */
-	string name;
 }
 
 /** {@link Option} annotating a string value */

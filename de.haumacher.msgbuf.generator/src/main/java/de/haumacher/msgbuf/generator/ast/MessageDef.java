@@ -222,49 +222,6 @@ public class MessageDef extends Definition {
 		return "MessageDef";
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			ABSTRACT, 
-			EXTENDS, 
-			DEFINITIONS, 
-			FIELDS, 
-			SPECIALIZATIONS, 
-			EXTENDED_DEF, 
-			ID));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case ABSTRACT: return isAbstract();
-			case EXTENDS: return getExtends();
-			case DEFINITIONS: return getDefinitions();
-			case FIELDS: return getFields();
-			case SPECIALIZATIONS: return getSpecializations();
-			case EXTENDED_DEF: return getExtendedDef();
-			case ID: return getId();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case ABSTRACT: setAbstract((boolean) value); break;
-			case EXTENDS: setExtends((QName) value); break;
-			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
-			case FIELDS: setFields((java.util.List<Field>) value); break;
-			case SPECIALIZATIONS: setSpecializations((java.util.List<MessageDef>) value); break;
-			case EXTENDED_DEF: setExtendedDef((MessageDef) value); break;
-			case ID: setId((int) value); break;
-			default: super.set(field, value); break;
-		}
-	}
-
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
@@ -311,77 +268,6 @@ public class MessageDef extends Definition {
 			break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public int typeId() {
-		return 2;
-	}
-
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		out.name(6);
-		out.value(isAbstract());
-		if (hasExtends()) {
-			out.name(7);
-			getExtends().writeTo(out);
-		}
-		out.name(8);
-		{
-			java.util.List<Definition> values = getDefinitions();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (Definition x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
-		out.name(9);
-		{
-			java.util.List<Field> values = getFields();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (Field x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case 6: setAbstract(in.nextBoolean()); break;
-			case 7: setExtends(QName.readQName(in)); break;
-			case 8: {
-				in.beginArray();
-				while (in.hasNext()) {
-					addDefinition(Definition.readDefinition(in));
-				}
-				in.endArray();
-			}
-			break;
-			case 9: {
-				in.beginArray();
-				while (in.hasNext()) {
-					addField(Field.readField(in));
-				}
-				in.endArray();
-			}
-			break;
-			default: super.readField(in, field);
-		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static MessageDef readMessageDef(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		MessageDef result = new MessageDef();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 	@Override

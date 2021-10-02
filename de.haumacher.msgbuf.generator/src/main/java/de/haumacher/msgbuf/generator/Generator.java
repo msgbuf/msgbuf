@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -22,6 +23,7 @@ import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
+import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.Type;
@@ -94,7 +96,7 @@ public class Generator {
 		for (DefinitionFile file : _files) {
 			File dir = mkdir(file.getPackage());
 			
-			PackageGenerator packageGenerator = new PackageGenerator(dir);
+			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions());
 			for (Definition def : file.getDefinitions()) {
 				def.visit(packageGenerator, null);
 			}
@@ -162,9 +164,11 @@ public class Generator {
 	
 	class PackageGenerator implements Definition.Visitor<Void, Void> {
 		private File _dir;
+		private Map<String, Option> _options;
 
-		public PackageGenerator(File dir) {
+		public PackageGenerator(File dir, Map<String, Option> options) {
 			_dir = dir;
+			_options = options;
 		}
 
 		@Override
@@ -174,7 +178,7 @@ public class Generator {
 		
 		@Override
 		public Void visit(MessageDef def, Void arg) {
-			return generateJava(def.getName(), new MessageGenerator(_table, def));
+			return generateJava(def.getName(), new MessageGenerator(_table, _options, def));
 		}
 		
 		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {

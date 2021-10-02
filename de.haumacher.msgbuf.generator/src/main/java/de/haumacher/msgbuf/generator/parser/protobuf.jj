@@ -92,7 +92,6 @@ DefinitionFile file() :
   DefinitionFile result = DefinitionFile.create();
   QName pkgName;
   Definition def;
-  Option option;
 }
 {
   (    < SYNTAX > "=" < STRING > ";"
@@ -105,8 +104,7 @@ DefinitionFile file() :
     }
   )?
   
-  (    option=optionStatement()
-    { result.addOption(option); }
+  (    optionStatement(result)
   )*
   
   (    def = definition()
@@ -119,28 +117,25 @@ DefinitionFile file() :
   }
 }
 
-Option optionStatement() :
+void optionStatement(WithOptions part) :
 {
-  Option result;
 }
 {
-  < OPTION > result=optionAssignment() ";"
-  {
-    return result;
-  }
+  < OPTION > optionAssignment(part) ";"
 }
 
-Option optionAssignment() :
+void optionAssignment(WithOptions part) :
 {
-  Option result;
+  Option option;
   Token t;
 }
 {
-  t=<  NAME > "=" result=value()
-  {
-    result.setName(t.image);
-    return result;
-  }
+  t=< NAME >
+  (    "=" option=value()
+  	{ part.getOptions().put(t.image, option); }
+  |
+  	{ part.getOptions().put(t.image, Flag.create().setValue(true)); }
+  )
 }
 
 Option value() :
@@ -182,7 +177,6 @@ EnumDef enumeration() :
   String name;
   Constant constant;
   Token d;
-  Option option;
 }
 {
   d=< ENUM > name = name() "{"
@@ -191,8 +185,7 @@ EnumDef enumeration() :
     result.setComment(Util.stripComment(d));
   }
   (
-    option=optionStatement()
-    { result.addOption(option); }
+    optionStatement(result)
   )*
   (
     constant=constant()
@@ -240,7 +233,6 @@ MessageDef message() :
   Definition def;
   Field field;
   Token comment;
-  Option option;
 }
 {
   { result.setComment(Util.stripComment(token.next)); }
@@ -260,8 +252,7 @@ MessageDef message() :
     }
   )?
   "{"
-  ( option=optionStatement()
-    { result.addOption(option); }
+  ( optionStatement(result)
   | field=field()
     {
       result.addField(field);
@@ -292,8 +283,13 @@ Field field() :
 {
   { result.setComment(Util.stripComment(token.next)); }
   (
-    "@" optionName=<  NAME > "(" option=value() ")"
-    { option.setName(optionName.image); result.addOption(option); }  )*
+    "@" optionName=<  NAME >
+    (
+      "(" option=value() ")"
+	  { result.getOptions().put(optionName.image, option); }
+  	|
+	  { result.getOptions().put(optionName.image, Flag.create().setValue(true)); }
+  	)  )*
   (
     < TRANSIENT >
     {
@@ -327,16 +323,13 @@ Field field() :
 
 void partOptions(Part part) :
 {
-  Option option;
 }
 {
   (
     "["
-	option=optionAssignment()
-	{ part.addOption(option); }
+	optionAssignment(part)
 	( ","
-	  option=optionAssignment()
-      { part.addOption(option); }
+	  optionAssignment(part)
 	)*
     "]"
   )? 
