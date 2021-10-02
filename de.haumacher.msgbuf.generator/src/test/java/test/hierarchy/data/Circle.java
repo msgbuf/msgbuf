@@ -21,6 +21,9 @@ public class Circle extends AtomicShape {
 		super();
 	}
 
+	/** @see #getRadius() */
+	public static final String RADIUS = "radius";
+
 	private int _radius = 0;
 
 	/**
@@ -48,14 +51,23 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Circle";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			RADIUS));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "radius": return getRadius();
+			case RADIUS: return getRadius();
 			default: return super.get(field);
 		}
 	}
@@ -63,7 +75,7 @@ public class Circle extends AtomicShape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "radius": setRadius((int) value); break;
+			case RADIUS: setRadius((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -71,20 +83,20 @@ public class Circle extends AtomicShape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("radius");
+		out.name(RADIUS);
 		out.value(getRadius());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "radius": setRadius(in.nextInt()); break;
+			case RADIUS: setRadius(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 1;
 	}
 

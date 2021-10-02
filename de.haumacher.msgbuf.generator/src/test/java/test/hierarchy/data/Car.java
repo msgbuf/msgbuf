@@ -21,6 +21,15 @@ public class Car extends Shape {
 		super();
 	}
 
+	/** @see #getWheel1() */
+	public static final String WHEEL1 = "wheel1";
+
+	/** @see #getWheel2() */
+	public static final String WHEEL2 = "wheel2";
+
+	/** @see #getBody() */
+	public static final String BODY = "body";
+
 	private Circle _wheel1 = null;
 
 	private Circle _wheel2 = null;
@@ -103,16 +112,27 @@ public class Car extends Shape {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Car";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			WHEEL1, 
+			WHEEL2, 
+			BODY));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "wheel1": return getWheel1();
-			case "wheel2": return getWheel2();
-			case "body": return getBody();
+			case WHEEL1: return getWheel1();
+			case WHEEL2: return getWheel2();
+			case BODY: return getBody();
 			default: return super.get(field);
 		}
 	}
@@ -120,9 +140,9 @@ public class Car extends Shape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "wheel1": setWheel1((Circle) value); break;
-			case "wheel2": setWheel2((Circle) value); break;
-			case "body": setBody((Rectangle) value); break;
+			case WHEEL1: setWheel1((Circle) value); break;
+			case WHEEL2: setWheel2((Circle) value); break;
+			case BODY: setBody((Rectangle) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -131,15 +151,15 @@ public class Car extends Shape {
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasWheel1()) {
-			out.name("wheel1");
+			out.name(WHEEL1);
 			getWheel1().writeContent(out);
 		}
 		if (hasWheel2()) {
-			out.name("wheel2");
+			out.name(WHEEL2);
 			getWheel2().writeContent(out);
 		}
 		if (hasBody()) {
-			out.name("body");
+			out.name(BODY);
 			getBody().writeContent(out);
 		}
 	}
@@ -147,15 +167,15 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "wheel1": setWheel1(Circle.readCircle(in)); break;
-			case "wheel2": setWheel2(Circle.readCircle(in)); break;
-			case "body": setBody(Rectangle.readRectangle(in)); break;
+			case WHEEL1: setWheel1(Circle.readCircle(in)); break;
+			case WHEEL2: setWheel2(Circle.readCircle(in)); break;
+			case BODY: setBody(Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 4;
 	}
 

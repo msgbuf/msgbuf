@@ -4,6 +4,8 @@
 package de.haumacher.msgbuf.data;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import de.haumacher.msgbuf.io.StringW;
 import de.haumacher.msgbuf.json.JsonReader;
@@ -22,6 +24,11 @@ public abstract class AbstractDataObject implements DataObject {
 	@Override
 	public void set(String field, Object value) {
 		// Ignore.
+	}
+	
+	@Override
+	public List<String> properties() {
+		return Collections.emptyList();
 	}
 
 	/**

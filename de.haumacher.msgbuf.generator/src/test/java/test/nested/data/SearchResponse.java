@@ -19,6 +19,15 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			super();
 		}
 
+		/** @see #getUrl() */
+		public static final String URL = "url";
+
+		/** @see #getTitle() */
+		public static final String TITLE = "title";
+
+		/** @see #getSnippets() */
+		public static final String SNIPPETS = "snippets";
+
 		private String _url = "";
 
 		private String _title = "";
@@ -84,12 +93,23 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			writeContent(out);
 		}
 
+		private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+			java.util.Arrays.asList(
+				URL, 
+				TITLE, 
+				SNIPPETS));
+
+		@Override
+		public java.util.List<String> properties() {
+			return PROPERTIES;
+		}
+
 		@Override
 		public Object get(String field) {
 			switch (field) {
-				case "url": return getUrl();
-				case "title": return getTitle();
-				case "snippets": return getSnippets();
+				case URL: return getUrl();
+				case TITLE: return getTitle();
+				case SNIPPETS: return getSnippets();
 				default: return super.get(field);
 			}
 		}
@@ -97,20 +117,20 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		@Override
 		public void set(String field, Object value) {
 			switch (field) {
-				case "url": setUrl((String) value); break;
-				case "title": setTitle((String) value); break;
-				case "snippets": setSnippets((java.util.List<String>) value); break;
+				case URL: setUrl((String) value); break;
+				case TITLE: setTitle((String) value); break;
+				case SNIPPETS: setSnippets((java.util.List<String>) value); break;
 			}
 		}
 
 		@Override
 		protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 			super.writeFields(out);
-			out.name("url");
+			out.name(URL);
 			out.value(getUrl());
-			out.name("title");
+			out.name(TITLE);
 			out.value(getTitle());
-			out.name("snippets");
+			out.name(SNIPPETS);
 			out.beginArray();
 			for (String x : getSnippets()) {
 				out.value(x);
@@ -121,9 +141,9 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		@Override
 		protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 			switch (field) {
-				case "url": setUrl(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-				case "title": setTitle(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-				case "snippets": {
+				case URL: setUrl(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+				case TITLE: setTitle(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+				case SNIPPETS: {
 					in.beginArray();
 					while (in.hasNext()) {
 						addSnippet(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
@@ -212,6 +232,9 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		super();
 	}
 
+	/** @see #getResults() */
+	public static final String RESULTS = "results";
+
 	private final java.util.List<Result> _results = new java.util.ArrayList<>();
 
 	public final java.util.List<Result> getResults() {
@@ -249,10 +272,19 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		writeContent(out);
 	}
 
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			RESULTS));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "results": return getResults();
+			case RESULTS: return getResults();
 			default: return super.get(field);
 		}
 	}
@@ -260,14 +292,14 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "results": setResults((java.util.List<Result>) value); break;
+			case RESULTS: setResults((java.util.List<Result>) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("results");
+		out.name(RESULTS);
 		out.beginArray();
 		for (Result x : getResults()) {
 			x.writeTo(out);
@@ -278,7 +310,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "results": {
+			case RESULTS: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addResult(Result.readResult(in));

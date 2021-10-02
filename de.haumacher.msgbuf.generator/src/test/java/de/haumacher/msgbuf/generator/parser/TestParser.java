@@ -4,6 +4,8 @@
 package de.haumacher.msgbuf.generator.parser;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import de.haumacher.msgbuf.generator.Generator;
 import junit.framework.Test;
@@ -43,15 +45,17 @@ public class TestParser extends TestCase {
 		return new File("src" + File.separator + "test" + File.separator + "java");
 	}
 	
-	public static Test suite() {
+	public static Test suite() throws IOException {
 		TestSuite result = new TestSuite();
 		File fixturesDir = new File(testDir(), "test");
-		for (File testPkg : fixturesDir.listFiles(f -> f.isDirectory())) {
-			File[] testFiles = testPkg.listFiles(f -> f.getName().endsWith(".proto"));
-			for (File proto : testFiles) {
-				result.addTest(new TestParser(proto));
-			}
-		}
+		
+		Files.walk(fixturesDir.toPath())
+			.map(p -> p.toFile())
+			.filter(f -> f.isFile())
+			.filter(p -> p.getName().endsWith(".proto"))
+			.map(f -> new TestParser(f))
+			.forEach(t -> result.addTest(t));
+		
 		return result;
 	}
 

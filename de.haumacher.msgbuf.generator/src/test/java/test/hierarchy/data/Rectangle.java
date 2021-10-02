@@ -21,6 +21,12 @@ public class Rectangle extends AtomicShape {
 		super();
 	}
 
+	/** @see #getWidth() */
+	public static final String WIDTH = "width";
+
+	/** @see #getHeight() */
+	public static final String HEIGHT = "height";
+
 	private int _width = 0;
 
 	private int _height = 0;
@@ -73,15 +79,25 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Rectangle";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			WIDTH, 
+			HEIGHT));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "width": return getWidth();
-			case "height": return getHeight();
+			case WIDTH: return getWidth();
+			case HEIGHT: return getHeight();
 			default: return super.get(field);
 		}
 	}
@@ -89,8 +105,8 @@ public class Rectangle extends AtomicShape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "width": setWidth((int) value); break;
-			case "height": setHeight((int) value); break;
+			case WIDTH: setWidth((int) value); break;
+			case HEIGHT: setHeight((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -98,23 +114,23 @@ public class Rectangle extends AtomicShape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("width");
+		out.name(WIDTH);
 		out.value(getWidth());
-		out.name("height");
+		out.name(HEIGHT);
 		out.value(getHeight());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "width": setWidth(in.nextInt()); break;
-			case "height": setHeight(in.nextInt()); break;
+			case WIDTH: setWidth(in.nextInt()); break;
+			case HEIGHT: setHeight(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 2;
 	}
 

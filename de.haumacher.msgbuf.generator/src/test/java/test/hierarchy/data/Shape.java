@@ -23,6 +23,12 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		super();
 	}
 
+	/** @see #getXCoordinate() */
+	public static final String XCOORDINATE = "xCoordinate";
+
+	/** @see #getYCoordinate() */
+	public static final String YCOORDINATE = "yCoordinate";
+
 	private int _xCoordinate = 0;
 
 	private int _yCoordinate = 0;
@@ -82,13 +88,23 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** The type identifier for this concrete subtype. */
-	protected abstract String jsonType();
+	public abstract String jsonType();
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			XCOORDINATE, 
+			YCOORDINATE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "xCoordinate": return getXCoordinate();
-			case "yCoordinate": return getYCoordinate();
+			case XCOORDINATE: return getXCoordinate();
+			case YCOORDINATE: return getYCoordinate();
 			default: return super.get(field);
 		}
 	}
@@ -96,25 +112,25 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "xCoordinate": setXCoordinate((int) value); break;
-			case "yCoordinate": setYCoordinate((int) value); break;
+			case XCOORDINATE: setXCoordinate((int) value); break;
+			case YCOORDINATE: setYCoordinate((int) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("xCoordinate");
+		out.name(XCOORDINATE);
 		out.value(getXCoordinate());
-		out.name("yCoordinate");
+		out.name(YCOORDINATE);
 		out.value(getYCoordinate());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "xCoordinate": setXCoordinate(in.nextInt()); break;
-			case "yCoordinate": setYCoordinate(in.nextInt()); break;
+			case XCOORDINATE: setXCoordinate(in.nextInt()); break;
+			case YCOORDINATE: setYCoordinate(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -129,7 +145,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
-	protected abstract int typeId();
+	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.

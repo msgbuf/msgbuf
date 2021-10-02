@@ -18,6 +18,15 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		super();
 	}
 
+	/** @see #getQuery() */
+	public static final String QUERY = "query";
+
+	/** @see #getPageNumber() */
+	public static final String PAGE_NUMBER = "page_number";
+
+	/** @see #getResultPerPage() */
+	public static final String RESULT_PER_PAGE = "result_per_page";
+
 	private String _query = "";
 
 	private int _pageNumber = 0;
@@ -74,12 +83,23 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		writeContent(out);
 	}
 
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			QUERY, 
+			PAGE_NUMBER, 
+			RESULT_PER_PAGE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "query": return getQuery();
-			case "page_number": return getPageNumber();
-			case "result_per_page": return getResultPerPage();
+			case QUERY: return getQuery();
+			case PAGE_NUMBER: return getPageNumber();
+			case RESULT_PER_PAGE: return getResultPerPage();
 			default: return super.get(field);
 		}
 	}
@@ -87,29 +107,29 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "query": setQuery((String) value); break;
-			case "page_number": setPageNumber((int) value); break;
-			case "result_per_page": setResultPerPage((int) value); break;
+			case QUERY: setQuery((String) value); break;
+			case PAGE_NUMBER: setPageNumber((int) value); break;
+			case RESULT_PER_PAGE: setResultPerPage((int) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("query");
+		out.name(QUERY);
 		out.value(getQuery());
-		out.name("page_number");
+		out.name(PAGE_NUMBER);
 		out.value(getPageNumber());
-		out.name("result_per_page");
+		out.name(RESULT_PER_PAGE);
 		out.value(getResultPerPage());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "query": setQuery(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case "page_number": setPageNumber(in.nextInt()); break;
-			case "result_per_page": setResultPerPage(in.nextInt()); break;
+			case QUERY: setQuery(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case PAGE_NUMBER: setPageNumber(in.nextInt()); break;
+			case RESULT_PER_PAGE: setResultPerPage(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

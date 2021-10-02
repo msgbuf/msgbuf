@@ -18,6 +18,12 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		super();
 	}
 
+	/** @see #getProjects() */
+	public static final String PROJECTS = "projects";
+
+	/** @see #getRating() */
+	public static final String RATING = "rating";
+
 	private java.util.Map<String, Project> _projects = new java.util.HashMap<>();
 
 	private java.util.Map<Integer, String> _rating = new java.util.HashMap<>();
@@ -82,11 +88,21 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		writeContent(out);
 	}
 
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			PROJECTS, 
+			RATING));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "projects": return getProjects();
-			case "rating": return getRating();
+			case PROJECTS: return getProjects();
+			case RATING: return getRating();
 			default: return super.get(field);
 		}
 	}
@@ -94,22 +110,22 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "projects": setProjects((java.util.Map<String, Project>) value); break;
-			case "rating": setRating((java.util.Map<Integer, String>) value); break;
+			case PROJECTS: setProjects((java.util.Map<String, Project>) value); break;
+			case RATING: setRating((java.util.Map<Integer, String>) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("projects");
+		out.name(PROJECTS);
 		out.beginObject();
 		for (java.util.Map.Entry<String,Project> entry : getProjects().entrySet()) {
 			out.name(entry.getKey());
 			entry.getValue().writeTo(out);
 		}
 		out.endObject();
-		out.name("rating");
+		out.name(RATING);
 		out.beginArray();
 		for (java.util.Map.Entry<Integer,String> entry : getRating().entrySet()) {
 			out.beginObject();
@@ -125,7 +141,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "projects": {
+			case PROJECTS: {
 				in.beginObject();
 				while (in.hasNext()) {
 					addProject(in.nextName(), Project.readProject(in));
@@ -133,7 +149,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 				in.endObject();
 				break;
 			}
-			case "rating": {
+			case RATING: {
 				in.beginArray();
 				while (in.hasNext()) {
 					in.beginObject();

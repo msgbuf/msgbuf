@@ -21,6 +21,9 @@ public class Group extends Shape {
 		super();
 	}
 
+	/** @see #getShapes() */
+	public static final String SHAPES = "shapes";
+
 	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
 
 	/**
@@ -61,14 +64,23 @@ public class Group extends Shape {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Group";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			SHAPES));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "shapes": return getShapes();
+			case SHAPES: return getShapes();
 			default: return super.get(field);
 		}
 	}
@@ -76,7 +88,7 @@ public class Group extends Shape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "shapes": setShapes((java.util.List<Shape>) value); break;
+			case SHAPES: setShapes((java.util.List<Shape>) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -84,7 +96,7 @@ public class Group extends Shape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("shapes");
+		out.name(SHAPES);
 		out.beginArray();
 		for (Shape x : getShapes()) {
 			x.writeTo(out);
@@ -95,7 +107,7 @@ public class Group extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "shapes": {
+			case SHAPES: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addShape(Shape.readShape(in));
@@ -108,7 +120,7 @@ public class Group extends Shape {
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 3;
 	}
 

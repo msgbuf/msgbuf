@@ -18,6 +18,12 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 		super();
 	}
 
+	/** @see #getName() */
+	public static final String NAME = "name";
+
+	/** @see #getCost() */
+	public static final String COST = "cost";
+
 	private String _name = "";
 
 	private double _cost = 0.0d;
@@ -60,11 +66,21 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 		writeContent(out);
 	}
 
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAME, 
+			COST));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "name": return getName();
-			case "cost": return getCost();
+			case NAME: return getName();
+			case COST: return getCost();
 			default: return super.get(field);
 		}
 	}
@@ -72,25 +88,25 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "name": setName((String) value); break;
-			case "cost": setCost((double) value); break;
+			case NAME: setName((String) value); break;
+			case COST: setCost((double) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("name");
+		out.name(NAME);
 		out.value(getName());
-		out.name("cost");
+		out.name(COST);
 		out.value(getCost());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "name": setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case "cost": setCost(in.nextDouble()); break;
+			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case COST: setCost(in.nextDouble()); break;
 			default: super.readField(in, field);
 		}
 	}

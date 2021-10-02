@@ -77,7 +77,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			if (field == null) {
 				replacement += name;
 			} else {
-				replacement += getterName(field) + "()";
+				replacement += getter(field);
 			}
 			
 			matcher.appendReplacement(buffer, replacement);
@@ -85,6 +85,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		matcher.appendTail(buffer);
 		
 		super.docComment(buffer.toString());
+	}
+
+	private String getter(Field field) {
+		return getterName(field) + "()";
 	}
 
 	private QName qName(String name) {
@@ -183,12 +187,16 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("super();");
 		}
 		line("}");
+		
+		List<Field> fields = _def.getFields();
+		
+		generateConstants(fields);
 
-		for (Field field : _def.getFields()) {
+		for (Field field : fields) {
 			generateFieldDef(field);
 		}
 		
-		for (Field field : _def.getFields()) {
+		for (Field field : fields) {
 			generateFieldAccessor(field);
 		}
 		
@@ -308,12 +316,40 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		
 		if (!fields.isEmpty()) {
 			nl();
+			line("private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(");
+			{
+				line("java.util.Arrays.asList(");
+				{
+					boolean first = true;
+					for (Field field : fields) {
+						if (first) {
+							first = false;
+						} else {
+							append(", ");
+							nl();
+						}
+						lineStart(constant(field));
+					}
+					append("));");
+					nl();
+				}
+			}
+			
+			nl();
+			line("@Override");
+			line("public java.util.List<String> properties() {");
+			{
+				line("return PROPERTIES;");
+			}
+			line("}");
+			
+			nl();
 			line("@Override");
 			line("public Object get(String field) {");
 			{
 				line("switch (field) {");
 				for (Field field : fields) {
-					line("case " + fieldNameString(field) + ": return " + getterName(field) + "()" + ";");
+					line("case " + constant(field) + ": return " + getterName(field) + "()" + ";");
 				}
 				line("default: return super.get(field);");
 				line("}");
@@ -327,7 +363,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				{
 					line("switch (field) {");
 					for (Field field : fields) {
-						line("case " + fieldNameString(field) + ": " + setterName(field) + "(" + cast(field, "value") + ")" + "; break;");
+						line("case " + constant(field) + ": " + setterName(field) + "(" + cast(field, "value") + ")" + "; break;");
 					}
 					if (!baseClass) {
 						line("default: super.set(field, value); break;");
@@ -350,7 +386,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (nullable) {
 						line("if (" + hasName(field) + "()" + ") {");
 					}
-					line("out.name(" + fieldNameString(field) + ");");
+					line("out.name(" + constant(field) + ");");
 					if (field.isRepeated()) {
 						line("out.beginArray();");
 						line("for (" + getType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
@@ -360,7 +396,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 						line("}");
 						line("out.endArray();");
 					} else {
-						jsonOutValue(field.getType(), getterName(field) + "()");
+						jsonOutValue(field.getType(), getter(field));
 					}
 					if (nullable) {
 						line("}");
@@ -387,10 +423,23 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 	}
 
+	/** 
+	 * TODO
+	 *
+	 * @param fields
+	 */
+	private void generateConstants(List<Field> fields) {
+		for (Field field : fields) {
+			nl();
+			line("/** @see #" + getter(field) + " */");
+			line("public static final String " + constant(field) + " = " + fieldNameString(field) + ";");
+		}
+	}
+
 	private void jsonReadField(Field field) {
 		Type type = field.getType();
 		if (field.isRepeated()) {
-			line("case " + fieldNameString(field) + ": {");
+			line("case " + constant(field) + ": {");
 			{
 				line("in.beginArray();");
 				line("while (in.hasNext()) {");
@@ -404,7 +453,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("break;");
 		} else if (type instanceof MapType) {
 			MapType mapType = (MapType) type;
-			line("case " + fieldNameString(field) + ": {");
+			line("case " + constant(field) + ": {");
 			{
 				Type keyType = mapType.getKeyType();
 				Type valueType = mapType.getValueType();
@@ -442,7 +491,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("break;");
 			line("}");
 		} else {
-			line("case " + fieldNameString(field) + ": " + setterName(field) + "(" + jsonReadEntry(type) + "); break;");
+			line("case " + constant(field) + ": " + setterName(field) + "(" + jsonReadEntry(type) + "); break;");
 		}
 	}
 
@@ -579,7 +628,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 								}
 								line("}");
 							} else {
-								binaryOutValue(field.getType(), getterName(field) + "()");
+								binaryOutValue(field.getType(), getter(field));
 							}
 						}
 						if (nullable) {
@@ -1166,7 +1215,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return firstLowerCase(camelCase(field.getName()));
 	}
 
-	private String camelCase(String name) {
+	private static String camelCase(String name) {
 		StringBuilder result = new StringBuilder();
 		for (String part : name.split("_+")) {
 			result.append(firstUpperCase(part));
@@ -1174,11 +1223,29 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return result.toString();
 	}
 
+	private static String allUpperCase(String name) {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for (String part : name.split("_+")) {
+			if (first) {
+				first = false;
+			} else {
+				result.append('_');
+			}
+			result.append(part.toUpperCase());
+		}
+		return result.toString();
+	}
+	
+	private String constant(Field field) {
+		return allUpperCase(field.getName());
+	}
+	
 	private String suffix(Field field) {
 		return camelCase(field.getName());
 	}
 
-	private String firstUpperCase(String name) {
+	private static String firstUpperCase(String name) {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 	

@@ -10,26 +10,7 @@ import de.haumacher.msgbuf.json.JsonWriter;
 /**
  * Common interface for all <code>msgbuf</code> generated data objects.
  */
-public interface DataObject {
-
-	/**
-	 * Retrieves value of the field with the given name.
-	 * 
-	 * @param field
-	 *        The name of the field.
-	 * @return The value of the field with the given name.
-	 */
-	Object get(String field);
-
-	/**
-	 * Sets the value of the field with the given name.
-	 * 
-	 * @param field
-	 *        The name of the field to update.
-	 * @param value
-	 *        The new value of the field.
-	 */
-	void set(String field, Object value);
+public interface DataObject extends ReflectiveDataObject {
 
 	/**
 	 * Writes this instance to the given output.
