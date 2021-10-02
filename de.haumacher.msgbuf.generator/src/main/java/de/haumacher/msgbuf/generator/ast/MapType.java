@@ -21,6 +21,12 @@ public class MapType extends Type {
 		super();
 	}
 
+	/** @see #getKeyType() */
+	public static final String KEY_TYPE = "keyType";
+
+	/** @see #getValueType() */
+	public static final String VALUE_TYPE = "valueType";
+
 	private Type _keyType = null;
 
 	private Type _valueType = null;
@@ -79,15 +85,25 @@ public class MapType extends Type {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "MapType";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			KEY_TYPE, 
+			VALUE_TYPE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "keyType": return getKeyType();
-			case "valueType": return getValueType();
+			case KEY_TYPE: return getKeyType();
+			case VALUE_TYPE: return getValueType();
 			default: return super.get(field);
 		}
 	}
@@ -95,8 +111,8 @@ public class MapType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "keyType": setKeyType((Type) value); break;
-			case "valueType": setValueType((Type) value); break;
+			case KEY_TYPE: setKeyType((Type) value); break;
+			case VALUE_TYPE: setValueType((Type) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -105,11 +121,11 @@ public class MapType extends Type {
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasKeyType()) {
-			out.name("keyType");
+			out.name(KEY_TYPE);
 			getKeyType().writeTo(out);
 		}
 		if (hasValueType()) {
-			out.name("valueType");
+			out.name(VALUE_TYPE);
 			getValueType().writeTo(out);
 		}
 	}
@@ -117,14 +133,14 @@ public class MapType extends Type {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "keyType": setKeyType(Type.readType(in)); break;
-			case "valueType": setValueType(Type.readType(in)); break;
+			case KEY_TYPE: setKeyType(Type.readType(in)); break;
+			case VALUE_TYPE: setValueType(Type.readType(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 3;
 	}
 

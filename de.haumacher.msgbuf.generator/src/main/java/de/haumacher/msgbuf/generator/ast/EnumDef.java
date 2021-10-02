@@ -21,6 +21,9 @@ public class EnumDef extends Definition {
 		super();
 	}
 
+	/** @see #getConstants() */
+	public static final String CONSTANTS = "constants";
+
 	private final java.util.List<Constant> _constants = new java.util.ArrayList<>();
 
 	/**
@@ -57,14 +60,23 @@ public class EnumDef extends Definition {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "EnumDef";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			CONSTANTS));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "constants": return getConstants();
+			case CONSTANTS: return getConstants();
 			default: return super.get(field);
 		}
 	}
@@ -72,7 +84,7 @@ public class EnumDef extends Definition {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "constants": setConstants((java.util.List<Constant>) value); break;
+			case CONSTANTS: setConstants((java.util.List<Constant>) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -80,10 +92,10 @@ public class EnumDef extends Definition {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("constants");
+		out.name(CONSTANTS);
 		out.beginArray();
 		for (Constant x : getConstants()) {
-			x.writeTo(out);
+			x.writeContent(out);
 		}
 		out.endArray();
 	}
@@ -91,7 +103,7 @@ public class EnumDef extends Definition {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "constants": {
+			case CONSTANTS: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addConstant(Constant.readConstant(in));
@@ -104,7 +116,7 @@ public class EnumDef extends Definition {
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 1;
 	}
 

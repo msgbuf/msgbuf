@@ -1,6 +1,6 @@
 package test.options.data;
 
-public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	public enum EnumNotAllowingAlias {
 

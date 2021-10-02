@@ -3,6 +3,7 @@
  */
 package de.haumacher.msgbuf.data;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,7 +18,9 @@ public interface ReflectiveDataObject {
 	 * 
 	 * @see #get(String)
 	 */
-	List<String> properties();
+	default List<String> properties() {
+		return Collections.emptyList();
+	}
 
 	/**
 	 * Retrieves value of the field with the given name.
@@ -28,7 +31,9 @@ public interface ReflectiveDataObject {
 	 * 
 	 * @see #properties()
 	 */
-	Object get(String field);
+	default Object get(String field) {
+		return null;
+	}
 
 	/**
 	 * Sets the value of the property with the given name.
@@ -40,6 +45,8 @@ public interface ReflectiveDataObject {
 	 * 
 	 * @see #get(String)
 	 */
-	void set(String field, Object value);
+	default void set(String field, Object value) {
+		// Ignore.
+	}
 
 }

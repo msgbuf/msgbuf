@@ -1,11 +1,9 @@
 package de.haumacher.msgbuf.generator.ast;
 
-import java.util.Collections;
-
 /**
  * Member of a {@link Definition}.
  */
-public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Part extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -24,6 +22,21 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 	protected Part() {
 		super();
 	}
+
+	/** @see #getComment() */
+	public static final String COMMENT = "comment";
+
+	/** @see #getName() */
+	public static final String NAME = "name";
+
+	/** @see #getIndex() */
+	public static final String INDEX = "index";
+
+	/** @see #getOptions() */
+	public static final String OPTIONS = "options";
+
+	/** @see #getOwner() */
+	public static final String OWNER = "owner";
 
 	private String _comment = "";
 
@@ -149,16 +162,29 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	/** The type identifier for this concrete subtype. */
-	protected abstract String jsonType();
+	public abstract String jsonType();
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			COMMENT, 
+			NAME, 
+			INDEX, 
+			OPTIONS, 
+			OWNER));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "comment": return getComment();
-			case "name": return getName();
-			case "index": return getIndex();
-			case "options": return getOptions();
-			case "owner": return getOwner();
+			case COMMENT: return getComment();
+			case NAME: return getName();
+			case INDEX: return getIndex();
+			case OPTIONS: return getOptions();
+			case OWNER: return getOwner();
 			default: return super.get(field);
 		}
 	}
@@ -166,24 +192,24 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "comment": setComment((String) value); break;
-			case "name": setName((String) value); break;
-			case "index": setIndex((int) value); break;
-			case "options": setOptions((java.util.List<Option>) value); break;
-			case "owner": setOwner((Definition) value); break;
+			case COMMENT: setComment((String) value); break;
+			case NAME: setName((String) value); break;
+			case INDEX: setIndex((int) value); break;
+			case OPTIONS: setOptions((java.util.List<Option>) value); break;
+			case OWNER: setOwner((Definition) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("comment");
+		out.name(COMMENT);
 		out.value(getComment());
-		out.name("name");
+		out.name(NAME);
 		out.value(getName());
-		out.name("index");
+		out.name(INDEX);
 		out.value(getIndex());
-		out.name("options");
+		out.name(OPTIONS);
 		out.beginArray();
 		for (Option x : getOptions()) {
 			x.writeTo(out);
@@ -194,10 +220,10 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "comment": setComment(in.nextString()); break;
-			case "name": setName(in.nextString()); break;
-			case "index": setIndex(in.nextInt()); break;
-			case "options": {
+			case COMMENT: setComment(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case INDEX: setIndex(in.nextInt()); break;
+			case OPTIONS: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addOption(Option.readOption(in));
@@ -219,7 +245,7 @@ public abstract class Part extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	/** The binary identifier for this concrete type in the polymorphic {@link Part} hierarchy. */
-	protected abstract int typeId();
+	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.

@@ -21,6 +21,15 @@ public class Field extends Part {
 		super();
 	}
 
+	/** @see #isTransient() */
+	public static final String TRANSIENT = "transient";
+
+	/** @see #isRepeated() */
+	public static final String REPEATED = "repeated";
+
+	/** @see #getType() */
+	public static final String TYPE = "type";
+
 	private boolean _transient = false;
 
 	private boolean _repeated = false;
@@ -89,16 +98,27 @@ public class Field extends Part {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Field";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			TRANSIENT, 
+			REPEATED, 
+			TYPE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "transient": return isTransient();
-			case "repeated": return isRepeated();
-			case "type": return getType();
+			case TRANSIENT: return isTransient();
+			case REPEATED: return isRepeated();
+			case TYPE: return getType();
 			default: return super.get(field);
 		}
 	}
@@ -106,9 +126,9 @@ public class Field extends Part {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "transient": setTransient((boolean) value); break;
-			case "repeated": setRepeated((boolean) value); break;
-			case "type": setType((Type) value); break;
+			case TRANSIENT: setTransient((boolean) value); break;
+			case REPEATED: setRepeated((boolean) value); break;
+			case TYPE: setType((Type) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -116,12 +136,12 @@ public class Field extends Part {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("transient");
+		out.name(TRANSIENT);
 		out.value(isTransient());
-		out.name("repeated");
+		out.name(REPEATED);
 		out.value(isRepeated());
 		if (hasType()) {
-			out.name("type");
+			out.name(TYPE);
 			getType().writeTo(out);
 		}
 	}
@@ -129,15 +149,15 @@ public class Field extends Part {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "transient": setTransient(in.nextBoolean()); break;
-			case "repeated": setRepeated(in.nextBoolean()); break;
-			case "type": setType(Type.readType(in)); break;
+			case TRANSIENT: setTransient(in.nextBoolean()); break;
+			case REPEATED: setRepeated(in.nextBoolean()); break;
+			case TYPE: setType(Type.readType(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 2;
 	}
 

@@ -1,6 +1,6 @@
 package test.enumeration.data;
 
-public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	public enum Corpus {
 

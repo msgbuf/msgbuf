@@ -24,7 +24,7 @@ import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
 
 /**
- * TODO
+ * {@link Generator} for message data classes.
  */
 public class MessageGenerator extends AbstractFileGenerator implements Type.Visitor<String, Boolean>, Definition.Visitor<Void, Void> {
 
@@ -37,6 +37,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	private final NameTable _table;
 	private final MessageDef _def;
 	private boolean _binary = true;
+	private boolean _reflection = true;
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
@@ -47,6 +48,34 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	public MessageGenerator(NameTable table, MessageDef def) {
 		_table = table;
 		_def = def;
+	}
+	
+	/**
+	 * Whether binary IO should be generated.
+	 */
+	public boolean isBinary() {
+		return _binary;
+	}
+	
+	/**
+	 * @see #isBinary()
+	 */
+	public void setBinary(boolean binary) {
+		_binary = binary;
+	}
+	
+	/**
+	 * Whether reflective access should be generated.
+	 */
+	public boolean isReflection() {
+		return _reflection;
+	}
+	
+	/**
+	 * @see #isReflection()
+	 */
+	public void setReflection(boolean reflection) {
+		_reflection = reflection;
 	}
 
 	@Override
@@ -129,7 +158,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String getExtends() {
-		return _def.getExtends() == null ? " extends de.haumacher.msgbuf.data.AbstractDataObject" + (_binary ? " implements de.haumacher.msgbuf.binary.BinaryDataObject" : "") : " extends " + Util.qName(_def.getExtends());
+		if (_def.getExtends() == null) {
+			return " extends " + (_reflection ? "de.haumacher.msgbuf.data.AbstractReflectiveDataObject" : "de.haumacher.msgbuf.data.AbstractDataObject") + 
+					(_binary ? " implements " : "") + 
+					(_binary ? "de.haumacher.msgbuf.binary.BinaryDataObject" : "")
+				;
+		} else {
+			return " extends " + Util.qName(_def.getExtends());
+		}
 	}
 
 	private void generateClassContents() {

@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class of a definition in a {@link DefinitionFile}.
  */
-public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Definition extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Definition} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -22,6 +22,21 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	protected Definition() {
 		super();
 	}
+
+	/** @see #getComment() */
+	public static final String COMMENT = "comment";
+
+	/** @see #getName() */
+	public static final String NAME = "name";
+
+	/** @see #getOptions() */
+	public static final String OPTIONS = "options";
+
+	/** @see #getFile() */
+	public static final String FILE = "file";
+
+	/** @see #getOuter() */
+	public static final String OUTER = "outer";
 
 	private String _comment = "";
 
@@ -158,16 +173,29 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	}
 
 	/** The type identifier for this concrete subtype. */
-	protected abstract String jsonType();
+	public abstract String jsonType();
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			COMMENT, 
+			NAME, 
+			OPTIONS, 
+			FILE, 
+			OUTER));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "comment": return getComment();
-			case "name": return getName();
-			case "options": return getOptions();
-			case "file": return getFile();
-			case "outer": return getOuter();
+			case COMMENT: return getComment();
+			case NAME: return getName();
+			case OPTIONS: return getOptions();
+			case FILE: return getFile();
+			case OUTER: return getOuter();
 			default: return super.get(field);
 		}
 	}
@@ -175,22 +203,22 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "comment": setComment((String) value); break;
-			case "name": setName((String) value); break;
-			case "options": setOptions((java.util.List<Option>) value); break;
-			case "file": setFile((DefinitionFile) value); break;
-			case "outer": setOuter((MessageDef) value); break;
+			case COMMENT: setComment((String) value); break;
+			case NAME: setName((String) value); break;
+			case OPTIONS: setOptions((java.util.List<Option>) value); break;
+			case FILE: setFile((DefinitionFile) value); break;
+			case OUTER: setOuter((MessageDef) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("comment");
+		out.name(COMMENT);
 		out.value(getComment());
-		out.name("name");
+		out.name(NAME);
 		out.value(getName());
-		out.name("options");
+		out.name(OPTIONS);
 		out.beginArray();
 		for (Option x : getOptions()) {
 			x.writeTo(out);
@@ -201,9 +229,9 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "comment": setComment(in.nextString()); break;
-			case "name": setName(in.nextString()); break;
-			case "options": {
+			case COMMENT: setComment(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case OPTIONS: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addOption(Option.readOption(in));
@@ -225,7 +253,7 @@ public abstract class Definition extends de.haumacher.msgbuf.data.AbstractDataOb
 	}
 
 	/** The binary identifier for this concrete type in the polymorphic {@link Definition} hierarchy. */
-	protected abstract int typeId();
+	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.

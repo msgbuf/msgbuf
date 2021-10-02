@@ -10,7 +10,7 @@ import de.haumacher.msgbuf.json.JsonWriter;
 /**
  * Common interface for all <code>msgbuf</code> generated data objects.
  */
-public interface DataObject extends ReflectiveDataObject {
+public interface DataObject {
 
 	/**
 	 * Writes this instance to the given output.

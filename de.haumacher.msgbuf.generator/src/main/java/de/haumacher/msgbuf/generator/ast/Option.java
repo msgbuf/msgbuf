@@ -1,9 +1,13 @@
 package de.haumacher.msgbuf.generator.ast;
 
 /**
- * An option annotation.
+ * Base class for an option annotation.
+ *
+ * @see StringOption 
+ * @see NumberOption 
+ * @see Flag
  */
-public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Option extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Option} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -25,6 +29,9 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	protected Option() {
 		super();
 	}
+
+	/** @see #getName() */
+	public static final String NAME = "name";
 
 	private String _name = "";
 
@@ -67,12 +74,21 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	}
 
 	/** The type identifier for this concrete subtype. */
-	protected abstract String jsonType();
+	public abstract String jsonType();
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAME));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "name": return getName();
+			case NAME: return getName();
 			default: return super.get(field);
 		}
 	}
@@ -80,21 +96,21 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "name": setName((String) value); break;
+			case NAME: setName((String) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("name");
+		out.name(NAME);
 		out.value(getName());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "name": setName(in.nextString()); break;
+			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -109,7 +125,7 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	}
 
 	/** The binary identifier for this concrete type in the polymorphic {@link Option} hierarchy. */
-	protected abstract int typeId();
+	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.

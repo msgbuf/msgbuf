@@ -201,7 +201,13 @@ message MapType extends Type {
 	Type valueType;
 }
 
-/** An option annotation. */
+/** 
+ * Base class for an option annotation.
+ * 
+ * @see StringOption 
+ * @see NumberOption 
+ * @see Flag 
+ */
 abstract message Option {
 	/** The name of this option. */
 	string name;

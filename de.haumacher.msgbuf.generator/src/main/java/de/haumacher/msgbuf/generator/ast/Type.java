@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for possible {@link Field} types.
  */
-public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Type extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link Type} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -50,7 +50,7 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	/** The type identifier for this concrete subtype. */
-	protected abstract String jsonType();
+	public abstract String jsonType();
 
 	@Override
 	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
@@ -62,7 +62,7 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	/** The binary identifier for this concrete type in the polymorphic {@link Type} hierarchy. */
-	protected abstract int typeId();
+	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.

@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A dot-separated qualified name.
  */
-public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class QName extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link QName} instance.
@@ -20,6 +20,9 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	protected QName() {
 		super();
 	}
+
+	/** @see #getNames() */
+	public static final String NAMES = "names";
 
 	private final java.util.List<String> _names = new java.util.ArrayList<>();
 
@@ -61,10 +64,19 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 		writeContent(out);
 	}
 
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAMES));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "names": return getNames();
+			case NAMES: return getNames();
 			default: return super.get(field);
 		}
 	}
@@ -72,14 +84,14 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "names": setNames((java.util.List<String>) value); break;
+			case NAMES: setNames((java.util.List<String>) value); break;
 		}
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("names");
+		out.name(NAMES);
 		out.beginArray();
 		for (String x : getNames()) {
 			out.value(x);
@@ -90,10 +102,10 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "names": {
+			case NAMES: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addName(in.nextString());
+					addName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
 				}
 				in.endArray();
 			}

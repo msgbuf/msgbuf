@@ -21,6 +21,9 @@ public class NumberOption extends Option {
 		super();
 	}
 
+	/** @see #getValue() */
+	public static final String VALUE = "value";
+
 	private double _value = 0.0d;
 
 	/**
@@ -48,14 +51,23 @@ public class NumberOption extends Option {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "NumberOption";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			VALUE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "value": return getValue();
+			case VALUE: return getValue();
 			default: return super.get(field);
 		}
 	}
@@ -63,7 +75,7 @@ public class NumberOption extends Option {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "value": setValue((double) value); break;
+			case VALUE: setValue((double) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -71,20 +83,20 @@ public class NumberOption extends Option {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("value");
+		out.name(VALUE);
 		out.value(getValue());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "value": setValue(in.nextDouble()); break;
+			case VALUE: setValue(in.nextDouble()); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 2;
 	}
 

@@ -23,6 +23,12 @@ public class CustomType extends Type {
 		super();
 	}
 
+	/** @see #getName() */
+	public static final String NAME = "name";
+
+	/** @see #getDefinition() */
+	public static final String DEFINITION = "definition";
+
 	private QName _name = null;
 
 	private transient Definition _definition = null;
@@ -81,15 +87,25 @@ public class CustomType extends Type {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "CustomType";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAME, 
+			DEFINITION));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "name": return getName();
-			case "definition": return getDefinition();
+			case NAME: return getName();
+			case DEFINITION: return getDefinition();
 			default: return super.get(field);
 		}
 	}
@@ -97,8 +113,8 @@ public class CustomType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "name": setName((QName) value); break;
-			case "definition": setDefinition((Definition) value); break;
+			case NAME: setName((QName) value); break;
+			case DEFINITION: setDefinition((Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -107,7 +123,7 @@ public class CustomType extends Type {
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasName()) {
-			out.name("name");
+			out.name(NAME);
 			getName().writeTo(out);
 		}
 	}
@@ -115,13 +131,13 @@ public class CustomType extends Type {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "name": setName(QName.readQName(in)); break;
+			case NAME: setName(QName.readQName(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 1;
 	}
 

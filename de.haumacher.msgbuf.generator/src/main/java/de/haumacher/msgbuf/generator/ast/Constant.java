@@ -33,12 +33,12 @@ public class Constant extends Part {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Constant";
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 1;
 	}
 

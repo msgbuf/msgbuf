@@ -21,6 +21,27 @@ public class MessageDef extends Definition {
 		super();
 	}
 
+	/** @see #isAbstract() */
+	public static final String ABSTRACT = "abstract";
+
+	/** @see #getExtends() */
+	public static final String EXTENDS = "extends";
+
+	/** @see #getDefinitions() */
+	public static final String DEFINITIONS = "definitions";
+
+	/** @see #getFields() */
+	public static final String FIELDS = "fields";
+
+	/** @see #getSpecializations() */
+	public static final String SPECIALIZATIONS = "specializations";
+
+	/** @see #getExtendedDef() */
+	public static final String EXTENDED_DEF = "extendedDef";
+
+	/** @see #getId() */
+	public static final String ID = "id";
+
 	private boolean _abstract = false;
 
 	private QName _extends = null;
@@ -197,20 +218,35 @@ public class MessageDef extends Definition {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "MessageDef";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			ABSTRACT, 
+			EXTENDS, 
+			DEFINITIONS, 
+			FIELDS, 
+			SPECIALIZATIONS, 
+			EXTENDED_DEF, 
+			ID));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "abstract": return isAbstract();
-			case "extends": return getExtends();
-			case "definitions": return getDefinitions();
-			case "fields": return getFields();
-			case "specializations": return getSpecializations();
-			case "extendedDef": return getExtendedDef();
-			case "id": return getId();
+			case ABSTRACT: return isAbstract();
+			case EXTENDS: return getExtends();
+			case DEFINITIONS: return getDefinitions();
+			case FIELDS: return getFields();
+			case SPECIALIZATIONS: return getSpecializations();
+			case EXTENDED_DEF: return getExtendedDef();
+			case ID: return getId();
 			default: return super.get(field);
 		}
 	}
@@ -218,13 +254,13 @@ public class MessageDef extends Definition {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "abstract": setAbstract((boolean) value); break;
-			case "extends": setExtends((QName) value); break;
-			case "definitions": setDefinitions((java.util.List<Definition>) value); break;
-			case "fields": setFields((java.util.List<Field>) value); break;
-			case "specializations": setSpecializations((java.util.List<MessageDef>) value); break;
-			case "extendedDef": setExtendedDef((MessageDef) value); break;
-			case "id": setId((int) value); break;
+			case ABSTRACT: setAbstract((boolean) value); break;
+			case EXTENDS: setExtends((QName) value); break;
+			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
+			case FIELDS: setFields((java.util.List<Field>) value); break;
+			case SPECIALIZATIONS: setSpecializations((java.util.List<MessageDef>) value); break;
+			case EXTENDED_DEF: setExtendedDef((MessageDef) value); break;
+			case ID: setId((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -232,22 +268,22 @@ public class MessageDef extends Definition {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("abstract");
+		out.name(ABSTRACT);
 		out.value(isAbstract());
 		if (hasExtends()) {
-			out.name("extends");
+			out.name(EXTENDS);
 			getExtends().writeTo(out);
 		}
-		out.name("definitions");
+		out.name(DEFINITIONS);
 		out.beginArray();
 		for (Definition x : getDefinitions()) {
 			x.writeTo(out);
 		}
 		out.endArray();
-		out.name("fields");
+		out.name(FIELDS);
 		out.beginArray();
 		for (Field x : getFields()) {
-			x.writeTo(out);
+			x.writeContent(out);
 		}
 		out.endArray();
 	}
@@ -255,9 +291,9 @@ public class MessageDef extends Definition {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "abstract": setAbstract(in.nextBoolean()); break;
-			case "extends": setExtends(QName.readQName(in)); break;
-			case "definitions": {
+			case ABSTRACT: setAbstract(in.nextBoolean()); break;
+			case EXTENDS: setExtends(QName.readQName(in)); break;
+			case DEFINITIONS: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addDefinition(Definition.readDefinition(in));
@@ -265,7 +301,7 @@ public class MessageDef extends Definition {
 				in.endArray();
 			}
 			break;
-			case "fields": {
+			case FIELDS: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addField(Field.readField(in));
@@ -278,7 +314,7 @@ public class MessageDef extends Definition {
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 2;
 	}
 

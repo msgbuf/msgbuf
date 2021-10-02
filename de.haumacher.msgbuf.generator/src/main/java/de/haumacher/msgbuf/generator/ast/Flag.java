@@ -21,6 +21,9 @@ public class Flag extends Option {
 		super();
 	}
 
+	/** @see #isValue() */
+	public static final String VALUE = "value";
+
 	private boolean _value = false;
 
 	/**
@@ -48,14 +51,23 @@ public class Flag extends Option {
 	}
 
 	@Override
-	protected String jsonType() {
+	public String jsonType() {
 		return "Flag";
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			VALUE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case "value": return isValue();
+			case VALUE: return isValue();
 			default: return super.get(field);
 		}
 	}
@@ -63,7 +75,7 @@ public class Flag extends Option {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case "value": setValue((boolean) value); break;
+			case VALUE: setValue((boolean) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -71,20 +83,20 @@ public class Flag extends Option {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name("value");
+		out.name(VALUE);
 		out.value(isValue());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case "value": setValue(in.nextBoolean()); break;
+			case VALUE: setValue(in.nextBoolean()); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	protected int typeId() {
+	public int typeId() {
 		return 3;
 	}
 

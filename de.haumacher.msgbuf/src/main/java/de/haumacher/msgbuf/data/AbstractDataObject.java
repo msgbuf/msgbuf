@@ -4,8 +4,6 @@
 package de.haumacher.msgbuf.data;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import de.haumacher.msgbuf.io.StringW;
 import de.haumacher.msgbuf.json.JsonReader;
@@ -15,21 +13,6 @@ import de.haumacher.msgbuf.json.JsonWriter;
  * Base class for {@link DataObject} implementations.
  */
 public abstract class AbstractDataObject implements DataObject {
-
-	@Override
-	public Object get(String field) {
-		return null;
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		// Ignore.
-	}
-	
-	@Override
-	public List<String> properties() {
-		return Collections.emptyList();
-	}
 
 	/**
 	 * Writes a JSON object containing keys for all fields of this object.
