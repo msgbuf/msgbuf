@@ -286,9 +286,14 @@ Field field() :
   String name;
   Token index;
   Token comment;
+  Option option;
+  Token optionName;
 }
 {
   { result.setComment(Util.stripComment(token.next)); }
+  (
+    "@" optionName=<  NAME > "(" option=value() ")"
+    { option.setName(optionName.image); result.addOption(option); }  )*
   (
     < TRANSIENT >
     {
