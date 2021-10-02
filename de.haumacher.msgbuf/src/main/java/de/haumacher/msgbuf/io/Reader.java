@@ -5,6 +5,8 @@ package de.haumacher.msgbuf.io;
 
 import java.io.IOException;
 
+import de.haumacher.msgbuf.server.io.ReaderAdapter;
+
 /**
  * A character stream reader.
  * 
@@ -12,6 +14,9 @@ import java.io.IOException;
  * For compatibility with GWT, the native Java {@link java.io.Reader} implementation
  * cannot be used.
  * </p>
+ * 
+ * @see ReaderAdapter
+ * @see StringR
  */
 public interface Reader {
 

@@ -5,6 +5,8 @@ package de.haumacher.msgbuf.io;
 
 import java.io.IOException;
 
+import de.haumacher.msgbuf.server.io.WriterAdapter;
+
 /**
  * A character stream producer.
  * 
@@ -12,6 +14,9 @@ import java.io.IOException;
  * For compatibility with GWT, the native Java {@link java.io.Writer}
  * implementation cannot be used.
  * </p>
+ * 
+ * @see WriterAdapter
+ * @see StringW
  */
 public interface Writer {
 
