@@ -160,13 +160,41 @@ Option value() :
 
 Definition definition() :
 {
+  String comment;
   Definition result;
+  OptionContainer options;
 }
 {
+  { comment = Util.stripComment(token.next); }
+  
+  options = javaAnnotations()
   ( result = message()
   | result = enumeration()
   )
   {
+    result.setComment(comment);
+    if (options != null) result.setOptions(options.getOptions());
+    return result;
+  }
+}
+
+DefinitionBase memberDefinition() :
+{
+  String comment;
+  DefinitionBase result;
+  OptionContainer options;
+}
+{
+  { comment = Util.stripComment(token.next); }
+  
+  options = javaAnnotations()
+  ( result = message()
+  | result = enumeration()
+  | result = field()
+  )
+  {
+    result.setComment(comment);
+    if (options != null) result.setOptions(options.getOptions());
     return result;
   }
 }
@@ -230,12 +258,11 @@ MessageDef message() :
   MessageDef result = MessageDef.create();
   String name;
   QName generalization;
-  Definition def;
+  WithOptions def;
   Field field;
   Token comment;
 }
 {
-  { result.setComment(Util.stripComment(token.next)); }
   (    < ABSTRACT >
     {
       result.setAbstract(true);
@@ -253,16 +280,16 @@ MessageDef message() :
   )?
   "{"
   ( optionStatement(result)
-  | field=field()
+  | def = memberDefinition()
     {
-      result.addField(field);
-    }
+      if (def instanceof Field) {
+	    result.addField((Field) def);
+      } else {
+	    result.addDefinition((Definition) def);
+      }
+    } 
   | oneof()
   | reserved()
-  | def = definition()
-    {
-      result.addDefinition(def);
-    } 
   )*
   "}"
   {
@@ -281,15 +308,6 @@ Field field() :
   Token optionName;
 }
 {
-  { result.setComment(Util.stripComment(token.next)); }
-  (
-    "@" optionName=<  NAME >
-    (
-      "(" option=value() ")"
-	  { result.getOptions().put(optionName.image, option); }
-  	|
-	  { result.getOptions().put(optionName.image, Flag.create().setValue(true)); }
-  	)  )*
   (
     < TRANSIENT >
     {
@@ -320,6 +338,29 @@ Field field() :
   ";"
   {
     return result;  }}
+
+OptionContainer javaAnnotations() :
+{
+  Token optionName;
+  Option option;
+  OptionContainer result = null;
+}
+{
+  (
+    { if (result == null) result = OptionContainer.create(); }
+    
+    "@" optionName=<  NAME >
+    (
+      "(" option=value() ")"
+      { result.getOptions().put(optionName.image, option); }
+    |
+      { result.getOptions().put(optionName.image, Flag.create().setValue(true)); }
+    )
+  )*
+  {
+    return result;
+  }
+}
 
 void partOptions(Part part) :
 {

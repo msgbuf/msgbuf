@@ -53,6 +53,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       case MESSAGE:
       case ENUM:
       case ABSTRACT:
+      case 37:
         ;
         break;
       default:
@@ -119,6 +120,8 @@ public class ProtobufParser implements ProtobufParserConstants {
 
   final public Definition definition() throws ParseException {
   Definition result;
+  OptionContainer options;
+    options = javaAnnotations();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case MESSAGE:
     case ABSTRACT:
@@ -132,6 +135,45 @@ public class ProtobufParser implements ProtobufParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
+    if (options != null) result.setOptions(options.getOptions());
+    {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public DefinitionBase memberDefinition() throws ParseException {
+  String comment;
+  DefinitionBase result;
+  OptionContainer options;
+    comment = Util.stripComment(token.next);
+    options = javaAnnotations();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case MESSAGE:
+    case ABSTRACT:
+      result = message();
+      break;
+    case ENUM:
+      result = enumeration();
+      break;
+    case MAP:
+    case REPEATED:
+    case TRANSIENT:
+    case TO:
+    case MAX:
+    case INT_TYPE:
+    case LONG_TYPE:
+    case BOOLEAN_TYPE:
+    case TYPE:
+    case XNAME:
+    case NAME:
+      result = field();
+      break;
+    default:
+      jj_la1[7] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    result.setComment(comment);
+    if (options != null) result.setOptions(options.getOptions());
     {if (true) return result;}
     throw new Error("Missing return statement in function");
   }
@@ -153,7 +195,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         ;
         break;
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[8] = jj_gen;
         break label_3;
       }
       optionStatement(result);
@@ -169,7 +211,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         ;
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[9] = jj_gen;
         break label_4;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -184,7 +226,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         reserved();
         break;
       default:
-        jj_la1[9] = jj_gen;
+        jj_la1[10] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -208,7 +250,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       result.setIndex(Integer.parseInt(index.image));
       break;
     default:
-      jj_la1[10] = jj_gen;
+      jj_la1[11] = jj_gen;
       ;
     }
     partOptions(result);
@@ -221,7 +263,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   MessageDef result = MessageDef.create();
   String name;
   QName generalization;
-  Definition def;
+  WithOptions def;
   Field field;
   Token comment;
     result.setComment(Util.stripComment(token.next));
@@ -231,7 +273,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       result.setAbstract(true);
       break;
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[12] = jj_gen;
       ;
     }
     jj_consume_token(MESSAGE);
@@ -244,7 +286,7 @@ public class ProtobufParser implements ProtobufParserConstants {
                 result.setExtends(generalization);
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[13] = jj_gen;
       ;
     }
     jj_consume_token(35);
@@ -272,16 +314,19 @@ public class ProtobufParser implements ProtobufParserConstants {
         ;
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[14] = jj_gen;
         break label_5;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case OPTION:
         optionStatement(result);
         break;
+      case MESSAGE:
+      case ENUM:
       case MAP:
       case REPEATED:
       case TRANSIENT:
+      case ABSTRACT:
       case TO:
       case MAX:
       case INT_TYPE:
@@ -291,8 +336,12 @@ public class ProtobufParser implements ProtobufParserConstants {
       case XNAME:
       case NAME:
       case 37:
-        field = field();
-      result.addField(field);
+        def = memberDefinition();
+      if (def instanceof Field) {
+            result.addField((Field) def);
+      } else {
+            result.addDefinition((Definition) def);
+      }
         break;
       case ONEOF:
         oneof();
@@ -300,14 +349,8 @@ public class ProtobufParser implements ProtobufParserConstants {
       case RESERVED:
         reserved();
         break;
-      case MESSAGE:
-      case ENUM:
-      case ABSTRACT:
-        def = definition();
-      result.addDefinition(def);
-        break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[15] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -325,38 +368,13 @@ public class ProtobufParser implements ProtobufParserConstants {
   Token comment;
   Option option;
   Token optionName;
-    result.setComment(Util.stripComment(token.next));
-    label_6:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 37:
-        ;
-        break;
-      default:
-        jj_la1[15] = jj_gen;
-        break label_6;
-      }
-      jj_consume_token(37);
-      optionName = jj_consume_token(NAME);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 38:
-        jj_consume_token(38);
-        option = value();
-        jj_consume_token(39);
-            result.getOptions().put(optionName.image, option);
-        break;
-      default:
-        jj_la1[16] = jj_gen;
-            result.getOptions().put(optionName.image, Flag.create().setValue(true));
-      }
-    }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TRANSIENT:
       jj_consume_token(TRANSIENT);
       result.setTransient(true);
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[16] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -365,7 +383,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       result.setRepeated(true);
       break;
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[17] = jj_gen;
       ;
     }
     type = type();
@@ -379,11 +397,44 @@ public class ProtobufParser implements ProtobufParserConstants {
       result.setIndex(Integer.parseInt(index.image));
       break;
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[18] = jj_gen;
       ;
     }
     partOptions(result);
     jj_consume_token(34);
+    {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public OptionContainer javaAnnotations() throws ParseException {
+  Token optionName;
+  Option option;
+  OptionContainer result = null;
+    label_6:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 37:
+        ;
+        break;
+      default:
+        jj_la1[19] = jj_gen;
+        break label_6;
+      }
+      if (result == null) result = OptionContainer.create();
+      jj_consume_token(37);
+      optionName = jj_consume_token(NAME);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 38:
+        jj_consume_token(38);
+        option = value();
+        jj_consume_token(39);
+        result.getOptions().put(optionName.image, option);
+        break;
+      default:
+        jj_la1[20] = jj_gen;
+        result.getOptions().put(optionName.image, Flag.create().setValue(true));
+      }
+    }
     {if (true) return result;}
     throw new Error("Missing return statement in function");
   }
@@ -400,7 +451,7 @@ public class ProtobufParser implements ProtobufParserConstants {
           ;
           break;
         default:
-          jj_la1[20] = jj_gen;
+          jj_la1[21] = jj_gen;
           break label_7;
         }
         jj_consume_token(41);
@@ -409,7 +460,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       jj_consume_token(42);
       break;
     default:
-      jj_la1[21] = jj_gen;
+      jj_la1[22] = jj_gen;
       ;
     }
   }
@@ -424,7 +475,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         ;
         break;
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[23] = jj_gen;
         break label_8;
       }
       jj_consume_token(41);
@@ -448,13 +499,13 @@ public class ProtobufParser implements ProtobufParserConstants {
           jj_consume_token(MAX);
           break;
         default:
-          jj_la1[23] = jj_gen;
+          jj_la1[24] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
         break;
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[25] = jj_gen;
         ;
       }
       break;
@@ -462,7 +513,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       jj_consume_token(STRING);
       break;
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[26] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -482,7 +533,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         jj_consume_token(NUMBER);
         break;
       default:
-        jj_la1[26] = jj_gen;
+        jj_la1[27] = jj_gen;
         ;
       }
       jj_consume_token(34);
@@ -499,7 +550,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         ;
         break;
       default:
-        jj_la1[27] = jj_gen;
+        jj_la1[28] = jj_gen;
         break label_9;
       }
     }
@@ -525,7 +576,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       result = map();
       break;
     default:
-      jj_la1[28] = jj_gen;
+      jj_la1[29] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -554,7 +605,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       result = PrimitiveType.create().setKind(PrimitiveType.Kind.BOOL);
       break;
     default:
-      jj_la1[29] = jj_gen;
+      jj_la1[30] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -594,7 +645,7 @@ public class ProtobufParser implements ProtobufParserConstants {
         ;
         break;
       default:
-        jj_la1[30] = jj_gen;
+        jj_la1[31] = jj_gen;
         break label_10;
       }
       jj_consume_token(45);
@@ -626,7 +677,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       result = t.image.substring(1, t.image.length() - 1);
       break;
     default:
-      jj_la1[31] = jj_gen;
+      jj_la1[32] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -643,7 +694,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[32];
+  final private int[] jj_la1 = new int[33];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -651,10 +702,10 @@ public class ProtobufParser implements ProtobufParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x200,0x100,0x10000,0x40c00,0x0,0x30c00000,0x40c00,0x10000,0x40380000,0x40380000,0x0,0x40000,0x20000,0x4f3dfc00,0x4f3dfc00,0x0,0x0,0x8000,0x4000,0x0,0x0,0x0,0x0,0x10200000,0x100000,0x30000000,0x0,0x4f301000,0x4f301000,0xf000000,0x0,0x40300000,};
+      jj_la1_0 = new int[] {0x200,0x100,0x10000,0x40c00,0x0,0x30c00000,0x40c00,0x4f34dc00,0x10000,0x40380000,0x40380000,0x0,0x40000,0x20000,0x4f3dfc00,0x4f3dfc00,0x8000,0x4000,0x0,0x0,0x0,0x0,0x0,0x0,0x10200000,0x100000,0x30000000,0x0,0x4f301000,0x4f301000,0xf000000,0x0,0x40300000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x1,0x1,0x2,0x0,0x0,0x21,0x21,0x20,0x40,0x0,0x0,0x2,0x200,0x100,0x200,0x0,0x0,0x0,0x2,0x1,0x1,0x0,0x2000,0x1,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x20,0x2,0x0,0x0,0x1,0x0,0x1,0x1,0x2,0x0,0x0,0x21,0x21,0x0,0x0,0x2,0x20,0x40,0x200,0x100,0x200,0x0,0x0,0x0,0x2,0x1,0x1,0x0,0x2000,0x1,};
    }
 
   /** Constructor with InputStream. */
@@ -668,7 +719,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -682,7 +733,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -692,7 +743,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -702,7 +753,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -711,7 +762,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -720,7 +771,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -776,7 +827,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 33; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

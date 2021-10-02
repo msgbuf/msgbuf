@@ -201,6 +201,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			append(" {");
 			nl();
 			{
+				boolean hasCase = false;
 				for (MessageDef specialization : _def.getSpecializations()) {
 					if (specialization.isAbstract()) {
 						continue;
@@ -209,6 +210,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					nl();
 					line("/** Visit case for {@link " + Util.typeName(specialization) + "}.*/");
 					line("R visit(" + Util.typeName(specialization) + " self, A arg);");
+					
+					hasCase = true;
+				}
+				
+				if (!hasCase) {
+					nl();
+					line("// Pure sum interface.");
 				}
 			}
 			nl();
@@ -427,7 +435,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String jsonTypeValue(MessageDef def) {
-		return "\"" + def.getName() + "\"";
+		Option nameOption = def.getOptions().get("Name");
+		String jsonName = nameOption == null ? def.getName() : ((StringOption) nameOption).getValue();
+		return "\"" + jsonName + "\"";
 	}
 
 	private void generateReflection() {

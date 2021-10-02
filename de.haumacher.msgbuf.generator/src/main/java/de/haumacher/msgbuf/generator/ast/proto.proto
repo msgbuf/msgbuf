@@ -9,13 +9,20 @@ abstract message WithOptions {
 	map<string, Option> options;
 }
 
+/** Container for temporary collecting annotations without further semantics. */
+message OptionContainer extends WithOptions {
+}
+
+/** Base class for type and field definitions. */
+abstract message DefinitionBase extends WithOptions {
+    /** The documentation comment for this definition. */
+	string comment;
+}
+
 /**
  * Member of a {@link Definition}.
  */
-abstract message Part extends WithOptions {
-    /** The documentation comment for this member. */
-	string comment;
-	
+abstract message Part extends DefinitionBase {
     /** The name of this member. */
 	string name;
 	
@@ -51,10 +58,7 @@ message DefinitionFile extends WithOptions {
 /**
  * Base class of a definition in a {@link DefinitionFile}.
  */
-abstract message Definition extends WithOptions {
-    /** The documentation comment for this definition. */
-	string comment;
-	
+abstract message Definition extends DefinitionBase {
     /** The name of this definition. */
 	string name;
 	

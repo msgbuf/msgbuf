@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Member of a {@link Definition}.
  */
-public abstract class Part extends WithOptions {
+public abstract class Part extends DefinitionBase {
 
 	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -23,9 +23,6 @@ public abstract class Part extends WithOptions {
 		super();
 	}
 
-	/** @see #getComment() */
-	public static final String COMMENT = "comment";
-
 	/** @see #getName() */
 	public static final String NAME = "name";
 
@@ -35,28 +32,11 @@ public abstract class Part extends WithOptions {
 	/** @see #getOwner() */
 	public static final String OWNER = "owner";
 
-	private String _comment = "";
-
 	private String _name = "";
 
 	private int _index = 0;
 
 	private transient Definition _owner = null;
-
-	/**
-	 * The documentation comment for this member.
-	 */
-	public final String getComment() {
-		return _comment;
-	}
-
-	/**
-	 * @see #getComment()
-	 */
-	public final Part setComment(String value) {
-		_comment = value;
-		return this;
-	}
 
 	/**
 	 * The name of this member.
@@ -127,8 +107,6 @@ public abstract class Part extends WithOptions {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(COMMENT);
-		out.value(getComment());
 		out.name(NAME);
 		out.value(getName());
 		out.name(INDEX);
@@ -138,7 +116,6 @@ public abstract class Part extends WithOptions {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case COMMENT: setComment(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case INDEX: setIndex(in.nextInt()); break;
 			default: super.readField(in, field);
@@ -150,7 +127,7 @@ public abstract class Part extends WithOptions {
 
 
 	@Override
-	public final <R,A> R visit(WithOptions.Visitor<R,A> v, A arg) {
+	public final <R,A> R visit(DefinitionBase.Visitor<R,A> v, A arg) {
 		return visit((Visitor<R,A>) v, arg);
 	}
 

@@ -6,3 +6,9 @@ abstract message base_msg {
 message some_name extends base_msg {
 	string my_field;
 }
+
+@Name("m1")
+message annotated_message extends base_msg {
+	@Name("f1")
+	string annotated_field;
+}

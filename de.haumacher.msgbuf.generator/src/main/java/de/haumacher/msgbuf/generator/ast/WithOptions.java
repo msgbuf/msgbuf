@@ -6,7 +6,10 @@ package de.haumacher.msgbuf.generator.ast;
 public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/** Visitor interface for the {@link WithOptions} hierarchy.*/
-	public interface Visitor<R,A> extends Part.Visitor<R,A>, Definition.Visitor<R,A> {
+	public interface Visitor<R,A> extends DefinitionBase.Visitor<R,A> {
+
+		/** Visit case for {@link OptionContainer}.*/
+		R visit(OptionContainer self, A arg);
 
 		/** Visit case for {@link DefinitionFile}.*/
 		R visit(DefinitionFile self, A arg);
@@ -57,6 +60,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
+			case "OptionContainer": result = OptionContainer.readOptionContainer(in); break;
 			case "DefinitionFile": result = DefinitionFile.readDefinitionFile(in); break;
 			case "Constant": result = Constant.readConstant(in); break;
 			case "Field": result = Field.readField(in); break;
