@@ -1,49 +1,43 @@
-package test.hierarchy.data;
+package test.underscorename;
 
-/**
- * A circle {@link Shape}.
- */
-public class Circle extends AtomicShape {
+public class SomeName extends BaseMsg {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link SomeName} instance.
 	 */
-	public static Circle create() {
-		return new Circle();
+	public static SomeName create() {
+		return new SomeName();
 	}
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link SomeName} instance.
 	 *
 	 * @see #create()
 	 */
-	protected Circle() {
+	protected SomeName() {
 		super();
 	}
 
-	/** @see #getRadius() */
-	public static final String RADIUS = "r";
+	/** @see #getMyField() */
+	public static final String MY_FIELD = "my_field";
 
-	private int _radius = 0;
+	private String _myField = "";
 
-	/**
-	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
-	 */
-	public final int getRadius() {
-		return _radius;
+	public final String getMyField() {
+		return _myField;
 	}
 
 	/**
-	 * @see #getRadius()
+	 * @see #getMyField()
 	 */
-	public final Circle setRadius(int value) {
-		_radius = value;
+	public final SomeName setMyField(String value) {
+		_myField = value;
 		return this;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			RADIUS));
+			MY_FIELD));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -53,7 +47,7 @@ public class Circle extends AtomicShape {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case RADIUS: return getRadius();
+			case MY_FIELD: return getMyField();
 			default: return super.get(field);
 		}
 	}
@@ -61,14 +55,14 @@ public class Circle extends AtomicShape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case RADIUS: setRadius((int) value); break;
+			case MY_FIELD: setMyField((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Circle result = new Circle();
+	public static SomeName readsome_name(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		SomeName result = new SomeName();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -77,20 +71,20 @@ public class Circle extends AtomicShape {
 
 	@Override
 	public String jsonType() {
-		return "Circle";
+		return "some_name";
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(RADIUS);
-		out.value(getRadius());
+		out.name(MY_FIELD);
+		out.value(getMyField());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case RADIUS: setRadius(in.nextInt()); break;
+			case MY_FIELD: setMyField(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -103,22 +97,22 @@ public class Circle extends AtomicShape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(3);
-		out.value(getRadius());
+		out.name(1);
+		out.value(getMyField());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 3: setRadius(in.nextInt()); break;
+			case 1: setMyField(in.nextString()); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static SomeName readsome_name(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Circle result = new Circle();
+		SomeName result = new SomeName();
 		while (in.hasNext()) {
 			int field = in.nextName();
 			result.readField(in, field);
@@ -128,7 +122,7 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(BaseMsg.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

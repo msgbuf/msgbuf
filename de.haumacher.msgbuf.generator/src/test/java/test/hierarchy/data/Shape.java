@@ -63,33 +63,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		return this;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape result;
-		in.beginArray();
-		String type = in.nextString();
-		switch (type) {
-			case "Group": result = Group.readGroup(in); break;
-			case "Car": result = Car.readCar(in); break;
-			case "Circle": result = Circle.readCircle(in); break;
-			case "Rectangle": result = Rectangle.readRectangle(in); break;
-			default: in.skipValue(); result = null; break;
-		}
-		in.endArray();
-		return result;
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.beginArray();
-		out.value(jsonType());
-		writeContent(out);
-		out.endArray();
-	}
-
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			X_COORDINATE, 
@@ -116,6 +89,33 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			case Y_COORDINATE: setYCoordinate((int) value); break;
 		}
 	}
+
+	/** Reads a new instance from the given reader. */
+	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Shape result;
+		in.beginArray();
+		String type = in.nextString();
+		switch (type) {
+			case "Group": result = Group.readGroup(in); break;
+			case "Car": result = Car.readCar(in); break;
+			case "Circle": result = Circle.readCircle(in); break;
+			case "Rectangle": result = Rectangle.readRectangle(in); break;
+			default: in.skipValue(); result = null; break;
+		}
+		in.endArray();
+		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		out.beginArray();
+		out.value(jsonType());
+		writeContent(out);
+		out.endArray();
+	}
+
+	/** The type identifier for this concrete subtype. */
+	public abstract String jsonType();
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {

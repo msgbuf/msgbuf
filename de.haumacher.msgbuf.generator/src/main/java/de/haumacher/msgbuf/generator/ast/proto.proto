@@ -3,6 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 option NoBinary;
 option NoReflection;
 
+/** Base class for object that can be annotated. */
 abstract message WithOptions {
 	/** Annotations to this definition. */
 	map<string, Option> options;

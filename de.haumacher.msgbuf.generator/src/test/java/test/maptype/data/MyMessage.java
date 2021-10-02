@@ -74,20 +74,6 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 		_rating.put(key, value);
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static MyMessage readMyMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		MyMessage result = new MyMessage();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		writeContent(out);
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			PROJECTS, 
@@ -113,6 +99,20 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 			case PROJECTS: setProjects((java.util.Map<String, Project>) value); break;
 			case RATING: setRating((java.util.Map<Integer, String>) value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static MyMessage readMyMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		MyMessage result = new MyMessage();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		writeContent(out);
 	}
 
 	@Override

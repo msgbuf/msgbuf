@@ -31,6 +31,23 @@ public class Util {
 	public static String qName(QName qName) {
 		return qName.getNames().stream().collect(Collectors.joining("."));
 	}
+	
+	public static String qTypeName(QName qName) {
+		StringBuilder result = new StringBuilder();
+		List<String> names = qName.getNames();
+		for (int n = 0, cnt = names.size(); n < cnt; n++) {
+			if (n > 0) {
+				result.append('.');
+			}
+			String part = names.get(n);
+			if (n < cnt - 1) {
+				result.append(part);
+			} else {
+				result.append(camelCase(part));
+			}
+		}
+		return result.toString();
+	}
 
 	public static String stripComment(Token t) {
 		return t == null ? "" : t.specialToken == null ? "" : stripComment(t.specialToken.image);
@@ -61,11 +78,23 @@ public class Util {
 			if (pkg == null) {
 				return def.getName();
 			} else {
-				return qName(pkg) + "." + def.getName();
+				return qName(pkg) + "." + typeName(def);
 			}
 		} else {
-			return toString(outer) + "." + def.getName();
+			return toString(outer) + "." + typeName(def);
 		}
+	}
+
+	static String camelCase(String name) {
+		StringBuilder result = new StringBuilder();
+		for (String part : name.split("_+")) {
+			result.append(MessageGenerator.firstUpperCase(part));
+		}
+		return result.toString();
+	}
+
+	static String typeName(Definition def) {
+		return camelCase(def.getName());
 	}
 
 }

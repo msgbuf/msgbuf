@@ -52,20 +52,6 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 		return this;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Project readProject(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Project result = new Project();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		writeContent(out);
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			NAME, 
@@ -91,6 +77,20 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 			case NAME: setName((String) value); break;
 			case COST: setCost((double) value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Project readProject(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Project result = new Project();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		writeContent(out);
 	}
 
 	@Override

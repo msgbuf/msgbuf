@@ -54,20 +54,6 @@ public class Group extends Shape {
 		return this;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Group result = new Group();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return "Group";
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			SHAPES));
@@ -91,6 +77,20 @@ public class Group extends Shape {
 			case SHAPES: setShapes((java.util.List<Shape>) value); break;
 			default: super.set(field, value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Group result = new Group();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public String jsonType() {
+		return "Group";
 	}
 
 	@Override

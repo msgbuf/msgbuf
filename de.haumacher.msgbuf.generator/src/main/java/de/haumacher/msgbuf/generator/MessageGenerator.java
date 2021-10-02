@@ -104,7 +104,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			modifier = " static";
 		}
 		docComment(_def.getComment());
-		line("public" + modifier + getAbstract() + " class " + camelCase(_def.getName()) + getExtends() + " {");
+		line("public" + modifier + getAbstract() + " class " + Util.typeName(_def) + getExtends() + " {");
 		generateClassContents();
 		nl();
 		line("}");
@@ -176,14 +176,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					(_binary ? "de.haumacher.msgbuf.binary.BinaryDataObject" : "")
 				;
 		} else {
-			return " extends " + Util.qName(_def.getExtends());
+			return " extends " + Util.qTypeName(_def.getExtends());
 		}
 	}
 
 	private void generateClassContents() {
 		if (_def.isAbstract()) {
 			nl();
-			line("/** Visitor interface for the {@link " + _def.getName() + "} hierarchy.*/");
+			line("/** Visitor interface for the {@link " + Util.typeName(_def) + "} hierarchy.*/");
 			lineStart("public interface Visitor<R,A>");
 			boolean first = true;
 			for (MessageDef specialization : _def.getSpecializations()) {
@@ -196,7 +196,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				} else {
 					append(", ");
 				}
-				append(specialization.getName() + ".Visitor<R,A>");
+				append(Util.typeName(specialization) + ".Visitor<R,A>");
 			}
 			append(" {");
 			nl();
@@ -207,8 +207,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					}
 
 					nl();
-					line("/** Visit case for {@link " + specialization.getName() + "}.*/");
-					line("R visit(" + specialization.getName() + " self, A arg);");
+					line("/** Visit case for {@link " + Util.typeName(specialization) + "}.*/");
+					line("R visit(" + Util.typeName(specialization) + " self, A arg);");
 				}
 			}
 			nl();
@@ -222,24 +222,24 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (!_def.isAbstract()) {
 			nl();
 			line("/**");
-			line(" * Creates a {@link " + _def.getName() + "} instance.");
+			line(" * Creates a {@link " + Util.typeName(_def) + "} instance.");
 			line(" */");
-			line("public static " + _def.getName() + " " + factoryName(_def) + "() {");
+			line("public static " + Util.typeName(_def) + " " + factoryName(_def) + "() {");
 			{
-				line("return new " + _def.getName() + "();");
+				line("return new " + Util.typeName(_def) + "();");
 			}
 			line("}");
 		}
 		
 		nl();
 		line("/**");
-		line(" * Creates a {@link " + _def.getName() + "} instance.");
+		line(" * Creates a {@link " + Util.typeName(_def) + "} instance.");
 		if (!_def.isAbstract()) {
 			line(" *");
 			line(" * @see #" + factoryName(_def) + "()");
 		}
 		line(" */");
-		line("protected " + _def.getName() + "() {");
+		line("protected " + Util.typeName(_def) + "() {");
 		{
 			line("super();");
 		}
@@ -276,7 +276,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (gen != null) {
 			nl();
 			line("@Override");
-			line("public" + (_def.isAbstract() ? " final" : "") + " <R,A> R visit(" + gen.getName() + ".Visitor<R,A> v, A arg) {");
+			line("public" + (_def.isAbstract() ? " final" : "") + " <R,A> R visit(" + Util.typeName(gen) + ".Visitor<R,A> v, A arg) {");
 			{
 				if (_def.isAbstract()) {
 					line("return visit((Visitor<R,A>) v, arg);");
@@ -318,10 +318,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		
 		nl();
 		line("/** Reads a new instance from the given reader. */");
-		line("public static " + _def.getName() + " " + readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
+		line("public static " + Util.typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
 		{
 			if (_def.isAbstract()) {
-				line(_def.getName() + " result;");
+				line(Util.typeName(_def) + " result;");
 				line("in.beginArray();");
 				line("String type = in.nextString();");
 				line("switch (type) {");
@@ -329,13 +329,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case \"" + specialization.getName() + "\": result = " + specialization.getName() + "." + readerName(specialization) + "(in); break;");
+					line("case " + jsonTypeValue(specialization) + ": result = " + Util.typeName(specialization) + "." + readerName(specialization) + "(in); break;");
 				}
 				line("default: in.skipValue(); result = null; break;");
 				line("}");
 				line("in.endArray();");
 			} else {
-				line(_def.getName() + " result = new " + _def.getName() + "();");
+				line(Util.typeName(_def) + " result = new " + Util.typeName(_def) + "();");
 				line("in.beginObject();");
 				line("result.readFields(in);");
 				line("in.endObject();");
@@ -370,7 +370,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("@Override");
 			line("public String jsonType() {");
 			{
-				line("return \"" + _def.getName() + "\";");
+				line("return " + jsonTypeValue(_def) + ";");
 			}
 			line("}");
 		}
@@ -424,6 +424,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 			line("}");
 		}
+	}
+
+	private String jsonTypeValue(MessageDef def) {
+		return "\"" + def.getName() + "\"";
 	}
 
 	private void generateReflection() {
@@ -565,7 +569,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return Util.qName(name) + "." + readerName(Util.last(name)) +  "(in)";
+			return Util.qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
@@ -631,7 +635,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (baseClass) {
 			if (_def.isAbstract()) {
 				nl();
-				line("/** The binary identifier for this concrete type in the polymorphic {@link " + _def.getName() + "} hierarchy. */");
+				line("/** The binary identifier for this concrete type in the polymorphic {@link " + Util.typeName(_def) + "} hierarchy. */");
 				line("public abstract int typeId();");
 			}
 		} else {
@@ -729,11 +733,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		
 		nl();
 		line("/** Reads a new instance from the given reader. */");
-		line("public static " + _def.getName() + " " + readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
+		line("public static " + Util.typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
 		{
 			line("in.beginObject();");
 			if (_def.isAbstract()) {
-				line(_def.getName() + " result;");
+				line(Util.typeName(_def) + " result;");
 				line("int typeField = in.nextName();");
 				line("assert typeField == 0;");
 				line("int type = in.nextInt();");
@@ -742,12 +746,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + specialization.getId() + ": result = " + specialization.getName() + "." + factoryName(specialization) + "(); break;");
+					line("case " + specialization.getId() + ": result = " + Util.typeName(specialization) + "." + factoryName(specialization) + "(); break;");
 				}
 				line("default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;");
 				line("}");
 			} else {
-				line(_def.getName() + " result = new " + _def.getName() + "();");
+				line(Util.typeName(_def) + " result = new " + Util.typeName(_def) + "();");
 			}
 			
 			line("while (in.hasNext()) {");
@@ -820,7 +824,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return Util.qName(name) + "." + readerName(Util.last(name)) +  "(in)";
+			return Util.qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
@@ -1086,7 +1090,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		public String visit(CustomType self, Void arg) {
 			Definition definition = self.getDefinition();
 			if (definition instanceof EnumDef) {
-				return definition.getName() + "." + ((EnumDef) definition).getConstants().get(0).getName();
+				return Util.typeName(definition) + "." + ((EnumDef) definition).getConstants().get(0).getName();
 			} else {
 				return "null";
 			}
@@ -1145,7 +1149,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		return Util.qName(type.getName());
+		return Util.qTypeName(type.getName());
 	}
 	
 	@Override
@@ -1188,7 +1192,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		line("/**");
 		line(" * @see #" + getterName(field) + "()");
 		line(" */");
-		line("public final " + _def.getName() + " " + setterName(field) + "(" + getType(field) + " " + "value" + ")" + " {");
+		line("public final " + Util.typeName(_def) + " " + setterName(field) + "(" + getType(field) + " " + "value" + ")" + " {");
 		Type type = field.getType();
 		{
 			if (field.isRepeated()) {
@@ -1209,7 +1213,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("/**");
 			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} list.");
 			line(" */");
-			line("public final " + _def.getName() + " " + adderName(field) + "(" + getType(type) + " " + "value" + ")" + " {");
+			line("public final " + Util.typeName(_def) + " " + adderName(field) + "(" + getType(type) + " " + "value" + ")" + " {");
 			{
 				line("_" + name(field) + ".add(value);");
 				line("return this;");
@@ -1277,15 +1281,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private String name(Field field) {
-		return firstLowerCase(camelCase(field.getName()));
-	}
-
-	private static String camelCase(String name) {
-		StringBuilder result = new StringBuilder();
-		for (String part : name.split("_+")) {
-			result.append(firstUpperCase(part));
-		}
-		return result.toString();
+		return firstLowerCase(Util.camelCase(field.getName()));
 	}
 
 	private static String allUpperCase(String name) {
@@ -1307,10 +1303,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 	
 	private String suffix(Field field) {
-		return camelCase(field.getName());
+		return Util.camelCase(field.getName());
 	}
 
-	private static String firstUpperCase(String name) {
+	static String firstUpperCase(String name) {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 	

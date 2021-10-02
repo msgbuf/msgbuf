@@ -79,20 +79,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			return this;
 		}
 
-		/** Reads a new instance from the given reader. */
-		public static Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			Result result = new Result();
-			in.beginObject();
-			result.readFields(in);
-			in.endObject();
-			return result;
-		}
-
-		@Override
-		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-			writeContent(out);
-		}
-
 		private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 			java.util.Arrays.asList(
 				URL, 
@@ -121,6 +107,20 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 				case TITLE: setTitle((String) value); break;
 				case SNIPPETS: setSnippets((java.util.List<String>) value); break;
 			}
+		}
+
+		/** Reads a new instance from the given reader. */
+		public static Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+			Result result = new Result();
+			in.beginObject();
+			result.readFields(in);
+			in.endObject();
+			return result;
+		}
+
+		@Override
+		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+			writeContent(out);
 		}
 
 		@Override
@@ -258,20 +258,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		return this;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		SearchResponse result = new SearchResponse();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		writeContent(out);
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			RESULTS));
@@ -294,6 +280,20 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		switch (field) {
 			case RESULTS: setResults((java.util.List<Result>) value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		SearchResponse result = new SearchResponse();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		writeContent(out);
 	}
 
 	@Override

@@ -69,20 +69,6 @@ public class Rectangle extends AtomicShape {
 		return this;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Rectangle result = new Rectangle();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return "Rectangle";
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			WIDTH, 
@@ -109,6 +95,20 @@ public class Rectangle extends AtomicShape {
 			case HEIGHT: setHeight((int) value); break;
 			default: super.set(field, value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Rectangle result = new Rectangle();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public String jsonType() {
+		return "Rectangle";
 	}
 
 	@Override

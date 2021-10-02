@@ -102,20 +102,6 @@ public class Car extends Shape {
 		return _body != null;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Car result = new Car();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return "Car";
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			WHEEL_1, 
@@ -145,6 +131,20 @@ public class Car extends Shape {
 			case BODY: setBody((Rectangle) value); break;
 			default: super.set(field, value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Car result = new Car();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public String jsonType() {
+		return "Car";
 	}
 
 	@Override

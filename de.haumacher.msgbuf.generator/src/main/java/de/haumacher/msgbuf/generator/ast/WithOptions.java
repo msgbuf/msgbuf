@@ -1,5 +1,8 @@
 package de.haumacher.msgbuf.generator.ast;
 
+/**
+ * Base class for object that can be annotated.
+ */
 public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/** Visitor interface for the {@link WithOptions} hierarchy.*/

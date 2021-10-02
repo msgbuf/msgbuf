@@ -90,20 +90,6 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		return this;
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		SearchRequest result = new SearchRequest();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
-		return result;
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		writeContent(out);
-	}
-
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			QUERY, 
@@ -132,6 +118,20 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 			case PAGE_NUMBER: setPageNumber((int) value); break;
 			case RESULT_PER_PAGE: setResultPerPage((int) value); break;
 		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		SearchRequest result = new SearchRequest();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		writeContent(out);
 	}
 
 	@Override

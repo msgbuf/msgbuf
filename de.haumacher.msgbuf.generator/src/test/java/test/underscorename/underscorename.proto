@@ -1,0 +1,8 @@
+package test.underscorename;
+
+abstract message base_msg {
+}
+
+message some_name extends base_msg {
+	string my_field;
+}
