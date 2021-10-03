@@ -12,6 +12,14 @@ public class NumberOption extends Option {
 		return new NumberOption();
 	}
 
+	/** Identifier for the {@link NumberOption} type in JSON format. */
+	public static final String NUMBER_OPTION__TYPE = "NumberOption";
+
+	/** @see #getValue() */
+	public static final String VALUE = "value";
+
+	private double _value = 0.0d;
+
 	/**
 	 * Creates a {@link NumberOption} instance.
 	 *
@@ -20,14 +28,6 @@ public class NumberOption extends Option {
 	protected NumberOption() {
 		super();
 	}
-
-	/** Identifier for the {@link NumberOption} type in JSON format. */
-	public static final String NUMBER_OPTION__TYPE = "NumberOption";
-
-	/** @see #getValue() */
-	public static final String VALUE = "value";
-
-	private double _value = 0.0d;
 
 	/**
 	 * The number assigned to the option {@link #name}.

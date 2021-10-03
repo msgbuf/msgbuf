@@ -125,6 +125,14 @@ public class PrimitiveType extends Type {
 		return new PrimitiveType();
 	}
 
+	/** Identifier for the {@link PrimitiveType} type in JSON format. */
+	public static final String PRIMITIVE_TYPE__TYPE = "PrimitiveType";
+
+	/** @see #getKind() */
+	public static final String KIND = "kind";
+
+	private Kind _kind = Kind.INT32;
+
 	/**
 	 * Creates a {@link PrimitiveType} instance.
 	 *
@@ -133,14 +141,6 @@ public class PrimitiveType extends Type {
 	protected PrimitiveType() {
 		super();
 	}
-
-	/** Identifier for the {@link PrimitiveType} type in JSON format. */
-	public static final String PRIMITIVE_TYPE__TYPE = "PrimitiveType";
-
-	/** @see #getKind() */
-	public static final String KIND = "kind";
-
-	private Kind _kind = Kind.INT32;
 
 	/**
 	 * The type kind.

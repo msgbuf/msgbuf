@@ -12,15 +12,6 @@ public class MessageDef extends Definition {
 		return new MessageDef();
 	}
 
-	/**
-	 * Creates a {@link MessageDef} instance.
-	 *
-	 * @see #create()
-	 */
-	protected MessageDef() {
-		super();
-	}
-
 	/** Identifier for the {@link MessageDef} type in JSON format. */
 	public static final String MESSAGE_DEF__TYPE = "MessageDef";
 
@@ -58,6 +49,15 @@ public class MessageDef extends Definition {
 	private transient MessageDef _extendedDef = null;
 
 	private transient int _id = 0;
+
+	/**
+	 * Creates a {@link MessageDef} instance.
+	 *
+	 * @see #create()
+	 */
+	protected MessageDef() {
+		super();
+	}
 
 	/**
 	 * Whether this class only serves as super type for other data classes.

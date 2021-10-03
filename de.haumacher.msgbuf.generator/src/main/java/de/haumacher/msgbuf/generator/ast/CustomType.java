@@ -14,15 +14,6 @@ public class CustomType extends Type {
 		return new CustomType();
 	}
 
-	/**
-	 * Creates a {@link CustomType} instance.
-	 *
-	 * @see #create()
-	 */
-	protected CustomType() {
-		super();
-	}
-
 	/** Identifier for the {@link CustomType} type in JSON format. */
 	public static final String CUSTOM_TYPE__TYPE = "CustomType";
 
@@ -35,6 +26,15 @@ public class CustomType extends Type {
 	private QName _name = null;
 
 	private transient Definition _definition = null;
+
+	/**
+	 * Creates a {@link CustomType} instance.
+	 *
+	 * @see #create()
+	 */
+	protected CustomType() {
+		super();
+	}
 
 	/**
 	 * The name of the reference type.

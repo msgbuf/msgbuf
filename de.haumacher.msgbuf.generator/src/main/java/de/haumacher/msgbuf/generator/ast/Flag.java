@@ -12,6 +12,14 @@ public class Flag extends Option {
 		return new Flag();
 	}
 
+	/** Identifier for the {@link Flag} type in JSON format. */
+	public static final String FLAG__TYPE = "Flag";
+
+	/** @see #isValue() */
+	public static final String VALUE = "value";
+
+	private boolean _value = false;
+
 	/**
 	 * Creates a {@link Flag} instance.
 	 *
@@ -20,14 +28,6 @@ public class Flag extends Option {
 	protected Flag() {
 		super();
 	}
-
-	/** Identifier for the {@link Flag} type in JSON format. */
-	public static final String FLAG__TYPE = "Flag";
-
-	/** @see #isValue() */
-	public static final String VALUE = "value";
-
-	private boolean _value = false;
 
 	/**
 	 * The boolean value assigned to the option {@link #name}.

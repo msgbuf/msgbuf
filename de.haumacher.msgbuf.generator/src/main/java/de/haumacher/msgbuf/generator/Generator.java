@@ -135,7 +135,7 @@ public class Generator {
 				if (generalizationName != null) {
 					MessageDef ref = (MessageDef) table.lookup(def, generalizationName);
 					if (ref ==  null) {
-						error("Referenced type '" + Util.qTypeName(generalizationName) + "' not found.");
+						error("Referenced type '" + CodeConvention.qTypeName(generalizationName) + "' not found.");
 					} else {
 						def.setExtendedDef(ref);
 						ref.addSpecialization(def);
@@ -173,12 +173,12 @@ public class Generator {
 
 		@Override
 		public Void visit(EnumDef def, Void arg) {
-			return generateJava(Util.typeName(def), new EnumGenerator(def));
+			return generateJava(CodeConvention.typeName(def), new EnumGenerator(def));
 		}
 		
 		@Override
 		public Void visit(MessageDef def, Void arg) {
-			return generateJava(Util.typeName(def), new MessageGenerator(_table, _options, def));
+			return generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, def));
 		}
 		
 		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {

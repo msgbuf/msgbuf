@@ -14,6 +14,9 @@ public class Constant extends Part {
 		return new Constant();
 	}
 
+	/** Identifier for the {@link Constant} type in JSON format. */
+	public static final String CONSTANT__TYPE = "Constant";
+
 	/**
 	 * Creates a {@link Constant} instance.
 	 *
@@ -22,9 +25,6 @@ public class Constant extends Part {
 	protected Constant() {
 		super();
 	}
-
-	/** Identifier for the {@link Constant} type in JSON format. */
-	public static final String CONSTANT__TYPE = "Constant";
 
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

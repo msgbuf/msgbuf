@@ -9,15 +9,6 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 		return new MyMessage();
 	}
 
-	/**
-	 * Creates a {@link MyMessage} instance.
-	 *
-	 * @see #create()
-	 */
-	protected MyMessage() {
-		super();
-	}
-
 	/** Identifier for the {@link MyMessage} type in JSON format. */
 	public static final String MY_MESSAGE__TYPE = "MyMessage";
 
@@ -36,6 +27,15 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	private java.util.Map<String, Project> _projects = new java.util.HashMap<>();
 
 	private java.util.Map<Integer, String> _rating = new java.util.HashMap<>();
+
+	/**
+	 * Creates a {@link MyMessage} instance.
+	 *
+	 * @see #create()
+	 */
+	protected MyMessage() {
+		super();
+	}
 
 	public final java.util.Map<String, Project> getProjects() {
 		return _projects;
@@ -200,6 +200,18 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 		out.name(RATING__ID);
 	}
 
+	/** Reads a new instance from the given reader. */
+	public static MyMessage readMyMessage(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		MyMessage result = new MyMessage();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -243,18 +255,6 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 			}
 			default: in.skipValue(); 
 		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static MyMessage readMyMessage(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		MyMessage result = new MyMessage();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 }

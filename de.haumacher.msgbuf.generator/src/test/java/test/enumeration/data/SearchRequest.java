@@ -66,15 +66,6 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		return new SearchRequest();
 	}
 
-	/**
-	 * Creates a {@link SearchRequest} instance.
-	 *
-	 * @see #create()
-	 */
-	protected SearchRequest() {
-		super();
-	}
-
 	/** Identifier for the {@link SearchRequest} type in JSON format. */
 	public static final String SEARCH_REQUEST__TYPE = "SearchRequest";
 
@@ -109,6 +100,15 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	private int _resultPerPage = 0;
 
 	private Corpus _corpus = Corpus.UNIVERSAL;
+
+	/**
+	 * Creates a {@link SearchRequest} instance.
+	 *
+	 * @see #create()
+	 */
+	protected SearchRequest() {
+		super();
+	}
 
 	public final String getQuery() {
 		return _query;
@@ -265,17 +265,6 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		}
 	}
 
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case QUERY__ID: setQuery(in.nextString()); break;
-			case PAGE_NUMBER__ID: setPageNumber(in.nextInt()); break;
-			case RESULT_PER_PAGE__ID: setResultPerPage(in.nextInt()); break;
-			case CORPUS__ID: setCorpus(Corpus.readCorpus(in)); break;
-			default: in.skipValue(); 
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -286,6 +275,17 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case QUERY__ID: setQuery(in.nextString()); break;
+			case PAGE_NUMBER__ID: setPageNumber(in.nextInt()); break;
+			case RESULT_PER_PAGE__ID: setResultPerPage(in.nextInt()); break;
+			case CORPUS__ID: setCorpus(Corpus.readCorpus(in)); break;
+			default: in.skipValue(); 
+		}
 	}
 
 }

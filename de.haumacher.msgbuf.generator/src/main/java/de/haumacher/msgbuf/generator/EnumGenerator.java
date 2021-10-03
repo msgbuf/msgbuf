@@ -34,12 +34,12 @@ public class EnumGenerator extends AbstractFileGenerator {
 		if (file != null) {
 			QName packageName = file.getPackage();
 			if (packageName != null) {
-				line("package " + Util.qName(packageName) + ";");
+				line("package " + CodeConvention.packageName(packageName) + ";");
 			}
 		}
 		nl();
 		docComment(_def.getComment());
-		line("public enum " + Util.typeName(_def) + " {");
+		line("public enum " + CodeConvention.typeName(_def) + " {");
 		generateConstants();
 		
 		nl();
@@ -52,7 +52,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 		
 		nl();
 		line("/** Reads a new instance from the given reader. */");
-		line("public static " + Util.typeName(_def) + " " + MessageGenerator.readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
+		line("public static " + CodeConvention.typeName(_def) + " " + CodeConvention.readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
 		{
 			line("return valueOf(in.nextString());");
 		}
@@ -74,7 +74,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 		
 		nl();
 		line("/** Reads a new instance from the given binary reader. */");
-		line("public static " + Util.typeName(_def) + " " + MessageGenerator.readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
+		line("public static " + CodeConvention.typeName(_def) + " " + CodeConvention.readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
 		{
 			line("switch (in.nextInt()) {");
 			Set<Integer> ids = new HashSet<>(); 

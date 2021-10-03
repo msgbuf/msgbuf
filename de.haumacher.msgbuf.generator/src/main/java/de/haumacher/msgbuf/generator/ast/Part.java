@@ -16,13 +16,6 @@ public abstract class Part extends DefinitionBase {
 
 	}
 
-	/**
-	 * Creates a {@link Part} instance.
-	 */
-	protected Part() {
-		super();
-	}
-
 	/** @see #getName() */
 	public static final String NAME = "name";
 
@@ -37,6 +30,13 @@ public abstract class Part extends DefinitionBase {
 	private int _index = 0;
 
 	private transient Definition _owner = null;
+
+	/**
+	 * Creates a {@link Part} instance.
+	 */
+	protected Part() {
+		super();
+	}
 
 	/**
 	 * The name of this member.

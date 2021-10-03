@@ -12,6 +12,14 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return new QName();
 	}
 
+	/** Identifier for the {@link QName} type in JSON format. */
+	public static final String QNAME__TYPE = "QName";
+
+	/** @see #getNames() */
+	public static final String NAMES = "names";
+
+	private final java.util.List<String> _names = new java.util.ArrayList<>();
+
 	/**
 	 * Creates a {@link QName} instance.
 	 *
@@ -20,14 +28,6 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject {
 	protected QName() {
 		super();
 	}
-
-	/** Identifier for the {@link QName} type in JSON format. */
-	public static final String QNAME__TYPE = "QName";
-
-	/** @see #getNames() */
-	public static final String NAMES = "names";
-
-	private final java.util.List<String> _names = new java.util.ArrayList<>();
 
 	/**
 	 * The parts that compose this qualified name.

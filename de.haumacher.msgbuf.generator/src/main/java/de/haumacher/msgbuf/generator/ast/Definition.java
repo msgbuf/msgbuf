@@ -16,13 +16,6 @@ public abstract class Definition extends DefinitionBase {
 
 	}
 
-	/**
-	 * Creates a {@link Definition} instance.
-	 */
-	protected Definition() {
-		super();
-	}
-
 	/** @see #getName() */
 	public static final String NAME = "name";
 
@@ -37,6 +30,13 @@ public abstract class Definition extends DefinitionBase {
 	private transient DefinitionFile _file = null;
 
 	private transient MessageDef _outer = null;
+
+	/**
+	 * Creates a {@link Definition} instance.
+	 */
+	protected Definition() {
+		super();
+	}
 
 	/**
 	 * The name of this definition.

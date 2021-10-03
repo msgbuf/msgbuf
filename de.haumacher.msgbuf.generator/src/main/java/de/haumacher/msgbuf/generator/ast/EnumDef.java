@@ -12,6 +12,14 @@ public class EnumDef extends Definition {
 		return new EnumDef();
 	}
 
+	/** Identifier for the {@link EnumDef} type in JSON format. */
+	public static final String ENUM_DEF__TYPE = "EnumDef";
+
+	/** @see #getConstants() */
+	public static final String CONSTANTS = "constants";
+
+	private final java.util.List<Constant> _constants = new java.util.ArrayList<>();
+
 	/**
 	 * Creates a {@link EnumDef} instance.
 	 *
@@ -20,14 +28,6 @@ public class EnumDef extends Definition {
 	protected EnumDef() {
 		super();
 	}
-
-	/** Identifier for the {@link EnumDef} type in JSON format. */
-	public static final String ENUM_DEF__TYPE = "EnumDef";
-
-	/** @see #getConstants() */
-	public static final String CONSTANTS = "constants";
-
-	private final java.util.List<Constant> _constants = new java.util.ArrayList<>();
 
 	/**
 	 * All enum constants of this enumeration

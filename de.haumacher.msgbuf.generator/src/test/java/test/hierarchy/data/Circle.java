@@ -12,15 +12,6 @@ public class Circle extends AtomicShape {
 		return new Circle();
 	}
 
-	/**
-	 * Creates a {@link Circle} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Circle() {
-		super();
-	}
-
 	/** Identifier for the {@link Circle} type in JSON format. */
 	public static final String CIRCLE__TYPE = "Circle";
 
@@ -34,6 +25,15 @@ public class Circle extends AtomicShape {
 	public static final int RADIUS__ID = 3;
 
 	private int _radius = 0;
+
+	/**
+	 * Creates a {@link Circle} instance.
+	 *
+	 * @see #create()
+	 */
+	protected Circle() {
+		super();
+	}
 
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
@@ -116,14 +116,6 @@ public class Circle extends AtomicShape {
 		out.value(getRadius());
 	}
 
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case RADIUS__ID: setRadius(in.nextInt()); break;
-			default: super.readField(in, field);
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -134,6 +126,14 @@ public class Circle extends AtomicShape {
 		}
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case RADIUS__ID: setRadius(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
 	}
 
 	@Override

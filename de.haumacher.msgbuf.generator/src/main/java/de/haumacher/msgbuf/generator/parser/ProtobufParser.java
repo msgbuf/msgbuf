@@ -119,8 +119,10 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public Definition definition() throws ParseException {
+  String comment;
   Definition result;
   OptionContainer options;
+    comment = Util.stripComment(token.next);
     options = javaAnnotations();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case MESSAGE:
@@ -135,6 +137,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
+    result.setComment(comment);
     if (options != null) result.setOptions(options.getOptions());
     {if (true) return result;}
     throw new Error("Missing return statement in function");
@@ -266,7 +269,6 @@ public class ProtobufParser implements ProtobufParserConstants {
   WithOptions def;
   Field field;
   Token comment;
-    result.setComment(Util.stripComment(token.next));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ABSTRACT:
       jj_consume_token(ABSTRACT);

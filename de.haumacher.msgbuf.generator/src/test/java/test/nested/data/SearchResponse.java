@@ -10,15 +10,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			return new Result();
 		}
 
-		/**
-		 * Creates a {@link Result} instance.
-		 *
-		 * @see #create()
-		 */
-		protected Result() {
-			super();
-		}
-
 		/** Identifier for the {@link Result} type in JSON format. */
 		public static final String RESULT__TYPE = "Result";
 
@@ -45,6 +36,15 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		private String _title = "";
 
 		private final java.util.List<String> _snippets = new java.util.ArrayList<>();
+
+		/**
+		 * Creates a {@link Result} instance.
+		 *
+		 * @see #create()
+		 */
+		protected Result() {
+			super();
+		}
 
 		public final String getUrl() {
 			return _url;
@@ -197,6 +197,18 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			}
 		}
 
+		/** Reads a new instance from the given reader. */
+		public static Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+			in.beginObject();
+			Result result = new Result();
+			while (in.hasNext()) {
+				int field = in.nextName();
+				result.readField(in, field);
+			}
+			in.endObject();
+			return result;
+		}
+
 		/** Consumes the value for the field with the given ID and assigns its value. */
 		protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 			switch (field) {
@@ -214,18 +226,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			}
 		}
 
-		/** Reads a new instance from the given reader. */
-		public static Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-			in.beginObject();
-			Result result = new Result();
-			while (in.hasNext()) {
-				int field = in.nextName();
-				result.readField(in, field);
-			}
-			in.endObject();
-			return result;
-		}
-
 	}
 
 	/**
@@ -233,15 +233,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	 */
 	public static SearchResponse create() {
 		return new SearchResponse();
-	}
-
-	/**
-	 * Creates a {@link SearchResponse} instance.
-	 *
-	 * @see #create()
-	 */
-	protected SearchResponse() {
-		super();
 	}
 
 	/** Identifier for the {@link SearchResponse} type in JSON format. */
@@ -254,6 +245,15 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	public static final int RESULTS__ID = 1;
 
 	private final java.util.List<Result> _results = new java.util.ArrayList<>();
+
+	/**
+	 * Creates a {@link SearchResponse} instance.
+	 *
+	 * @see #create()
+	 */
+	protected SearchResponse() {
+		super();
+	}
 
 	public final java.util.List<Result> getResults() {
 		return _results;
@@ -366,6 +366,18 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		}
 	}
 
+	/** Reads a new instance from the given reader. */
+	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		SearchResponse result = new SearchResponse();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -379,18 +391,6 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			break;
 			default: in.skipValue(); 
 		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		SearchResponse result = new SearchResponse();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 }

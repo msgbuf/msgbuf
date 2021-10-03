@@ -9,6 +9,9 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		return new SampleMessage();
 	}
 
+	/** Identifier for the {@link SampleMessage} type in JSON format. */
+	public static final String SAMPLE_MESSAGE__TYPE = "SampleMessage";
+
 	/**
 	 * Creates a {@link SampleMessage} instance.
 	 *
@@ -17,9 +20,6 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	protected SampleMessage() {
 		super();
 	}
-
-	/** Identifier for the {@link SampleMessage} type in JSON format. */
-	public static final String SAMPLE_MESSAGE__TYPE = "SampleMessage";
 
 	/** Reads a new instance from the given reader. */
 	public static SampleMessage readSampleMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
@@ -53,13 +53,6 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		// No fields to write, hook for subclasses.
 	}
 
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static SampleMessage readSampleMessage(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -70,6 +63,13 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			default: in.skipValue(); 
+		}
 	}
 
 }

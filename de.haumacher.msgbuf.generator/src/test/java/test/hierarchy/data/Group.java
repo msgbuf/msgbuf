@@ -12,15 +12,6 @@ public class Group extends Shape {
 		return new Group();
 	}
 
-	/**
-	 * Creates a {@link Group} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Group() {
-		super();
-	}
-
 	/** Identifier for the {@link Group} type in JSON format. */
 	public static final String GROUP__TYPE = "Group";
 
@@ -34,6 +25,15 @@ public class Group extends Shape {
 	public static final int SHAPES__ID = 3;
 
 	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
+
+	/**
+	 * Creates a {@link Group} instance.
+	 *
+	 * @see #create()
+	 */
+	protected Group() {
+		super();
+	}
 
 	/**
 	 * All {@link Shape}s in this {@link Group}.
@@ -147,6 +147,18 @@ public class Group extends Shape {
 		}
 	}
 
+	/** Reads a new instance from the given reader. */
+	public static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Group result = new Group();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
+
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
@@ -160,18 +172,6 @@ public class Group extends Shape {
 			break;
 			default: super.readField(in, field);
 		}
-	}
-
-	/** Reads a new instance from the given reader. */
-	public static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Group result = new Group();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
-		in.endObject();
-		return result;
 	}
 
 	@Override

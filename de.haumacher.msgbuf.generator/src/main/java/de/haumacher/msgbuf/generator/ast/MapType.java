@@ -12,15 +12,6 @@ public class MapType extends Type {
 		return new MapType();
 	}
 
-	/**
-	 * Creates a {@link MapType} instance.
-	 *
-	 * @see #create()
-	 */
-	protected MapType() {
-		super();
-	}
-
 	/** Identifier for the {@link MapType} type in JSON format. */
 	public static final String MAP_TYPE__TYPE = "MapType";
 
@@ -33,6 +24,15 @@ public class MapType extends Type {
 	private Type _keyType = null;
 
 	private Type _valueType = null;
+
+	/**
+	 * Creates a {@link MapType} instance.
+	 *
+	 * @see #create()
+	 */
+	protected MapType() {
+		super();
+	}
 
 	/**
 	 * The key type of this map.

@@ -62,7 +62,7 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		if (qName == null) {
 			name = "";
 		} else {
-			name = Util.qName(qName);
+			name = CodeConvention.packageName(qName);
 		}
 		Package result = _packageByName.get(name);
 		if (result == null) {

@@ -49,6 +49,9 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractReflectiveDataO
 		return new MyMessage1();
 	}
 
+	/** Identifier for the {@link MyMessage1} type in JSON format. */
+	public static final String MY_MESSAGE_1__TYPE = "MyMessage1";
+
 	/**
 	 * Creates a {@link MyMessage1} instance.
 	 *
@@ -57,9 +60,6 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractReflectiveDataO
 	protected MyMessage1() {
 		super();
 	}
-
-	/** Identifier for the {@link MyMessage1} type in JSON format. */
-	public static final String MY_MESSAGE_1__TYPE = "MyMessage1";
 
 	/** Reads a new instance from the given reader. */
 	public static MyMessage1 readMyMessage1(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
@@ -93,13 +93,6 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractReflectiveDataO
 		// No fields to write, hook for subclasses.
 	}
 
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static MyMessage1 readMyMessage1(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -110,6 +103,13 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractReflectiveDataO
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			default: in.skipValue(); 
+		}
 	}
 
 }

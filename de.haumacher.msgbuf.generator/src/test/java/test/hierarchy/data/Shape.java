@@ -16,13 +16,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 
 	}
 
-	/**
-	 * Creates a {@link Shape} instance.
-	 */
-	protected Shape() {
-		super();
-	}
-
 	/** @see #getXCoordinate() */
 	public static final String X_COORDINATE = "x";
 
@@ -38,6 +31,13 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	private int _xCoordinate = 0;
 
 	private int _yCoordinate = 0;
+
+	/**
+	 * Creates a {@link Shape} instance.
+	 */
+	protected Shape() {
+		super();
+	}
 
 	/**
 	 * X coordinate of the origin of the coordinate system of this {@link Shape}.
@@ -141,6 +141,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		}
 	}
 
+	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
+	public abstract int typeId();
+
 	@Override
 	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		out.beginObject();
@@ -149,9 +152,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		writeFields(out);
 		out.endObject();
 	}
-
-	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
-	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.
@@ -165,15 +165,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		out.value(getXCoordinate());
 		out.name(Y_COORDINATE__ID);
 		out.value(getYCoordinate());
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case X_COORDINATE__ID: setXCoordinate(in.nextInt()); break;
-			case Y_COORDINATE__ID: setYCoordinate(in.nextInt()); break;
-			default: in.skipValue(); 
-		}
 	}
 
 	/** Reads a new instance from the given reader. */
@@ -196,6 +187,15 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case X_COORDINATE__ID: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__ID: setYCoordinate(in.nextInt()); break;
+			default: in.skipValue(); 
+		}
 	}
 
 	/** Accepts the given visitor. */

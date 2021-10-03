@@ -12,17 +12,17 @@ public abstract class DefinitionBase extends WithOptions {
 
 	}
 
+	/** @see #getComment() */
+	public static final String COMMENT = "comment";
+
+	private String _comment = "";
+
 	/**
 	 * Creates a {@link DefinitionBase} instance.
 	 */
 	protected DefinitionBase() {
 		super();
 	}
-
-	/** @see #getComment() */
-	public static final String COMMENT = "comment";
-
-	private String _comment = "";
 
 	/**
 	 * The documentation comment for this definition.

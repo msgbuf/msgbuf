@@ -9,15 +9,6 @@ public class SomeName extends BaseMsg {
 		return new SomeName();
 	}
 
-	/**
-	 * Creates a {@link SomeName} instance.
-	 *
-	 * @see #create()
-	 */
-	protected SomeName() {
-		super();
-	}
-
 	/** Identifier for the {@link SomeName} type in JSON format. */
 	public static final String SOME_NAME__TYPE = "some_name";
 
@@ -31,6 +22,15 @@ public class SomeName extends BaseMsg {
 	public static final int MY_FIELD__ID = 1;
 
 	private String _myField = "";
+
+	/**
+	 * Creates a {@link SomeName} instance.
+	 *
+	 * @see #create()
+	 */
+	protected SomeName() {
+		super();
+	}
 
 	public final String getMyField() {
 		return _myField;
@@ -110,14 +110,6 @@ public class SomeName extends BaseMsg {
 		out.value(getMyField());
 	}
 
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case MY_FIELD__ID: setMyField(in.nextString()); break;
-			default: super.readField(in, field);
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static SomeName readsome_name(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -128,6 +120,14 @@ public class SomeName extends BaseMsg {
 		}
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case MY_FIELD__ID: setMyField(in.nextString()); break;
+			default: super.readField(in, field);
+		}
 	}
 
 	@Override

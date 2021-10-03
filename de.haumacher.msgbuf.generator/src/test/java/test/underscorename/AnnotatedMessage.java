@@ -9,15 +9,6 @@ public class AnnotatedMessage extends BaseMsg {
 		return new AnnotatedMessage();
 	}
 
-	/**
-	 * Creates a {@link AnnotatedMessage} instance.
-	 *
-	 * @see #create()
-	 */
-	protected AnnotatedMessage() {
-		super();
-	}
-
 	/** Identifier for the {@link AnnotatedMessage} type in JSON format. */
 	public static final String ANNOTATED_MESSAGE__TYPE = "m1";
 
@@ -31,6 +22,15 @@ public class AnnotatedMessage extends BaseMsg {
 	public static final int ANNOTATED_FIELD__ID = 1;
 
 	private String _annotatedField = "";
+
+	/**
+	 * Creates a {@link AnnotatedMessage} instance.
+	 *
+	 * @see #create()
+	 */
+	protected AnnotatedMessage() {
+		super();
+	}
 
 	public final String getAnnotatedField() {
 		return _annotatedField;
@@ -110,14 +110,6 @@ public class AnnotatedMessage extends BaseMsg {
 		out.value(getAnnotatedField());
 	}
 
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case ANNOTATED_FIELD__ID: setAnnotatedField(in.nextString()); break;
-			default: super.readField(in, field);
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static AnnotatedMessage readannotated_message(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -128,6 +120,14 @@ public class AnnotatedMessage extends BaseMsg {
 		}
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case ANNOTATED_FIELD__ID: setAnnotatedField(in.nextString()); break;
+			default: super.readField(in, field);
+		}
 	}
 
 	@Override

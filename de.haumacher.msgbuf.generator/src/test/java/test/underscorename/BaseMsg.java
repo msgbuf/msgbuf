@@ -45,6 +45,9 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 	/** The type identifier for this concrete subtype. */
 	public abstract String jsonType();
 
+	/** The binary identifier for this concrete type in the polymorphic {@link BaseMsg} hierarchy. */
+	public abstract int typeId();
+
 	@Override
 	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		out.beginObject();
@@ -53,9 +56,6 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 		writeFields(out);
 		out.endObject();
 	}
-
-	/** The binary identifier for this concrete type in the polymorphic {@link BaseMsg} hierarchy. */
-	public abstract int typeId();
 
 	/**
 	 * Serializes all fields of this instance to the given binary output.
@@ -66,13 +66,6 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		// No fields to write, hook for subclasses.
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
 	}
 
 	/** Reads a new instance from the given reader. */
@@ -93,6 +86,13 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			default: in.skipValue(); 
+		}
 	}
 
 	/** Accepts the given visitor. */

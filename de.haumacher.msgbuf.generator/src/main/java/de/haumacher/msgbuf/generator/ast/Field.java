@@ -12,15 +12,6 @@ public class Field extends Part {
 		return new Field();
 	}
 
-	/**
-	 * Creates a {@link Field} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Field() {
-		super();
-	}
-
 	/** Identifier for the {@link Field} type in JSON format. */
 	public static final String FIELD__TYPE = "Field";
 
@@ -38,6 +29,15 @@ public class Field extends Part {
 	private boolean _repeated = false;
 
 	private Type _type = null;
+
+	/**
+	 * Creates a {@link Field} instance.
+	 *
+	 * @see #create()
+	 */
+	protected Field() {
+		super();
+	}
 
 	/**
 	 * Whether this field is not serialized when a message is created.

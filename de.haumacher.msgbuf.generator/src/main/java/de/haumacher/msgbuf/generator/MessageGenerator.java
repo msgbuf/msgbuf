@@ -3,6 +3,8 @@
  */
 package de.haumacher.msgbuf.generator;
 
+import static de.haumacher.msgbuf.generator.CodeConvention.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +32,6 @@ import de.haumacher.msgbuf.generator.ast.Type;
  */
 public class MessageGenerator extends AbstractFileGenerator implements Type.Visitor<String, Boolean>, Definition.Visitor<Void, Void> {
 
-	private static final Pattern NAME_PART_PATTERN = Pattern.compile(
-		"(?<=\\p{javaLowerCase})(?=\\p{javaUpperCase})" + "|" + 
-		"(?<=\\p{javaLetter})(?=\\p{javaDigit})" + "|" + 
-		"(?<=\\p{javaDigit})(?=\\p{javaLetter})" + "|" + 
-		"_+");
-	
 	private final NameTable _table;
 	private final MessageDef _def;
 	private boolean _binary;
@@ -45,10 +41,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
-	 * @param table 
-	 * @param options 
-	 *
-	 * @param def
 	 */
 	public MessageGenerator(NameTable table, Map<String, Option> options, MessageDef def) {
 		_table = table;
@@ -96,7 +88,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		if (_def.getFile() != null) {
 			QName packageName = _def.getFile().getPackage();
 			if (packageName != null) {
-				line("package " + Util.qName(packageName) + ";");
+				line("package " + packageName(packageName) + ";");
 				nl();
 			}
 			modifier = "";
@@ -104,12 +96,27 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			modifier = " static";
 		}
 		docComment(_def.getComment());
-		line("public" + modifier + getAbstract() + " class " + Util.typeName(_def) + getExtends() + " {");
+		line("public" + modifier + mkAbstract() + " class " + typeName(_def) + mkExtends() + " {");
 		generateClassContents();
 		nl();
 		line("}");
 	}
 	
+	private String mkAbstract() {
+		return _def.isAbstract() ? " abstract" : "";
+	}
+
+	private String mkExtends() {
+		if (_def.getExtends() == null) {
+			return " extends " + (_reflection ? "de.haumacher.msgbuf.data.AbstractReflectiveDataObject" : "de.haumacher.msgbuf.data.AbstractDataObject") + 
+					(_binary ? " implements " : "") + 
+					(_binary ? "de.haumacher.msgbuf.binary.BinaryDataObject" : "")
+				;
+		} else {
+			return " extends " + qTypeName(_def.getExtends());
+		}
+	}
+
 	@Override
 	protected void docComment(String comment) {
 		Pattern ref = Pattern.compile("([a-zA-Z_][a-zA-Z_0-9]*)?#([a-zA-Z_][a-zA-Z_0-9]*)");
@@ -127,7 +134,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			if (field == null) {
 				replacement += name;
 			} else {
-				replacement += getter(field);
+				replacement += getterCall(field);
 			}
 			
 			matcher.appendReplacement(buffer, replacement);
@@ -137,20 +144,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		super.docComment(buffer.toString());
 	}
 
-	private String getter(Field field) {
-		return getterName(field) + "()";
-	}
-
-	private QName qName(String name) {
-		QName result = QName.create();
-		for (String part : name.split("\\.")) {
-			result.addName(part);
-		}
-		return result;
-	}
-
 	private Field getField(MessageDef def, String name) {
-		Field result = localField(def, name);
+		Field result = getLocalField(def, name);
 		if (result != null) {
 			return result;
 		}
@@ -161,29 +156,32 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return null;
 	}
 
-	private Field localField(MessageDef def, String name) {
-		return def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
-	}
-
-	private String getAbstract() {
-		return _def.isAbstract() ? " abstract" : "";
-	}
-
-	private String getExtends() {
-		if (_def.getExtends() == null) {
-			return " extends " + (_reflection ? "de.haumacher.msgbuf.data.AbstractReflectiveDataObject" : "de.haumacher.msgbuf.data.AbstractDataObject") + 
-					(_binary ? " implements " : "") + 
-					(_binary ? "de.haumacher.msgbuf.binary.BinaryDataObject" : "")
-				;
-		} else {
-			return " extends " + Util.qTypeName(_def.getExtends());
-		}
-	}
-
 	private void generateClassContents() {
+		generateVisitorInterface();
+		generateInnerDefinitions();
+		generateFactoryMethod();
+		generateConstants();
+		generateFieldMembers();
+		generateConstructor();
+		generateAccessors();
+		
+		if (_reflection) {
+			generateReflection();
+		}
+		
+		generateJson();
+		
+		if (_binary) {
+			generateBinaryIO();
+		}
+		
+		generateVisitMethods();
+	}
+
+	private void generateVisitorInterface() {
 		if (_def.isAbstract()) {
 			nl();
-			line("/** Visitor interface for the {@link " + Util.typeName(_def) + "} hierarchy.*/");
+			line("/** Visitor interface for the {@link " + typeName(_def) + "} hierarchy.*/");
 			lineStart("public interface Visitor<R,A>");
 			boolean first = true;
 			for (MessageDef specialization : _def.getSpecializations()) {
@@ -196,7 +194,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				} else {
 					append(", ");
 				}
-				append(Util.typeName(specialization) + ".Visitor<R,A>");
+				append(typeName(specialization) + ".Visitor<R,A>");
 			}
 			append(" {");
 			nl();
@@ -206,10 +204,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (specialization.isAbstract()) {
 						continue;
 					}
-
+	
 					nl();
-					line("/** Visit case for {@link " + Util.typeName(specialization) + "}.*/");
-					line("R visit(" + Util.typeName(specialization) + " self, A arg);");
+					line("/** Visit case for {@link " + typeName(specialization) + "}.*/");
+					line("R visit(" + typeName(specialization) + " self, A arg);");
 					
 					hasCase = true;
 				}
@@ -222,128 +220,275 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			nl();
 			line("}");
 		}
-		
+	}
+
+	private void generateInnerDefinitions() {
 		for (Definition def : _def.getDefinitions()) {
 			def.visit(this, null);
 		}
-		
+	}
+
+	private void generateFactoryMethod() {
 		if (!_def.isAbstract()) {
 			nl();
 			line("/**");
-			line(" * Creates a {@link " + Util.typeName(_def) + "} instance.");
+			line(" * Creates a {@link " + typeName(_def) + "} instance.");
 			line(" */");
-			line("public static " + Util.typeName(_def) + " " + factoryName(_def) + "() {");
+			line("public static " + typeName(_def) + " " + factoryName(_def) + "() {");
 			{
-				line("return new " + Util.typeName(_def) + "();");
+				line("return new " + typeName(_def) + "();");
 			}
 			line("}");
 		}
+	}
+
+	private void generateConstants() {
+		if (!_def.isAbstract()) {
+			nl();
+			line("/** Identifier for the {@link " + typeName(_def) + "} type in JSON format. */");
+			line("public static final String " + jsonTypeConstant(_def) + " = " + jsonTypeID(_def) + ";");
+		}
 		
+		for (Field field : getFields()) {
+			nl();
+			line("/** @see #" + getterCall(field) + " */");
+			line("public static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
+		}
+		
+		if (_binary) {
+			if (!_def.isAbstract() && getRoot(_def).isAbstract()) {
+				nl();
+				line("/** Identifier for the {@link " + typeName(_def) + "} type in binary format. */");
+				line("public static final int " + mkBinaryTypeConstant(_def) + " = " + _def.getId() + ";");
+			}
+			
+			for (Field field : getFields()) {
+				if (field.isTransient()) {
+					continue;
+				}
+				
+				nl();
+				line("/** Identifier for the property {@link #" + getterCall(field) + "} in binary format. */");
+				line("public static final int " + binaryConstant(field) + " = " + field.getIndex() + ";");
+			}
+		}
+	}
+
+	private String getFieldNameString(Field field) {
+		Optional<Option> fieldName = Optional.ofNullable(field.getOptions().get("Name"));
+		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
+		return "\"" + name + "\"";
+	}
+
+	private void generateConstructor() {
 		nl();
 		line("/**");
-		line(" * Creates a {@link " + Util.typeName(_def) + "} instance.");
+		line(" * Creates a {@link " + typeName(_def) + "} instance.");
 		if (!_def.isAbstract()) {
 			line(" *");
 			line(" * @see #" + factoryName(_def) + "()");
 		}
 		line(" */");
-		line("protected " + Util.typeName(_def) + "() {");
+		line("protected " + typeName(_def) + "() {");
 		{
 			line("super();");
 		}
 		line("}");
-		
-		List<Field> fields = _def.getFields();
-		
-		generateConstants(fields);
+	}
 
-		for (Field field : fields) {
-			generateFieldDef(field);
-		}
-		
-		for (Field field : fields) {
-			generateFieldAccessor(field);
-		}
-		
-		if (_reflection) {
-			generateReflection();
-		}
-		
-		generateJson();
-		
-		binaryIO();
-		
-		if (_def.isAbstract()) {
+	private void generateFieldMembers() {
+		for (Field field : getFields()) {
 			nl();
-			line("/** Accepts the given visitor. */");
-			line("public abstract <R,A> R visit(Visitor<R,A> v, A arg);");
-			nl();
+			line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + "_" + name(field) + mkInitializer(field) + ";");
 		}
-		
-		MessageDef gen = abstractGeneralizations(_def);
-		if (gen != null) {
+	}
+
+	private void generateAccessors() {
+		for (Field field : getFields()) {
+			generateAccessors(field);
+		}
+	}
+
+	private void generateAccessors(Field field) {
+		accessorGetter(field);
+		accessorSetter(field);
+		accessorAdder(field);
+		accessorHasValue(field);
+	}
+
+	private void accessorGetter(Field field) {
+		nl();
+		docComment(field.getComment());
+		line("public final " + mkType(field) + " " + getterName(field) + "()" + " {");
+		line("return " + "_" + name(field) + ";");
+		line("}");
+	}
+
+	private void accessorSetter(Field field) {
+		nl();
+		line("/**");
+		line(" * @see #" + getterName(field) + "()");
+		line(" */");
+		line("public final " + typeName(_def) + " " + setterName(field) + "(" + mkType(field) + " " + "value" + ")" + " {");
+		Type type = field.getType();
+		{
+			if (field.isRepeated()) {
+				line("_" + name(field) + ".clear();");
+				line("_" + name(field) + ".addAll(value);");
+			} else if (type instanceof MapType) {
+				line("_" + name(field) + ".clear();");
+				line("_" + name(field) + ".putAll(value);");
+			} else {
+				line("_" + name(field) + " = " + "value" + ";");
+			}
+			line("return this;");
+		}
+		line("}");
+	}
+
+	private void accessorAdder(Field field) {
+		Type type = field.getType();
+		if (field.isRepeated()) {
 			nl();
-			line("@Override");
-			line("public" + (_def.isAbstract() ? " final" : "") + " <R,A> R visit(" + Util.typeName(gen) + ".Visitor<R,A> v, A arg) {");
+			line("/**");
+			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} list.");
+			line(" */");
+			line("public final " + typeName(_def) + " " + adderName(field) + "(" + mkType(type) + " " + "value" + ")" + " {");
 			{
-				if (_def.isAbstract()) {
-					line("return visit((Visitor<R,A>) v, arg);");
-				} else {
-					line("return v.visit(this, arg);");
+				line("_" + name(field) + ".add(value);");
+				line("return this;");
+			}
+			line("}");
+		}
+		else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			nl();
+			line("/**");
+			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} map.");
+			line(" */");
+			line("public final " + "void" + " " + adderName(field) + "(" + mkType(mapType.getKeyType()) + " key" + ", " + mkType(mapType.getValueType()) + " value" + ")" + " {");
+			{
+				line("if (" + "_" + name(field) + ".containsKey(key)) {");
+				{
+					line("throw new IllegalArgumentException(\"Property '" + field.getName() + "' already contains a value for key '\" + key + \"'.\");");
 				}
+				line("}");
+				line("_" + name(field) + ".put(key, value);");
 			}
 			line("}");
 		}
 	}
 
-	/**
-	 * Name of the factory method for the given {@link MessageDef}.
-	 * 
-	 * @param def
-	 *        The {@link MessageDef} to produce a factory name for.
-	 */
-	private String factoryName(MessageDef def) {
-		return "create";
-	}
-	
-	private MessageDef abstractGeneralizations(MessageDef def) {
-		while (true) {
-			MessageDef extendsDef = def.getExtendedDef();
-			if (extendsDef == null) {
-				break;
+	private void accessorHasValue(Field field) {
+		if (isNullable(field)) {
+			nl();
+			line("/**");
+			line(" * Checks, whether {@link #" + getterName(field) + "()"+ "} has a value.");
+			line(" */");
+			line("public final " + "boolean" + " " + hasName(field) + "()" + " {");
+			{
+				line("return _" + name(field) + " != null;");
 			}
-			if (extendsDef.isAbstract()) {
-				return extendsDef;
-			}
-			def = extendsDef;
+			line("}");
 		}
-		return null;
+	}
+
+	private void generateReflection() {
+		if (hasFields()) {
+			reflectionPropertiesConstant();
+			reflectionProperties();
+			reflectionGet();
+			reflectionSet();
+		}
+	}
+
+	private void reflectionPropertiesConstant() {
+		nl();
+		line("private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(");
+		{
+			line("java.util.Arrays.asList(");
+			{
+				boolean first = true;
+				for (Field field : getFields()) {
+					if (first) {
+						first = false;
+					} else {
+						append(", ");
+						nl();
+					}
+					lineStart(constant(field));
+				}
+				append("));");
+				nl();
+			}
+		}
+	}
+
+	private void reflectionProperties() {
+		nl();
+		line("@Override");
+		line("public java.util.List<String> properties() {");
+		{
+			line("return PROPERTIES;");
+		}
+		line("}");
+	}
+
+	private void reflectionGet() {
+		nl();
+		line("@Override");
+		line("public Object get(String field) {");
+		{
+			line("switch (field) {");
+			for (Field field : getFields()) {
+				line("case " + constant(field) + ": return " + getterName(field) + "()" + ";");
+			}
+			line("default: return super.get(field);");
+			line("}");
+		}
+		line("}");
+	}
+
+	private void reflectionSet() {
+		nl();
+		line("@Override");
+		line("public void set(String field, Object value) {");
+		{
+			{
+				line("switch (field) {");
+				for (Field field : getFields()) {
+					line("case " + constant(field) + ": " + setterName(field) + "(" + mkCast(field, "value") + ")" + "; break;");
+				}
+				if (!isBaseClass()) {
+					line("default: super.set(field, value); break;");
+				}
+				line("}");
+			}
+		}
+		line("}");
 	}
 
 	private void generateJson() {
-		boolean baseClass = _def.getExtends() == null;
-		List<Field> fields = _def.getFields();
-		
 		nl();
 		line("/** Reads a new instance from the given reader. */");
-		line("public static " + Util.typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
+		line("public static " + typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
 		{
 			if (_def.isAbstract()) {
-				line(Util.typeName(_def) + " result;");
+				line(typeName(_def) + " result;");
 				line("in.beginArray();");
 				line("String type = in.nextString();");
 				line("switch (type) {");
-				for (MessageDef specialization : transitiveSpecializations(_def)) {
+				for (MessageDef specialization : getTransitiveSpecializations(_def)) {
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + jsonTypeConstant(specialization) + ": result = " + Util.typeName(specialization) + "." + readerName(specialization) + "(in); break;");
+					line("case " + jsonTypeConstantRef(specialization) + ": result = " + typeName(specialization) + "." + readerName(specialization) + "(in); break;");
 				}
 				line("default: in.skipValue(); result = null; break;");
 				line("}");
 				line("in.endArray();");
 			} else {
-				line(Util.typeName(_def) + " result = new " + Util.typeName(_def) + "();");
+				line(typeName(_def) + " result = new " + typeName(_def) + "();");
 				line("in.beginObject();");
 				line("result.readFields(in);");
 				line("in.endObject();");
@@ -352,7 +497,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 		line("}");
 		
-		if (baseClass) {
+		if (isBaseClass()) {
 			nl();
 			line("@Override");
 			line("public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
@@ -378,18 +523,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("@Override");
 			line("public String jsonType() {");
 			{
-				line("return " + jsonTypeConstantName(_def) + ";");
+				line("return " + jsonTypeConstant(_def) + ";");
 			}
 			line("}");
 		}
 		
-		if (!fields.isEmpty()) {
+		if (hasFields()) {
 			nl();
 			line("@Override");
 			line("protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
 			{
 				line("super.writeFields(out);");
-				for (Field field : fields) {
+				for (Field field : getFields()) {
 					if (field.isTransient()) {
 						continue;
 					}
@@ -400,14 +545,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					line("out.name(" + constant(field) + ");");
 					if (field.isRepeated()) {
 						line("out.beginArray();");
-						line("for (" + getType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
+						line("for (" + mkType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
 						{
 							jsonOutValue(field.getType(), "x");
 						}
 						line("}");
 						line("out.endArray();");
 					} else {
-						jsonOutValue(field.getType(), getter(field));
+						jsonOutValue(field.getType(), getterCall(field));
 					}
 					if (nullable) {
 						line("}");
@@ -421,7 +566,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {");
 			{
 				line("switch (field) {");
-				for (Field field : fields) {
+				for (Field field : getFields()) {
 					if (field.isTransient()) {
 						continue;
 					}
@@ -431,125 +576,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				line("}");
 			}
 			line("}");
-		}
-	}
-
-	private String jsonTypeConstant(MessageDef def) {
-		return Util.typeName(def) + "." + jsonTypeConstantName(def);
-	}
-
-	private String jsonTypeConstantName(MessageDef def) {
-		return allUpperCase(def.getName()) + "__TYPE";
-	}
-
-	private String binaryTypeConstant(MessageDef def) {
-		return Util.typeName(def) + "." + binaryTypeConstantName(def);
-	}
-	
-	private String binaryTypeConstantName(MessageDef def) {
-		return allUpperCase(def.getName()) + "__TYPE_ID";
-	}
-	
-	private String jsonTypeValue(MessageDef def) {
-		Option nameOption = def.getOptions().get("Name");
-		String jsonName = nameOption == null ? def.getName() : ((StringOption) nameOption).getValue();
-		return "\"" + jsonName + "\"";
-	}
-
-	private void generateReflection() {
-		boolean baseClass = _def.getExtends() == null;
-		List<Field> fields = _def.getFields();
-		
-		if (!fields.isEmpty()) {
-			nl();
-			line("private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(");
-			{
-				line("java.util.Arrays.asList(");
-				{
-					boolean first = true;
-					for (Field field : fields) {
-						if (first) {
-							first = false;
-						} else {
-							append(", ");
-							nl();
-						}
-						lineStart(constant(field));
-					}
-					append("));");
-					nl();
-				}
-			}
-			
-			nl();
-			line("@Override");
-			line("public java.util.List<String> properties() {");
-			{
-				line("return PROPERTIES;");
-			}
-			line("}");
-			
-			nl();
-			line("@Override");
-			line("public Object get(String field) {");
-			{
-				line("switch (field) {");
-				for (Field field : fields) {
-					line("case " + constant(field) + ": return " + getterName(field) + "()" + ";");
-				}
-				line("default: return super.get(field);");
-				line("}");
-			}
-			line("}");
-			
-			nl();
-			line("@Override");
-			line("public void set(String field, Object value) {");
-			{
-				{
-					line("switch (field) {");
-					for (Field field : fields) {
-						line("case " + constant(field) + ": " + setterName(field) + "(" + cast(field, "value") + ")" + "; break;");
-					}
-					if (!baseClass) {
-						line("default: super.set(field, value); break;");
-					}
-					line("}");
-				}
-			}
-			line("}");
-		}
-	}
-
-	private void generateConstants(List<Field> fields) {
-		if (!_def.isAbstract()) {
-			nl();
-			line("/** Identifier for the {@link " + Util.typeName(_def) + "} type in JSON format. */");
-			line("public static final String " + jsonTypeConstantName(_def) + " = " + jsonTypeValue(_def) + ";");
-		}
-		
-		for (Field field : fields) {
-			nl();
-			line("/** @see #" + getter(field) + " */");
-			line("public static final String " + constant(field) + " = " + fieldNameString(field) + ";");
-		}
-		
-		if (_binary) {
-			if (!_def.isAbstract() && root(_def).isAbstract()) {
-				nl();
-				line("/** Identifier for the {@link " + Util.typeName(_def) + "} type in binary format. */");
-				line("public static final int " + binaryTypeConstantName(_def) + " = " + _def.getId() + ";");
-			}
-			
-			for (Field field : fields) {
-				if (field.isTransient()) {
-					continue;
-				}
-				
-				nl();
-				line("/** Identifier for the property {@link #" + getter(field) + "} in binary format. */");
-				line("public static final int " + binaryConstant(field) + " = " + field.getIndex() + ";");
-			}
 		}
 	}
 
@@ -587,8 +613,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					line("while (in.hasNext()) {");
 					{
 						line("in.beginObject();");
-						line(getType(keyType) + " key = " + defaultValue(keyType) + ";");
-						line(getType(valueType) + " value = " + defaultValue(valueType) + ";");
+						line(mkType(keyType) + " key = " + mkDefaultValue(keyType) + ";");
+						line(mkType(valueType) + " value = " + mkDefaultValue(valueType) + ";");
 						line("while (in.hasNext()) {");
 						{
 							line("switch (in.nextName()) {");
@@ -619,16 +645,22 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return Util.qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
+			return qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
-	
+
+	private String jsonTypeID(MessageDef def) {
+		Option nameOption = def.getOptions().get("Name");
+		String typeId = nameOption == null ? def.getName() : ((StringOption) nameOption).getValue();
+		return "\"" + typeId + "\"";
+	}
+
 	private String jsonType(PrimitiveType.Kind primitive) {
 		switch (primitive) {
 		case BOOL: 
 			return "in.nextBoolean()";
-
+	
 		case FLOAT:
 			return "(float) in.nextDouble()";
 		case DOUBLE: 
@@ -658,15 +690,102 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
-	private void binaryIO() {
-		if (!_binary) {
-			return;
+	private void jsonOutValue(Type type, String x) {
+		jsonOutValue(type, x, 0);
+	}
+
+	private void jsonOutValue(Type type, String x, int depth) {
+		if (type instanceof PrimitiveType) {
+			switch (((PrimitiveType) type).getKind()) {
+			case BYTES: {
+				line("de.haumacher.msgbuf.json.JsonUtil.writeBinaryOptional(out, " + x + ");");
+				break;
+			}
+			default: {
+				line("out.value(" + x + ");");
+				break;
+			}
+			}
+		} else if (type instanceof CustomType) {
+			CustomType customType = (CustomType) type;
+			if (isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
+				line(x + ".writeContent(out);");
+			} else {
+				line(x + ".writeTo(out);");
+			}
+		} else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			
+			Type keyType = mapType.getKeyType();
+			Type valueType = mapType.getValueType();
+			if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
+				line("out.beginObject();");
+				String entry = "entry";
+				if (depth > 0) {
+					entry += depth;
+				}
+				line("for (" + mkEntryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
+				{
+					line("out.name(" + entry + ".getKey()" + ");");
+					jsonOutValue(valueType, entry + ".getValue()", depth + 1);
+				}
+				line("}");
+				line("out.endObject();");
+			} else {
+				line("out.beginArray();");
+				String entry = "entry";
+				if (depth > 0) {
+					entry += depth;
+				}
+				line("for (" + mkEntryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
+				{
+					line("out.beginObject();");
+					line("out.name(\"key\");");
+					jsonOutValue(keyType, entry + ".getKey()", depth + 1);
+					line("out.name(\"value\");");
+					jsonOutValue(valueType, entry + ".getValue()", depth + 1);
+					line("out.endObject();");
+				}
+				line("}");
+				line("out.endArray();");
+			}
+		} else {
+			throw new RuntimeException("Unsupported: " + type);
 		}
-		
-		boolean baseClass = _def.getExtends() == null;
-		List<Field> fields = _def.getFields();
-		
-		if (baseClass) {
+	}
+
+	private String mkEntryType(MapType mapType) {
+		return "java.util.Map.Entry" + "<" + mkTypeWrapped(mapType.getKeyType()) + "," + mkTypeWrapped(mapType.getValueType()) + ">";
+	}
+
+	private void generateBinaryIO() {
+		binaryTypeId();
+		binaryWrite();
+		binaryRead();
+	}
+
+	private void binaryTypeId() {
+		if (isBaseClass()) {
+			if (_def.isAbstract()) {
+				nl();
+				line("/** The binary identifier for this concrete type in the polymorphic {@link " + typeName(_def) + "} hierarchy. */");
+				line("public abstract int typeId();");
+			}
+		} else {
+			if (!_def.isAbstract() && getRoot(_def).isAbstract()) {
+				nl();
+				line("@Override");
+				line("public int typeId() {");
+				{
+					line("return " + mkBinaryTypeConstant(_def) + ";");				
+				}
+				line("}");
+			}
+		}
+	}
+
+	private void binaryWrite() {
+		if (isBaseClass()) {
 			nl();
 			line("@Override");
 			line("public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
@@ -681,28 +800,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 			line("}");
 		}
-		
-		if (baseClass) {
-			if (_def.isAbstract()) {
-				nl();
-				line("/** The binary identifier for this concrete type in the polymorphic {@link " + Util.typeName(_def) + "} hierarchy. */");
-				line("public abstract int typeId();");
-			}
-		} else {
-			if (!_def.isAbstract() && root(_def).isAbstract()) {
-				nl();
-				line("@Override");
-				line("public int typeId() {");
-				{
-					line("return " + binaryTypeConstantName(_def) + ";");				
-				}
-				line("}");
-			}
-		}
-		
-		if (baseClass || !fields.isEmpty()) {
+
+		if (isBaseClass() || hasFields()) {
 			nl();
-			if (baseClass) {
+			if (isBaseClass()) {
 				line("/**");
 				line(" * Serializes all fields of this instance to the given binary output.");
 				line(" *");
@@ -715,13 +816,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 			line("protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
 			{
-				if (!baseClass) {
+				if (!isBaseClass()) {
 					line("super.writeFields(out);");
 				}
-				if (fields.isEmpty()) {
+				if (getFields().isEmpty()) {
 					line("// No fields to write, hook for subclasses.");
 				} else {
-					for (Field field : fields) {
+					for (Field field : getFields()) {
 						if (field.isTransient()) {
 							continue;
 						}
@@ -734,18 +835,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 							if (field.isRepeated()) {
 								line("{");
 								{
-									line(getType(field) + " values = " + getterName(field) + "();");
-									line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + binaryType(field.getType()) + ", values.size());");
-									line("for (" + getType(field.getType()) +" x : values) {");
+									line(mkType(field) + " values = " + getterName(field) + "();");
+									line("out.beginArray(" + "de.haumacher.msgbuf.binary.DataType." + mkBinaryType(field.getType()) + ", values.size());");
+									line("for (" + mkType(field.getType()) +" x : values) {");
 									{
-										binaryOutValue(field.getType(), "x");
+										binaryWriteValue(field.getType(), "x");
 									}
 									line("}");
 									line("out.endArray();");
 								}
 								line("}");
 							} else {
-								binaryOutValue(field.getType(), getter(field));
+								binaryWriteValue(field.getType(), getterCall(field));
 							}
 						}
 						if (nullable) {
@@ -755,53 +856,41 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				}
 			}
 			line("}");
-			
-			nl();
-			if (baseClass) {
-				line("/** Consumes the value for the field with the given ID and assigns its value. */");
-			} else {
-				line("@Override");
-			}
-			line("protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {");
-			{
-				line("switch (field) {");
-				for (Field field : fields) {
-					if (field.isTransient()) {
-						continue;
-					}
-					binaryReadField(field);
-				}
-				if (baseClass) {
-					line("default: in.skipValue(); ");
-				} else {
-					line("default: super.readField(in, field);");
-				}
-				line("}");
-			}
-			line("}");
 		}
-		
+	}
+
+	private void binaryWriteValue(Type type, String x) {
+		if (type instanceof PrimitiveType) {
+			line("out.value(" + x + ");");
+		} else if (type instanceof CustomType) {
+			line(x + ".writeTo(out);");
+		} else {
+			// TODO
+		}
+	}
+
+	private void binaryRead() {
 		nl();
 		line("/** Reads a new instance from the given reader. */");
-		line("public static " + Util.typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
+		line("public static " + typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {");
 		{
 			line("in.beginObject();");
 			if (_def.isAbstract()) {
-				line(Util.typeName(_def) + " result;");
+				line(typeName(_def) + " result;");
 				line("int typeField = in.nextName();");
 				line("assert typeField == 0;");
 				line("int type = in.nextInt();");
 				line("switch (type) {");
-				for (MessageDef specialization : transitiveSpecializations(_def)) {
+				for (MessageDef specialization : getTransitiveSpecializations(_def)) {
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + binaryTypeConstant(specialization) + ": result = " + Util.typeName(specialization) + "." + factoryName(specialization) + "(); break;");
+					line("case " + mkBinaryTypeConstantRef(specialization) + ": result = " + typeName(specialization) + "." + factoryName(specialization) + "(); break;");
 				}
 				line("default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;");
 				line("}");
 			} else {
-				line(Util.typeName(_def) + " result = new " + Util.typeName(_def) + "();");
+				line(typeName(_def) + " result = new " + typeName(_def) + "();");
 			}
 			
 			line("while (in.hasNext()) {");
@@ -810,11 +899,37 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				line("result.readField(in, field);");
 			}
 			line("}");
-
+	
 			line("in.endObject();");
 			line("return result;");
 		}
 		line("}");
+		
+		if (isBaseClass() || hasFields()) {
+			nl();
+			if (isBaseClass()) {
+				line("/** Consumes the value for the field with the given ID and assigns its value. */");
+			} else {
+				line("@Override");
+			}
+			line("protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {");
+			{
+				line("switch (field) {");
+				for (Field field : getFields()) {
+					if (field.isTransient()) {
+						continue;
+					}
+					binaryReadField(field);
+				}
+				if (isBaseClass()) {
+					line("default: in.skipValue(); ");
+				} else {
+					line("default: super.readField(in, field);");
+				}
+				line("}");
+			}
+			line("}");
+		}
 	}
 
 	private void binaryReadField(Field field) {
@@ -843,8 +958,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				line("while (in.hasNext()) {");
 				{
 					line("in.beginObject();");
-					line(getType(keyType) + " key = " + defaultValue(keyType) + ";");
-					line(getType(valueType) + " value = " + defaultValue(valueType) + ";");
+					line(mkType(keyType) + " key = " + mkDefaultValue(keyType) + ";");
+					line(mkType(valueType) + " value = " + mkDefaultValue(valueType) + ";");
 					line("while (in.hasNext()) {");
 					{
 						line("switch (in.nextName()) {");
@@ -869,17 +984,21 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 
 	private String binaryReadEntry(Type type) {
 		if (type instanceof PrimitiveType) {
-			return binaryReadValue(((PrimitiveType) type).getKind());
+			return mkBinaryReadValue(((PrimitiveType) type).getKind());
 		}
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return Util.qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
+			return qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
 
-	private String binaryReadValue(Kind kind) {
+	private String mkBinaryTypeConstantRef(MessageDef def) {
+		return typeName(def) + "." + mkBinaryTypeConstant(def);
+	}
+
+	private String mkBinaryReadValue(Kind kind) {
 		switch (kind) {
 		case BOOL: 
 			return "in.nextBoolean()";
@@ -902,7 +1021,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			
 		case SINT64:
 			return "in.nextLongSigned()";
-
+	
 		case FIXED64: 
 		case SFIXED64: 
 			return "in.nextLongFixed()";
@@ -917,33 +1036,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		throw new RuntimeException("No such type: " + kind);
 	}
 
-	private static MessageDef root(MessageDef def) {
-		MessageDef extendedDef = def.getExtendedDef();
-		if (extendedDef == null) {
-			return def;
-		} else {
-			return root(extendedDef);
-		}
-	}
-
-	private List<MessageDef> transitiveSpecializations(MessageDef def) {
-		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
-		int n = 0;
-		while (n < result.size()) {
-			result.addAll(result.get(n++).getSpecializations());
-		}
-		return result;
-	}
-
-	private String fieldNameString(Field field) {
-		Optional<Option> fieldName = Optional.ofNullable(field.getOptions().get("Name"));
-		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
-		return "\"" + name + "\"";
-	}
-
-	private DataType binaryType(Type type) {
+	private DataType mkBinaryType(Type type) {
 		if (type instanceof PrimitiveType) {
-			return binaryType(((PrimitiveType) type).getKind());
+			return mkBinaryType(((PrimitiveType) type).getKind());
 		} else if (type instanceof CustomType) {
 			Definition definition = ((CustomType) type).getDefinition();
 			if (definition instanceof EnumDef) {
@@ -955,12 +1050,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			return DataType.OBJECT;
 		}
 	}
-	
-	private DataType binaryType(PrimitiveType.Kind primitive) {
+
+	private DataType mkBinaryType(PrimitiveType.Kind primitive) {
 		switch (primitive) {
 		case BOOL: 
 			return DataType.INT;
-
+	
 		case FLOAT:
 			return DataType.FLOAT;
 		case DOUBLE: 
@@ -994,78 +1089,73 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
-	private void binaryOutValue(Type type, String x) {
-		if (type instanceof PrimitiveType) {
-			line("out.value(" + x + ");");
-		} else if (type instanceof CustomType) {
-			line(x + ".writeTo(out);");
-		} else {
-			// TODO
+	private void generateVisitMethods() {
+		if (_def.isAbstract()) {
+			nl();
+			line("/** Accepts the given visitor. */");
+			line("public abstract <R,A> R visit(Visitor<R,A> v, A arg);");
+			nl();
+		}
+
+		MessageDef gen = getAbstractGeneralization();
+		if (gen != null) {
+			nl();
+			line("@Override");
+			line("public" + (_def.isAbstract() ? " final" : "") + " <R,A> R visit(" + typeName(gen) + ".Visitor<R,A> v, A arg) {");
+			{
+				if (_def.isAbstract()) {
+					line("return visit((Visitor<R,A>) v, arg);");
+				} else {
+					line("return v.visit(this, arg);");
+				}
+			}
+			line("}");
 		}
 	}
-	
-	private void jsonOutValue(Type type, String x) {
-		jsonOutValue(type, x, 0);
-	}
-	
-	private void jsonOutValue(Type type, String x, int depth) {
-		if (type instanceof PrimitiveType) {
-			switch (((PrimitiveType) type).getKind()) {
-			case BYTES: {
-				line("de.haumacher.msgbuf.json.JsonUtil.writeBinaryOptional(out, " + x + ");");
-				break;
+
+	private MessageDef getAbstractGeneralization() {
+		MessageDef current = _def;
+		while (true) {
+			MessageDef extendsDef = current.getExtendedDef();
+			if (extendsDef == null) {
+				return null;
 			}
-			default: {
-				line("out.value(" + x + ");");
-				break;
+			if (extendsDef.isAbstract()) {
+				return extendsDef;
 			}
-			}
-		} else if (type instanceof CustomType) {
-			CustomType customType = (CustomType) type;
-			if (isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
-				line(x + ".writeContent(out);");
-			} else {
-				line(x + ".writeTo(out);");
-			}
-		} else if (type instanceof MapType) {
-			MapType mapType = (MapType) type;
-			
-			Type keyType = mapType.getKeyType();
-			Type valueType = mapType.getValueType();
-			if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
-				line("out.beginObject();");
-				String entry = "entry";
-				if (depth > 0) {
-					entry += depth;
-				}
-				line("for (" + entryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
-				{
-					line("out.name(" + entry + ".getKey()" + ");");
-					jsonOutValue(valueType, entry + ".getValue()", depth + 1);
-				}
-				line("}");
-				line("out.endObject();");
-			} else {
-				line("out.beginArray();");
-				String entry = "entry";
-				if (depth > 0) {
-					entry += depth;
-				}
-				line("for (" + entryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
-				{
-					line("out.beginObject();");
-					line("out.name(\"key\");");
-					jsonOutValue(keyType, entry + ".getKey()", depth + 1);
-					line("out.name(\"value\");");
-					jsonOutValue(valueType, entry + ".getValue()", depth + 1);
-					line("out.endObject();");
-				}
-				line("}");
-				line("out.endArray();");
-			}
-		} else {
-			throw new RuntimeException("Unsupported: " + type);
+			current = extendsDef;
 		}
+	}
+
+	private boolean hasFields() {
+		return !getFields().isEmpty();
+	}
+
+	private List<Field> getFields() {
+		return _def.getFields();
+	}
+
+	private boolean isBaseClass() {
+		boolean baseClass = _def.getExtends() == null;
+		return baseClass;
+	}
+
+	private static MessageDef getRoot(MessageDef def) {
+		MessageDef extendedDef = def.getExtendedDef();
+		if (extendedDef == null) {
+			return def;
+		} else {
+			return getRoot(extendedDef);
+		}
+	}
+
+	private List<MessageDef> getTransitiveSpecializations(MessageDef def) {
+		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
+		int n = 0;
+		while (n < result.size()) {
+			result.addAll(result.get(n++).getSpecializations());
+		}
+		return result;
 	}
 
 	private boolean isMonomorphicReferenceToTypeInPolymorphicHierarchy(CustomType customType) {
@@ -1080,21 +1170,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return false;
 	}
 
-	private String entryType(MapType mapType) {
-		return "java.util.Map.Entry" + "<" + getTypeWrapped(mapType.getKeyType()) + "," + getTypeWrapped(mapType.getValueType()) + ">";
-	}
-
-	static String readerName(Definition def) {
-		return readerName(def.getName());
-	}
-
-	static String readerName(String name) {
-		return "read" + name;
-	}
-
-
-	private String cast(Field field, String var) {
-		return "(" + getType(field) + ") " + var;
+	private String mkCast(Field field, String var) {
+		return "(" + mkType(field) + ") " + var;
 	}
 
 	@Override
@@ -1109,28 +1186,23 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return null;
 	}
 
-	private void generateFieldDef(Field field) {
-		nl();
-		line("private" + getTransient(field) + getFinal(field) +  " " + getType(field) + " " + "_" + name(field) + getInitializer(field) + ";");
-	}
-
-	private String getTransient(Field field) {
+	private String mkTransient(Field field) {
 		return field.isTransient() ? " transient" : "";
 	}
 
-	private String getFinal(Field field) {
+	private String mkFinal(Field field) {
 		return field.isRepeated() ? " final" : "";
 	}
 	
-	private String getInitializer(Field field) {
-		return " = " + defaultValue(field);
+	private String mkInitializer(Field field) {
+		return " = " + mkDefaultValue(field);
 	}
 	
-	private String defaultValue(Field field) {
+	private String mkDefaultValue(Field field) {
 		if (field.isRepeated()) {
 			return "new java.util.ArrayList<>()";
 		} else {
-			return defaultValue(field.getType());
+			return mkDefaultValue(field.getType());
 		}
 	}
 	
@@ -1140,7 +1212,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		public String visit(CustomType self, Void arg) {
 			Definition definition = self.getDefinition();
 			if (definition instanceof EnumDef) {
-				return Util.typeName(definition) + "." + ((EnumDef) definition).getConstants().get(0).getName();
+				return typeName(definition) + "." + ((EnumDef) definition).getConstants().get(0).getName();
 			} else {
 				return "null";
 			}
@@ -1176,30 +1248,30 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		}
 	};
 	
-	private String defaultValue(Type type) {
+	private String mkDefaultValue(Type type) {
 		return type.visit(DEFAULT_VALUE, null);
 	}
 
-	private String getType(Field field) {
-		return field.isRepeated() ? "java.util.List<" + getTypeWrapped(field.getType()) + ">" : getType(field.getType());
+	private String mkType(Field field) {
+		return field.isRepeated() ? "java.util.List<" + mkTypeWrapped(field.getType()) + ">" : mkType(field.getType());
 	}
 
-	private String getType(Type type) {
+	private String mkType(Type type) {
 		return type.visit(this, Boolean.FALSE);
 	}
 	
-	private String getTypeWrapped(Type type) {
+	private String mkTypeWrapped(Type type) {
 		return type.visit(this, Boolean.TRUE);
 	}
 	
 	@Override
 	public String visit(MapType type, Boolean wrapped) {
-		return "java.util.Map<" + getTypeWrapped(type.getKeyType()) + ", " + getTypeWrapped(type.getValueType()) + ">";
+		return "java.util.Map<" + mkTypeWrapped(type.getKeyType()) + ", " + mkTypeWrapped(type.getValueType()) + ">";
 	}
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		return Util.qTypeName(type.getName());
+		return qTypeName(type.getName());
 	}
 	
 	@Override
@@ -1231,141 +1303,24 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		throw new RuntimeException("No such type: " + type.getKind());
 	}
 
-	private void generateFieldAccessor(Field field) {
-		nl();
-		docComment(field.getComment());
-		line("public final " + getType(field) + " " + getterName(field) + "()" + " {");
-		line("return " + "_" + name(field) + ";");
-		line("}");
-		
-		nl();
-		line("/**");
-		line(" * @see #" + getterName(field) + "()");
-		line(" */");
-		line("public final " + Util.typeName(_def) + " " + setterName(field) + "(" + getType(field) + " " + "value" + ")" + " {");
-		Type type = field.getType();
-		{
-			if (field.isRepeated()) {
-				line("_" + name(field) + ".clear();");
-				line("_" + name(field) + ".addAll(value);");
-			} else if (type instanceof MapType) {
-				line("_" + name(field) + ".clear();");
-				line("_" + name(field) + ".putAll(value);");
-			} else {
-				line("_" + name(field) + " = " + "value" + ";");
-			}
-			line("return this;");
+	static QName qName(String name) {
+		QName result = QName.create();
+		for (String part : name.split("\\.")) {
+			result.addName(part);
 		}
-		line("}");
-		
-		if (field.isRepeated()) {
-			nl();
-			line("/**");
-			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} list.");
-			line(" */");
-			line("public final " + Util.typeName(_def) + " " + adderName(field) + "(" + getType(type) + " " + "value" + ")" + " {");
-			{
-				line("_" + name(field) + ".add(value);");
-				line("return this;");
-			}
-			line("}");
-		}
-		else if (type instanceof MapType) {
-			MapType mapType = (MapType) type;
-			nl();
-			line("/**");
-			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} map.");
-			line(" */");
-			line("public final " + "void" + " " + adderName(field) + "(" + getType(mapType.getKeyType()) + " key" + ", " + getType(mapType.getValueType()) + " value" + ")" + " {");
-			{
-				line("if (" + "_" + name(field) + ".containsKey(key)) {");
-				{
-					line("throw new IllegalArgumentException(\"Property '" + field.getName() + "' already contains a value for key '\" + key + \"'.\");");
-				}
-				line("}");
-				line("_" + name(field) + ".put(key, value);");
-			}
-			line("}");
-		}
-		
-		if (isNullable(field)) {
-			nl();
-			line("/**");
-			line(" * Checks, whether {@link #" + getterName(field) + "()"+ "} has a value.");
-			line(" */");
-			line("public final " + "boolean" + " " + hasName(field) + "()" + " {");
-			{
-				line("return _" + name(field) + " != null;");
-			}
-			line("}");
-		}
+		return result;
 	}
 
-	private boolean isNullable(Field field) {
+	static String getterCall(Field field) {
+		return getterName(field) + "()";
+	}
+
+	static Field getLocalField(MessageDef def, String name) {
+		return def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
+	}
+
+	private static boolean isNullable(Field field) {
 		return field.getType() instanceof CustomType && !field.isRepeated();
-	}
-
-	private String setterName(Field field) {
-		return "set" + suffix(field);
-	}
-
-	private String hasName(Field field) {
-		return "has" + suffix(field);
-	}
-	
-	private String adderName(Field field) {
-		String suffix = suffix(field);
-		if (suffix.endsWith("s")) {
-			suffix = suffix.substring(0, suffix.length() - 1);
-		}
-		return "add" + suffix;
-	}
-	
-	private String getterName(Field field) {
-		Type type = field.getType();
-		if (type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BOOL) {
-			return "is" + suffix(field);
-		} else {
-			return "get" + suffix(field);
-		}
-	}
-
-	private String name(Field field) {
-		return firstLowerCase(Util.camelCase(field.getName()));
-	}
-
-	private static String allUpperCase(String name) {
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		for (String part : NAME_PART_PATTERN.split(name)) {
-			if (first) {
-				first = false;
-			} else {
-				result.append('_');
-			}
-			result.append(part.toUpperCase());
-		}
-		return result.toString();
-	}
-	
-	private String constant(Field field) {
-		return allUpperCase(field.getName());
-	}
-	
-	private String binaryConstant(Field field) {
-		return allUpperCase(field.getName()) + "__ID";
-	}
-	
-	private String suffix(Field field) {
-		return Util.camelCase(field.getName());
-	}
-
-	static String firstUpperCase(String name) {
-		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-	}
-	
-	private String firstLowerCase(String name) {
-		return Character.toLowerCase(name.charAt(0)) + name.substring(1);
 	}
 	
 

@@ -12,15 +12,6 @@ public class Car extends Shape {
 		return new Car();
 	}
 
-	/**
-	 * Creates a {@link Car} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Car() {
-		super();
-	}
-
 	/** Identifier for the {@link Car} type in JSON format. */
 	public static final String CAR__TYPE = "Car";
 
@@ -50,6 +41,15 @@ public class Car extends Shape {
 	private Circle _wheel2 = null;
 
 	private Rectangle _body = null;
+
+	/**
+	 * Creates a {@link Car} instance.
+	 *
+	 * @see #create()
+	 */
+	protected Car() {
+		super();
+	}
 
 	/**
 	 * The front wheel.
@@ -211,16 +211,6 @@ public class Car extends Shape {
 		}
 	}
 
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case WHEEL_1__ID: setWheel1(Circle.readCircle(in)); break;
-			case WHEEL_2__ID: setWheel2(Circle.readCircle(in)); break;
-			case BODY__ID: setBody(Rectangle.readRectangle(in)); break;
-			default: super.readField(in, field);
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -231,6 +221,16 @@ public class Car extends Shape {
 		}
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case WHEEL_1__ID: setWheel1(Circle.readCircle(in)); break;
+			case WHEEL_2__ID: setWheel2(Circle.readCircle(in)); break;
+			case BODY__ID: setBody(Rectangle.readRectangle(in)); break;
+			default: super.readField(in, field);
+		}
 	}
 
 	@Override

@@ -9,15 +9,6 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 		return new Project();
 	}
 
-	/**
-	 * Creates a {@link Project} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Project() {
-		super();
-	}
-
 	/** Identifier for the {@link Project} type in JSON format. */
 	public static final String PROJECT__TYPE = "Project";
 
@@ -36,6 +27,15 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 	private String _name = "";
 
 	private double _cost = 0.0d;
+
+	/**
+	 * Creates a {@link Project} instance.
+	 *
+	 * @see #create()
+	 */
+	protected Project() {
+		super();
+	}
 
 	public final String getName() {
 		return _name;
@@ -141,15 +141,6 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 		out.value(getCost());
 	}
 
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case NAME__ID: setName(in.nextString()); break;
-			case COST__ID: setCost(in.nextDouble()); break;
-			default: in.skipValue(); 
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static Project readProject(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -160,6 +151,15 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case NAME__ID: setName(in.nextString()); break;
+			case COST__ID: setCost(in.nextDouble()); break;
+			default: in.skipValue(); 
+		}
 	}
 
 }

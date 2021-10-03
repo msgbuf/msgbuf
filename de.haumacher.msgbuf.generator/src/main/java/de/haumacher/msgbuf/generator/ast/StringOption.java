@@ -12,6 +12,14 @@ public class StringOption extends Option {
 		return new StringOption();
 	}
 
+	/** Identifier for the {@link StringOption} type in JSON format. */
+	public static final String STRING_OPTION__TYPE = "StringOption";
+
+	/** @see #getValue() */
+	public static final String VALUE = "value";
+
+	private String _value = "";
+
 	/**
 	 * Creates a {@link StringOption} instance.
 	 *
@@ -20,14 +28,6 @@ public class StringOption extends Option {
 	protected StringOption() {
 		super();
 	}
-
-	/** Identifier for the {@link StringOption} type in JSON format. */
-	public static final String STRING_OPTION__TYPE = "StringOption";
-
-	/** @see #getValue() */
-	public static final String VALUE = "value";
-
-	private String _value = "";
 
 	/**
 	 * The string value assigned to the option {@link #name}.

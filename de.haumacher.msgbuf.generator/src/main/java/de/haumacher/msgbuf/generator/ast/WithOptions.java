@@ -16,17 +16,17 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 
 	}
 
+	/** @see #getOptions() */
+	public static final String OPTIONS = "options";
+
+	private java.util.Map<String, Option> _options = new java.util.HashMap<>();
+
 	/**
 	 * Creates a {@link WithOptions} instance.
 	 */
 	protected WithOptions() {
 		super();
 	}
-
-	/** @see #getOptions() */
-	public static final String OPTIONS = "options";
-
-	private java.util.Map<String, Option> _options = new java.util.HashMap<>();
 
 	/**
 	 * Annotations to this definition.

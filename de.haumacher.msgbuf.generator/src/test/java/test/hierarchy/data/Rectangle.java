@@ -12,15 +12,6 @@ public class Rectangle extends AtomicShape {
 		return new Rectangle();
 	}
 
-	/**
-	 * Creates a {@link Rectangle} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Rectangle() {
-		super();
-	}
-
 	/** Identifier for the {@link Rectangle} type in JSON format. */
 	public static final String RECTANGLE__TYPE = "Rectangle";
 
@@ -42,6 +33,15 @@ public class Rectangle extends AtomicShape {
 	private int _width = 0;
 
 	private int _height = 0;
+
+	/**
+	 * Creates a {@link Rectangle} instance.
+	 *
+	 * @see #create()
+	 */
+	protected Rectangle() {
+		super();
+	}
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -155,15 +155,6 @@ public class Rectangle extends AtomicShape {
 		out.value(getHeight());
 	}
 
-	@Override
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			case WIDTH__ID: setWidth(in.nextInt()); break;
-			case HEIGHT__ID: setHeight(in.nextInt()); break;
-			default: super.readField(in, field);
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
@@ -174,6 +165,15 @@ public class Rectangle extends AtomicShape {
 		}
 		in.endObject();
 		return result;
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case WIDTH__ID: setWidth(in.nextInt()); break;
+			case HEIGHT__ID: setHeight(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
 	}
 
 	@Override

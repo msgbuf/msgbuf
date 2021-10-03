@@ -14,15 +14,6 @@ public class DefinitionFile extends WithOptions {
 		return new DefinitionFile();
 	}
 
-	/**
-	 * Creates a {@link DefinitionFile} instance.
-	 *
-	 * @see #create()
-	 */
-	protected DefinitionFile() {
-		super();
-	}
-
 	/** Identifier for the {@link DefinitionFile} type in JSON format. */
 	public static final String DEFINITION_FILE__TYPE = "DefinitionFile";
 
@@ -35,6 +26,15 @@ public class DefinitionFile extends WithOptions {
 	private QName _package = null;
 
 	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
+
+	/**
+	 * Creates a {@link DefinitionFile} instance.
+	 *
+	 * @see #create()
+	 */
+	protected DefinitionFile() {
+		super();
+	}
 
 	/**
 	 * The package name for all types in this file.
