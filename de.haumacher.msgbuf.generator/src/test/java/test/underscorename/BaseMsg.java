@@ -26,8 +26,8 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "some_name": result = SomeName.readsome_name(in); break;
-			case "m1": result = AnnotatedMessage.readannotated_message(in); break;
+			case SomeName.SOME_NAME__TYPE: result = SomeName.readsome_name(in); break;
+			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE: result = AnnotatedMessage.readannotated_message(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

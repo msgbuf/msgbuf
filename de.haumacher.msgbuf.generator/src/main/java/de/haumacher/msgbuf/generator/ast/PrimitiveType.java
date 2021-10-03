@@ -134,6 +134,9 @@ public class PrimitiveType extends Type {
 		super();
 	}
 
+	/** Identifier for the {@link PrimitiveType} type in JSON format. */
+	public static final String PRIMITIVE_TYPE__TYPE = "PrimitiveType";
+
 	/** @see #getKind() */
 	public static final String KIND = "kind";
 
@@ -172,7 +175,7 @@ public class PrimitiveType extends Type {
 
 	@Override
 	public String jsonType() {
-		return "PrimitiveType";
+		return PRIMITIVE_TYPE__TYPE;
 	}
 
 	@Override

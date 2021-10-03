@@ -21,6 +21,9 @@ public class Flag extends Option {
 		super();
 	}
 
+	/** Identifier for the {@link Flag} type in JSON format. */
+	public static final String FLAG__TYPE = "Flag";
+
 	/** @see #isValue() */
 	public static final String VALUE = "value";
 
@@ -52,7 +55,7 @@ public class Flag extends Option {
 
 	@Override
 	public String jsonType() {
-		return "Flag";
+		return FLAG__TYPE;
 	}
 
 	@Override

@@ -18,6 +18,9 @@ public class AnnotatedMessage extends BaseMsg {
 		super();
 	}
 
+	/** Identifier for the {@link AnnotatedMessage} type in JSON format. */
+	public static final String ANNOTATED_MESSAGE__TYPE = "m1";
+
 	/** @see #getAnnotatedField() */
 	public static final String ANNOTATED_FIELD = "f1";
 
@@ -71,7 +74,7 @@ public class AnnotatedMessage extends BaseMsg {
 
 	@Override
 	public String jsonType() {
-		return "m1";
+		return ANNOTATED_MESSAGE__TYPE;
 	}
 
 	@Override

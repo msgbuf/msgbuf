@@ -96,10 +96,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "Group": result = Group.readGroup(in); break;
-			case "Car": result = Car.readCar(in); break;
-			case "Circle": result = Circle.readCircle(in); break;
-			case "Rectangle": result = Rectangle.readRectangle(in); break;
+			case Group.GROUP__TYPE: result = Group.readGroup(in); break;
+			case Car.CAR__TYPE: result = Car.readCar(in); break;
+			case Circle.CIRCLE__TYPE: result = Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

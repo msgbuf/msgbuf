@@ -32,9 +32,9 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "CustomType": result = CustomType.readCustomType(in); break;
-			case "PrimitiveType": result = PrimitiveType.readPrimitiveType(in); break;
-			case "MapType": result = MapType.readMapType(in); break;
+			case CustomType.CUSTOM_TYPE__TYPE: result = CustomType.readCustomType(in); break;
+			case PrimitiveType.PRIMITIVE_TYPE__TYPE: result = PrimitiveType.readPrimitiveType(in); break;
+			case MapType.MAP_TYPE__TYPE: result = MapType.readMapType(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

@@ -23,6 +23,9 @@ public class CustomType extends Type {
 		super();
 	}
 
+	/** Identifier for the {@link CustomType} type in JSON format. */
+	public static final String CUSTOM_TYPE__TYPE = "CustomType";
+
 	/** @see #getName() */
 	public static final String NAME = "name";
 
@@ -88,7 +91,7 @@ public class CustomType extends Type {
 
 	@Override
 	public String jsonType() {
-		return "CustomType";
+		return CUSTOM_TYPE__TYPE;
 	}
 
 	@Override

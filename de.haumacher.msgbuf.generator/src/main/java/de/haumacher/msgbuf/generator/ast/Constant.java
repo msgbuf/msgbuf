@@ -23,6 +23,9 @@ public class Constant extends Part {
 		super();
 	}
 
+	/** Identifier for the {@link Constant} type in JSON format. */
+	public static final String CONSTANT__TYPE = "Constant";
+
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Constant result = new Constant();
@@ -34,7 +37,7 @@ public class Constant extends Part {
 
 	@Override
 	public String jsonType() {
-		return "Constant";
+		return CONSTANT__TYPE;
 	}
 
 	@Override

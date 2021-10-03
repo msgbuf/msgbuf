@@ -19,6 +19,9 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			super();
 		}
 
+		/** Identifier for the {@link Result} type in JSON format. */
+		public static final String RESULT__TYPE = "Result";
+
 		/** @see #getUrl() */
 		public static final String URL = "url";
 
@@ -231,6 +234,9 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	protected SearchResponse() {
 		super();
 	}
+
+	/** Identifier for the {@link SearchResponse} type in JSON format. */
+	public static final String SEARCH_RESPONSE__TYPE = "SearchResponse";
 
 	/** @see #getResults() */
 	public static final String RESULTS = "results";

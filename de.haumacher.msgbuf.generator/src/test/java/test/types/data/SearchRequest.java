@@ -18,6 +18,9 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		super();
 	}
 
+	/** Identifier for the {@link SearchRequest} type in JSON format. */
+	public static final String SEARCH_REQUEST__TYPE = "SearchRequest";
+
 	/** @see #getQuery() */
 	public static final String QUERY = "query";
 

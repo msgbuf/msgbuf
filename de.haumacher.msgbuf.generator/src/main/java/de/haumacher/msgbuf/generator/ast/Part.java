@@ -96,8 +96,8 @@ public abstract class Part extends DefinitionBase {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "Constant": result = Constant.readConstant(in); break;
-			case "Field": result = Field.readField(in); break;
+			case Constant.CONSTANT__TYPE: result = Constant.readConstant(in); break;
+			case Field.FIELD__TYPE: result = Field.readField(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

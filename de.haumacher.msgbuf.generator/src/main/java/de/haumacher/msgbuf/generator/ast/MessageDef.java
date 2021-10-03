@@ -21,6 +21,9 @@ public class MessageDef extends Definition {
 		super();
 	}
 
+	/** Identifier for the {@link MessageDef} type in JSON format. */
+	public static final String MESSAGE_DEF__TYPE = "MessageDef";
+
 	/** @see #isAbstract() */
 	public static final String ABSTRACT = "abstract";
 
@@ -219,7 +222,7 @@ public class MessageDef extends Definition {
 
 	@Override
 	public String jsonType() {
-		return "MessageDef";
+		return MESSAGE_DEF__TYPE;
 	}
 
 	@Override

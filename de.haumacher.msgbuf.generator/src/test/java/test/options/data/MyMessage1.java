@@ -58,6 +58,9 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractReflectiveDataO
 		super();
 	}
 
+	/** Identifier for the {@link MyMessage1} type in JSON format. */
+	public static final String MY_MESSAGE_1__TYPE = "MyMessage1";
+
 	/** Reads a new instance from the given reader. */
 	public static MyMessage1 readMyMessage1(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		MyMessage1 result = new MyMessage1();

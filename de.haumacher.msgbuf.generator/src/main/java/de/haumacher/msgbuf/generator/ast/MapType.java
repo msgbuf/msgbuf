@@ -21,6 +21,9 @@ public class MapType extends Type {
 		super();
 	}
 
+	/** Identifier for the {@link MapType} type in JSON format. */
+	public static final String MAP_TYPE__TYPE = "MapType";
+
 	/** @see #getKeyType() */
 	public static final String KEY_TYPE = "keyType";
 
@@ -86,7 +89,7 @@ public class MapType extends Type {
 
 	@Override
 	public String jsonType() {
-		return "MapType";
+		return MAP_TYPE__TYPE;
 	}
 
 	@Override

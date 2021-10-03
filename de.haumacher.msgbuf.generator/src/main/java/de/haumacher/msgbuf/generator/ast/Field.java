@@ -21,6 +21,9 @@ public class Field extends Part {
 		super();
 	}
 
+	/** Identifier for the {@link Field} type in JSON format. */
+	public static final String FIELD__TYPE = "Field";
+
 	/** @see #isTransient() */
 	public static final String TRANSIENT = "transient";
 
@@ -99,7 +102,7 @@ public class Field extends Part {
 
 	@Override
 	public String jsonType() {
-		return "Field";
+		return FIELD__TYPE;
 	}
 
 	@Override

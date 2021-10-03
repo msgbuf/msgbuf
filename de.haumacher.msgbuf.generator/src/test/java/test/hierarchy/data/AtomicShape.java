@@ -29,8 +29,8 @@ public abstract class AtomicShape extends Shape {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "Circle": result = Circle.readCircle(in); break;
-			case "Rectangle": result = Rectangle.readRectangle(in); break;
+			case Circle.CIRCLE__TYPE: result = Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

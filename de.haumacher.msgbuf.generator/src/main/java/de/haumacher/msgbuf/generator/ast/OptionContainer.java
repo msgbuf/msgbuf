@@ -21,6 +21,9 @@ public class OptionContainer extends WithOptions {
 		super();
 	}
 
+	/** Identifier for the {@link OptionContainer} type in JSON format. */
+	public static final String OPTION_CONTAINER__TYPE = "OptionContainer";
+
 	/** Reads a new instance from the given reader. */
 	public static OptionContainer readOptionContainer(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		OptionContainer result = new OptionContainer();
@@ -32,7 +35,7 @@ public class OptionContainer extends WithOptions {
 
 	@Override
 	public String jsonType() {
-		return "OptionContainer";
+		return OPTION_CONTAINER__TYPE;
 	}
 
 	@Override

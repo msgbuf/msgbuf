@@ -337,7 +337,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + jsonTypeValue(specialization) + ": result = " + Util.typeName(specialization) + "." + readerName(specialization) + "(in); break;");
+					line("case " + jsonTypeConstant(specialization) + ": result = " + Util.typeName(specialization) + "." + readerName(specialization) + "(in); break;");
 				}
 				line("default: in.skipValue(); result = null; break;");
 				line("}");
@@ -378,7 +378,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("@Override");
 			line("public String jsonType() {");
 			{
-				line("return " + jsonTypeValue(_def) + ";");
+				line("return " + jsonTypeConstantName(_def) + ";");
 			}
 			line("}");
 		}
@@ -432,6 +432,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			}
 			line("}");
 		}
+	}
+
+	private String jsonTypeConstant(MessageDef def) {
+		return Util.typeName(def) + "." + jsonTypeConstantName(def);
+	}
+
+	private String jsonTypeConstantName(MessageDef def) {
+		return allUpperCase(def.getName()) + "__TYPE";
 	}
 
 	private String jsonTypeValue(MessageDef def) {
@@ -506,6 +514,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	}
 
 	private void generateConstants(List<Field> fields) {
+		if (!_def.isAbstract()) {
+			nl();
+			line("/** Identifier for the {@link " + Util.typeName(_def) + "} type in JSON format. */");
+			line("public static final String " + jsonTypeConstantName(_def) + " = " + jsonTypeValue(_def) + ";");
+		}
+		
 		for (Field field : fields) {
 			nl();
 			line("/** @see #" + getter(field) + " */");

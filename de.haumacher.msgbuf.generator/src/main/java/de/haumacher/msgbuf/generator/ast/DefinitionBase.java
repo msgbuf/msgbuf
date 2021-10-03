@@ -45,10 +45,10 @@ public abstract class DefinitionBase extends WithOptions {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "Constant": result = Constant.readConstant(in); break;
-			case "Field": result = Field.readField(in); break;
-			case "EnumDef": result = EnumDef.readEnumDef(in); break;
-			case "MessageDef": result = MessageDef.readMessageDef(in); break;
+			case Constant.CONSTANT__TYPE: result = Constant.readConstant(in); break;
+			case Field.FIELD__TYPE: result = Field.readField(in); break;
+			case EnumDef.ENUM_DEF__TYPE: result = EnumDef.readEnumDef(in); break;
+			case MessageDef.MESSAGE_DEF__TYPE: result = MessageDef.readMessageDef(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

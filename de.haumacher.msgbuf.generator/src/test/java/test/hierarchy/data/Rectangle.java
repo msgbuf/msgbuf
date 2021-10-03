@@ -21,6 +21,9 @@ public class Rectangle extends AtomicShape {
 		super();
 	}
 
+	/** Identifier for the {@link Rectangle} type in JSON format. */
+	public static final String RECTANGLE__TYPE = "Rectangle";
+
 	/** @see #getWidth() */
 	public static final String WIDTH = "w";
 
@@ -108,7 +111,7 @@ public class Rectangle extends AtomicShape {
 
 	@Override
 	public String jsonType() {
-		return "Rectangle";
+		return RECTANGLE__TYPE;
 	}
 
 	@Override

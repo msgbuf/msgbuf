@@ -18,6 +18,9 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 		super();
 	}
 
+	/** Identifier for the {@link Project} type in JSON format. */
+	public static final String PROJECT__TYPE = "Project";
+
 	/** @see #getName() */
 	public static final String NAME = "name";
 

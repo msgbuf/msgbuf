@@ -107,8 +107,8 @@ public abstract class Definition extends DefinitionBase {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "EnumDef": result = EnumDef.readEnumDef(in); break;
-			case "MessageDef": result = MessageDef.readMessageDef(in); break;
+			case EnumDef.ENUM_DEF__TYPE: result = EnumDef.readEnumDef(in); break;
+			case MessageDef.MESSAGE_DEF__TYPE: result = MessageDef.readMessageDef(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

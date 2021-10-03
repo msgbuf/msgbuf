@@ -60,12 +60,12 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "OptionContainer": result = OptionContainer.readOptionContainer(in); break;
-			case "DefinitionFile": result = DefinitionFile.readDefinitionFile(in); break;
-			case "Constant": result = Constant.readConstant(in); break;
-			case "Field": result = Field.readField(in); break;
-			case "EnumDef": result = EnumDef.readEnumDef(in); break;
-			case "MessageDef": result = MessageDef.readMessageDef(in); break;
+			case OptionContainer.OPTION_CONTAINER__TYPE: result = OptionContainer.readOptionContainer(in); break;
+			case DefinitionFile.DEFINITION_FILE__TYPE: result = DefinitionFile.readDefinitionFile(in); break;
+			case Constant.CONSTANT__TYPE: result = Constant.readConstant(in); break;
+			case Field.FIELD__TYPE: result = Field.readField(in); break;
+			case EnumDef.ENUM_DEF__TYPE: result = EnumDef.readEnumDef(in); break;
+			case MessageDef.MESSAGE_DEF__TYPE: result = MessageDef.readMessageDef(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

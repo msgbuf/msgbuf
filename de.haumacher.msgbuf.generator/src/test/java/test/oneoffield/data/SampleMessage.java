@@ -18,6 +18,9 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		super();
 	}
 
+	/** Identifier for the {@link SampleMessage} type in JSON format. */
+	public static final String SAMPLE_MESSAGE__TYPE = "SampleMessage";
+
 	/** Reads a new instance from the given reader. */
 	public static SampleMessage readSampleMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SampleMessage result = new SampleMessage();

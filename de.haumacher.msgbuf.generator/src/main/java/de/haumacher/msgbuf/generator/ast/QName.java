@@ -21,6 +21,9 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject {
 		super();
 	}
 
+	/** Identifier for the {@link QName} type in JSON format. */
+	public static final String QNAME__TYPE = "QName";
+
 	/** @see #getNames() */
 	public static final String NAMES = "names";
 

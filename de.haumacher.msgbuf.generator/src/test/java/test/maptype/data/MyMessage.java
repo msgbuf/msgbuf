@@ -18,6 +18,9 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 		super();
 	}
 
+	/** Identifier for the {@link MyMessage} type in JSON format. */
+	public static final String MY_MESSAGE__TYPE = "MyMessage";
+
 	/** @see #getProjects() */
 	public static final String PROJECTS = "projects";
 

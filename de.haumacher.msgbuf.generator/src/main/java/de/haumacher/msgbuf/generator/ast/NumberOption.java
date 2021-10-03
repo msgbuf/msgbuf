@@ -21,6 +21,9 @@ public class NumberOption extends Option {
 		super();
 	}
 
+	/** Identifier for the {@link NumberOption} type in JSON format. */
+	public static final String NUMBER_OPTION__TYPE = "NumberOption";
+
 	/** @see #getValue() */
 	public static final String VALUE = "value";
 
@@ -52,7 +55,7 @@ public class NumberOption extends Option {
 
 	@Override
 	public String jsonType() {
-		return "NumberOption";
+		return NUMBER_OPTION__TYPE;
 	}
 
 	@Override

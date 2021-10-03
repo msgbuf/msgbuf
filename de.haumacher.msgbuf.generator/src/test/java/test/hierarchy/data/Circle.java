@@ -21,6 +21,9 @@ public class Circle extends AtomicShape {
 		super();
 	}
 
+	/** Identifier for the {@link Circle} type in JSON format. */
+	public static final String CIRCLE__TYPE = "Circle";
+
 	/** @see #getRadius() */
 	public static final String RADIUS = "r";
 
@@ -77,7 +80,7 @@ public class Circle extends AtomicShape {
 
 	@Override
 	public String jsonType() {
-		return "Circle";
+		return CIRCLE__TYPE;
 	}
 
 	@Override

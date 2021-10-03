@@ -21,6 +21,9 @@ public class Car extends Shape {
 		super();
 	}
 
+	/** Identifier for the {@link Car} type in JSON format. */
+	public static final String CAR__TYPE = "Car";
+
 	/** @see #getWheel1() */
 	public static final String WHEEL_1 = "wheel1";
 
@@ -144,7 +147,7 @@ public class Car extends Shape {
 
 	@Override
 	public String jsonType() {
-		return "Car";
+		return CAR__TYPE;
 	}
 
 	@Override

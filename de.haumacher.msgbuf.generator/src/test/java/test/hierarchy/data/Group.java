@@ -21,6 +21,9 @@ public class Group extends Shape {
 		super();
 	}
 
+	/** Identifier for the {@link Group} type in JSON format. */
+	public static final String GROUP__TYPE = "Group";
+
 	/** @see #getShapes() */
 	public static final String SHAPES = "shapes";
 
@@ -90,7 +93,7 @@ public class Group extends Shape {
 
 	@Override
 	public String jsonType() {
-		return "Group";
+		return GROUP__TYPE;
 	}
 
 	@Override

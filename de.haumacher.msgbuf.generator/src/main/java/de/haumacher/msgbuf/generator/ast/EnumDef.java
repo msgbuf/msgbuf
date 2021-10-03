@@ -21,6 +21,9 @@ public class EnumDef extends Definition {
 		super();
 	}
 
+	/** Identifier for the {@link EnumDef} type in JSON format. */
+	public static final String ENUM_DEF__TYPE = "EnumDef";
+
 	/** @see #getConstants() */
 	public static final String CONSTANTS = "constants";
 
@@ -61,7 +64,7 @@ public class EnumDef extends Definition {
 
 	@Override
 	public String jsonType() {
-		return "EnumDef";
+		return ENUM_DEF__TYPE;
 	}
 
 	@Override

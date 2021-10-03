@@ -32,6 +32,11 @@ public class Util {
 		return qName.getNames().stream().collect(Collectors.joining("."));
 	}
 	
+	public static String qTypeName(MessageDef def) {
+		QName pkg = def.getFile().getPackage();
+		return (pkg.getNames().size() == 0 ? "" : qName(pkg) + ".") + typeName(def);
+	}
+
 	public static String qTypeName(QName qName) {
 		StringBuilder result = new StringBuilder();
 		List<String> names = qName.getNames();
@@ -43,7 +48,7 @@ public class Util {
 			if (n < cnt - 1) {
 				result.append(part);
 			} else {
-				result.append(camelCase(part));
+				result.append(typeName(part));
 			}
 		}
 		return result.toString();
@@ -94,7 +99,11 @@ public class Util {
 	}
 
 	static String typeName(Definition def) {
-		return camelCase(def.getName());
+		return typeName(def.getName());
+	}
+
+	private static String typeName(String name) {
+		return camelCase(name);
 	}
 
 }

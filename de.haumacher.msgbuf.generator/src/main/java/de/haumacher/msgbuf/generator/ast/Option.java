@@ -36,9 +36,9 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "StringOption": result = StringOption.readStringOption(in); break;
-			case "NumberOption": result = NumberOption.readNumberOption(in); break;
-			case "Flag": result = Flag.readFlag(in); break;
+			case StringOption.STRING_OPTION__TYPE: result = StringOption.readStringOption(in); break;
+			case NumberOption.NUMBER_OPTION__TYPE: result = NumberOption.readNumberOption(in); break;
+			case Flag.FLAG__TYPE: result = Flag.readFlag(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

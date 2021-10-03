@@ -23,6 +23,9 @@ public class DefinitionFile extends WithOptions {
 		super();
 	}
 
+	/** Identifier for the {@link DefinitionFile} type in JSON format. */
+	public static final String DEFINITION_FILE__TYPE = "DefinitionFile";
+
 	/** @see #getPackage() */
 	public static final String PACKAGE = "package";
 
@@ -90,7 +93,7 @@ public class DefinitionFile extends WithOptions {
 
 	@Override
 	public String jsonType() {
-		return "DefinitionFile";
+		return DEFINITION_FILE__TYPE;
 	}
 
 	@Override

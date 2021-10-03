@@ -18,6 +18,9 @@ public class SomeName extends BaseMsg {
 		super();
 	}
 
+	/** Identifier for the {@link SomeName} type in JSON format. */
+	public static final String SOME_NAME__TYPE = "some_name";
+
 	/** @see #getMyField() */
 	public static final String MY_FIELD = "my_field";
 
@@ -71,7 +74,7 @@ public class SomeName extends BaseMsg {
 
 	@Override
 	public String jsonType() {
-		return "some_name";
+		return SOME_NAME__TYPE;
 	}
 
 	@Override
