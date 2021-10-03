@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Output interface for creating binary messages out of data objects.
+ * Input interface for reading binary messages into data objects.
  * 
  * <p>
  * A message constructed by a {@link DataWriter} may only contain object at

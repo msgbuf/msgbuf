@@ -7,14 +7,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Input interface for reading binary messages into data objects.
+ * Output interface for creating binary messages out of data objects.
  * 
  * <p>
- * Top-level, only object must be written. Therefore, the first call to a
+ * Top-level, only objects must be written. Therefore, the first call to a
  * {@link DataWriter} must be {@link #beginObject()}.
  * </p>
  * 
  * @see #beginObject()
+ * @see DataReader
  */
 public interface DataWriter {
 
