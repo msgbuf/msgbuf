@@ -24,6 +24,12 @@ public class AnnotatedMessage extends BaseMsg {
 	/** @see #getAnnotatedField() */
 	public static final String ANNOTATED_FIELD = "f1";
 
+	/** Identifier for the {@link AnnotatedMessage} type in binary format. */
+	public static final int ANNOTATED_MESSAGE__TYPE_ID = 2;
+
+	/** Identifier for the property {@link #getAnnotatedField()} in binary format. */
+	public static final int ANNOTATED_FIELD__ID = 1;
+
 	private String _annotatedField = "";
 
 	public final String getAnnotatedField() {
@@ -94,20 +100,20 @@ public class AnnotatedMessage extends BaseMsg {
 
 	@Override
 	public int typeId() {
-		return 2;
+		return ANNOTATED_MESSAGE__TYPE_ID;
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(1);
+		out.name(ANNOTATED_FIELD__ID);
 		out.value(getAnnotatedField());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: setAnnotatedField(in.nextString()); break;
+			case ANNOTATED_FIELD__ID: setAnnotatedField(in.nextString()); break;
 			default: super.readField(in, field);
 		}
 	}

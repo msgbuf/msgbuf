@@ -27,6 +27,12 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 	/** @see #getCost() */
 	public static final String COST = "cost";
 
+	/** Identifier for the property {@link #getName()} in binary format. */
+	public static final int NAME__ID = 1;
+
+	/** Identifier for the property {@link #getCost()} in binary format. */
+	public static final int COST__ID = 2;
+
 	private String _name = "";
 
 	private double _cost = 0.0d;
@@ -129,17 +135,17 @@ public class Project extends de.haumacher.msgbuf.data.AbstractReflectiveDataObje
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
+		out.name(NAME__ID);
 		out.value(getName());
-		out.name(2);
+		out.name(COST__ID);
 		out.value(getCost());
 	}
 
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: setName(in.nextString()); break;
-			case 2: setCost(in.nextDouble()); break;
+			case NAME__ID: setName(in.nextString()); break;
+			case COST__ID: setCost(in.nextDouble()); break;
 			default: in.skipValue(); 
 		}
 	}

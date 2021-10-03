@@ -442,6 +442,14 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 		return allUpperCase(def.getName()) + "__TYPE";
 	}
 
+	private String binaryTypeConstant(MessageDef def) {
+		return Util.typeName(def) + "." + binaryTypeConstantName(def);
+	}
+	
+	private String binaryTypeConstantName(MessageDef def) {
+		return allUpperCase(def.getName()) + "__TYPE_ID";
+	}
+	
 	private String jsonTypeValue(MessageDef def) {
 		Option nameOption = def.getOptions().get("Name");
 		String jsonName = nameOption == null ? def.getName() : ((StringOption) nameOption).getValue();
@@ -524,6 +532,24 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			nl();
 			line("/** @see #" + getter(field) + " */");
 			line("public static final String " + constant(field) + " = " + fieldNameString(field) + ";");
+		}
+		
+		if (_binary) {
+			if (!_def.isAbstract() && root(_def).isAbstract()) {
+				nl();
+				line("/** Identifier for the {@link " + Util.typeName(_def) + "} type in binary format. */");
+				line("public static final int " + binaryTypeConstantName(_def) + " = " + _def.getId() + ";");
+			}
+			
+			for (Field field : fields) {
+				if (field.isTransient()) {
+					continue;
+				}
+				
+				nl();
+				line("/** Identifier for the property {@link #" + getter(field) + "} in binary format. */");
+				line("public static final int " + binaryConstant(field) + " = " + field.getIndex() + ";");
+			}
 		}
 	}
 
@@ -668,7 +694,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 				line("@Override");
 				line("public int typeId() {");
 				{
-					line("return " + _def.getId() + ";");				
+					line("return " + binaryTypeConstantName(_def) + ";");				
 				}
 				line("}");
 			}
@@ -704,7 +730,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 							line("if (" + hasName(field) + "()" + ") {");
 						}
 						{
-							line("out.name(" + field.getIndex() + ");");
+							line("out.name(" + binaryConstant(field) + ");");
 							if (field.isRepeated()) {
 								line("{");
 								{
@@ -770,7 +796,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + specialization.getId() + ": result = " + Util.typeName(specialization) + "." + factoryName(specialization) + "(); break;");
+					line("case " + binaryTypeConstant(specialization) + ": result = " + Util.typeName(specialization) + "." + factoryName(specialization) + "(); break;");
 				}
 				line("default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;");
 				line("}");
@@ -794,7 +820,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	private void binaryReadField(Field field) {
 		Type type = field.getType();
 		if (field.isRepeated()) {
-			line("case " + field.getIndex() + ": {");
+			line("case " + binaryConstant(field) + ": {");
 			{
 				line("in.beginArray();");
 				line("while (in.hasNext()) {");
@@ -808,7 +834,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("break;");
 		} else if (type instanceof MapType) {
 			MapType mapType = (MapType) type;
-			line("case " + field.getIndex() + ": {");
+			line("case " + binaryConstant(field) + ": {");
 			{
 				Type keyType = mapType.getKeyType();
 				Type valueType = mapType.getValueType();
@@ -837,7 +863,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 			line("break;");
 			line("}");
 		} else {
-			line("case " + field.getIndex() + ": " + setterName(field) + "(" + binaryReadEntry(type) + "); break;");
+			line("case " + binaryConstant(field) + ": " + setterName(field) + "(" + binaryReadEntry(type) + "); break;");
 		}
 	}
 
@@ -1324,6 +1350,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Type.Visi
 	
 	private String constant(Field field) {
 		return allUpperCase(field.getName());
+	}
+	
+	private String binaryConstant(Field field) {
+		return allUpperCase(field.getName()) + "__ID";
 	}
 	
 	private String suffix(Field field) {

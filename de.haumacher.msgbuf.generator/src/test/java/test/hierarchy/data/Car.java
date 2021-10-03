@@ -33,6 +33,18 @@ public class Car extends Shape {
 	/** @see #getBody() */
 	public static final String BODY = "body";
 
+	/** Identifier for the {@link Car} type in binary format. */
+	public static final int CAR__TYPE_ID = 4;
+
+	/** Identifier for the property {@link #getWheel1()} in binary format. */
+	public static final int WHEEL_1__ID = 3;
+
+	/** Identifier for the property {@link #getWheel2()} in binary format. */
+	public static final int WHEEL_2__ID = 4;
+
+	/** Identifier for the property {@link #getBody()} in binary format. */
+	public static final int BODY__ID = 5;
+
 	private Circle _wheel1 = null;
 
 	private Circle _wheel2 = null;
@@ -179,22 +191,22 @@ public class Car extends Shape {
 
 	@Override
 	public int typeId() {
-		return 4;
+		return CAR__TYPE_ID;
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasWheel1()) {
-			out.name(3);
+			out.name(WHEEL_1__ID);
 			getWheel1().writeTo(out);
 		}
 		if (hasWheel2()) {
-			out.name(4);
+			out.name(WHEEL_2__ID);
 			getWheel2().writeTo(out);
 		}
 		if (hasBody()) {
-			out.name(5);
+			out.name(BODY__ID);
 			getBody().writeTo(out);
 		}
 	}
@@ -202,9 +214,9 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 3: setWheel1(Circle.readCircle(in)); break;
-			case 4: setWheel2(Circle.readCircle(in)); break;
-			case 5: setBody(Rectangle.readRectangle(in)); break;
+			case WHEEL_1__ID: setWheel1(Circle.readCircle(in)); break;
+			case WHEEL_2__ID: setWheel2(Circle.readCircle(in)); break;
+			case BODY__ID: setBody(Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}

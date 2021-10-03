@@ -24,6 +24,12 @@ public class SomeName extends BaseMsg {
 	/** @see #getMyField() */
 	public static final String MY_FIELD = "my_field";
 
+	/** Identifier for the {@link SomeName} type in binary format. */
+	public static final int SOME_NAME__TYPE_ID = 1;
+
+	/** Identifier for the property {@link #getMyField()} in binary format. */
+	public static final int MY_FIELD__ID = 1;
+
 	private String _myField = "";
 
 	public final String getMyField() {
@@ -94,20 +100,20 @@ public class SomeName extends BaseMsg {
 
 	@Override
 	public int typeId() {
-		return 1;
+		return SOME_NAME__TYPE_ID;
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(1);
+		out.name(MY_FIELD__ID);
 		out.value(getMyField());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: setMyField(in.nextString()); break;
+			case MY_FIELD__ID: setMyField(in.nextString()); break;
 			default: super.readField(in, field);
 		}
 	}

@@ -90,6 +90,18 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	/** @see #getCorpus() */
 	public static final String CORPUS = "corpus";
 
+	/** Identifier for the property {@link #getQuery()} in binary format. */
+	public static final int QUERY__ID = 1;
+
+	/** Identifier for the property {@link #getPageNumber()} in binary format. */
+	public static final int PAGE_NUMBER__ID = 2;
+
+	/** Identifier for the property {@link #getResultPerPage()} in binary format. */
+	public static final int RESULT_PER_PAGE__ID = 3;
+
+	/** Identifier for the property {@link #getCorpus()} in binary format. */
+	public static final int CORPUS__ID = 4;
+
 	private String _query = "";
 
 	private int _pageNumber = 0;
@@ -241,14 +253,14 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
+		out.name(QUERY__ID);
 		out.value(getQuery());
-		out.name(2);
+		out.name(PAGE_NUMBER__ID);
 		out.value(getPageNumber());
-		out.name(3);
+		out.name(RESULT_PER_PAGE__ID);
 		out.value(getResultPerPage());
 		if (hasCorpus()) {
-			out.name(4);
+			out.name(CORPUS__ID);
 			getCorpus().writeTo(out);
 		}
 	}
@@ -256,10 +268,10 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: setQuery(in.nextString()); break;
-			case 2: setPageNumber(in.nextInt()); break;
-			case 3: setResultPerPage(in.nextInt()); break;
-			case 4: setCorpus(Corpus.readCorpus(in)); break;
+			case QUERY__ID: setQuery(in.nextString()); break;
+			case PAGE_NUMBER__ID: setPageNumber(in.nextInt()); break;
+			case RESULT_PER_PAGE__ID: setResultPerPage(in.nextInt()); break;
+			case CORPUS__ID: setCorpus(Corpus.readCorpus(in)); break;
 			default: in.skipValue(); 
 		}
 	}

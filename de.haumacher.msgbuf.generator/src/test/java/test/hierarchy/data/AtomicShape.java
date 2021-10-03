@@ -45,8 +45,8 @@ public abstract class AtomicShape extends Shape {
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case 1: result = Circle.create(); break;
-			case 2: result = Rectangle.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

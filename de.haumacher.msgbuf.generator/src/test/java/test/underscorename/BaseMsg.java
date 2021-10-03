@@ -83,8 +83,8 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case 1: result = SomeName.create(); break;
-			case 2: result = AnnotatedMessage.create(); break;
+			case SomeName.SOME_NAME__TYPE_ID: result = SomeName.create(); break;
+			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE_ID: result = AnnotatedMessage.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

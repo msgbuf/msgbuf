@@ -29,6 +29,12 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	/** @see #getYCoordinate() */
 	public static final String Y_COORDINATE = "y";
 
+	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
+	public static final int X_COORDINATE__ID = 1;
+
+	/** Identifier for the property {@link #getYCoordinate()} in binary format. */
+	public static final int Y_COORDINATE__ID = 2;
+
 	private int _xCoordinate = 0;
 
 	private int _yCoordinate = 0;
@@ -155,17 +161,17 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
+		out.name(X_COORDINATE__ID);
 		out.value(getXCoordinate());
-		out.name(2);
+		out.name(Y_COORDINATE__ID);
 		out.value(getYCoordinate());
 	}
 
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: setXCoordinate(in.nextInt()); break;
-			case 2: setYCoordinate(in.nextInt()); break;
+			case X_COORDINATE__ID: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__ID: setYCoordinate(in.nextInt()); break;
 			default: in.skipValue(); 
 		}
 	}
@@ -178,10 +184,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case 3: result = Group.create(); break;
-			case 4: result = Car.create(); break;
-			case 1: result = Circle.create(); break;
-			case 2: result = Rectangle.create(); break;
+			case Group.GROUP__TYPE_ID: result = Group.create(); break;
+			case Car.CAR__TYPE_ID: result = Car.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

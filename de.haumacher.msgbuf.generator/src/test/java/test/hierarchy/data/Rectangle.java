@@ -30,6 +30,15 @@ public class Rectangle extends AtomicShape {
 	/** @see #getHeight() */
 	public static final String HEIGHT = "h";
 
+	/** Identifier for the {@link Rectangle} type in binary format. */
+	public static final int RECTANGLE__TYPE_ID = 2;
+
+	/** Identifier for the property {@link #getWidth()} in binary format. */
+	public static final int WIDTH__ID = 3;
+
+	/** Identifier for the property {@link #getHeight()} in binary format. */
+	public static final int HEIGHT__ID = 4;
+
 	private int _width = 0;
 
 	private int _height = 0;
@@ -134,23 +143,23 @@ public class Rectangle extends AtomicShape {
 
 	@Override
 	public int typeId() {
-		return 2;
+		return RECTANGLE__TYPE_ID;
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(3);
+		out.name(WIDTH__ID);
 		out.value(getWidth());
-		out.name(4);
+		out.name(HEIGHT__ID);
 		out.value(getHeight());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 3: setWidth(in.nextInt()); break;
-			case 4: setHeight(in.nextInt()); break;
+			case WIDTH__ID: setWidth(in.nextInt()); break;
+			case HEIGHT__ID: setHeight(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

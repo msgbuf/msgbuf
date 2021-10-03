@@ -27,6 +27,12 @@ public class Circle extends AtomicShape {
 	/** @see #getRadius() */
 	public static final String RADIUS = "r";
 
+	/** Identifier for the {@link Circle} type in binary format. */
+	public static final int CIRCLE__TYPE_ID = 1;
+
+	/** Identifier for the property {@link #getRadius()} in binary format. */
+	public static final int RADIUS__ID = 3;
+
 	private int _radius = 0;
 
 	/**
@@ -100,20 +106,20 @@ public class Circle extends AtomicShape {
 
 	@Override
 	public int typeId() {
-		return 1;
+		return CIRCLE__TYPE_ID;
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(3);
+		out.name(RADIUS__ID);
 		out.value(getRadius());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 3: setRadius(in.nextInt()); break;
+			case RADIUS__ID: setRadius(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

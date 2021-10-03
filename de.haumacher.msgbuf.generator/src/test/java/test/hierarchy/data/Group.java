@@ -27,6 +27,12 @@ public class Group extends Shape {
 	/** @see #getShapes() */
 	public static final String SHAPES = "shapes";
 
+	/** Identifier for the {@link Group} type in binary format. */
+	public static final int GROUP__TYPE_ID = 3;
+
+	/** Identifier for the property {@link #getShapes()} in binary format. */
+	public static final int SHAPES__ID = 3;
+
 	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
 
 	/**
@@ -124,13 +130,13 @@ public class Group extends Shape {
 
 	@Override
 	public int typeId() {
-		return 3;
+		return GROUP__TYPE_ID;
 	}
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(3);
+		out.name(SHAPES__ID);
 		{
 			java.util.List<Shape> values = getShapes();
 			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
@@ -144,7 +150,7 @@ public class Group extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 3: {
+			case SHAPES__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addShape(Shape.readShape(in));

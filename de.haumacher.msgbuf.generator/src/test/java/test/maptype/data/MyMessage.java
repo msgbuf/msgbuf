@@ -27,6 +27,12 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	/** @see #getRating() */
 	public static final String RATING = "rating";
 
+	/** Identifier for the property {@link #getProjects()} in binary format. */
+	public static final int PROJECTS__ID = 3;
+
+	/** Identifier for the property {@link #getRating()} in binary format. */
+	public static final int RATING__ID = 4;
+
 	private java.util.Map<String, Project> _projects = new java.util.HashMap<>();
 
 	private java.util.Map<Integer, String> _rating = new java.util.HashMap<>();
@@ -190,14 +196,14 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(3);
-		out.name(4);
+		out.name(PROJECTS__ID);
+		out.name(RATING__ID);
 	}
 
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 3: {
+			case PROJECTS__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
 					in.beginObject();
@@ -216,7 +222,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 				in.endArray();
 				break;
 			}
-			case 4: {
+			case RATING__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
 					in.beginObject();

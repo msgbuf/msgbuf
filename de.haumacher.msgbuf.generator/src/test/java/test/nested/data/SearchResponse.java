@@ -31,6 +31,15 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		/** @see #getSnippets() */
 		public static final String SNIPPETS = "snippets";
 
+		/** Identifier for the property {@link #getUrl()} in binary format. */
+		public static final int URL__ID = 1;
+
+		/** Identifier for the property {@link #getTitle()} in binary format. */
+		public static final int TITLE__ID = 2;
+
+		/** Identifier for the property {@link #getSnippets()} in binary format. */
+		public static final int SNIPPETS__ID = 3;
+
 		private String _url = "";
 
 		private String _title = "";
@@ -173,11 +182,11 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		 * @throws java.io.IOException If writing fails.
 		 */
 		protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-			out.name(1);
+			out.name(URL__ID);
 			out.value(getUrl());
-			out.name(2);
+			out.name(TITLE__ID);
 			out.value(getTitle());
-			out.name(3);
+			out.name(SNIPPETS__ID);
 			{
 				java.util.List<String> values = getSnippets();
 				out.beginArray(de.haumacher.msgbuf.binary.DataType.STRING, values.size());
@@ -191,9 +200,9 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		/** Consumes the value for the field with the given ID and assigns its value. */
 		protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 			switch (field) {
-				case 1: setUrl(in.nextString()); break;
-				case 2: setTitle(in.nextString()); break;
-				case 3: {
+				case URL__ID: setUrl(in.nextString()); break;
+				case TITLE__ID: setTitle(in.nextString()); break;
+				case SNIPPETS__ID: {
 					in.beginArray();
 					while (in.hasNext()) {
 						addSnippet(in.nextString());
@@ -240,6 +249,9 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 
 	/** @see #getResults() */
 	public static final String RESULTS = "results";
+
+	/** Identifier for the property {@link #getResults()} in binary format. */
+	public static final int RESULTS__ID = 1;
 
 	private final java.util.List<Result> _results = new java.util.ArrayList<>();
 
@@ -343,7 +355,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
+		out.name(RESULTS__ID);
 		{
 			java.util.List<Result> values = getResults();
 			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
@@ -357,7 +369,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: {
+			case RESULTS__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addResult(Result.readResult(in));

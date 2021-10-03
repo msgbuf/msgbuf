@@ -30,6 +30,15 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	/** @see #getResultPerPage() */
 	public static final String RESULT_PER_PAGE = "result_per_page";
 
+	/** Identifier for the property {@link #getQuery()} in binary format. */
+	public static final int QUERY__ID = 1;
+
+	/** Identifier for the property {@link #getPageNumber()} in binary format. */
+	public static final int PAGE_NUMBER__ID = 2;
+
+	/** Identifier for the property {@link #getResultPerPage()} in binary format. */
+	public static final int RESULT_PER_PAGE__ID = 3;
+
 	private String _query = "";
 
 	private int _pageNumber = 0;
@@ -152,20 +161,20 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(1);
+		out.name(QUERY__ID);
 		out.value(getQuery());
-		out.name(2);
+		out.name(PAGE_NUMBER__ID);
 		out.value(getPageNumber());
-		out.name(3);
+		out.name(RESULT_PER_PAGE__ID);
 		out.value(getResultPerPage());
 	}
 
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case 1: setQuery(in.nextString()); break;
-			case 2: setPageNumber(in.nextInt()); break;
-			case 3: setResultPerPage(in.nextInt()); break;
+			case QUERY__ID: setQuery(in.nextString()); break;
+			case PAGE_NUMBER__ID: setPageNumber(in.nextInt()); break;
+			case RESULT_PER_PAGE__ID: setResultPerPage(in.nextInt()); break;
 			default: in.skipValue(); 
 		}
 	}
