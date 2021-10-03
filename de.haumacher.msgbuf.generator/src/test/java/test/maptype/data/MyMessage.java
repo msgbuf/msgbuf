@@ -24,9 +24,9 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	/** Identifier for the property {@link #getRating()} in binary format. */
 	public static final int RATING__ID = 4;
 
-	private java.util.Map<String, Project> _projects = new java.util.HashMap<>();
+	private final java.util.Map<String, Project> _projects = new java.util.HashMap<>();
 
-	private java.util.Map<Integer, String> _rating = new java.util.HashMap<>();
+	private final java.util.Map<Integer, String> _rating = new java.util.HashMap<>();
 
 	/**
 	 * Creates a {@link MyMessage} instance.
@@ -45,6 +45,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	 * @see #getProjects()
 	 */
 	public final MyMessage setProjects(java.util.Map<String, Project> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'projects' cannot be null.");
 		_projects.clear();
 		_projects.putAll(value);
 		return this;
@@ -53,7 +54,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	/**
 	 * Adds a value to the {@link #getProjects()} map.
 	 */
-	public final void addProject(String key, Project value) {
+	public final void putProject(String key, Project value) {
 		if (_projects.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'projects' already contains a value for key '" + key + "'.");
 		}
@@ -68,6 +69,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	 * @see #getRating()
 	 */
 	public final MyMessage setRating(java.util.Map<Integer, String> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'rating' cannot be null.");
 		_rating.clear();
 		_rating.putAll(value);
 		return this;
@@ -76,7 +78,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 	/**
 	 * Adds a value to the {@link #getRating()} map.
 	 */
-	public final void addRating(int key, String value) {
+	public final void putRating(int key, String value) {
 		if (_rating.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'rating' already contains a value for key '" + key + "'.");
 		}
@@ -153,7 +155,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 			case PROJECTS: {
 				in.beginObject();
 				while (in.hasNext()) {
-					addProject(in.nextName(), Project.readProject(in));
+					putProject(in.nextName(), Project.readProject(in));
 				}
 				in.endObject();
 				break;
@@ -171,7 +173,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 							default: in.skipValue(); break;
 						}
 					}
-					addRating(key, value);
+					putRating(key, value);
 					in.endObject();
 				}
 				in.endArray();
@@ -228,7 +230,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 							default: in.skipValue(); break;
 						}
 					}
-					addProject(key, value);
+					putProject(key, value);
 					in.endObject();
 				}
 				in.endArray();
@@ -247,7 +249,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 							default: in.skipValue(); break;
 						}
 					}
-					addRating(key, value);
+					putRating(key, value);
 					in.endObject();
 				}
 				in.endArray();

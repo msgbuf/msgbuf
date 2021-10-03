@@ -50,6 +50,7 @@ public class Group extends Shape {
 	 * @see #getShapes()
 	 */
 	public final Group setShapes(java.util.List<Shape> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'shapes' cannot be null.");
 		_shapes.clear();
 		_shapes.addAll(value);
 		return this;

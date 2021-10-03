@@ -153,15 +153,9 @@ public class PrimitiveType extends Type {
 	 * @see #getKind()
 	 */
 	public final PrimitiveType setKind(Kind value) {
+		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
 		_kind = value;
 		return this;
-	}
-
-	/**
-	 * Checks, whether {@link #getKind()} has a value.
-	 */
-	public final boolean hasKind() {
-		return _kind != null;
 	}
 
 	/** Reads a new instance from the given reader. */
@@ -181,10 +175,8 @@ public class PrimitiveType extends Type {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		if (hasKind()) {
-			out.name(KIND);
-			getKind().writeTo(out);
-		}
+		out.name(KIND);
+		getKind().writeTo(out);
 	}
 
 	@Override

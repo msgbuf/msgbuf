@@ -69,6 +69,7 @@ public class DefinitionFile extends WithOptions {
 	 * @see #getDefinitions()
 	 */
 	public final DefinitionFile setDefinitions(java.util.List<Definition> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
 		return this;

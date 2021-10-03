@@ -19,7 +19,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	/** @see #getOptions() */
 	public static final String OPTIONS = "options";
 
-	private java.util.Map<String, Option> _options = new java.util.HashMap<>();
+	private final java.util.Map<String, Option> _options = new java.util.HashMap<>();
 
 	/**
 	 * Creates a {@link WithOptions} instance.
@@ -39,6 +39,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	 * @see #getOptions()
 	 */
 	public final WithOptions setOptions(java.util.Map<String, Option> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'options' cannot be null.");
 		_options.clear();
 		_options.putAll(value);
 		return this;
@@ -47,7 +48,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	/**
 	 * Adds a value to the {@link #getOptions()} map.
 	 */
-	public final void addOption(String key, Option value) {
+	public final void putOption(String key, Option value) {
 		if (_options.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
 		}
@@ -101,7 +102,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 			case OPTIONS: {
 				in.beginObject();
 				while (in.hasNext()) {
-					addOption(in.nextName(), Option.readOption(in));
+					putOption(in.nextName(), Option.readOption(in));
 				}
 				in.endObject();
 				break;

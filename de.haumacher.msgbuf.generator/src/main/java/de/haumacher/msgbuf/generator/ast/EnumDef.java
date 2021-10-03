@@ -40,6 +40,7 @@ public class EnumDef extends Definition {
 	 * @see #getConstants()
 	 */
 	public final EnumDef setConstants(java.util.List<Constant> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'constants' cannot be null.");
 		_constants.clear();
 		_constants.addAll(value);
 		return this;

@@ -1,0 +1,32 @@
+package test.nullable.data;
+
+enum Decision {
+	YES;
+	NO;
+}
+
+message NullableValues {
+	@Nullable
+	int `int`;
+	
+	@Nullable
+	long `long`;
+	
+	@Nullable
+	boolean `boolean`;
+	
+	@Nullable
+	string `string`;
+	
+	@Nullable
+	repeated int intList;
+	
+	@Nullable
+	repeated string stringList;
+	
+	@Nullable
+	map<string, int> stringIntMap;
+	
+	@Nullable
+	Decision optionalDecision;
+}

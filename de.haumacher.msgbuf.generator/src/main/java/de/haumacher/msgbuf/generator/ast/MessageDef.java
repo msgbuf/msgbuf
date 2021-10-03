@@ -107,6 +107,7 @@ public class MessageDef extends Definition {
 	 * @see #getDefinitions()
 	 */
 	public final MessageDef setDefinitions(java.util.List<Definition> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
 		return this;
@@ -137,6 +138,7 @@ public class MessageDef extends Definition {
 	 * @see #getFields()
 	 */
 	public final MessageDef setFields(java.util.List<Field> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'fields' cannot be null.");
 		_fields.clear();
 		_fields.addAll(value);
 		return this;
@@ -161,6 +163,7 @@ public class MessageDef extends Definition {
 	 * @see #getSpecializations()
 	 */
 	public final MessageDef setSpecializations(java.util.List<MessageDef> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'specializations' cannot be null.");
 		_specializations.clear();
 		_specializations.addAll(value);
 		return this;

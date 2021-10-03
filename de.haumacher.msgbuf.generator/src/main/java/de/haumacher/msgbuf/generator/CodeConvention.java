@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
@@ -76,7 +77,7 @@ public class CodeConvention {
 
 	public static String getterName(Field field) {
 		Type type = field.getType();
-		if (type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BOOL) {
+		if (type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BOOL && !Util.isNullable(field)) {
 			return "is" + suffix(field);
 		} else {
 			return "get" + suffix(field);
@@ -88,7 +89,11 @@ public class CodeConvention {
 		if (suffix.endsWith("s")) {
 			suffix = suffix.substring(0, suffix.length() - 1);
 		}
-		return "add" + suffix;
+		if (field.getType() instanceof MapType) {
+			return "put" + suffix;
+		} else {
+			return "add" + suffix;
+		}
 	}
 
 	public static String hasName(Field field) {
@@ -129,6 +134,10 @@ public class CodeConvention {
 
 	public static String mkBinaryTypeConstant(MessageDef def) {
 		return allUpperCase(def.getName()) + "__TYPE_ID";
+	}
+
+	public static String fieldMemberName(Field field) {
+		return "_" + name(field);
 	}
 
 }

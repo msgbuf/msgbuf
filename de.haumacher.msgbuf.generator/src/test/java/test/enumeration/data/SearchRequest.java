@@ -154,15 +154,9 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 	 * @see #getCorpus()
 	 */
 	public final SearchRequest setCorpus(Corpus value) {
+		if (value == null) throw new IllegalArgumentException("Property 'corpus' cannot be null.");
 		_corpus = value;
 		return this;
-	}
-
-	/**
-	 * Checks, whether {@link #getCorpus()} has a value.
-	 */
-	public final boolean hasCorpus() {
-		return _corpus != null;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -221,10 +215,8 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		out.value(getPageNumber());
 		out.name(RESULT_PER_PAGE);
 		out.value(getResultPerPage());
-		if (hasCorpus()) {
-			out.name(CORPUS);
-			getCorpus().writeTo(out);
-		}
+		out.name(CORPUS);
+		getCorpus().writeTo(out);
 	}
 
 	@Override
@@ -259,10 +251,8 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 		out.value(getPageNumber());
 		out.name(RESULT_PER_PAGE__ID);
 		out.value(getResultPerPage());
-		if (hasCorpus()) {
-			out.name(CORPUS__ID);
-			getCorpus().writeTo(out);
-		}
+		out.name(CORPUS__ID);
+		getCorpus().writeTo(out);
 	}
 
 	/** Reads a new instance from the given reader. */

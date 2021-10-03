@@ -263,6 +263,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	 * @see #getResults()
 	 */
 	public final SearchResponse setResults(java.util.List<Result> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'results' cannot be null.");
 		_results.clear();
 		_results.addAll(value);
 		return this;
