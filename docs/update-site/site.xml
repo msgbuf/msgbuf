@@ -9,6 +9,7 @@
    <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202109181716.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202109181716">
       <category name="de.haumacher.msgbuf.site.builderCategory"/>
    </feature>
+   <feature url="features/de.haumacher.msgbuf.feature_1.0.0.202110031429.jar" id="de.haumacher.msgbuf.feature" version="1.0.0.202110031429"/>
    <category-def name="de.haumacher.msgbuf.site.builderCategory" label="MsgBuf Project Builder">
       <description>
          Code generator for GWT-compatible Java data classes suitable for typed client-server messaging.
