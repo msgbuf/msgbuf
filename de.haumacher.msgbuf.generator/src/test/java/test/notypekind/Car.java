@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.notypekind;
 
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
@@ -49,11 +49,6 @@ public class Car extends Shape {
 	 */
 	protected Car() {
 		super();
-	}
-
-	@Override
-	public TypeKind kind() {
-		return TypeKind.CAR;
 	}
 
 	/**

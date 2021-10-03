@@ -18,10 +18,10 @@ public class CustomType extends Type {
 	public static final String CUSTOM_TYPE__TYPE = "CustomType";
 
 	/** @see #getName() */
-	public static final String NAME = "name";
+	private static final String NAME = "name";
 
 	/** @see #getDefinition() */
-	public static final String DEFINITION = "definition";
+	private static final String DEFINITION = "definition";
 
 	private QName _name = null;
 
@@ -34,6 +34,11 @@ public class CustomType extends Type {
 	 */
 	protected CustomType() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.CUSTOM_TYPE;
 	}
 
 	/**

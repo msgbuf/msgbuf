@@ -17,13 +17,13 @@ public abstract class Part extends DefinitionBase {
 	}
 
 	/** @see #getName() */
-	public static final String NAME = "name";
+	private static final String NAME = "name";
 
 	/** @see #getIndex() */
-	public static final String INDEX = "index";
+	private static final String INDEX = "index";
 
 	/** @see #getOwner() */
-	public static final String OWNER = "owner";
+	private static final String OWNER = "owner";
 
 	private String _name = "";
 

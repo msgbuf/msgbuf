@@ -2,6 +2,18 @@ package test.underscorename;
 
 public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
+	/** Type codes for the {@link BaseMsg} hierarchy. */
+	public enum TypeKind {
+
+		/** Type literal for {@link SomeName}. */
+		SOME_NAME,
+
+		/** Type literal for {@link AnnotatedMessage}. */
+		ANNOTATED_MESSAGE,
+		;
+
+	}
+
 	/** Visitor interface for the {@link BaseMsg} hierarchy.*/
 	public interface Visitor<R,A> {
 
@@ -19,6 +31,9 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractReflectiv
 	protected BaseMsg() {
 		super();
 	}
+
+	/** The type code of this instance. */
+	public abstract TypeKind kind();
 
 	/** Reads a new instance from the given reader. */
 	public static BaseMsg readbase_msg(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

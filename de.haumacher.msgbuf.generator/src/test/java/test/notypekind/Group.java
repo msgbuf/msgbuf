@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.notypekind;
 
 /**
  * A group of shapes.
@@ -33,11 +33,6 @@ public class Group extends Shape {
 	 */
 	protected Group() {
 		super();
-	}
-
-	@Override
-	public TypeKind kind() {
-		return TypeKind.GROUP;
 	}
 
 	/**

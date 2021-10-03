@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.notypekind;
 
 /**
  * A circle {@link Shape}.
@@ -33,11 +33,6 @@ public class Circle extends AtomicShape {
 	 */
 	protected Circle() {
 		super();
-	}
-
-	@Override
-	public TypeKind kind() {
-		return TypeKind.CIRCLE;
 	}
 
 	/**

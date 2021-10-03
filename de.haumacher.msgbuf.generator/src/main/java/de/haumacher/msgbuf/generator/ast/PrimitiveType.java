@@ -129,7 +129,7 @@ public class PrimitiveType extends Type {
 	public static final String PRIMITIVE_TYPE__TYPE = "PrimitiveType";
 
 	/** @see #getKind() */
-	public static final String KIND = "kind";
+	private static final String KIND = "kind";
 
 	private Kind _kind = Kind.INT32;
 
@@ -140,6 +140,11 @@ public class PrimitiveType extends Type {
 	 */
 	protected PrimitiveType() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.PRIMITIVE_TYPE;
 	}
 
 	/**

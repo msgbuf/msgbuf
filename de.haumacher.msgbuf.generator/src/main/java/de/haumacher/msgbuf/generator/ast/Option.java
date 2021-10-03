@@ -9,6 +9,21 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject {
 
+	/** Type codes for the {@link Option} hierarchy. */
+	public enum TypeKind {
+
+		/** Type literal for {@link StringOption}. */
+		STRING_OPTION,
+
+		/** Type literal for {@link NumberOption}. */
+		NUMBER_OPTION,
+
+		/** Type literal for {@link Flag}. */
+		FLAG,
+		;
+
+	}
+
 	/** Visitor interface for the {@link Option} hierarchy.*/
 	public interface Visitor<R,A> {
 
@@ -29,6 +44,9 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	protected Option() {
 		super();
 	}
+
+	/** The type code of this instance. */
+	public abstract TypeKind kind();
 
 	/** Reads a new instance from the given reader. */
 	public static Option readOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

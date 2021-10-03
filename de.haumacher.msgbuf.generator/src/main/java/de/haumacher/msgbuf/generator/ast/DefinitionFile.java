@@ -18,10 +18,10 @@ public class DefinitionFile extends WithOptions {
 	public static final String DEFINITION_FILE__TYPE = "DefinitionFile";
 
 	/** @see #getPackage() */
-	public static final String PACKAGE = "package";
+	private static final String PACKAGE = "package";
 
 	/** @see #getDefinitions() */
-	public static final String DEFINITIONS = "definitions";
+	private static final String DEFINITIONS = "definitions";
 
 	private QName _package = null;
 
@@ -34,6 +34,11 @@ public class DefinitionFile extends WithOptions {
 	 */
 	protected DefinitionFile() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.DEFINITION_FILE;
 	}
 
 	/**

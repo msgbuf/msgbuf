@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.novisit;
 
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
@@ -236,11 +236,6 @@ public class Car extends Shape {
 			case BODY__ID: setBody(Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
-		return v.visit(this, arg);
 	}
 
 }

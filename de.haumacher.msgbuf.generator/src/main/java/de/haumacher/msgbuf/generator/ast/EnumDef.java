@@ -16,7 +16,7 @@ public class EnumDef extends Definition {
 	public static final String ENUM_DEF__TYPE = "EnumDef";
 
 	/** @see #getConstants() */
-	public static final String CONSTANTS = "constants";
+	private static final String CONSTANTS = "constants";
 
 	private final java.util.List<Constant> _constants = new java.util.ArrayList<>();
 
@@ -27,6 +27,11 @@ public class EnumDef extends Definition {
 	 */
 	protected EnumDef() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.ENUM_DEF;
 	}
 
 	/**

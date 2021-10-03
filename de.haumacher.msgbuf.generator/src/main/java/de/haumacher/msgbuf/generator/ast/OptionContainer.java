@@ -24,6 +24,11 @@ public class OptionContainer extends WithOptions {
 		super();
 	}
 
+	@Override
+	public TypeKind kind() {
+		return TypeKind.OPTION_CONTAINER;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static OptionContainer readOptionContainer(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		OptionContainer result = new OptionContainer();

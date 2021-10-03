@@ -140,4 +140,10 @@ public class CodeConvention {
 		return "_" + name(field);
 	}
 
+	public static String typeKindConstant(MessageDef caseDef) {
+		return CodeUtil.allUpperCase(caseDef.getName());
+	}
+
+	static final String TYPE_KIND_NAME = "TypeKind";
+
 }

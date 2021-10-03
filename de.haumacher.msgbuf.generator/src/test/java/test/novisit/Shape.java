@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.novisit;
 
 /**
  * An abstract base class for all shapes
@@ -20,17 +20,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		/** Type literal for {@link Car}. */
 		CAR,
 		;
-
-	}
-
-	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
-
-		/** Visit case for {@link Group}.*/
-		R visit(Group self, A arg);
-
-		/** Visit case for {@link Car}.*/
-		R visit(Car self, A arg);
 
 	}
 
@@ -218,9 +207,5 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			default: in.skipValue(); 
 		}
 	}
-
-	/** Accepts the given visitor. */
-	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
-
 
 }

@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.novisit;
 
 /**
  * A group of shapes.
@@ -178,11 +178,6 @@ public class Group extends Shape {
 			break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
-		return v.visit(this, arg);
 	}
 
 }

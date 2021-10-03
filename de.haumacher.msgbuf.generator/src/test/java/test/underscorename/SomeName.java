@@ -32,6 +32,11 @@ public class SomeName extends BaseMsg {
 		super();
 	}
 
+	@Override
+	public TypeKind kind() {
+		return TypeKind.SOME_NAME;
+	}
+
 	public final String getMyField() {
 		return _myField;
 	}

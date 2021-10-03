@@ -1,27 +1,9 @@
-package test.hierarchy.data;
+package test.notypekind;
 
 /**
  * An abstract base class for all shapes
  */
 public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
-
-	/** Type codes for the {@link Shape} hierarchy. */
-	public enum TypeKind {
-
-		/** Type literal for {@link Circle}. */
-		CIRCLE,
-
-		/** Type literal for {@link Rectangle}. */
-		RECTANGLE,
-
-		/** Type literal for {@link Group}. */
-		GROUP,
-
-		/** Type literal for {@link Car}. */
-		CAR,
-		;
-
-	}
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
 	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
@@ -56,9 +38,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	protected Shape() {
 		super();
 	}
-
-	/** The type code of this instance. */
-	public abstract TypeKind kind();
 
 	/**
 	 * X coordinate of the origin of the coordinate system of this {@link Shape}.

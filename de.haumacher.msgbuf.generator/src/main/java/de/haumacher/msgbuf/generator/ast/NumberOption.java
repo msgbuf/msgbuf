@@ -16,7 +16,7 @@ public class NumberOption extends Option {
 	public static final String NUMBER_OPTION__TYPE = "NumberOption";
 
 	/** @see #getValue() */
-	public static final String VALUE = "value";
+	private static final String VALUE = "value";
 
 	private double _value = 0.0d;
 
@@ -27,6 +27,11 @@ public class NumberOption extends Option {
 	 */
 	protected NumberOption() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.NUMBER_OPTION;
 	}
 
 	/**

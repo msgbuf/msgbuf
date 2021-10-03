@@ -26,6 +26,11 @@ public class Constant extends Part {
 		super();
 	}
 
+	@Override
+	public TypeKind kind() {
+		return TypeKind.CONSTANT;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Constant result = new Constant();

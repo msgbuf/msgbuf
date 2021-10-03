@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.notypekind;
 
 /**
  * A rectangle.
@@ -41,11 +41,6 @@ public class Rectangle extends AtomicShape {
 	 */
 	protected Rectangle() {
 		super();
-	}
-
-	@Override
-	public TypeKind kind() {
-		return TypeKind.RECTANGLE;
 	}
 
 	/**

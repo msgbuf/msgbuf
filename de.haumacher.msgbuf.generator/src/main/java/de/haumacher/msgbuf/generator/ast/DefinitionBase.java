@@ -13,7 +13,7 @@ public abstract class DefinitionBase extends WithOptions {
 	}
 
 	/** @see #getComment() */
-	public static final String COMMENT = "comment";
+	private static final String COMMENT = "comment";
 
 	private String _comment = "";
 

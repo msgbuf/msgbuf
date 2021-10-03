@@ -16,7 +16,7 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject {
 	public static final String QNAME__TYPE = "QName";
 
 	/** @see #getNames() */
-	public static final String NAMES = "names";
+	private static final String NAMES = "names";
 
 	private final java.util.List<String> _names = new java.util.ArrayList<>();
 

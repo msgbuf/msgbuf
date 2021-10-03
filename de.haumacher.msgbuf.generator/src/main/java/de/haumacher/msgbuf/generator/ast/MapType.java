@@ -16,10 +16,10 @@ public class MapType extends Type {
 	public static final String MAP_TYPE__TYPE = "MapType";
 
 	/** @see #getKeyType() */
-	public static final String KEY_TYPE = "keyType";
+	private static final String KEY_TYPE = "keyType";
 
 	/** @see #getValueType() */
-	public static final String VALUE_TYPE = "valueType";
+	private static final String VALUE_TYPE = "valueType";
 
 	private Type _keyType = null;
 
@@ -32,6 +32,11 @@ public class MapType extends Type {
 	 */
 	protected MapType() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.MAP_TYPE;
 	}
 
 	/**

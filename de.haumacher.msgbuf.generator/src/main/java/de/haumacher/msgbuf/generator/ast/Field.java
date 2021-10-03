@@ -16,13 +16,13 @@ public class Field extends Part {
 	public static final String FIELD__TYPE = "Field";
 
 	/** @see #isTransient() */
-	public static final String TRANSIENT = "transient";
+	private static final String TRANSIENT = "transient";
 
 	/** @see #isRepeated() */
-	public static final String REPEATED = "repeated";
+	private static final String REPEATED = "repeated";
 
 	/** @see #getType() */
-	public static final String TYPE = "type";
+	private static final String TYPE = "type";
 
 	private boolean _transient = false;
 
@@ -37,6 +37,11 @@ public class Field extends Part {
 	 */
 	protected Field() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.FIELD;
 	}
 
 	/**

@@ -5,6 +5,21 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject {
 
+	/** Type codes for the {@link Type} hierarchy. */
+	public enum TypeKind {
+
+		/** Type literal for {@link CustomType}. */
+		CUSTOM_TYPE,
+
+		/** Type literal for {@link PrimitiveType}. */
+		PRIMITIVE_TYPE,
+
+		/** Type literal for {@link MapType}. */
+		MAP_TYPE,
+		;
+
+	}
+
 	/** Visitor interface for the {@link Type} hierarchy.*/
 	public interface Visitor<R,A> {
 
@@ -25,6 +40,9 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject {
 	protected Type() {
 		super();
 	}
+
+	/** The type code of this instance. */
+	public abstract TypeKind kind();
 
 	/** Reads a new instance from the given reader. */
 	public static Type readType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

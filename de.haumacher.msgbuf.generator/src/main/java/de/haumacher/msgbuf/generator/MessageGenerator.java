@@ -38,6 +38,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private final MessageDef _def;
 	private boolean _binary;
 	private boolean _reflection;
+	private boolean _visitor;
+	private boolean _typeKind;
 
 	private Map<String, Option> _options;
 
@@ -50,6 +52,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		_def = def;
 		_binary = !isTrue(options.get("NoBinary"), false);
 		_reflection = !isTrue(options.get("NoReflection"), false);
+		_visitor = !isTrue(options.get("NoVisitor"), false);
+		_typeKind = !isTrue(options.get("NoTypeKind"), false);
 	}
 	
 	private boolean isTrue(Option option, boolean defaultValue) {
@@ -159,12 +163,20 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void generateClassContents() {
-		generateVisitorInterface();
+		if (_typeKind) {
+			generateTypeCodeEnum();
+		}
+		if (_visitor) {
+			generateVisitorInterface();
+		}
 		generateInnerDefinitions();
 		generateFactoryMethod();
 		generateConstants();
 		generateFieldMembers();
 		generateConstructor();
+		if (_typeKind) {
+			generateKindLookup();
+		}
 		generateAccessors();
 		
 		if (_reflection) {
@@ -176,8 +188,26 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_binary) {
 			generateBinaryIO();
 		}
-		
-		generateVisitMethods();
+
+		if (_visitor) {
+			generateVisitMethods();
+		}
+	}
+
+	private void generateTypeCodeEnum() {
+		if (!_def.getSpecializations().isEmpty() && _def == getRoot(_def)) {
+			nl();
+			line("/** Type codes for the {@link " + typeName(_def) + "} hierarchy. */");
+			line("public enum " + TYPE_KIND_NAME + " {");
+			for (MessageDef caseDef : concreteSpecializations(_def)) {
+				nl();
+				line("/** Type literal for {@link " + typeName(caseDef) + "}. */");
+				line(typeKindConstant(caseDef) + ",");
+			}
+			line(";");
+			nl();
+			line("}");
+		}
 	}
 
 	private void generateVisitorInterface() {
@@ -224,6 +254,22 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		}
 	}
 
+	private List<MessageDef> concreteSpecializations(MessageDef def) {
+		ArrayList<MessageDef> result = new ArrayList<>();
+		addConcreteSpecializations(result, def);
+		return result;
+	}
+
+	private void addConcreteSpecializations(ArrayList<MessageDef> result, MessageDef def) {
+		for (MessageDef specialization : def.getSpecializations()) {
+			if (!specialization.isAbstract()) {
+				result.add(specialization);
+			}
+			
+			addConcreteSpecializations(result, specialization);
+		}
+	}
+
 	private void generateInnerDefinitions() {
 		for (Definition def : _def.getDefinitions()) {
 			def.visit(this, null);
@@ -266,7 +312,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		for (Field field : getFields()) {
 			nl();
 			line("/** @see #" + getterCall(field) + " */");
-			line("public static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
+			line((_reflection ? "public " : "private ") + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
 		}
 		
 		if (_binary) {
@@ -317,6 +363,35 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		}
 	}
 
+	private void generateKindLookup() {
+		boolean isSpecialization = _def.getExtendedDef() != null;
+		if (_def.isAbstract()) {
+			if (!isSpecialization) {
+				nl();
+				kindLookupComment();
+				line("public abstract " + TYPE_KIND_NAME + " kind();");
+			}
+		} else {
+			if (isSpecialization || !_def.getSpecializations().isEmpty()) {
+				nl();
+				if (isSpecialization) {
+					line("@Override");
+				} else {
+					kindLookupComment();
+				}
+				line("public " + TYPE_KIND_NAME + " kind() {");
+				{
+					line("return " + TYPE_KIND_NAME + "." + typeKindConstant(_def) + ";");
+				}
+				line("}");
+			}
+		}
+	}
+
+	private void kindLookupComment() {
+		line("/** The type code of this instance. */");
+	}
+	
 	private void generateAccessors() {
 		for (Field field : getFields()) {
 			generateAccessors(field);

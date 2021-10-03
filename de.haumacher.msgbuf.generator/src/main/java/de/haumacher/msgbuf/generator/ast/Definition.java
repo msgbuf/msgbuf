@@ -17,13 +17,13 @@ public abstract class Definition extends DefinitionBase {
 	}
 
 	/** @see #getName() */
-	public static final String NAME = "name";
+	private static final String NAME = "name";
 
 	/** @see #getFile() */
-	public static final String FILE = "file";
+	private static final String FILE = "file";
 
 	/** @see #getOuter() */
-	public static final String OUTER = "outer";
+	private static final String OUTER = "outer";
 
 	private String _name = "";
 

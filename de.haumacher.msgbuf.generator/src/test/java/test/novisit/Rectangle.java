@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.novisit;
 
 /**
  * A rectangle.
@@ -179,11 +179,6 @@ public class Rectangle extends AtomicShape {
 			case HEIGHT__ID: setHeight(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
-		return v.visit(this, arg);
 	}
 
 }

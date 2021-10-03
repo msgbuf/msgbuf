@@ -5,6 +5,30 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject {
 
+	/** Type codes for the {@link WithOptions} hierarchy. */
+	public enum TypeKind {
+
+		/** Type literal for {@link OptionContainer}. */
+		OPTION_CONTAINER,
+
+		/** Type literal for {@link Constant}. */
+		CONSTANT,
+
+		/** Type literal for {@link Field}. */
+		FIELD,
+
+		/** Type literal for {@link EnumDef}. */
+		ENUM_DEF,
+
+		/** Type literal for {@link MessageDef}. */
+		MESSAGE_DEF,
+
+		/** Type literal for {@link DefinitionFile}. */
+		DEFINITION_FILE,
+		;
+
+	}
+
 	/** Visitor interface for the {@link WithOptions} hierarchy.*/
 	public interface Visitor<R,A> extends DefinitionBase.Visitor<R,A> {
 
@@ -17,7 +41,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	}
 
 	/** @see #getOptions() */
-	public static final String OPTIONS = "options";
+	private static final String OPTIONS = "options";
 
 	private final java.util.Map<String, Option> _options = new java.util.HashMap<>();
 
@@ -27,6 +51,9 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	protected WithOptions() {
 		super();
 	}
+
+	/** The type code of this instance. */
+	public abstract TypeKind kind();
 
 	/**
 	 * Annotations to this definition.

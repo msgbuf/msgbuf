@@ -1,4 +1,4 @@
-package test.hierarchy.data;
+package test.novisit;
 
 /**
  * A circle {@link Shape}.
@@ -139,11 +139,6 @@ public class Circle extends AtomicShape {
 			case RADIUS__ID: setRadius(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
-	}
-
-	@Override
-	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
-		return v.visit(this, arg);
 	}
 
 }

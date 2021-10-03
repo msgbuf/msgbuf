@@ -32,6 +32,11 @@ public class AnnotatedMessage extends BaseMsg {
 		super();
 	}
 
+	@Override
+	public TypeKind kind() {
+		return TypeKind.ANNOTATED_MESSAGE;
+	}
+
 	public final String getAnnotatedField() {
 		return _annotatedField;
 	}

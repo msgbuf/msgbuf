@@ -16,7 +16,7 @@ public class Flag extends Option {
 	public static final String FLAG__TYPE = "Flag";
 
 	/** @see #isValue() */
-	public static final String VALUE = "value";
+	private static final String VALUE = "value";
 
 	private boolean _value = false;
 
@@ -27,6 +27,11 @@ public class Flag extends Option {
 	 */
 	protected Flag() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.FLAG;
 	}
 
 	/**

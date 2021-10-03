@@ -16,25 +16,25 @@ public class MessageDef extends Definition {
 	public static final String MESSAGE_DEF__TYPE = "MessageDef";
 
 	/** @see #isAbstract() */
-	public static final String ABSTRACT = "abstract";
+	private static final String ABSTRACT = "abstract";
 
 	/** @see #getExtends() */
-	public static final String EXTENDS = "extends";
+	private static final String EXTENDS = "extends";
 
 	/** @see #getDefinitions() */
-	public static final String DEFINITIONS = "definitions";
+	private static final String DEFINITIONS = "definitions";
 
 	/** @see #getFields() */
-	public static final String FIELDS = "fields";
+	private static final String FIELDS = "fields";
 
 	/** @see #getSpecializations() */
-	public static final String SPECIALIZATIONS = "specializations";
+	private static final String SPECIALIZATIONS = "specializations";
 
 	/** @see #getExtendedDef() */
-	public static final String EXTENDED_DEF = "extendedDef";
+	private static final String EXTENDED_DEF = "extendedDef";
 
 	/** @see #getId() */
-	public static final String ID = "id";
+	private static final String ID = "id";
 
 	private boolean _abstract = false;
 
@@ -57,6 +57,11 @@ public class MessageDef extends Definition {
 	 */
 	protected MessageDef() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.MESSAGE_DEF;
 	}
 
 	/**
