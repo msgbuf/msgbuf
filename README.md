@@ -60,7 +60,7 @@ There is an Eclipse plugin providing a project builder that automatically genera
  * Select the `MsgBuf Project Builder` checkbox and click `Finish`. 
  * Accept the license and the installation of unsigned content.
 
-### Enable the MsgBuf builder in your Project
+### Enable the MsgBuf Builder in your project
 
  * Select your project in the `Package Explorer`.
  * In the context menu, select `Configure > Enable MsgBuf Builder`.
