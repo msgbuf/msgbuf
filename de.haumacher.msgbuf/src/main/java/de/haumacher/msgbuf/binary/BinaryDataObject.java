@@ -20,6 +20,8 @@ public interface BinaryDataObject extends DataObject {
 	 * 
 	 * @param out
 	 *        The writer to write this object to.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	public void writeTo(DataWriter out) throws IOException;
 

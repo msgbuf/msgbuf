@@ -27,22 +27,30 @@ public interface DataWriter {
 	 * encoding method such as {@link #value(int)} is expected followed by a
 	 * final {@link #endObject()} call.
 	 * </p>
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void beginObject() throws IOException;
 
 	/**
 	 * Finishes writing the fields of the object started with the last call to
 	 * {@link #beginObject()}.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void endObject() throws IOException;
 
 	/**
 	 * Writes an identifier of a field fo the currently written object.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void name(int id) throws IOException;
 	
 	/**
 	 * Writes a <code>boolean</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	default void value(boolean value) throws IOException {
 		value(value ? 1 : 0);
@@ -50,51 +58,71 @@ public interface DataWriter {
 
 	/**
 	 * Writes an unsigned <code>int</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void value(int value) throws IOException;
 
 	/**
 	 * Writes a signed <code>int</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void valueSigned(int value) throws IOException;
 
 	/**
 	 * Writes a fixed size 32 bit <code>int</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void valueFixed(int value) throws IOException;
 
 	/**
 	 * Writes an unsigned <code>long</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void value(long value) throws IOException;
 
 	/**
 	 * Writes a signed <code>long</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void valueSigned(long value) throws IOException;
 
 	/**
 	 * Writes a fixed size 64 bit <code>long</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void valueFixed(long value) throws IOException;
 
 	/**
 	 * Writes a <code>float</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void value(float value) throws IOException;
 
 	/**
 	 * Writes a <code>double</code> value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void value(double value) throws IOException;
 
 	/**
 	 * Writes a {@link String} value in <code>utf-8</code> encoding.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void value(String value) throws IOException;
 
 	/**
 	 * Writes a binary string value.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void value(byte[] value) throws IOException;
 	
@@ -107,6 +135,8 @@ public interface DataWriter {
 	 * called before the resulting {@link OutputStream} has been
 	 * {@link OutputStream#close() closed}.
 	 * </p>
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	OutputStream valueBinaryStream() throws IOException;
 
@@ -117,12 +147,16 @@ public interface DataWriter {
 	 *        The type of the array elements.
 	 * @param lenght
 	 *        The number of elements that follow.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void beginArray(DataType type, int lenght) throws IOException;
 
 	/**
 	 * Stops writing the array started with the last call to
 	 * {@link #beginObject()}.
+	 * 
+	 * @throws IOException If writing fails.
 	 */
 	void endArray() throws IOException;
 

@@ -17,6 +17,9 @@ public interface DataObject {
 	 * 
 	 * @param out
 	 *        The {@link JsonWriter} to write this instance to.
+	 * 
+	 * @throws IOException
+	 *         if writing fails.
 	 */
 	void writeTo(JsonWriter out) throws IOException;
 
