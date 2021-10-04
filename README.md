@@ -71,7 +71,7 @@ There is an Eclipse plugin providing a project builder that automatically genera
 <dependency>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
