@@ -4,7 +4,6 @@
 package de.haumacher.msgbuf.server.io;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import de.haumacher.msgbuf.io.Writer;
 
@@ -15,12 +14,12 @@ import de.haumacher.msgbuf.io.Writer;
  */
 public final class WriterAdapter implements Writer {
 
-	private final OutputStreamWriter _out;
+	private final java.io.Writer _out;
 
 	/** 
 	 * Creates a {@link WriterAdapter}.
 	 */
-	public WriterAdapter(OutputStreamWriter out) {
+	public WriterAdapter(java.io.Writer out) {
 		_out = out;
 	}
 
