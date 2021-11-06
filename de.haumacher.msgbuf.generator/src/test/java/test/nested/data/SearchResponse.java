@@ -332,7 +332,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			case RESULTS: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addResult(Result.readResult(in));
+					addResult(test.nested.data.SearchResponse.Result.readResult(in));
 				}
 				in.endArray();
 			}
@@ -385,7 +385,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			case RESULTS__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addResult(Result.readResult(in));
+					addResult(test.nested.data.SearchResponse.Result.readResult(in));
 				}
 				in.endArray();
 			}

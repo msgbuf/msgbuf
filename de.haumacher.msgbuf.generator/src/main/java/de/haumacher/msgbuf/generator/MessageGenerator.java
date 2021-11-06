@@ -630,7 +630,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + jsonTypeConstantRef(specialization) + ": result = " + typeName(specialization) + "." + readerName(specialization) + "(in); break;");
+					line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(in); break;");
 				}
 				line("default: in.skipValue(); result = null; break;");
 				line("}");
@@ -793,7 +793,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
+			return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
@@ -1033,7 +1033,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + mkBinaryTypeConstantRef(specialization) + ": result = " + typeName(specialization) + "." + factoryName(specialization) + "(); break;");
+					line("case " + mkBinaryTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + factoryName(specialization) + "(); break;");
 				}
 				line("default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;");
 				line("}");
@@ -1137,7 +1137,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return qTypeName(name) + "." + readerName(Util.last(name)) +  "(in)";
+			return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}

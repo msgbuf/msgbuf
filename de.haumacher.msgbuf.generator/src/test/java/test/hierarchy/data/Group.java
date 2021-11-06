@@ -125,7 +125,7 @@ public class Group extends Shape {
 			case SHAPES: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(Shape.readShape(in));
+					addShape(test.hierarchy.data.Shape.readShape(in));
 				}
 				in.endArray();
 			}
@@ -171,7 +171,7 @@ public class Group extends Shape {
 			case SHAPES__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(Shape.readShape(in));
+					addShape(test.hierarchy.data.Shape.readShape(in));
 				}
 				in.endArray();
 			}

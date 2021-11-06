@@ -41,8 +41,8 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case SomeName.SOME_NAME__TYPE: result = SomeName.readsome_name(in); break;
-			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE: result = AnnotatedMessage.readannotated_message(in); break;
+			case SomeName.SOME_NAME__TYPE: result = test.underscorename.SomeName.readsome_name(in); break;
+			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE: result = test.underscorename.AnnotatedMessage.readannotated_message(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -91,8 +91,8 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case SomeName.SOME_NAME__TYPE_ID: result = SomeName.create(); break;
-			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE_ID: result = AnnotatedMessage.create(); break;
+			case SomeName.SOME_NAME__TYPE_ID: result = test.underscorename.SomeName.create(); break;
+			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE_ID: result = test.underscorename.AnnotatedMessage.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

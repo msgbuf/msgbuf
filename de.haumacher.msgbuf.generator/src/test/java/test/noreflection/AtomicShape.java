@@ -29,8 +29,8 @@ public abstract class AtomicShape extends Shape {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case Circle.CIRCLE__TYPE: result = Circle.readCircle(in); break;
-			case Rectangle.RECTANGLE__TYPE: result = Rectangle.readRectangle(in); break;
+			case Circle.CIRCLE__TYPE: result = test.noreflection.Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.noreflection.Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -45,8 +45,8 @@ public abstract class AtomicShape extends Shape {
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case Circle.CIRCLE__TYPE_ID: result = Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = Rectangle.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = test.noreflection.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = test.noreflection.Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

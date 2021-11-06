@@ -102,10 +102,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case Group.GROUP__TYPE: result = Group.readGroup(in); break;
-			case Car.CAR__TYPE: result = Car.readCar(in); break;
-			case Circle.CIRCLE__TYPE: result = Circle.readCircle(in); break;
-			case Rectangle.RECTANGLE__TYPE: result = Rectangle.readRectangle(in); break;
+			case Group.GROUP__TYPE: result = test.notypekind.Group.readGroup(in); break;
+			case Car.CAR__TYPE: result = test.notypekind.Car.readCar(in); break;
+			case Circle.CIRCLE__TYPE: result = test.notypekind.Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.notypekind.Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -175,10 +175,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case Group.GROUP__TYPE_ID: result = Group.create(); break;
-			case Car.CAR__TYPE_ID: result = Car.create(); break;
-			case Circle.CIRCLE__TYPE_ID: result = Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = Rectangle.create(); break;
+			case Group.GROUP__TYPE_ID: result = test.notypekind.Group.create(); break;
+			case Car.CAR__TYPE_ID: result = test.notypekind.Car.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = test.notypekind.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = test.notypekind.Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

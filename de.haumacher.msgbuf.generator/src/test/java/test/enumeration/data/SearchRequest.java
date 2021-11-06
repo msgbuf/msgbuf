@@ -225,7 +225,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 			case QUERY: setQuery(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case PAGE_NUMBER: setPageNumber(in.nextInt()); break;
 			case RESULT_PER_PAGE: setResultPerPage(in.nextInt()); break;
-			case CORPUS: setCorpus(Corpus.readCorpus(in)); break;
+			case CORPUS: setCorpus(test.enumeration.data.SearchRequest.Corpus.readCorpus(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -273,7 +273,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 			case QUERY__ID: setQuery(in.nextString()); break;
 			case PAGE_NUMBER__ID: setPageNumber(in.nextInt()); break;
 			case RESULT_PER_PAGE__ID: setResultPerPage(in.nextInt()); break;
-			case CORPUS__ID: setCorpus(Corpus.readCorpus(in)); break;
+			case CORPUS__ID: setCorpus(test.enumeration.data.SearchRequest.Corpus.readCorpus(in)); break;
 			default: in.skipValue(); 
 		}
 	}

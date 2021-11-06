@@ -8,7 +8,9 @@ import static de.haumacher.msgbuf.generator.CodeUtil.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
+import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
@@ -23,9 +25,27 @@ import de.haumacher.msgbuf.generator.ast.Type;
  */
 public class CodeConvention {
 
-	public static String qTypeName(MessageDef def) {
-		QName pkg = def.getFile().getPackage();
-		return (pkg.getNames().size() == 0 ? "" : qName(pkg) + ".") + typeName(def);
+	public static String qTypeName(CustomType def) {
+		Definition definition = def.getDefinition();
+		if (definition == null) {
+			return qTypeName(def.getName());
+		} else {
+			return qTypeName(definition);
+		}
+	}
+	
+	public static String qTypeName(Definition def) {
+		String scope;
+		
+		DefinitionFile file = def.getFile();
+		if (file == null) {
+			scope = qTypeName(def.getOuter()) + ".";
+		} else {
+			QName pkg = file.getPackage();
+			scope = pkg.getNames().size() == 0 ? "" : qName(pkg) + ".";
+		}
+		
+		return scope + typeName(def);
 	}
 
 	public static String qTypeName(QName qName) {

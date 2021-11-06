@@ -412,7 +412,7 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 				in.endObject();
 				break;
 			}
-			case OPTIONAL_DECISION: setOptionalDecision(Decision.readDecision(in)); break;
+			case OPTIONAL_DECISION: setOptionalDecision(test.nullable.data.Decision.readDecision(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -533,7 +533,7 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 				in.endArray();
 				break;
 			}
-			case OPTIONAL_DECISION__ID: setOptionalDecision(Decision.readDecision(in)); break;
+			case OPTIONAL_DECISION__ID: setOptionalDecision(test.nullable.data.Decision.readDecision(in)); break;
 			default: in.skipValue(); 
 		}
 	}

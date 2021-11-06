@@ -187,9 +187,9 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1: setWheel1(Circle.readCircle(in)); break;
-			case WHEEL_2: setWheel2(Circle.readCircle(in)); break;
-			case BODY: setBody(Rectangle.readRectangle(in)); break;
+			case WHEEL_1: setWheel1(test.novisit.Circle.readCircle(in)); break;
+			case WHEEL_2: setWheel2(test.novisit.Circle.readCircle(in)); break;
+			case BODY: setBody(test.novisit.Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -231,9 +231,9 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1__ID: setWheel1(Circle.readCircle(in)); break;
-			case WHEEL_2__ID: setWheel2(Circle.readCircle(in)); break;
-			case BODY__ID: setBody(Rectangle.readRectangle(in)); break;
+			case WHEEL_1__ID: setWheel1(test.novisit.Circle.readCircle(in)); break;
+			case WHEEL_2__ID: setWheel2(test.novisit.Circle.readCircle(in)); break;
+			case BODY__ID: setBody(test.novisit.Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}

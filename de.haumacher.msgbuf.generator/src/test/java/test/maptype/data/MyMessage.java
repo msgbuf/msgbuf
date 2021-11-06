@@ -155,7 +155,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 			case PROJECTS: {
 				in.beginObject();
 				while (in.hasNext()) {
-					putProject(in.nextName(), Project.readProject(in));
+					putProject(in.nextName(), test.maptype.data.Project.readProject(in));
 				}
 				in.endObject();
 				break;
@@ -226,7 +226,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 					while (in.hasNext()) {
 						switch (in.nextName()) {
 							case 1: key = in.nextString(); break;
-							case 2: value = Project.readProject(in); break;
+							case 2: value = test.maptype.data.Project.readProject(in); break;
 							default: in.skipValue(); break;
 						}
 					}

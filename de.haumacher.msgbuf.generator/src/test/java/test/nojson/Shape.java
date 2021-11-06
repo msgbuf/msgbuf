@@ -151,10 +151,10 @@ public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObje
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case Group.GROUP__TYPE_ID: result = Group.create(); break;
-			case Car.CAR__TYPE_ID: result = Car.create(); break;
-			case Circle.CIRCLE__TYPE_ID: result = Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = Rectangle.create(); break;
+			case Group.GROUP__TYPE_ID: result = test.nojson.Group.create(); break;
+			case Car.CAR__TYPE_ID: result = test.nojson.Car.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = test.nojson.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = test.nojson.Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {
