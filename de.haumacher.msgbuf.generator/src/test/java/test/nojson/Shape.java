@@ -1,9 +1,9 @@
-package test.novisit;
+package test.nojson;
 
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -20,6 +20,17 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/** Type literal for {@link Car}. */
 		CAR,
 		;
+
+	}
+
+	/** Visitor interface for the {@link Shape} hierarchy.*/
+	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
+
+		/** Visit case for {@link Group}.*/
+		R visit(Group self, A arg);
+
+		/** Visit case for {@link Car}.*/
+		R visit(Car self, A arg);
 
 	}
 
@@ -106,51 +117,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 	}
 
-	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape result;
-		in.beginArray();
-		String type = in.nextString();
-		switch (type) {
-			case Group.GROUP__TYPE: result = Group.readGroup(in); break;
-			case Car.CAR__TYPE: result = Car.readCar(in); break;
-			case Circle.CIRCLE__TYPE: result = Circle.readCircle(in); break;
-			case Rectangle.RECTANGLE__TYPE: result = Rectangle.readRectangle(in); break;
-			default: in.skipValue(); result = null; break;
-		}
-		in.endArray();
-		return result;
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.beginArray();
-		out.value(jsonType());
-		writeContent(out);
-		out.endArray();
-	}
-
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
-	@Override
-	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		super.writeFields(out);
-		out.name(X_COORDINATE);
-		out.value(getXCoordinate());
-		out.name(Y_COORDINATE);
-		out.value(getYCoordinate());
-	}
-
-	@Override
-	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
-		switch (field) {
-			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
-			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
-			default: super.readField(in, field);
-		}
-	}
-
 	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
 	public abstract int typeId();
 
@@ -207,5 +173,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 			default: in.skipValue(); 
 		}
 	}
+
+	/** Accepts the given visitor. */
+	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
+
 
 }

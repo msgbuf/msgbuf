@@ -72,10 +72,6 @@ public abstract class AbstractDataObject implements DataObject {
 
 	@Override
 	public String toString() {
-		return toJson();
-	}
-
-	private String toJson() {
 		StringW out = new StringW();
 		try {
 			writeTo(new JsonWriter(out));

@@ -13,7 +13,7 @@ import de.haumacher.msgbuf.data.DataObject;
  * @see DataWriter
  * @see DataReader
  */
-public interface BinaryDataObject extends DataObject {
+public interface BinaryDataObject {
 	
 	/**
 	 * Writes the content of this {@link DataObject} to the given binary output.

@@ -1,6 +1,6 @@
 package test.maptype.data;
 
-public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/**
 	 * Creates a {@link MyMessage} instance.
@@ -100,7 +100,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractReflectiveDataOb
 		switch (field) {
 			case PROJECTS: return getProjects();
 			case RATING: return getRating();
-			default: return super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

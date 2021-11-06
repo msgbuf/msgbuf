@@ -4,7 +4,7 @@ package test.comments.data;
  * SearchRequest represents a search query, with {@link #getPageNumber() pagination options} to
  * indicate which results to include in the response.
  */
-public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/**
 	 * Creates a {@link SearchRequest} instance.
@@ -119,7 +119,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 			case QUERY: return getQuery();
 			case PAGE_NUMBER: return getPageNumber();
 			case RESULT_PER_PAGE: return getResultPerPage();
-			default: return super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

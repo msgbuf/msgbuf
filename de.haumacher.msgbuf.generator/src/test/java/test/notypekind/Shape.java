@@ -3,7 +3,7 @@ package test.notypekind;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
 	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
@@ -84,7 +84,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractReflectiveD
 		switch (field) {
 			case X_COORDINATE: return getXCoordinate();
 			case Y_COORDINATE: return getYCoordinate();
-			default: return super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

@@ -1,6 +1,6 @@
 package test.nullable.data;
 
-public class NullableValues extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/**
 	 * Creates a {@link NullableValues} instance.
@@ -299,7 +299,7 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractReflectiveD
 			case STRING_LIST: return getStringList();
 			case STRING_INT_MAP: return getStringIntMap();
 			case OPTIONAL_DECISION: return getOptionalDecision();
-			default: return super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

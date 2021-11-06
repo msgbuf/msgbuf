@@ -1,9 +1,9 @@
-package test.novisit;
+package test.noreflection;
 
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -23,11 +23,22 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	}
 
+	/** Visitor interface for the {@link Shape} hierarchy.*/
+	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
+
+		/** Visit case for {@link Group}.*/
+		R visit(Group self, A arg);
+
+		/** Visit case for {@link Car}.*/
+		R visit(Car self, A arg);
+
+	}
+
 	/** @see #getXCoordinate() */
-	public static final String X_COORDINATE = "x";
+	private static final String X_COORDINATE = "x";
 
 	/** @see #getYCoordinate() */
-	public static final String Y_COORDINATE = "y";
+	private static final String Y_COORDINATE = "y";
 
 	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
 	public static final int X_COORDINATE__ID = 1;
@@ -77,33 +88,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	public final Shape setYCoordinate(int value) {
 		_yCoordinate = value;
 		return this;
-	}
-
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			X_COORDINATE, 
-			Y_COORDINATE));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case X_COORDINATE: return getXCoordinate();
-			case Y_COORDINATE: return getYCoordinate();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case X_COORDINATE: setXCoordinate((int) value); break;
-			case Y_COORDINATE: setYCoordinate((int) value); break;
-		}
 	}
 
 	/** Reads a new instance from the given reader. */
@@ -207,5 +191,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 			default: in.skipValue(); 
 		}
 	}
+
+	/** Accepts the given visitor. */
+	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
+
 
 }

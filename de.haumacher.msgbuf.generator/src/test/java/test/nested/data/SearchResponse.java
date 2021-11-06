@@ -1,7 +1,7 @@
 package test.nested.data;
 
-public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
-	public static class Result extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 		/**
 		 * Creates a {@link Result} instance.
@@ -108,7 +108,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 				case URL: return getUrl();
 				case TITLE: return getTitle();
 				case SNIPPETS: return getSnippets();
-				default: return super.get(field);
+				default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 			}
 		}
 
@@ -290,7 +290,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractReflectiveD
 	public Object get(String field) {
 		switch (field) {
 			case RESULTS: return getResults();
-			default: return super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

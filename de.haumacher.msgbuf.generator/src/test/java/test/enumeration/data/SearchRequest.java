@@ -1,6 +1,6 @@
 package test.enumeration.data;
 
-public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	public enum Corpus {
 
@@ -178,7 +178,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractReflectiveDa
 			case PAGE_NUMBER: return getPageNumber();
 			case RESULT_PER_PAGE: return getResultPerPage();
 			case CORPUS: return getCorpus();
-			default: return super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import de.haumacher.msgbuf.binary.DataType;
 import de.haumacher.msgbuf.generator.ast.CustomType;
@@ -36,6 +37,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 
 	private final NameTable _table;
 	private final MessageDef _def;
+	private boolean _json;
 	private boolean _binary;
 	private boolean _reflection;
 	private boolean _visitor;
@@ -50,6 +52,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		_table = table;
 		_options = options;
 		_def = def;
+		_json = !isTrue(options.get("NoJson"), false);
 		_binary = !isTrue(options.get("NoBinary"), false);
 		_reflection = !isTrue(options.get("NoReflection"), false);
 		_visitor = !isTrue(options.get("NoVisitor"), false);
@@ -58,6 +61,20 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	
 	private boolean isTrue(Option option, boolean defaultValue) {
 		return option == null ? defaultValue : ((Flag) option).isValue();
+	}
+	
+	/**
+	 * Whether to generate JSON serialization code.
+	 */
+	public boolean isJson() {
+		return _json;
+	}
+	
+	/**
+	 * @see #isJson()
+	 */
+	public void setJson(boolean json) {
+		_json = json;
 	}
 
 	/**
@@ -114,15 +131,31 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 
 	private String mkExtends() {
 		if (_def.getExtends() == null) {
-			return " extends " + (_reflection ? "de.haumacher.msgbuf.data.AbstractReflectiveDataObject" : "de.haumacher.msgbuf.data.AbstractDataObject") + 
-					(_binary ? " implements " : "") + 
-					(_binary ? "de.haumacher.msgbuf.binary.BinaryDataObject" : "")
-				;
+			return getExtends() + getImplements();
 		} else {
 			return " extends " + qTypeName(_def.getExtends());
 		}
 	}
 
+	private String getExtends() {
+		if (_json) {
+			return " extends de.haumacher.msgbuf.data.AbstractDataObject";
+		} else {
+			return "";
+		}
+	}
+
+	private String getImplements() {
+		List<String> generalizations = new ArrayList<>();
+		if (_binary) {
+			generalizations.add("de.haumacher.msgbuf.binary.BinaryDataObject");
+		}
+		if (_reflection) {
+			generalizations.add("de.haumacher.msgbuf.data.ReflectiveDataObject");
+		}
+		return (generalizations.size() > 0 ? " implements " : "") + generalizations.stream().collect(Collectors.joining(", "));
+	}
+	
 	@Override
 	protected void docComment(String comment) {
 		Pattern ref = Pattern.compile("([a-zA-Z_][a-zA-Z_0-9]*)?#([a-zA-Z_][a-zA-Z_0-9]*)");
@@ -183,7 +216,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			generateReflection();
 		}
 		
-		generateJson();
+		if (_json) {
+			generateJson();
+		}
 		
 		if (_binary) {
 			generateBinaryIO();
@@ -303,16 +338,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void generateConstants() {
-		if (!_def.isAbstract()) {
+		if (_json && !_def.isAbstract()) {
 			nl();
 			line("/** Identifier for the {@link " + typeName(_def) + "} type in JSON format. */");
 			line("public static final String " + jsonTypeConstant(_def) + " = " + jsonTypeID(_def) + ";");
 		}
 		
-		for (Field field : getFields()) {
-			nl();
-			line("/** @see #" + getterCall(field) + " */");
-			line((_reflection ? "public " : "private ") + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
+		if (_json || _reflection) {
+			for (Field field : getFields()) {
+				nl();
+				line("/** @see #" + getterCall(field) + " */");
+				line((_reflection ? "public " : "private ") + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
+			}
 		}
 		
 		if (_binary) {
@@ -550,7 +587,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			for (Field field : getFields()) {
 				line("case " + constant(field) + ": return " + getterName(field) + "()" + ";");
 			}
-			line("default: return super.get(field);");
+			if (_def.getExtendedDef() == null) {
+				line("default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);");
+			} else {
+				line("default: return super.get(field);");
+			}
 			line("}");
 		}
 		line("}");
