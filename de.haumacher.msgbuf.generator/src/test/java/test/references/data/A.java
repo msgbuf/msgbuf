@@ -60,12 +60,6 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	/** Identifier for the property {@link #getOthers()} in binary format. */
 	public static final int OTHERS__ID = 7;
 
-	/** Identifier for the property {@link #getInOther()} in binary format. */
-	public static final int IN_OTHER__ID = 8;
-
-	/** Identifier for the property {@link #getInOthers()} in binary format. */
-	public static final int IN_OTHERS__ID = 9;
-
 	private String _name = "";
 
 	private A _contents = null;
@@ -439,18 +433,6 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 			x.writeTo(out);
 		}
 		out.endArray();
-		out.name(IN_OTHER);
-		out.beginArray();
-		for (A x : getInOther()) {
-			x.writeTo(out);
-		}
-		out.endArray();
-		out.name(IN_OTHERS);
-		out.beginArray();
-		for (A x : getInOthers()) {
-			x.writeTo(out);
-		}
-		out.endArray();
 	}
 
 	@Override
@@ -538,24 +520,6 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 		out.name(OTHERS__ID);
 		{
 			java.util.List<A> values = getOthers();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (A x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
-		out.name(IN_OTHER__ID);
-		{
-			java.util.List<A> values = getInOther();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (A x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
-		out.name(IN_OTHERS__ID);
-		{
-			java.util.List<A> values = getInOthers();
 			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
 			for (A x : values) {
 				x.writeTo(out);

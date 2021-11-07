@@ -24,12 +24,6 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	/** Identifier for the property {@link #getName()} in binary format. */
 	public static final int NAME__ID = 1;
 
-	/** Identifier for the property {@link #getInBs()} in binary format. */
-	public static final int IN_BS__ID = 2;
-
-	/** Identifier for the property {@link #getInB()} in binary format. */
-	public static final int IN_B__ID = 3;
-
 	private String _name = "";
 
 	private final java.util.List<A> _inBs = new java.util.ArrayList<>();
@@ -164,18 +158,6 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 		super.writeFields(out);
 		out.name(NAME);
 		out.value(getName());
-		out.name(IN_BS);
-		out.beginArray();
-		for (A x : getInBs()) {
-			x.writeTo(out);
-		}
-		out.endArray();
-		out.name(IN_B);
-		out.beginArray();
-		for (A x : getInB()) {
-			x.writeTo(out);
-		}
-		out.endArray();
 	}
 
 	@Override
@@ -203,24 +185,6 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		out.name(NAME__ID);
 		out.value(getName());
-		out.name(IN_BS__ID);
-		{
-			java.util.List<A> values = getInBs();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (A x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
-		out.name(IN_B__ID);
-		{
-			java.util.List<A> values = getInB();
-			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (A x : values) {
-				x.writeTo(out);
-			}
-			out.endArray();
-		}
 	}
 
 	/** Reads a new instance from the given reader. */

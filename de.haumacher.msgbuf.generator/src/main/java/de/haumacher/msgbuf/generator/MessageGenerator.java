@@ -373,7 +373,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			}
 			
 			for (Field field : getFields()) {
-				if (field.isTransient()) {
+				if (field.isTransient() || field.isDerived()) {
 					continue;
 				}
 				
@@ -793,7 +793,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			{
 				line("super.writeFields(out);");
 				for (Field field : getFields()) {
-					if (field.isTransient()) {
+					if (field.isTransient() || field.isDerived()) {
 						continue;
 					}
 					boolean nullable = Util.isNullable(field);
@@ -1085,7 +1085,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 					line("// No fields to write, hook for subclasses.");
 				} else {
 					for (Field field : getFields()) {
-						if (field.isTransient()) {
+						if (field.isTransient() || field.isDerived()) {
 							continue;
 						}
 						boolean nullable = Util.isNullable(field);
