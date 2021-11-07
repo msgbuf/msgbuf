@@ -111,7 +111,7 @@ public class CustomType extends Type {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case NAME: setName(QName.readQName(in)); break;
+			case NAME: setName(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			default: super.readField(in, field);
 		}
 	}

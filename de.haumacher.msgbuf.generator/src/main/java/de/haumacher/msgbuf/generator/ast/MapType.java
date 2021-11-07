@@ -113,8 +113,8 @@ public class MapType extends Type {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case KEY_TYPE: setKeyType(Type.readType(in)); break;
-			case VALUE_TYPE: setValueType(Type.readType(in)); break;
+			case KEY_TYPE: setKeyType(de.haumacher.msgbuf.generator.ast.Type.readType(in)); break;
+			case VALUE_TYPE: setValueType(de.haumacher.msgbuf.generator.ast.Type.readType(in)); break;
 			default: super.readField(in, field);
 		}
 	}

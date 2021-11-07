@@ -260,11 +260,11 @@ public class MessageDef extends Definition {
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case ABSTRACT: setAbstract(in.nextBoolean()); break;
-			case EXTENDS: setExtends(QName.readQName(in)); break;
+			case EXTENDS: setExtends(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			case DEFINITIONS: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addDefinition(Definition.readDefinition(in));
+					addDefinition(de.haumacher.msgbuf.generator.ast.Definition.readDefinition(in));
 				}
 				in.endArray();
 			}
@@ -272,7 +272,7 @@ public class MessageDef extends Definition {
 			case FIELDS: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addField(Field.readField(in));
+					addField(de.haumacher.msgbuf.generator.ast.Field.readField(in));
 				}
 				in.endArray();
 			}

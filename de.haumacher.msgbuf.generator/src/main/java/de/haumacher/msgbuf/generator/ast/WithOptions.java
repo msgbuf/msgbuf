@@ -88,12 +88,12 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case OptionContainer.OPTION_CONTAINER__TYPE: result = OptionContainer.readOptionContainer(in); break;
-			case DefinitionFile.DEFINITION_FILE__TYPE: result = DefinitionFile.readDefinitionFile(in); break;
-			case Constant.CONSTANT__TYPE: result = Constant.readConstant(in); break;
-			case Field.FIELD__TYPE: result = Field.readField(in); break;
-			case EnumDef.ENUM_DEF__TYPE: result = EnumDef.readEnumDef(in); break;
-			case MessageDef.MESSAGE_DEF__TYPE: result = MessageDef.readMessageDef(in); break;
+			case OptionContainer.OPTION_CONTAINER__TYPE: result = de.haumacher.msgbuf.generator.ast.OptionContainer.readOptionContainer(in); break;
+			case DefinitionFile.DEFINITION_FILE__TYPE: result = de.haumacher.msgbuf.generator.ast.DefinitionFile.readDefinitionFile(in); break;
+			case Constant.CONSTANT__TYPE: result = de.haumacher.msgbuf.generator.ast.Constant.readConstant(in); break;
+			case Field.FIELD__TYPE: result = de.haumacher.msgbuf.generator.ast.Field.readField(in); break;
+			case EnumDef.ENUM_DEF__TYPE: result = de.haumacher.msgbuf.generator.ast.EnumDef.readEnumDef(in); break;
+			case MessageDef.MESSAGE_DEF__TYPE: result = de.haumacher.msgbuf.generator.ast.MessageDef.readMessageDef(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -129,7 +129,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 			case OPTIONS: {
 				in.beginObject();
 				while (in.hasNext()) {
-					putOption(in.nextName(), Option.readOption(in));
+					putOption(in.nextName(), de.haumacher.msgbuf.generator.ast.Option.readOption(in));
 				}
 				in.endObject();
 				break;

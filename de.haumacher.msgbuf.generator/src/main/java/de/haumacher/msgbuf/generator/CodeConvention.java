@@ -105,10 +105,7 @@ public class CodeConvention {
 	}
 
 	public static String adderName(Field field) {
-		String suffix = suffix(field);
-		if (suffix.endsWith("s")) {
-			suffix = suffix.substring(0, suffix.length() - 1);
-		}
+		String suffix = singularSuffix(field);
 		if (field.getType() instanceof MapType) {
 			return "put" + suffix;
 		} else {
@@ -116,6 +113,27 @@ public class CodeConvention {
 		}
 	}
 
+	public static String removerName(Field field) {
+		String suffix = singularSuffix(field);
+		return "remove" + suffix;
+	}
+
+	private static String singularSuffix(Field field) {
+		String suffix = suffix(field);
+		if (suffix.endsWith("s")) {
+			String singularSuffix = suffix.substring(0, suffix.length() - 1);
+			String name = field.getName();
+			String singularName = name.substring(0, name.length() - 1);
+			
+			MessageDef owner = (MessageDef) field.getOwner();
+			if (getField(owner, singularName) == null) {
+				// No clash with other singular field.
+				return singularSuffix;
+			}
+		}
+		return suffix;
+	}
+	
 	public static String hasName(Field field) {
 		return "has" + suffix(field);
 	}
@@ -165,5 +183,17 @@ public class CodeConvention {
 	}
 
 	static final String TYPE_KIND_NAME = "TypeKind";
+
+	public static Field getField(MessageDef def, String name) {
+		Field result = MessageGenerator.getLocalField(def, name);
+		if (result != null) {
+			return result;
+		}
+		MessageDef extendedDef = def.getExtendedDef();
+		if (extendedDef != null) {
+			return getField(extendedDef, name);
+		}
+		return null;
+	}
 
 }

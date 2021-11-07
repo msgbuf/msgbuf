@@ -185,6 +185,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/**
+	 * Removes a value from the {@link #getIntList()} list.
+	 */
+	public final NullableValues removeIntList(int value) {
+		if (_intList == null) _intList = new java.util.ArrayList<>();
+		_intList.remove(value);
+		return this;
+	}
+
+	/**
 	 * Checks, whether {@link #getIntList()} has a value.
 	 */
 	public final boolean hasIntList() {
@@ -215,6 +224,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/**
+	 * Removes a value from the {@link #getStringList()} list.
+	 */
+	public final NullableValues removeStringList(String value) {
+		if (_stringList == null) _stringList = new java.util.ArrayList<>();
+		_stringList.remove(value);
+		return this;
+	}
+
+	/**
 	 * Checks, whether {@link #getStringList()} has a value.
 	 */
 	public final boolean hasStringList() {
@@ -238,12 +256,22 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * Adds a value to the {@link #getStringIntMap()} map.
 	 */
-	public final void putStringIntMap(String key, int value) {
+	public final NullableValues putStringIntMap(String key, int value) {
 		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
 		if (_stringIntMap.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'stringIntMap' already contains a value for key '" + key + "'.");
 		}
 		_stringIntMap.put(key, value);
+		return this;
+	}
+
+	/**
+	 * Removes a key from the {@link #getStringIntMap()} map.
+	 */
+	public final NullableValues removeStringIntMap(String key) {
+		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
+		_stringIntMap.remove(key);
+		return this;
 	}
 
 	/**

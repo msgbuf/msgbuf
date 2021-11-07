@@ -1,0 +1,32 @@
+package test.references.data;
+
+message A {
+	string name;
+	
+	A contents;
+	repeated A children;
+
+	repeated B bs;
+
+	B b;
+
+	A other;
+
+	repeated A others;
+
+	@Reverse("other")
+	repeated A inOther;
+	
+	@Reverse("others")	
+	repeated A inOthers;
+}
+
+message B {
+	string name;
+
+	@Reverse("bs")
+	repeated A inBs;
+	
+	@Reverse("b")	
+	repeated A inB;
+}

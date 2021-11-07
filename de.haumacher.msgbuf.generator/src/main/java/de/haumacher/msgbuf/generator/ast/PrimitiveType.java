@@ -187,7 +187,7 @@ public class PrimitiveType extends Type {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case KIND: setKind(Kind.readKind(in)); break;
+			case KIND: setKind(de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind.readKind(in)); break;
 			default: super.readField(in, field);
 		}
 	}

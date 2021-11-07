@@ -120,11 +120,11 @@ public class DefinitionFile extends WithOptions {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case PACKAGE: setPackage(QName.readQName(in)); break;
+			case PACKAGE: setPackage(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			case DEFINITIONS: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addDefinition(Definition.readDefinition(in));
+					addDefinition(de.haumacher.msgbuf.generator.ast.Definition.readDefinition(in));
 				}
 				in.endArray();
 			}

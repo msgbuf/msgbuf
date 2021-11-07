@@ -48,7 +48,7 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		}
 		for (Definition inner : self.getDefinitions()) {
 			inner.setOuter(self);
-			enterDef(inner);
+			inner.visit(this, arg);
 		}
 		return null;
 	}

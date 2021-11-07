@@ -69,6 +69,14 @@ public class Group extends Shape {
 		return this;
 	}
 
+	/**
+	 * Removes a value from the {@link #getShapes()} list.
+	 */
+	public final Group removeShape(Shape value) {
+		_shapes.remove(value);
+		return this;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Group result = new Group();

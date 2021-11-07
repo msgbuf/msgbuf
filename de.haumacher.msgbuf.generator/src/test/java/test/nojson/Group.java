@@ -66,6 +66,14 @@ public class Group extends Shape {
 		return this;
 	}
 
+	/**
+	 * Removes a value from the {@link #getShapes()} list.
+	 */
+	public final Group removeShape(Shape value) {
+		_shapes.remove(value);
+		return this;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			SHAPES));

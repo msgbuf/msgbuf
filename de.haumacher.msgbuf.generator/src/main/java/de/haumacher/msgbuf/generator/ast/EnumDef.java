@@ -90,7 +90,7 @@ public class EnumDef extends Definition {
 			case CONSTANTS: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addConstant(Constant.readConstant(in));
+					addConstant(de.haumacher.msgbuf.generator.ast.Constant.readConstant(in));
 				}
 				in.endArray();
 			}

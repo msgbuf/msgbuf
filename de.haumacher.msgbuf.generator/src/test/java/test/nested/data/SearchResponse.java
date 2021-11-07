@@ -91,6 +91,14 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			return this;
 		}
 
+		/**
+		 * Removes a value from the {@link #getSnippets()} list.
+		 */
+		public final Result removeSnippet(String value) {
+			_snippets.remove(value);
+			return this;
+		}
+
 		private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 			java.util.Arrays.asList(
 				URL, 
@@ -274,6 +282,14 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 */
 	public final SearchResponse addResult(Result value) {
 		_results.add(value);
+		return this;
+	}
+
+	/**
+	 * Removes a value from the {@link #getResults()} list.
+	 */
+	public final SearchResponse removeResult(Result value) {
+		_results.remove(value);
 		return this;
 	}
 

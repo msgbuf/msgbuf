@@ -133,7 +133,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_def.getExtends() == null) {
 			return getExtends() + getImplements();
 		} else {
-			return " extends " + qTypeName(_def.getExtends());
+			return " extends " + qTypeName(_def.getExtends()) + getMixins();
 		}
 	}
 
@@ -144,6 +144,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			return "";
 		}
 	}
+	
+	private String getMixins() {
+		List<String> generalizations = new ArrayList<>();
+		addMixins(generalizations);
+		return toImplements(generalizations);
+	}
 
 	private String getImplements() {
 		List<String> generalizations = new ArrayList<>();
@@ -153,7 +159,26 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_reflection) {
 			generalizations.add("de.haumacher.msgbuf.data.ReflectiveDataObject");
 		}
+		
+		addMixins(generalizations);
+		
+		return toImplements(generalizations);
+	}
+
+	private String toImplements(List<String> generalizations) {
 		return (generalizations.size() > 0 ? " implements " : "") + generalizations.stream().collect(Collectors.joining(", "));
+	}
+
+	private void addMixins(List<String> generalizations) {
+		Option operations = _def.getOptions().get("Operations");
+		if (operations != null) {
+			if (operations instanceof StringOption) {
+				StringOption singleOperation = (StringOption) operations;
+				generalizations.add(singleOperation.getValue());
+			} else {
+				System.err.println("String option '" + "Operations" + "' expected, got: " + operations);
+			}
+		}
 	}
 	
 	@Override
@@ -168,7 +193,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			if (type != null) {
 				def = _table.lookup(_def, qName(type));
 			}
-			Field field = def instanceof MessageDef ? getField((MessageDef) def, name) : null;
+			Field field = def instanceof MessageDef ? CodeConvention.getField((MessageDef) def, name) : null;
 			String replacement = (type == null ? "" : type) + "#";
 			if (field == null) {
 				replacement += name;
@@ -181,18 +206,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		matcher.appendTail(buffer);
 		
 		super.docComment(buffer.toString());
-	}
-
-	private Field getField(MessageDef def, String name) {
-		Field result = getLocalField(def, name);
-		if (result != null) {
-			return result;
-		}
-		MessageDef extendedDef = def.getExtendedDef();
-		if (extendedDef != null) {
-			return getField(extendedDef, name);
-		}
-		return null;
 	}
 
 	private void generateClassContents() {
@@ -396,6 +409,33 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private void generateFieldMembers() {
 		for (Field field : getFields()) {
 			nl();
+			
+			if (field.isRepeated()) {
+				Field reverseEnd = reverseEnd(field);
+				if (reverseEnd != null) {
+					String qFieldTypeName = qTypeName((CustomType) field.getType());
+					line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + fieldMemberName(field) + " = " + "new de.haumacher.msgbuf.util.ReferenceList<" + qFieldTypeName + ">() {");
+					{
+						line("@Override");
+						line("protected void onAdd(" + qFieldTypeName + " element) {");
+						{
+							line("element." + adderName(reverseEnd) + "(" + qTypeName(_def) + ".this);");
+						}
+						line("}");
+						nl();
+						
+						line("@Override");
+						line("protected void onRemove(" + qFieldTypeName + " element) {");
+						{
+							line("element." + removerName(reverseEnd) + "(" + qTypeName(_def) + ".this);");
+						}
+						line("}");
+					}
+					line("};");
+					continue;
+				}
+			}
+			
 			line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + fieldMemberName(field) + mkInitializer(field) + ";");
 		}
 	}
@@ -455,12 +495,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		line("/**");
 		line(" * @see #" + getterName(field) + "()");
 		line(" */");
-		line("public final " + typeName(_def) + " " + setterName(field) + "(" + mkType(field) + " " + "value" + ")" + " {");
+		line(setterModifier(field) + "final " + typeName(_def) + " " + setterName(field) + "(" + mkType(field) + " " + "value" + ")" + " {");
 		Type type = field.getType();
 		{
-			if (!Util.isNullable(field) && !(field.getType() instanceof PrimitiveType)) {
+			if (!Util.isNullable(field) && !(type instanceof PrimitiveType)) {
 				line("if (value == null) throw new IllegalArgumentException(\"Property '" + field.getName() + "' cannot be null.\");");
 			}
+			
 			if (field.isRepeated()) {
 				setterReset(field);
 				line(fieldMemberName(field) + ".addAll(value);");
@@ -468,11 +509,42 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				setterReset(field);
 				line(fieldMemberName(field) + ".putAll(value);");
 			} else {
+				Field reverseEnd = reverseEnd(field);
+				boolean hasReverseEnd = reverseEnd != null;
+				
+				if (hasReverseEnd) {
+					line("if (" + fieldMemberName(field) + " != null) {");
+					line(fieldMemberName(field) + "." + removerName(reverseEnd) + "(this);");
+					line("}");
+				}
+
 				line(fieldMemberName(field) + " = " + "value" + ";");
+
+				if (hasReverseEnd) {
+					line("if (value != null) {");
+					{
+						line("value." + adderName(reverseEnd) + "(this);");
+					}
+					line("}");
+				}
 			}
+			
 			line("return this;");
 		}
 		line("}");
+	}
+
+	private Field reverseEnd(Field field) {
+		Type type = field.getType();
+		if (type instanceof CustomType) {
+			Definition typeDef = ((CustomType) type).getDefinition();
+			if (typeDef instanceof MessageDef) {
+				MessageDef messageType = (MessageDef) typeDef;
+				
+				return getReverseField(messageType, field.getName());
+			}
+		}
+		return null;
 	}
 
 	private void setterReset(Field field) {
@@ -489,10 +561,22 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			line("/**");
 			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} list.");
 			line(" */");
-			line("public final " + typeName(_def) + " " + adderName(field) + "(" + mkType(type) + " " + "value" + ")" + " {");
+			line(setterModifier(field) + "final " + typeName(_def) + " " + adderName(field) + "(" + mkType(type) + " " + "value" + ")" + " {");
 			{
 				adderInitNullable(field);
 				line(fieldMemberName(field) + ".add(value);");
+				line("return this;");
+			}
+			line("}");
+
+			nl();
+			line("/**");
+			line(" * Removes a value from the {@link #" + getterName(field) + "()"+ "} list.");
+			line(" */");
+			line(setterModifier(field) + "final " + typeName(_def) + " " + removerName(field) + "(" + mkType(type) + " " + "value" + ")" + " {");
+			{
+				adderInitNullable(field);
+				line(fieldMemberName(field) + ".remove(value);");
 				line("return this;");
 			}
 			line("}");
@@ -503,7 +587,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			line("/**");
 			line(" * Adds a value to the {@link #" + getterName(field) + "()"+ "} map.");
 			line(" */");
-			line("public final " + "void" + " " + adderName(field) + "(" + mkType(mapType.getKeyType()) + " key" + ", " + mkType(mapType.getValueType()) + " value" + ")" + " {");
+			line(setterModifier(field) + "final " + typeName(_def) + " " + adderName(field) + "(" + mkType(mapType.getKeyType()) + " key" + ", " + mkType(mapType.getValueType()) + " value" + ")" + " {");
 			{
 				adderInitNullable(field);
 				line("if (" + fieldMemberName(field) + ".containsKey(key)) {");
@@ -512,9 +596,32 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				}
 				line("}");
 				line(fieldMemberName(field) + ".put(key, value);");
+				line("return this;");
+			}
+			line("}");
+			
+			nl();
+			line("/**");
+			line(" * Removes a key from the {@link #" + getterName(field) + "()"+ "} map.");
+			line(" */");
+			line(setterModifier(field) + "final " + typeName(_def) + " " + removerName(field) + "(" + mkType(mapType.getKeyType()) + " key" + ")" + " {");
+			{
+				adderInitNullable(field);
+				line(fieldMemberName(field) + ".remove(key);");
+				line("return this;");
 			}
 			line("}");
 		}
+	}
+
+	private String setterModifier(Field field) {
+		String modifier;
+		if (field.isDerived()) {
+			modifier = "";
+		} else {
+			modifier = "public ";
+		}
+		return modifier;
 	}
 
 	private void adderInitNullable(Field field) {
@@ -605,6 +712,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			{
 				line("switch (field) {");
 				for (Field field : getFields()) {
+					if (field.isDerived()) {
+						continue;
+					}
 					line("case " + constant(field) + ": " + setterName(field) + "(" + mkCast(field, "value") + ")" + "; break;");
 				}
 				if (!isBaseClass()) {
@@ -715,9 +825,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			{
 				line("switch (field) {");
 				for (Field field : getFields()) {
-					if (field.isTransient()) {
-						continue;
-					}
 					jsonReadField(field);
 				}
 				line("default: super.readField(in, field);");
@@ -728,6 +835,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void jsonReadField(Field field) {
+		if (field.isTransient()) {
+			return;
+		}
+		if (field.isDerived()) {
+			return;
+		}
+		
 		Type type = field.getType();
 		if (field.isRepeated()) {
 			line("case " + constant(field) + ": {");
@@ -1064,9 +1178,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			{
 				line("switch (field) {");
 				for (Field field : getFields()) {
-					if (field.isTransient()) {
-						continue;
-					}
 					binaryReadField(field);
 				}
 				if (isBaseClass()) {
@@ -1081,6 +1192,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void binaryReadField(Field field) {
+		if (field.isTransient()) {
+			return;
+		}
+		if (field.isDerived()) {
+			return;
+		}
+
 		Type type = field.getType();
 		if (field.isRepeated()) {
 			line("case " + binaryConstant(field) + ": {");
@@ -1351,5 +1469,28 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		return def.getFields().stream().filter(f -> name.equals(f.getName())).findFirst().orElse(null);
 	}
 	
+	private static Field getReverseField(MessageDef def, String name) {
+		Field result = getLocalReverseField(def, name);
+		if (result != null) {
+			return result;
+		}
+		MessageDef extendedDef = def.getExtendedDef();
+		if (extendedDef != null) {
+			return getReverseField(extendedDef, name);
+		}
+		return null;
+	}
+	
+	static Field getLocalReverseField(MessageDef def, String name) {
+		return def.getFields().stream().filter(f -> hasReverseName(f, name)).findFirst().orElse(null);
+	}
+
+	private static boolean hasReverseName(Field f, String name) {
+		StringOption reverseOption = (StringOption) f.getOptions().get("Reverse");
+		if (reverseOption == null) {
+			return false;
+		}
+		return reverseOption.getValue().equals(name);
+	}
 
 }

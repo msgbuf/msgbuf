@@ -120,6 +120,7 @@ message MessageDef extends Definition {
 /**
  * A field definition of a {@link MessageDef}.
  */
+@Operations("de.haumacher.msgbuf.generator.FieldOperations")
 message Field extends Part {
 	
 	/** Whether this field is not serialized when a message is created. */

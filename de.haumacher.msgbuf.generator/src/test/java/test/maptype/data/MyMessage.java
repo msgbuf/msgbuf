@@ -54,11 +54,20 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	/**
 	 * Adds a value to the {@link #getProjects()} map.
 	 */
-	public final void putProject(String key, Project value) {
+	public final MyMessage putProject(String key, Project value) {
 		if (_projects.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'projects' already contains a value for key '" + key + "'.");
 		}
 		_projects.put(key, value);
+		return this;
+	}
+
+	/**
+	 * Removes a key from the {@link #getProjects()} map.
+	 */
+	public final MyMessage removeProject(String key) {
+		_projects.remove(key);
+		return this;
 	}
 
 	public final java.util.Map<Integer, String> getRating() {
@@ -78,11 +87,20 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	/**
 	 * Adds a value to the {@link #getRating()} map.
 	 */
-	public final void putRating(int key, String value) {
+	public final MyMessage putRating(int key, String value) {
 		if (_rating.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'rating' already contains a value for key '" + key + "'.");
 		}
 		_rating.put(key, value);
+		return this;
+	}
+
+	/**
+	 * Removes a key from the {@link #getRating()} map.
+	 */
+	public final MyMessage removeRating(int key) {
+		_rating.remove(key);
+		return this;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

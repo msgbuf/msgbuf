@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A field definition of a {@link MessageDef}.
  */
-public class Field extends Part {
+public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOperations {
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -128,7 +128,7 @@ public class Field extends Part {
 		switch (field) {
 			case TRANSIENT: setTransient(in.nextBoolean()); break;
 			case REPEATED: setRepeated(in.nextBoolean()); break;
-			case TYPE: setType(Type.readType(in)); break;
+			case TYPE: setType(de.haumacher.msgbuf.generator.ast.Type.readType(in)); break;
 			default: super.readField(in, field);
 		}
 	}
