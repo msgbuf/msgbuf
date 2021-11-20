@@ -3,7 +3,7 @@ package test.notypekind;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
 	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
@@ -50,6 +50,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getXCoordinate()
 	 */
 	public final Shape setXCoordinate(int value) {
+		_listener.beforeSet(this, X_COORDINATE, value);
 		_xCoordinate = value;
 		return this;
 	}
@@ -65,7 +66,22 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getYCoordinate()
 	 */
 	public final Shape setYCoordinate(int value) {
+		_listener.beforeSet(this, Y_COORDINATE, value);
 		_yCoordinate = value;
+		return this;
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
 	}
 
@@ -84,7 +100,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		switch (field) {
 			case X_COORDINATE: return getXCoordinate();
 			case Y_COORDINATE: return getYCoordinate();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 		}
 	}
 

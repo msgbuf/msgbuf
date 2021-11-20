@@ -1,9 +1,9 @@
-package test.nojson;
+package test.nolistener;
 
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -71,7 +71,6 @@ public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObje
 	 * @see #getXCoordinate()
 	 */
 	public final Shape setXCoordinate(int value) {
-		_listener.beforeSet(this, X_COORDINATE, value);
 		_xCoordinate = value;
 		return this;
 	}
@@ -87,22 +86,7 @@ public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObje
 	 * @see #getYCoordinate()
 	 */
 	public final Shape setYCoordinate(int value) {
-		_listener.beforeSet(this, Y_COORDINATE, value);
 		_yCoordinate = value;
-		return this;
-	}
-
-	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
-
-	@Override
-	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return this;
-	}
-
-	@Override
-	public Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
 	}
 
@@ -121,7 +105,7 @@ public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObje
 		switch (field) {
 			case X_COORDINATE: return getXCoordinate();
 			case Y_COORDINATE: return getYCoordinate();
-			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 
@@ -130,6 +114,51 @@ public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObje
 		switch (field) {
 			case X_COORDINATE: setXCoordinate((int) value); break;
 			case Y_COORDINATE: setYCoordinate((int) value); break;
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Shape result;
+		in.beginArray();
+		String type = in.nextString();
+		switch (type) {
+			case Group.GROUP__TYPE: result = test.nolistener.Group.readGroup(in); break;
+			case Car.CAR__TYPE: result = test.nolistener.Car.readCar(in); break;
+			case Circle.CIRCLE__TYPE: result = test.nolistener.Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.nolistener.Rectangle.readRectangle(in); break;
+			default: in.skipValue(); result = null; break;
+		}
+		in.endArray();
+		return result;
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		out.beginArray();
+		out.value(jsonType());
+		writeContent(out);
+		out.endArray();
+	}
+
+	/** The type identifier for this concrete subtype. */
+	public abstract String jsonType();
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(X_COORDINATE);
+		out.value(getXCoordinate());
+		out.name(Y_COORDINATE);
+		out.value(getYCoordinate());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
+			default: super.readField(in, field);
 		}
 	}
 
@@ -167,10 +196,10 @@ public abstract class Shape implements de.haumacher.msgbuf.binary.BinaryDataObje
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case Group.GROUP__TYPE_ID: result = test.nojson.Group.create(); break;
-			case Car.CAR__TYPE_ID: result = test.nojson.Car.create(); break;
-			case Circle.CIRCLE__TYPE_ID: result = test.nojson.Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.nojson.Rectangle.create(); break;
+			case Group.GROUP__TYPE_ID: result = test.nolistener.Group.create(); break;
+			case Car.CAR__TYPE_ID: result = test.nolistener.Car.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = test.nolistener.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = test.nolistener.Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {

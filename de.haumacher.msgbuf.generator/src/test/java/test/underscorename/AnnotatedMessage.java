@@ -45,6 +45,7 @@ public class AnnotatedMessage extends BaseMsg {
 	 * @see #getAnnotatedField()
 	 */
 	public final AnnotatedMessage setAnnotatedField(String value) {
+		_listener.beforeSet(this, ANNOTATED_FIELD, value);
 		_annotatedField = value;
 		return this;
 	}

@@ -46,6 +46,7 @@ public class Circle extends AtomicShape {
 	 * @see #getRadius()
 	 */
 	public final Circle setRadius(int value) {
+		_listener.beforeSet(this, RADIUS, value);
 		_radius = value;
 		return this;
 	}

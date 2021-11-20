@@ -62,6 +62,7 @@ public class Rectangle extends AtomicShape {
 	 * @see #getWidth()
 	 */
 	public final Rectangle setWidth(int value) {
+		_listener.beforeSet(this, WIDTH, value);
 		_width = value;
 		return this;
 	}
@@ -79,6 +80,7 @@ public class Rectangle extends AtomicShape {
 	 * @see #getHeight()
 	 */
 	public final Rectangle setHeight(int value) {
+		_listener.beforeSet(this, HEIGHT, value);
 		_height = value;
 		return this;
 	}

@@ -1,6 +1,6 @@
 package test.enumeration.data;
 
-public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	public enum Corpus {
 
@@ -118,6 +118,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	 * @see #getQuery()
 	 */
 	public final SearchRequest setQuery(String value) {
+		_listener.beforeSet(this, QUERY, value);
 		_query = value;
 		return this;
 	}
@@ -130,6 +131,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	 * @see #getPageNumber()
 	 */
 	public final SearchRequest setPageNumber(int value) {
+		_listener.beforeSet(this, PAGE_NUMBER, value);
 		_pageNumber = value;
 		return this;
 	}
@@ -142,6 +144,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	 * @see #getResultPerPage()
 	 */
 	public final SearchRequest setResultPerPage(int value) {
+		_listener.beforeSet(this, RESULT_PER_PAGE, value);
 		_resultPerPage = value;
 		return this;
 	}
@@ -155,7 +158,22 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	 */
 	public final SearchRequest setCorpus(Corpus value) {
 		if (value == null) throw new IllegalArgumentException("Property 'corpus' cannot be null.");
+		_listener.beforeSet(this, CORPUS, value);
 		_corpus = value;
+		return this;
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public SearchRequest registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
 	}
 
@@ -178,7 +196,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 			case PAGE_NUMBER: return getPageNumber();
 			case RESULT_PER_PAGE: return getResultPerPage();
 			case CORPUS: return getCorpus();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package test.nested.data;
 
-public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
-	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+	public static class Result extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 		/**
 		 * Creates a {@link Result} instance.
@@ -35,7 +35,17 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 		private String _title = "";
 
-		private final java.util.List<String> _snippets = new java.util.ArrayList<>();
+		private final java.util.List<String> _snippets = new de.haumacher.msgbuf.util.ReferenceList<String>() {
+			@Override
+			protected void beforeAdd(int index, String element) {
+				_listener.beforeAdd(test.nested.data.SearchResponse.Result.this, SNIPPETS, index, element);
+			}
+
+			@Override
+			protected void afterRemove(int index, String element) {
+				_listener.afterRemove(test.nested.data.SearchResponse.Result.this, SNIPPETS, index, element);
+			}
+		};
 
 		/**
 		 * Creates a {@link Result} instance.
@@ -54,6 +64,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		 * @see #getUrl()
 		 */
 		public final Result setUrl(String value) {
+			_listener.beforeSet(this, URL, value);
 			_url = value;
 			return this;
 		}
@@ -66,6 +77,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		 * @see #getTitle()
 		 */
 		public final Result setTitle(String value) {
+			_listener.beforeSet(this, TITLE, value);
 			_title = value;
 			return this;
 		}
@@ -99,6 +111,20 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			return this;
 		}
 
+		protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+		@Override
+		public Result registerListener(de.haumacher.msgbuf.observer.Listener l) {
+			_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+			return this;
+		}
+
+		@Override
+		public Result unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+			_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+			return this;
+		}
+
 		private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 			java.util.Arrays.asList(
 				URL, 
@@ -116,7 +142,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 				case URL: return getUrl();
 				case TITLE: return getTitle();
 				case SNIPPETS: return getSnippets();
-				default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+				default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 			}
 		}
 
@@ -252,7 +278,17 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/** Identifier for the property {@link #getResults()} in binary format. */
 	public static final int RESULTS__ID = 1;
 
-	private final java.util.List<Result> _results = new java.util.ArrayList<>();
+	private final java.util.List<Result> _results = new de.haumacher.msgbuf.util.ReferenceList<Result>() {
+		@Override
+		protected void beforeAdd(int index, Result element) {
+			_listener.beforeAdd(test.nested.data.SearchResponse.this, RESULTS, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, Result element) {
+			_listener.afterRemove(test.nested.data.SearchResponse.this, RESULTS, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link SearchResponse} instance.
@@ -293,6 +329,20 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		return this;
 	}
 
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public SearchResponse registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public SearchResponse unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			RESULTS));
@@ -306,7 +356,7 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	public Object get(String field) {
 		switch (field) {
 			case RESULTS: return getResults();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 		}
 	}
 

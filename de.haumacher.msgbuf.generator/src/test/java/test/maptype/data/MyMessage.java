@@ -1,6 +1,6 @@
 package test.maptype.data;
 
-public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/**
 	 * Creates a {@link MyMessage} instance.
@@ -103,6 +103,20 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		return this;
 	}
 
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public MyMessage registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public MyMessage unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			PROJECTS, 
@@ -118,7 +132,7 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		switch (field) {
 			case PROJECTS: return getProjects();
 			case RATING: return getRating();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 		}
 	}
 

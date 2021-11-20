@@ -1,8 +1,7 @@
 syntax = "msgbuf";
 
-package test.noreflection;
+package test.nolistener;
 
-option NoReflection;
 option NoListener;
 
 /** 

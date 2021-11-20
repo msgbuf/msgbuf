@@ -1,4 +1,4 @@
-package test.novisit;
+package test.nolistener;
 
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
@@ -67,7 +67,6 @@ public class Car extends Shape {
 	 * @see #getWheel1()
 	 */
 	public final Car setWheel1(Circle value) {
-		_listener.beforeSet(this, WHEEL_1, value);
 		_wheel1 = value;
 		return this;
 	}
@@ -90,7 +89,6 @@ public class Car extends Shape {
 	 * @see #getWheel2()
 	 */
 	public final Car setWheel2(Circle value) {
-		_listener.beforeSet(this, WHEEL_2, value);
 		_wheel2 = value;
 		return this;
 	}
@@ -113,7 +111,6 @@ public class Car extends Shape {
 	 * @see #getBody()
 	 */
 	public final Car setBody(Rectangle value) {
-		_listener.beforeSet(this, BODY, value);
 		_body = value;
 		return this;
 	}
@@ -190,9 +187,9 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1: setWheel1(test.novisit.Circle.readCircle(in)); break;
-			case WHEEL_2: setWheel2(test.novisit.Circle.readCircle(in)); break;
-			case BODY: setBody(test.novisit.Rectangle.readRectangle(in)); break;
+			case WHEEL_1: setWheel1(test.nolistener.Circle.readCircle(in)); break;
+			case WHEEL_2: setWheel2(test.nolistener.Circle.readCircle(in)); break;
+			case BODY: setBody(test.nolistener.Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -234,11 +231,16 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1__ID: setWheel1(test.novisit.Circle.readCircle(in)); break;
-			case WHEEL_2__ID: setWheel2(test.novisit.Circle.readCircle(in)); break;
-			case BODY__ID: setBody(test.novisit.Rectangle.readRectangle(in)); break;
+			case WHEEL_1__ID: setWheel1(test.nolistener.Circle.readCircle(in)); break;
+			case WHEEL_2__ID: setWheel2(test.nolistener.Circle.readCircle(in)); break;
+			case BODY__ID: setBody(test.nolistener.Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
+		return v.visit(this, arg);
 	}
 
 }

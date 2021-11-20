@@ -1,6 +1,6 @@
 package test.maptype.data;
 
-public class Project extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class Project extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/**
 	 * Creates a {@link Project} instance.
@@ -45,6 +45,7 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	 * @see #getName()
 	 */
 	public final Project setName(String value) {
+		_listener.beforeSet(this, NAME, value);
 		_name = value;
 		return this;
 	}
@@ -57,7 +58,22 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	 * @see #getCost()
 	 */
 	public final Project setCost(double value) {
+		_listener.beforeSet(this, COST, value);
 		_cost = value;
+		return this;
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public Project registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public Project unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
 	}
 
@@ -76,7 +92,7 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 		switch (field) {
 			case NAME: return getName();
 			case COST: return getCost();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 		}
 	}
 

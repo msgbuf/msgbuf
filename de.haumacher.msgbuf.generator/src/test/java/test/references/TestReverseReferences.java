@@ -6,9 +6,13 @@ package test.references;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.haumacher.msgbuf.io.StringR;
 import de.haumacher.msgbuf.json.JsonReader;
+import de.haumacher.msgbuf.observer.Listener;
+import de.haumacher.msgbuf.observer.Observable;
 import junit.framework.TestCase;
 import test.references.data.A;
 import test.references.data.B;
@@ -68,5 +72,41 @@ public class TestReverseReferences extends TestCase {
 		a1.removeBs(b3);
 		assertEquals(0, b3.getInB().size());
 		assertEquals(0, b3.getInBs().size());
+	}
+	
+	public void testSetListener() {
+		Map<String, Object> properties = new HashMap<>();
+		A a1 = A.create().registerListener((self, prop, value) -> properties.put(prop, value)).setB(B.create()).setName("a1");
+		assertEquals(a1.getB(), properties.get(A.B));
+		assertEquals("a1", properties.get(A.NAME));
+	}
+	
+	public void testAddListener() {
+		Map<String, Object> properties = new HashMap<>();
+		Listener l = new Listener() {
+			@Override
+			public void beforeSet(Observable obj, String property, Object value) {
+				if (value instanceof Observable) {
+					((Observable) value).registerListener(this);
+				}
+				
+				properties.put(property, value);
+			}
+			
+			@Override
+			public void beforeAdd(Observable obj, String property, int index, Object element) {
+				if (element instanceof Observable) {
+					((Observable) element).registerListener(this);
+				}
+				properties.put(property, element);
+			}
+		};
+		A a1 = A.create().registerListener(l).setName("a1").addBs(B.create().setName("b1")).setChildren(Arrays.asList(A.create().setName("a2")));
+		assertEquals("a1", properties.get(A.NAME));
+		assertEquals(a1.getBs().get(0), properties.get(A.BS));
+		assertEquals(a1.getChildren().get(0), properties.get(A.CHILDREN));
+		
+		a1.getBs().get(0).setName("b2");
+		assertEquals("b2", properties.get(B.NAME));
 	}
 }

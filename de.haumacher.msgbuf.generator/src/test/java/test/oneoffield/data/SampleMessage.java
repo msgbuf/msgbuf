@@ -1,6 +1,6 @@
 package test.oneoffield.data;
 
-public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/**
 	 * Creates a {@link SampleMessage} instance.
@@ -19,6 +19,20 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject i
 	 */
 	protected SampleMessage() {
 		super();
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public SampleMessage registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public SampleMessage unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */

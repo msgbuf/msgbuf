@@ -1,6 +1,6 @@
 package test.options.data;
 
-public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	public enum EnumAllowingAlias {
 
@@ -59,6 +59,20 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	 */
 	protected MyMessage1() {
 		super();
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public MyMessage1 registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public MyMessage1 unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */

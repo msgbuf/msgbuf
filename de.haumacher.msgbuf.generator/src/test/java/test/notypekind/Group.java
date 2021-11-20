@@ -24,7 +24,17 @@ public class Group extends Shape {
 	/** Identifier for the property {@link #getShapes()} in binary format. */
 	public static final int SHAPES__ID = 3;
 
-	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
+	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
+		@Override
+		protected void beforeAdd(int index, Shape element) {
+			_listener.beforeAdd(test.notypekind.Group.this, SHAPES, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, Shape element) {
+			_listener.afterRemove(test.notypekind.Group.this, SHAPES, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link Group} instance.

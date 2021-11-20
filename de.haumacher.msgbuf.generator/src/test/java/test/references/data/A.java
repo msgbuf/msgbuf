@@ -1,6 +1,6 @@
 package test.references.data;
 
-public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/**
 	 * Creates a {@link A} instance.
@@ -64,17 +64,29 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 
 	private A _contents = null;
 
-	private final java.util.List<A> _children = new java.util.ArrayList<>();
-
-	private final java.util.List<B> _bs = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.B>() {
+	private final java.util.List<A> _children = new de.haumacher.msgbuf.util.ReferenceList<A>() {
 		@Override
-		protected void onAdd(test.references.data.B element) {
+		protected void beforeAdd(int index, A element) {
+			_listener.beforeAdd(test.references.data.A.this, CHILDREN, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, A element) {
+			_listener.afterRemove(test.references.data.A.this, CHILDREN, index, element);
+		}
+	};
+
+	private final java.util.List<B> _bs = new de.haumacher.msgbuf.util.ReferenceList<B>() {
+		@Override
+		protected void beforeAdd(int index, B element) {
+			_listener.beforeAdd(test.references.data.A.this, BS, index, element);
 			element.addInBs(test.references.data.A.this);
 		}
 
 		@Override
-		protected void onRemove(test.references.data.B element) {
+		protected void afterRemove(int index, B element) {
 			element.removeInBs(test.references.data.A.this);
+			_listener.afterRemove(test.references.data.A.this, BS, index, element);
 		}
 	};
 
@@ -82,21 +94,43 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 
 	private A _other = null;
 
-	private final java.util.List<A> _others = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
+	private final java.util.List<A> _others = new de.haumacher.msgbuf.util.ReferenceList<A>() {
 		@Override
-		protected void onAdd(test.references.data.A element) {
+		protected void beforeAdd(int index, A element) {
+			_listener.beforeAdd(test.references.data.A.this, OTHERS, index, element);
 			element.addInOthers(test.references.data.A.this);
 		}
 
 		@Override
-		protected void onRemove(test.references.data.A element) {
+		protected void afterRemove(int index, A element) {
 			element.removeInOthers(test.references.data.A.this);
+			_listener.afterRemove(test.references.data.A.this, OTHERS, index, element);
 		}
 	};
 
-	private final java.util.List<A> _inOther = new java.util.ArrayList<>();
+	private final java.util.List<A> _inOther = new de.haumacher.msgbuf.util.ReferenceList<A>() {
+		@Override
+		protected void beforeAdd(int index, A element) {
+			_listener.beforeAdd(test.references.data.A.this, IN_OTHER, index, element);
+		}
 
-	private final java.util.List<A> _inOthers = new java.util.ArrayList<>();
+		@Override
+		protected void afterRemove(int index, A element) {
+			_listener.afterRemove(test.references.data.A.this, IN_OTHER, index, element);
+		}
+	};
+
+	private final java.util.List<A> _inOthers = new de.haumacher.msgbuf.util.ReferenceList<A>() {
+		@Override
+		protected void beforeAdd(int index, A element) {
+			_listener.beforeAdd(test.references.data.A.this, IN_OTHERS, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, A element) {
+			_listener.afterRemove(test.references.data.A.this, IN_OTHERS, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link A} instance.
@@ -115,6 +149,7 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	 * @see #getName()
 	 */
 	public final A setName(String value) {
+		_listener.beforeSet(this, NAME, value);
 		_name = value;
 		return this;
 	}
@@ -127,6 +162,7 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	 * @see #getContents()
 	 */
 	public final A setContents(A value) {
+		_listener.beforeSet(this, CONTENTS, value);
 		_contents = value;
 		return this;
 	}
@@ -206,6 +242,7 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	 * @see #getB()
 	 */
 	public final A setB(B value) {
+		_listener.beforeSet(this, B, value);
 		if (_b != null) {
 			_b.removeInB(this);
 		}
@@ -231,6 +268,7 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	 * @see #getOther()
 	 */
 	public final A setOther(A value) {
+		_listener.beforeSet(this, OTHER, value);
 		if (_other != null) {
 			_other.removeInOther(this);
 		}
@@ -338,6 +376,20 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 		return this;
 	}
 
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public A registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public A unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			NAME, 
@@ -367,7 +419,7 @@ public class A extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 			case OTHERS: return getOthers();
 			case IN_OTHER: return getInOther();
 			case IN_OTHERS: return getInOthers();
-			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
 		}
 	}
 
