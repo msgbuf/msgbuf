@@ -601,15 +601,15 @@ public class ProtobufParser implements ProtobufParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TYPE:
       t = jj_consume_token(TYPE);
-      result = PrimitiveType.create().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase()));
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.valueOfProtocol(t.image.toUpperCase()));
       break;
     case INT_TYPE:
       t = jj_consume_token(INT_TYPE);
-      result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT32);
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT_32);
       break;
     case LONG_TYPE:
       t = jj_consume_token(LONG_TYPE);
-      result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT64);
+      result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT_64);
       break;
     case BOOLEAN_TYPE:
       t = jj_consume_token(BOOLEAN_TYPE);

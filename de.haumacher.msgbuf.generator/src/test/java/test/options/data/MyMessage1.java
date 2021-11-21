@@ -4,22 +4,48 @@ public class MyMessage1 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 
 	public enum EnumAllowingAlias {
 
-		UNKNOWN,
+		UNKNOWN("UNKNOWN"),
 
-		STARTED,
+		STARTED("STARTED"),
 
-		RUNNING,
+		RUNNING("RUNNING"),
 
 		;
 
+		private final String _protocolName;
+
+		private EnumAllowingAlias(String protocolName) {
+			_protocolName = protocolName;
+		}
+
+		/**
+		 * The protocol name of a {@link EnumAllowingAlias} constant.
+		 *
+		 * @see #valueOfProtocol(String)
+		 */
+		public String protocolName() {
+			return _protocolName;
+		}
+
+		/** Looks up a {@link EnumAllowingAlias} constant by it's protocol name. */
+		public static EnumAllowingAlias valueOfProtocol(String protocolName) {
+			if (protocolName == null) { return null; }
+			switch (protocolName) {
+				case "UNKNOWN": return UNKNOWN;
+				case "STARTED": return STARTED;
+				case "RUNNING": return RUNNING;
+			}
+			return UNKNOWN;
+		}
+
 		/** Writes this instance to the given output. */
 		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-			out.value(name());
+			out.value(protocolName());
 		}
 
 		/** Reads a new instance from the given reader. */
 		public static EnumAllowingAlias readEnumAllowingAlias(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			return valueOf(in.nextString());
+			return valueOfProtocol(in.nextString());
 		}
 
 		/** Writes this instance to the given binary output. */

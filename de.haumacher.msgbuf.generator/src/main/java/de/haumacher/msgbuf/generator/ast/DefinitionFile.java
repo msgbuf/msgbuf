@@ -18,14 +18,24 @@ public class DefinitionFile extends WithOptions {
 	public static final String DEFINITION_FILE__TYPE = "DefinitionFile";
 
 	/** @see #getPackage() */
-	private static final String PACKAGE = "package";
+	public static final String PACKAGE = "package";
 
 	/** @see #getDefinitions() */
-	private static final String DEFINITIONS = "definitions";
+	public static final String DEFINITIONS = "definitions";
 
 	private QName _package = null;
 
-	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
+	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
+		@Override
+		protected void beforeAdd(int index, Definition element) {
+			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, Definition element) {
+			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
@@ -52,6 +62,7 @@ public class DefinitionFile extends WithOptions {
 	 * @see #getPackage()
 	 */
 	public final DefinitionFile setPackage(QName value) {
+		_listener.beforeSet(this, PACKAGE, value);
 		_package = value;
 		return this;
 	}
@@ -86,6 +97,42 @@ public class DefinitionFile extends WithOptions {
 	public final DefinitionFile addDefinition(Definition value) {
 		_definitions.add(value);
 		return this;
+	}
+
+	/**
+	 * Removes a value from the {@link #getDefinitions()} list.
+	 */
+	public final DefinitionFile removeDefinition(Definition value) {
+		_definitions.remove(value);
+		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			PACKAGE, 
+			DEFINITIONS));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case PACKAGE: return getPackage();
+			case DEFINITIONS: return getDefinitions();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case PACKAGE: setPackage((QName) value); break;
+			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

@@ -435,11 +435,11 @@ PrimitiveType primitiveType() :
 }
 {
   (
-	t=< TYPE >    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.valueOf(t.image.toUpperCase())); }
+	t=< TYPE >    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.valueOfProtocol(t.image.toUpperCase())); }
   | t=< INT_TYPE >
-    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT32); }
+    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT_32); }
   | t=< LONG_TYPE >
-    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT64); }
+    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT_64); }
   | t=< BOOLEAN_TYPE >
     { result = PrimitiveType.create().setKind(PrimitiveType.Kind.BOOL); }
   )

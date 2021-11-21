@@ -4,6 +4,7 @@
 package de.haumacher.msgbuf.generator;
 
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
+import static de.haumacher.msgbuf.generator.CodeUtil.*;
 import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
 
@@ -394,7 +395,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private String getFieldNameString(Field field) {
 		Optional<Option> fieldName = Util.getOption(field, "Name");
 		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
-		return "\"" + name + "\"";
+		return CodeUtil.stringLiteral(name);
 	}
 
 	private void generateConstructor() {
@@ -517,7 +518,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		Type type = field.getType();
 		{
 			if (!Util.isNullable(field) && !(type instanceof PrimitiveType)) {
-				line("if (value == null) throw new IllegalArgumentException(\"Property '" + field.getName() + "' cannot be null.\");");
+				line("if (value == null) throw new IllegalArgumentException(" +
+					stringLiteral("Property '" + field.getName() + "' cannot be null.") + ");");
 			}
 			
 			if (field.isRepeated()) {
@@ -614,7 +616,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				adderInitNullable(field);
 				line("if (" + fieldMemberName(field) + ".containsKey(key)) {");
 				{
-					line("throw new IllegalArgumentException(\"Property '" + field.getName() + "' already contains a value for key '\" + key + \"'.\");");
+					line("throw new IllegalArgumentException(" + stringLiteral("Property '" + field.getName() + "' already contains a value for key '") + 
+							" + key + " + stringLiteral("'.") + ");");
 				}
 				line("}");
 				line(fieldMemberName(field) + ".put(key, value);");
@@ -963,7 +966,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private String jsonTypeID(MessageDef def) {
 		Optional<Option> nameOption = Util.getOption(def, "Name");
 		String typeId = nameOption.isPresent() ? ((StringOption) nameOption.get()).getValue() : def.getName();
-		return "\"" + typeId + "\"";
+		return CodeUtil.stringLiteral(typeId);
 	}
 
 	private String jsonType(PrimitiveType.Kind primitive) {
@@ -976,18 +979,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		case DOUBLE: 
 			return "in.nextDouble()";
 		
-		case INT32:
-		case SINT32:
-		case UINT32:
-		case FIXED32: 
-		case SFIXED32:
+		case INT_32:
+		case SINT_32:
+		case UINT_32:
+		case FIXED_32: 
+		case SFIXED_32:
 			return "in.nextInt()";
 		
-		case INT64:
-		case SINT64:
-		case UINT64:
-		case FIXED64: 
-		case SFIXED64: 
+		case INT_64:
+		case SINT_64:
+		case UINT_64:
+		case FIXED_64: 
+		case SFIXED_64: 
 			return "in.nextLong()";
 		
 		case STRING:
@@ -1320,24 +1323,24 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			return "in.nextFloat()";
 		case DOUBLE: 
 			return "in.nextDouble()";
-		case INT32:
-		case UINT32:
+		case INT_32:
+		case UINT_32:
 			return "in.nextInt()";
-		case SINT32:
+		case SINT_32:
 			return "in.nextIntSigned()";
-		case FIXED32: 
-		case SFIXED32:
+		case FIXED_32: 
+		case SFIXED_32:
 			return "in.nextIntFixed()";
 		
-		case INT64:
-		case UINT64:
+		case INT_64:
+		case UINT_64:
 			return "in.nextLong()";
 			
-		case SINT64:
+		case SINT_64:
 			return "in.nextLongSigned()";
 	
-		case FIXED64: 
-		case SFIXED64: 
+		case FIXED_64: 
+		case SFIXED_64: 
 			return "in.nextLongFixed()";
 		
 		case STRING:
@@ -1375,22 +1378,22 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		case DOUBLE: 
 			return DataType.DOUBLE;
 		
-		case INT32:
-		case UINT32:
+		case INT_32:
+		case UINT_32:
 			return DataType.INT;
-		case SINT32:
+		case SINT_32:
 			return DataType.SINT;
-		case FIXED32: 
-		case SFIXED32:
+		case FIXED_32: 
+		case SFIXED_32:
 			return DataType.FINT;
 		
-		case INT64:
-		case UINT64:
+		case INT_64:
+		case UINT_64:
 			return DataType.LONG;
-		case SINT64:
+		case SINT_64:
 			return DataType.SLONG;
-		case FIXED64: 
-		case SFIXED64: 
+		case FIXED_64: 
+		case SFIXED_64: 
 			return DataType.FLONG;
 		
 		case STRING:

@@ -2,20 +2,45 @@ package test.nullable.data;
 
 public enum Decision {
 
-	YES,
+	YES("YES"),
 
-	NO,
+	NO("NO"),
 
 	;
 
+	private final String _protocolName;
+
+	private Decision(String protocolName) {
+		_protocolName = protocolName;
+	}
+
+	/**
+	 * The protocol name of a {@link Decision} constant.
+	 *
+	 * @see #valueOfProtocol(String)
+	 */
+	public String protocolName() {
+		return _protocolName;
+	}
+
+	/** Looks up a {@link Decision} constant by it's protocol name. */
+	public static Decision valueOfProtocol(String protocolName) {
+		if (protocolName == null) { return null; }
+		switch (protocolName) {
+			case "YES": return YES;
+			case "NO": return NO;
+		}
+		return YES;
+	}
+
 	/** Writes this instance to the given output. */
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.value(name());
+		out.value(protocolName());
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static Decision readDecision(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		return valueOf(in.nextString());
+		return valueOfProtocol(in.nextString());
 	}
 
 	/** Writes this instance to the given binary output. */

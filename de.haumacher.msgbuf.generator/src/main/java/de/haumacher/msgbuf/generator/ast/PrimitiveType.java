@@ -13,79 +13,117 @@ public class PrimitiveType extends Type {
 		/**
 		 * A 32 bit integer.
 		 */
-		INT32,
+		INT_32("INT32"),
 
-		UINT32,
+		UINT_32("UINT32"),
 
-		SINT32,
+		SINT_32("SINT32"),
 
-		FIXED32,
+		FIXED_32("FIXED32"),
 
-		SFIXED32,
+		SFIXED_32("SFIXED32"),
 
 		/**
 		 * A 64 bit integer.
 		 */
-		INT64,
+		INT_64("INT64"),
 
-		UINT64,
+		UINT_64("UINT64"),
 
-		SINT64,
+		SINT_64("SINT64"),
 
-		FIXED64,
+		FIXED_64("FIXED64"),
 
-		SFIXED64,
+		SFIXED_64("SFIXED64"),
 
 		/**
 		 * A boolean.
 		 */
-		BOOL,
+		BOOL("BOOL"),
 
 		/**
 		 * A string of characters.
 		 */
-		STRING,
+		STRING("STRING"),
 
 		/**
 		 * A 32 bit floating point number.
 		 */
-		FLOAT,
+		FLOAT("FLOAT"),
 
 		/**
 		 * A 64 bit floating point number.
 		 */
-		DOUBLE,
+		DOUBLE("DOUBLE"),
 
 		/**
 		 * A string of octets.
 		 */
-		BYTES,
+		BYTES("BYTES"),
 
 		;
 
+		private final String _protocolName;
+
+		private Kind(String protocolName) {
+			_protocolName = protocolName;
+		}
+
+		/**
+		 * The protocol name of a {@link Kind} constant.
+		 *
+		 * @see #valueOfProtocol(String)
+		 */
+		public String protocolName() {
+			return _protocolName;
+		}
+
+		/** Looks up a {@link Kind} constant by it's protocol name. */
+		public static Kind valueOfProtocol(String protocolName) {
+			if (protocolName == null) { return null; }
+			switch (protocolName) {
+				case "INT32": return INT_32;
+				case "UINT32": return UINT_32;
+				case "SINT32": return SINT_32;
+				case "FIXED32": return FIXED_32;
+				case "SFIXED32": return SFIXED_32;
+				case "INT64": return INT_64;
+				case "UINT64": return UINT_64;
+				case "SINT64": return SINT_64;
+				case "FIXED64": return FIXED_64;
+				case "SFIXED64": return SFIXED_64;
+				case "BOOL": return BOOL;
+				case "STRING": return STRING;
+				case "FLOAT": return FLOAT;
+				case "DOUBLE": return DOUBLE;
+				case "BYTES": return BYTES;
+			}
+			return INT_32;
+		}
+
 		/** Writes this instance to the given output. */
 		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-			out.value(name());
+			out.value(protocolName());
 		}
 
 		/** Reads a new instance from the given reader. */
 		public static Kind readKind(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			return valueOf(in.nextString());
+			return valueOfProtocol(in.nextString());
 		}
 
 		/** Writes this instance to the given binary output. */
 		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 			switch (this) {
-				case INT32: out.value(1); break;
-				case UINT32: out.value(2); break;
-				case SINT32: out.value(3); break;
-				case FIXED32: out.value(4); break;
-				case SFIXED32: out.value(5); break;
-				case INT64: out.value(6); break;
-				case UINT64: out.value(7); break;
-				case SINT64: out.value(8); break;
-				case FIXED64: out.value(9); break;
-				case SFIXED64: out.value(10); break;
+				case INT_32: out.value(1); break;
+				case UINT_32: out.value(2); break;
+				case SINT_32: out.value(3); break;
+				case FIXED_32: out.value(4); break;
+				case SFIXED_32: out.value(5); break;
+				case INT_64: out.value(6); break;
+				case UINT_64: out.value(7); break;
+				case SINT_64: out.value(8); break;
+				case FIXED_64: out.value(9); break;
+				case SFIXED_64: out.value(10); break;
 				case BOOL: out.value(11); break;
 				case STRING: out.value(12); break;
 				case FLOAT: out.value(13); break;
@@ -98,22 +136,22 @@ public class PrimitiveType extends Type {
 		/** Reads a new instance from the given binary reader. */
 		public static Kind readKind(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 			switch (in.nextInt()) {
-				case 1: return INT32;
-				case 2: return UINT32;
-				case 3: return SINT32;
-				case 4: return FIXED32;
-				case 5: return SFIXED32;
-				case 6: return INT64;
-				case 7: return UINT64;
-				case 8: return SINT64;
-				case 9: return FIXED64;
-				case 10: return SFIXED64;
+				case 1: return INT_32;
+				case 2: return UINT_32;
+				case 3: return SINT_32;
+				case 4: return FIXED_32;
+				case 5: return SFIXED_32;
+				case 6: return INT_64;
+				case 7: return UINT_64;
+				case 8: return SINT_64;
+				case 9: return FIXED_64;
+				case 10: return SFIXED_64;
 				case 11: return BOOL;
 				case 12: return STRING;
 				case 13: return FLOAT;
 				case 14: return DOUBLE;
 				case 15: return BYTES;
-				default: return INT32;
+				default: return INT_32;
 			}
 		}
 	}
@@ -129,9 +167,9 @@ public class PrimitiveType extends Type {
 	public static final String PRIMITIVE_TYPE__TYPE = "PrimitiveType";
 
 	/** @see #getKind() */
-	private static final String KIND = "kind";
+	public static final String KIND = "kind";
 
-	private Kind _kind = Kind.INT32;
+	private Kind _kind = de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind.INT_32;
 
 	/**
 	 * Creates a {@link PrimitiveType} instance.
@@ -159,8 +197,34 @@ public class PrimitiveType extends Type {
 	 */
 	public final PrimitiveType setKind(Kind value) {
 		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
+		_listener.beforeSet(this, KIND, value);
 		_kind = value;
 		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			KIND));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case KIND: return getKind();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case KIND: setKind((Kind) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

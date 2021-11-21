@@ -16,35 +16,65 @@ public class MessageDef extends Definition {
 	public static final String MESSAGE_DEF__TYPE = "MessageDef";
 
 	/** @see #isAbstract() */
-	private static final String ABSTRACT = "abstract";
+	public static final String ABSTRACT = "abstract";
 
 	/** @see #getExtends() */
-	private static final String EXTENDS = "extends";
+	public static final String EXTENDS = "extends";
 
 	/** @see #getDefinitions() */
-	private static final String DEFINITIONS = "definitions";
+	public static final String DEFINITIONS = "definitions";
 
 	/** @see #getFields() */
-	private static final String FIELDS = "fields";
+	public static final String FIELDS = "fields";
 
 	/** @see #getSpecializations() */
-	private static final String SPECIALIZATIONS = "specializations";
+	public static final String SPECIALIZATIONS = "specializations";
 
 	/** @see #getExtendedDef() */
-	private static final String EXTENDED_DEF = "extendedDef";
+	public static final String EXTENDED_DEF = "extendedDef";
 
 	/** @see #getId() */
-	private static final String ID = "id";
+	public static final String ID = "id";
 
 	private boolean _abstract = false;
 
 	private QName _extends = null;
 
-	private final java.util.List<Definition> _definitions = new java.util.ArrayList<>();
+	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
+		@Override
+		protected void beforeAdd(int index, Definition element) {
+			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, DEFINITIONS, index, element);
+		}
 
-	private final java.util.List<Field> _fields = new java.util.ArrayList<>();
+		@Override
+		protected void afterRemove(int index, Definition element) {
+			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, DEFINITIONS, index, element);
+		}
+	};
 
-	private transient final java.util.List<MessageDef> _specializations = new java.util.ArrayList<>();
+	private final java.util.List<Field> _fields = new de.haumacher.msgbuf.util.ReferenceList<Field>() {
+		@Override
+		protected void beforeAdd(int index, Field element) {
+			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, FIELDS, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, Field element) {
+			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, FIELDS, index, element);
+		}
+	};
+
+	private transient final java.util.List<MessageDef> _specializations = new de.haumacher.msgbuf.util.ReferenceList<MessageDef>() {
+		@Override
+		protected void beforeAdd(int index, MessageDef element) {
+			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, SPECIALIZATIONS, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, MessageDef element) {
+			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, SPECIALIZATIONS, index, element);
+		}
+	};
 
 	private transient MessageDef _extendedDef = null;
 
@@ -75,6 +105,7 @@ public class MessageDef extends Definition {
 	 * @see #isAbstract()
 	 */
 	public final MessageDef setAbstract(boolean value) {
+		_listener.beforeSet(this, ABSTRACT, value);
 		_abstract = value;
 		return this;
 	}
@@ -90,6 +121,7 @@ public class MessageDef extends Definition {
 	 * @see #getExtends()
 	 */
 	public final MessageDef setExtends(QName value) {
+		_listener.beforeSet(this, EXTENDS, value);
 		_extends = value;
 		return this;
 	}
@@ -127,6 +159,14 @@ public class MessageDef extends Definition {
 	}
 
 	/**
+	 * Removes a value from the {@link #getDefinitions()} list.
+	 */
+	public final MessageDef removeDefinition(Definition value) {
+		_definitions.remove(value);
+		return this;
+	}
+
+	/**
 	 * All {@link Field}s locally defined in this data class. 
 	 *
 	 * <p>
@@ -158,6 +198,14 @@ public class MessageDef extends Definition {
 	}
 
 	/**
+	 * Removes a value from the {@link #getFields()} list.
+	 */
+	public final MessageDef removeField(Field value) {
+		_fields.remove(value);
+		return this;
+	}
+
+	/**
 	 * All {@link MessageDef data classes} that inherit from this data class.
 	 */
 	public final java.util.List<MessageDef> getSpecializations() {
@@ -183,6 +231,14 @@ public class MessageDef extends Definition {
 	}
 
 	/**
+	 * Removes a value from the {@link #getSpecializations()} list.
+	 */
+	public final MessageDef removeSpecialization(MessageDef value) {
+		_specializations.remove(value);
+		return this;
+	}
+
+	/**
 	 * Reference to the {@link MessageDef data class definition} that is referenced by the {@link #getExtends()} clause.
 	 */
 	public final MessageDef getExtendedDef() {
@@ -193,6 +249,7 @@ public class MessageDef extends Definition {
 	 * @see #getExtendedDef()
 	 */
 	public final MessageDef setExtendedDef(MessageDef value) {
+		_listener.beforeSet(this, EXTENDED_DEF, value);
 		_extendedDef = value;
 		return this;
 	}
@@ -215,8 +272,52 @@ public class MessageDef extends Definition {
 	 * @see #getId()
 	 */
 	public final MessageDef setId(int value) {
+		_listener.beforeSet(this, ID, value);
 		_id = value;
 		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			ABSTRACT, 
+			EXTENDS, 
+			DEFINITIONS, 
+			FIELDS, 
+			SPECIALIZATIONS, 
+			EXTENDED_DEF, 
+			ID));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case ABSTRACT: return isAbstract();
+			case EXTENDS: return getExtends();
+			case DEFINITIONS: return getDefinitions();
+			case FIELDS: return getFields();
+			case SPECIALIZATIONS: return getSpecializations();
+			case EXTENDED_DEF: return getExtendedDef();
+			case ID: return getId();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case ABSTRACT: setAbstract((boolean) value); break;
+			case EXTENDS: setExtends((QName) value); break;
+			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
+			case FIELDS: setFields((java.util.List<Field>) value); break;
+			case SPECIALIZATIONS: setSpecializations((java.util.List<MessageDef>) value); break;
+			case EXTENDED_DEF: setExtendedDef((MessageDef) value); break;
+			case ID: setId((int) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

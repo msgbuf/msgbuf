@@ -16,13 +16,13 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	public static final String FIELD__TYPE = "Field";
 
 	/** @see #isTransient() */
-	private static final String TRANSIENT = "transient";
+	public static final String TRANSIENT = "transient";
 
 	/** @see #isRepeated() */
-	private static final String REPEATED = "repeated";
+	public static final String REPEATED = "repeated";
 
 	/** @see #getType() */
-	private static final String TYPE = "type";
+	public static final String TYPE = "type";
 
 	private boolean _transient = false;
 
@@ -55,6 +55,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	 * @see #isTransient()
 	 */
 	public final Field setTransient(boolean value) {
+		_listener.beforeSet(this, TRANSIENT, value);
 		_transient = value;
 		return this;
 	}
@@ -70,6 +71,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	 * @see #isRepeated()
 	 */
 	public final Field setRepeated(boolean value) {
+		_listener.beforeSet(this, REPEATED, value);
 		_repeated = value;
 		return this;
 	}
@@ -85,6 +87,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	 * @see #getType()
 	 */
 	public final Field setType(Type value) {
+		_listener.beforeSet(this, TYPE, value);
 		_type = value;
 		return this;
 	}
@@ -94,6 +97,37 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	 */
 	public final boolean hasType() {
 		return _type != null;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			TRANSIENT, 
+			REPEATED, 
+			TYPE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case TRANSIENT: return isTransient();
+			case REPEATED: return isRepeated();
+			case TYPE: return getType();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case TRANSIENT: setTransient((boolean) value); break;
+			case REPEATED: setRepeated((boolean) value); break;
+			case TYPE: setType((Type) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

@@ -16,10 +16,10 @@ public class MapType extends Type {
 	public static final String MAP_TYPE__TYPE = "MapType";
 
 	/** @see #getKeyType() */
-	private static final String KEY_TYPE = "keyType";
+	public static final String KEY_TYPE = "keyType";
 
 	/** @see #getValueType() */
-	private static final String VALUE_TYPE = "valueType";
+	public static final String VALUE_TYPE = "valueType";
 
 	private Type _keyType = null;
 
@@ -50,6 +50,7 @@ public class MapType extends Type {
 	 * @see #getKeyType()
 	 */
 	public final MapType setKeyType(Type value) {
+		_listener.beforeSet(this, KEY_TYPE, value);
 		_keyType = value;
 		return this;
 	}
@@ -72,6 +73,7 @@ public class MapType extends Type {
 	 * @see #getValueType()
 	 */
 	public final MapType setValueType(Type value) {
+		_listener.beforeSet(this, VALUE_TYPE, value);
 		_valueType = value;
 		return this;
 	}
@@ -81,6 +83,34 @@ public class MapType extends Type {
 	 */
 	public final boolean hasValueType() {
 		return _valueType != null;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			KEY_TYPE, 
+			VALUE_TYPE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case KEY_TYPE: return getKeyType();
+			case VALUE_TYPE: return getValueType();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case KEY_TYPE: setKeyType((Type) value); break;
+			case VALUE_TYPE: setValueType((Type) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

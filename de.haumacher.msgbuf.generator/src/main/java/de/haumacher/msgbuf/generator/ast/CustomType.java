@@ -18,10 +18,10 @@ public class CustomType extends Type {
 	public static final String CUSTOM_TYPE__TYPE = "CustomType";
 
 	/** @see #getName() */
-	private static final String NAME = "name";
+	public static final String NAME = "name";
 
 	/** @see #getDefinition() */
-	private static final String DEFINITION = "definition";
+	public static final String DEFINITION = "definition";
 
 	private QName _name = null;
 
@@ -52,6 +52,7 @@ public class CustomType extends Type {
 	 * @see #getName()
 	 */
 	public final CustomType setName(QName value) {
+		_listener.beforeSet(this, NAME, value);
 		_name = value;
 		return this;
 	}
@@ -74,6 +75,7 @@ public class CustomType extends Type {
 	 * @see #getDefinition()
 	 */
 	public final CustomType setDefinition(Definition value) {
+		_listener.beforeSet(this, DEFINITION, value);
 		_definition = value;
 		return this;
 	}
@@ -83,6 +85,34 @@ public class CustomType extends Type {
 	 */
 	public final boolean hasDefinition() {
 		return _definition != null;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAME, 
+			DEFINITION));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case NAME: return getName();
+			case DEFINITION: return getDefinition();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case NAME: setName((QName) value); break;
+			case DEFINITION: setDefinition((Definition) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

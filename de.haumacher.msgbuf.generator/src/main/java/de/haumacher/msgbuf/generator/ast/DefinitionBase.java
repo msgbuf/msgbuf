@@ -13,7 +13,7 @@ public abstract class DefinitionBase extends WithOptions {
 	}
 
 	/** @see #getComment() */
-	private static final String COMMENT = "comment";
+	public static final String COMMENT = "comment";
 
 	private String _comment = "";
 
@@ -35,8 +35,34 @@ public abstract class DefinitionBase extends WithOptions {
 	 * @see #getComment()
 	 */
 	public final DefinitionBase setComment(String value) {
+		_listener.beforeSet(this, COMMENT, value);
 		_comment = value;
 		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			COMMENT));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case COMMENT: return getComment();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case COMMENT: setComment((String) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

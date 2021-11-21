@@ -64,17 +64,17 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 			return wrapped ? "Float" : "float";
 		case DOUBLE:
 			return wrapped ? "Double" : "double";
-		case INT32:
-		case UINT32:
-		case FIXED32:
-		case SINT32:
-		case SFIXED32:
+		case INT_32:
+		case UINT_32:
+		case FIXED_32:
+		case SINT_32:
+		case SFIXED_32:
 			return wrapped ? "Integer" : "int";
-		case INT64:
-		case UINT64:
-		case FIXED64:
-		case SINT64:
-		case SFIXED64:
+		case INT_64:
+		case UINT_64:
+		case FIXED_64:
+		case SINT_64:
+		case SFIXED_64:
 			return wrapped ? "Long" : "long";
 		case STRING:
 			return "String";

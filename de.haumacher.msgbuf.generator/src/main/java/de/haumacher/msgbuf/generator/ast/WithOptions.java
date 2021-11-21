@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for object that can be annotated.
  */
-public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link WithOptions} hierarchy. */
 	public enum TypeKind {
@@ -41,7 +41,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	}
 
 	/** @see #getOptions() */
-	private static final String OPTIONS = "options";
+	public static final String OPTIONS = "options";
 
 	private final java.util.Map<String, Option> _options = new java.util.HashMap<>();
 
@@ -75,11 +75,58 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	/**
 	 * Adds a value to the {@link #getOptions()} map.
 	 */
-	public final void putOption(String key, Option value) {
+	public final WithOptions putOption(String key, Option value) {
 		if (_options.containsKey(key)) {
-			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
+			throw new IllegalArgumentException("Property 'options' already contains a value for key '\" + key + \"'.");
 		}
 		_options.put(key, value);
+		return this;
+	}
+
+	/**
+	 * Removes a key from the {@link #getOptions()} map.
+	 */
+	public final WithOptions removeOption(String key) {
+		_options.remove(key);
+		return this;
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public WithOptions registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public WithOptions unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			OPTIONS));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case OPTIONS: return getOptions();
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case OPTIONS: setOptions((java.util.Map<String, Option>) value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

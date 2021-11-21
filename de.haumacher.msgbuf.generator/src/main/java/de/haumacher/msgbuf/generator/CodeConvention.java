@@ -8,6 +8,7 @@ import static de.haumacher.msgbuf.generator.CodeUtil.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.haumacher.msgbuf.generator.ast.Constant;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
@@ -194,6 +195,13 @@ public class CodeConvention {
 			return getField(extendedDef, name);
 		}
 		return null;
+	}
+
+	/** 
+	 * The Java name of an enumeration classifier.
+	 */
+	public static String classifierName(Constant constant) {
+		return CodeUtil.allUpperCase(constant.getName());
 	}
 
 }

@@ -51,17 +51,17 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 		case DOUBLE: return "0.0d";
 		case FLOAT: return "0.0f";
 		case STRING: return "\"\"";
-		case INT32:
-		case SINT32:
-		case UINT32:
-		case FIXED32: 
-		case SFIXED32:
+		case INT_32:
+		case SINT_32:
+		case UINT_32:
+		case FIXED_32: 
+		case SFIXED_32:
 			return "0";
-		case INT64:
-		case SINT64:
-		case UINT64:
-		case FIXED64:
-		case SFIXED64:
+		case INT_64:
+		case SINT_64:
+		case UINT_64:
+		case FIXED_64:
+		case SFIXED_64:
 			return "0L";
 		}
 		throw new UnsupportedOperationException("Unsupported type: " + self.getKind());
@@ -71,7 +71,7 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 	public String visit(CustomType self, Void arg) {
 		Definition definition = self.getDefinition();
 		if (definition instanceof EnumDef) {
-			return typeName(definition) + "." + ((EnumDef) definition).getConstants().get(0).getName();
+			return qTypeName(definition) + "." + classifierName(((EnumDef) definition).getConstants().get(0));
 		} else {
 			return "null";
 		}

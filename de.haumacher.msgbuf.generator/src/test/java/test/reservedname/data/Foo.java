@@ -4,14 +4,37 @@ public enum Foo {
 
 	;
 
+	private final String _protocolName;
+
+	private Foo(String protocolName) {
+		_protocolName = protocolName;
+	}
+
+	/**
+	 * The protocol name of a {@link Foo} constant.
+	 *
+	 * @see #valueOfProtocol(String)
+	 */
+	public String protocolName() {
+		return _protocolName;
+	}
+
+	/** Looks up a {@link Foo} constant by it's protocol name. */
+	public static Foo valueOfProtocol(String protocolName) {
+		if (protocolName == null) { return null; }
+		switch (protocolName) {
+		}
+		return null;
+	}
+
 	/** Writes this instance to the given output. */
 	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.value(name());
+		out.value(protocolName());
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static Foo readFoo(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		return valueOf(in.nextString());
+		return valueOfProtocol(in.nextString());
 	}
 
 	/** Writes this instance to the given binary output. */

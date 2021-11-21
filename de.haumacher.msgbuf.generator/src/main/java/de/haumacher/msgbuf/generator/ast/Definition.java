@@ -17,13 +17,13 @@ public abstract class Definition extends DefinitionBase {
 	}
 
 	/** @see #getName() */
-	private static final String NAME = "name";
+	public static final String NAME = "name";
 
 	/** @see #getFile() */
-	private static final String FILE = "file";
+	public static final String FILE = "file";
 
 	/** @see #getOuter() */
-	private static final String OUTER = "outer";
+	public static final String OUTER = "outer";
 
 	private String _name = "";
 
@@ -49,6 +49,7 @@ public abstract class Definition extends DefinitionBase {
 	 * @see #getName()
 	 */
 	public final Definition setName(String value) {
+		_listener.beforeSet(this, NAME, value);
 		_name = value;
 		return this;
 	}
@@ -64,6 +65,7 @@ public abstract class Definition extends DefinitionBase {
 	 * @see #getFile()
 	 */
 	public final Definition setFile(DefinitionFile value) {
+		_listener.beforeSet(this, FILE, value);
 		_file = value;
 		return this;
 	}
@@ -90,6 +92,7 @@ public abstract class Definition extends DefinitionBase {
 	 * @see #getOuter()
 	 */
 	public final Definition setOuter(MessageDef value) {
+		_listener.beforeSet(this, OUTER, value);
 		_outer = value;
 		return this;
 	}
@@ -99,6 +102,37 @@ public abstract class Definition extends DefinitionBase {
 	 */
 	public final boolean hasOuter() {
 		return _outer != null;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAME, 
+			FILE, 
+			OUTER));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case NAME: return getName();
+			case FILE: return getFile();
+			case OUTER: return getOuter();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case NAME: setName((String) value); break;
+			case FILE: setFile((DefinitionFile) value); break;
+			case OUTER: setOuter((MessageDef) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

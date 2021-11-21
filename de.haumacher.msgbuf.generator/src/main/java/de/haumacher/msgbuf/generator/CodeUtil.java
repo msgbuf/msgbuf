@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
  */
 public class CodeUtil {
 	
+	private static final String QUOTE = "\"";
+
 	private static final Pattern NAME_PART_PATTERN = Pattern.compile(
 		"(?<=\\p{javaLowerCase})(?=\\p{javaUpperCase})" + "|" + 
 		"(?<=\\p{javaLetter})(?=\\p{javaDigit})" + "|" + 
@@ -47,6 +49,13 @@ public class CodeUtil {
 
 	public static String firstLowerCase(String name) {
 		return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+	}
+
+	/** 
+	 * A Java string literal with the given value.
+	 */
+	public static String stringLiteral(String str) {
+		return QUOTE + str.replace("\\", "\\\\").replace(QUOTE, "\\" + QUOTE) + QUOTE;
 	}
 
 }

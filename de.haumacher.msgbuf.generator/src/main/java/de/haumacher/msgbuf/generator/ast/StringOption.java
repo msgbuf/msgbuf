@@ -16,7 +16,7 @@ public class StringOption extends Option {
 	public static final String STRING_OPTION__TYPE = "StringOption";
 
 	/** @see #getValue() */
-	private static final String VALUE = "value";
+	public static final String VALUE = "value";
 
 	private String _value = "";
 
@@ -45,8 +45,34 @@ public class StringOption extends Option {
 	 * @see #getValue()
 	 */
 	public final StringOption setValue(String value) {
+		_listener.beforeSet(this, VALUE, value);
 		_value = value;
 		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			VALUE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case VALUE: return getValue();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case VALUE: setValue((String) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

@@ -17,13 +17,13 @@ public abstract class Part extends DefinitionBase {
 	}
 
 	/** @see #getName() */
-	private static final String NAME = "name";
+	public static final String NAME = "name";
 
 	/** @see #getIndex() */
-	private static final String INDEX = "index";
+	public static final String INDEX = "index";
 
 	/** @see #getOwner() */
-	private static final String OWNER = "owner";
+	public static final String OWNER = "owner";
 
 	private String _name = "";
 
@@ -49,6 +49,7 @@ public abstract class Part extends DefinitionBase {
 	 * @see #getName()
 	 */
 	public final Part setName(String value) {
+		_listener.beforeSet(this, NAME, value);
 		_name = value;
 		return this;
 	}
@@ -64,6 +65,7 @@ public abstract class Part extends DefinitionBase {
 	 * @see #getIndex()
 	 */
 	public final Part setIndex(int value) {
+		_listener.beforeSet(this, INDEX, value);
 		_index = value;
 		return this;
 	}
@@ -79,6 +81,7 @@ public abstract class Part extends DefinitionBase {
 	 * @see #getOwner()
 	 */
 	public final Part setOwner(Definition value) {
+		_listener.beforeSet(this, OWNER, value);
 		_owner = value;
 		return this;
 	}
@@ -88,6 +91,37 @@ public abstract class Part extends DefinitionBase {
 	 */
 	public final boolean hasOwner() {
 		return _owner != null;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			NAME, 
+			INDEX, 
+			OWNER));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case NAME: return getName();
+			case INDEX: return getIndex();
+			case OWNER: return getOwner();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case NAME: setName((String) value); break;
+			case INDEX: setIndex((int) value); break;
+			case OWNER: setOwner((Definition) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

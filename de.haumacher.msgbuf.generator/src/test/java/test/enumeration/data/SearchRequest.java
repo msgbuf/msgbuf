@@ -4,30 +4,60 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 
 	public enum Corpus {
 
-		UNIVERSAL,
+		UNIVERSAL("UNIVERSAL"),
 
-		WEB,
+		WEB("WEB"),
 
-		IMAGES,
+		IMAGES("IMAGES"),
 
-		LOCAL,
+		LOCAL("LOCAL"),
 
-		NEWS,
+		NEWS("NEWS"),
 
-		PRODUCTS,
+		PRODUCTS("PRODUCTS"),
 
-		VIDEO,
+		VIDEO("VIDEO"),
 
 		;
 
+		private final String _protocolName;
+
+		private Corpus(String protocolName) {
+			_protocolName = protocolName;
+		}
+
+		/**
+		 * The protocol name of a {@link Corpus} constant.
+		 *
+		 * @see #valueOfProtocol(String)
+		 */
+		public String protocolName() {
+			return _protocolName;
+		}
+
+		/** Looks up a {@link Corpus} constant by it's protocol name. */
+		public static Corpus valueOfProtocol(String protocolName) {
+			if (protocolName == null) { return null; }
+			switch (protocolName) {
+				case "UNIVERSAL": return UNIVERSAL;
+				case "WEB": return WEB;
+				case "IMAGES": return IMAGES;
+				case "LOCAL": return LOCAL;
+				case "NEWS": return NEWS;
+				case "PRODUCTS": return PRODUCTS;
+				case "VIDEO": return VIDEO;
+			}
+			return UNIVERSAL;
+		}
+
 		/** Writes this instance to the given output. */
 		public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-			out.value(name());
+			out.value(protocolName());
 		}
 
 		/** Reads a new instance from the given reader. */
 		public static Corpus readCorpus(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			return valueOf(in.nextString());
+			return valueOfProtocol(in.nextString());
 		}
 
 		/** Writes this instance to the given binary output. */
@@ -99,7 +129,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 
 	private int _resultPerPage = 0;
 
-	private Corpus _corpus = Corpus.UNIVERSAL;
+	private Corpus _corpus = test.enumeration.data.SearchRequest.Corpus.UNIVERSAL;
 
 	/**
 	 * Creates a {@link SearchRequest} instance.

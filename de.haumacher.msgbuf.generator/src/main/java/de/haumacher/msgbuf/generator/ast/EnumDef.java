@@ -16,9 +16,19 @@ public class EnumDef extends Definition {
 	public static final String ENUM_DEF__TYPE = "EnumDef";
 
 	/** @see #getConstants() */
-	private static final String CONSTANTS = "constants";
+	public static final String CONSTANTS = "constants";
 
-	private final java.util.List<Constant> _constants = new java.util.ArrayList<>();
+	private final java.util.List<Constant> _constants = new de.haumacher.msgbuf.util.ReferenceList<Constant>() {
+		@Override
+		protected void beforeAdd(int index, Constant element) {
+			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.EnumDef.this, CONSTANTS, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, Constant element) {
+			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.EnumDef.this, CONSTANTS, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link EnumDef} instance.
@@ -57,6 +67,39 @@ public class EnumDef extends Definition {
 	public final EnumDef addConstant(Constant value) {
 		_constants.add(value);
 		return this;
+	}
+
+	/**
+	 * Removes a value from the {@link #getConstants()} list.
+	 */
+	public final EnumDef removeConstant(Constant value) {
+		_constants.remove(value);
+		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			CONSTANTS));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case CONSTANTS: return getConstants();
+			default: return super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case CONSTANTS: setConstants((java.util.List<Constant>) value); break;
+			default: super.set(field, value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */

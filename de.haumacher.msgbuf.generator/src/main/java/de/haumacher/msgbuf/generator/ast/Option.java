@@ -7,7 +7,7 @@ package de.haumacher.msgbuf.generator.ast;
  * @see NumberOption 
  * @see Flag
  */
-public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link Option} hierarchy. */
 	public enum TypeKind {
@@ -47,6 +47,20 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public Option registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public Option unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
+	}
 
 	/** Reads a new instance from the given reader. */
 	public static Option readOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
