@@ -121,7 +121,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   final public Definition definition() throws ParseException {
   String comment;
   Definition result;
-  OptionContainer options;
+  WithOptions options;
     comment = Util.stripComment(token.next);
     options = javaAnnotations();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -146,7 +146,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   final public DefinitionBase memberDefinition() throws ParseException {
   String comment;
   DefinitionBase result;
-  OptionContainer options;
+  WithOptions options;
     comment = Util.stripComment(token.next);
     options = javaAnnotations();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -211,6 +211,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       case MAX:
       case XNAME:
       case NAME:
+      case 37:
         ;
         break;
       default:
@@ -222,6 +223,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       case MAX:
       case XNAME:
       case NAME:
+      case 37:
         constant = constant();
       result.addConstant(constant);
         break;
@@ -244,6 +246,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   String name;
   Token index;
     result.setComment(Util.stripComment(token.next));
+    javaAnnotationsFor(result);
     name = name();
     result.setName(name);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -408,10 +411,16 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public OptionContainer javaAnnotations() throws ParseException {
+  final public WithOptions javaAnnotations() throws ParseException {
+  WithOptions result;
+    result = javaAnnotationsFor(null);
+    {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public WithOptions javaAnnotationsFor(WithOptions result) throws ParseException {
   Token optionName;
   Option option;
-  OptionContainer result = null;
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -707,7 +716,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       jj_la1_0 = new int[] {0x200,0x100,0x10000,0x40c00,0x0,0x30c00000,0x40c00,0x4f34dc00,0x10000,0x40380000,0x40380000,0x0,0x40000,0x20000,0x4f3dfc00,0x4f3dfc00,0x8000,0x4000,0x0,0x0,0x0,0x0,0x0,0x0,0x10200000,0x100000,0x30000000,0x0,0x4f301000,0x4f301000,0xf000000,0x0,0x40300000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x20,0x2,0x0,0x0,0x1,0x0,0x1,0x1,0x2,0x0,0x0,0x21,0x21,0x0,0x0,0x2,0x20,0x40,0x200,0x100,0x200,0x0,0x0,0x0,0x2,0x1,0x1,0x0,0x2000,0x1,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x20,0x2,0x0,0x0,0x1,0x0,0x21,0x21,0x2,0x0,0x0,0x21,0x21,0x0,0x0,0x2,0x20,0x40,0x200,0x100,0x200,0x0,0x0,0x0,0x2,0x1,0x1,0x0,0x2000,0x1,};
    }
 
   /** Constructor with InputStream. */
