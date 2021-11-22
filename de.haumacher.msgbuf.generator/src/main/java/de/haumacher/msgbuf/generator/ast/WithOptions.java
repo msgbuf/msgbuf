@@ -77,7 +77,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	 */
 	public final WithOptions putOption(String key, Option value) {
 		if (_options.containsKey(key)) {
-			throw new IllegalArgumentException("Property 'options' already contains a value for key '\" + key + \"'.");
+			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
 		}
 		_options.put(key, value);
 		return this;

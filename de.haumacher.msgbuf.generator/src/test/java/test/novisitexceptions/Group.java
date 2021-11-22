@@ -1,4 +1,4 @@
-package test.nolistener;
+package test.novisitexceptions;
 
 /**
  * A group of shapes.
@@ -24,7 +24,17 @@ public class Group extends Shape {
 	/** Identifier for the property {@link #getShapes()} in binary format. */
 	public static final int SHAPES__ID = 3;
 
-	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
+	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
+		@Override
+		protected void beforeAdd(int index, Shape element) {
+			_listener.beforeAdd(test.novisitexceptions.Group.this, SHAPES, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, Shape element) {
+			_listener.afterRemove(test.novisitexceptions.Group.this, SHAPES, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link Group} instance.
@@ -133,7 +143,7 @@ public class Group extends Shape {
 			case SHAPES: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(test.nolistener.Shape.readShape(in));
+					addShape(test.novisitexceptions.Shape.readShape(in));
 				}
 				in.endArray();
 			}
@@ -179,7 +189,7 @@ public class Group extends Shape {
 			case SHAPES__ID: {
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(test.nolistener.Shape.readShape(in));
+					addShape(test.novisitexceptions.Shape.readShape(in));
 				}
 				in.endArray();
 			}
@@ -189,7 +199,7 @@ public class Group extends Shape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

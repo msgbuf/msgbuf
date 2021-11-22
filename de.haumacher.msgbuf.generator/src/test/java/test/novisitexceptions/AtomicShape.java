@@ -1,4 +1,4 @@
-package test.noreflection;
+package test.novisitexceptions;
 
 /**
  * A {@link Shape} that has no sub-shapes.
@@ -6,13 +6,13 @@ package test.noreflection;
 public abstract class AtomicShape extends Shape {
 
 	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
-	public interface Visitor<R,A,E extends Throwable> {
+	public interface Visitor<R,A> {
 
 		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg) throws E;
+		R visit(Circle self, A arg);
 
 		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg) throws E;
+		R visit(Rectangle self, A arg);
 
 	}
 
@@ -29,8 +29,8 @@ public abstract class AtomicShape extends Shape {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case Circle.CIRCLE__TYPE: result = test.noreflection.Circle.readCircle(in); break;
-			case Rectangle.RECTANGLE__TYPE: result = test.noreflection.Rectangle.readRectangle(in); break;
+			case Circle.CIRCLE__TYPE: result = test.novisitexceptions.Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.novisitexceptions.Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -45,8 +45,8 @@ public abstract class AtomicShape extends Shape {
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case Circle.CIRCLE__TYPE_ID: result = test.noreflection.Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.noreflection.Rectangle.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = test.novisitexceptions.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = test.novisitexceptions.Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {
@@ -58,12 +58,12 @@ public abstract class AtomicShape extends Shape {
 	}
 
 	/** Accepts the given visitor. */
-	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
+	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
 
 	@Override
-	public final <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
-		return visit((Visitor<R,A,E>) v, arg);
+	public final <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
+		return visit((Visitor<R,A>) v, arg);
 	}
 
 }

@@ -42,6 +42,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private boolean _binary;
 	private boolean _reflection;
 	private boolean _visitor;
+	private boolean _visitEx;
 	private boolean _typeKind;
 
 	private Map<String, Option> _options;
@@ -59,6 +60,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		_listener = !isTrue(options.get("NoListener"), false);
 		_reflection = _listener || !isTrue(options.get("NoReflection"), false);
 		_visitor = !isTrue(options.get("NoVisitor"), false);
+		_visitEx= !isTrue(options.get("NoVisitorExceptions"), false);
 		_typeKind = !isTrue(options.get("NoTypeKind"), false);
 	}
 	
@@ -270,7 +272,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_def.isAbstract()) {
 			nl();
 			line("/** Visitor interface for the {@link " + typeName(_def) + "} hierarchy.*/");
-			lineStart("public interface Visitor<R,A>");
+			lineStart("public interface Visitor<R,A" + onVisitEx(",E extends Throwable") + ">");
 			boolean first = true;
 			for (MessageDef specialization : _def.getSpecializations()) {
 				if (!specialization.isAbstract()) {
@@ -282,7 +284,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				} else {
 					append(", ");
 				}
-				append(typeName(specialization) + ".Visitor<R,A>");
+				append(typeName(specialization) + ".Visitor<R,A" + onVisitEx(",E") + ">");
 			}
 			append(" {");
 			nl();
@@ -295,7 +297,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	
 					nl();
 					line("/** Visit case for {@link " + typeName(specialization) + "}.*/");
-					line("R visit(" + typeName(specialization) + " self, A arg);");
+					line("R visit(" + typeName(specialization) + " self, A arg)" + onVisitEx(" throws E") + ";");
 					
 					hasCase = true;
 				}
@@ -1410,7 +1412,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_def.isAbstract()) {
 			nl();
 			line("/** Accepts the given visitor. */");
-			line("public abstract <R,A> R visit(Visitor<R,A> v, A arg);");
+			line("public abstract <R,A" + onVisitEx(",E extends Throwable") + "> R visit(Visitor<R,A" + onVisitEx(",E") + "> v, A arg)" + onVisitEx(" throws E") + ";");
 			nl();
 		}
 
@@ -1418,16 +1420,20 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (gen != null) {
 			nl();
 			line("@Override");
-			line("public" + (_def.isAbstract() ? " final" : "") + " <R,A> R visit(" + typeName(gen) + ".Visitor<R,A> v, A arg) {");
+			line("public" + (_def.isAbstract() ? " final" : "") + " <R,A" + onVisitEx(",E extends Throwable") + "> R visit(" + typeName(gen) + ".Visitor<R,A" + onVisitEx(",E") + "> v, A arg) " + onVisitEx("throws E ") + "{");
 			{
 				if (_def.isAbstract()) {
-					line("return visit((Visitor<R,A>) v, arg);");
+					line("return visit((Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
 				} else {
 					line("return v.visit(this, arg);");
 				}
 			}
 			line("}");
 		}
+	}
+
+	private String onVisitEx(String code) {
+		return _visitEx ? code : "";
 	}
 
 	private MessageDef getAbstractGeneralization() {

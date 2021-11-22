@@ -1,9 +1,9 @@
-package test.noreflection;
+package test.novisitexceptions;
 
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -24,21 +24,21 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A,E extends Throwable> extends AtomicShape.Visitor<R,A,E> {
+	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
 
 		/** Visit case for {@link Group}.*/
-		R visit(Group self, A arg) throws E;
+		R visit(Group self, A arg);
 
 		/** Visit case for {@link Car}.*/
-		R visit(Car self, A arg) throws E;
+		R visit(Car self, A arg);
 
 	}
 
 	/** @see #getXCoordinate() */
-	private static final String X_COORDINATE = "x";
+	public static final String X_COORDINATE = "x";
 
 	/** @see #getYCoordinate() */
-	private static final String Y_COORDINATE = "y";
+	public static final String Y_COORDINATE = "y";
 
 	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
 	public static final int X_COORDINATE__ID = 1;
@@ -71,6 +71,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getXCoordinate()
 	 */
 	public final Shape setXCoordinate(int value) {
+		_listener.beforeSet(this, X_COORDINATE, value);
 		_xCoordinate = value;
 		return this;
 	}
@@ -86,8 +87,50 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getYCoordinate()
 	 */
 	public final Shape setYCoordinate(int value) {
+		_listener.beforeSet(this, Y_COORDINATE, value);
 		_yCoordinate = value;
 		return this;
+	}
+
+	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+
+	@Override
+	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		return this;
+	}
+
+	@Override
+	public Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		return this;
+	}
+
+	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
+		java.util.Arrays.asList(
+			X_COORDINATE, 
+			Y_COORDINATE));
+
+	@Override
+	public java.util.List<String> properties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public Object get(String field) {
+		switch (field) {
+			case X_COORDINATE: return getXCoordinate();
+			case Y_COORDINATE: return getYCoordinate();
+			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
+		}
+	}
+
+	@Override
+	public void set(String field, Object value) {
+		switch (field) {
+			case X_COORDINATE: setXCoordinate((int) value); break;
+			case Y_COORDINATE: setYCoordinate((int) value); break;
+		}
 	}
 
 	/** Reads a new instance from the given reader. */
@@ -96,10 +139,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case Group.GROUP__TYPE: result = test.noreflection.Group.readGroup(in); break;
-			case Car.CAR__TYPE: result = test.noreflection.Car.readCar(in); break;
-			case Circle.CIRCLE__TYPE: result = test.noreflection.Circle.readCircle(in); break;
-			case Rectangle.RECTANGLE__TYPE: result = test.noreflection.Rectangle.readRectangle(in); break;
+			case Group.GROUP__TYPE: result = test.novisitexceptions.Group.readGroup(in); break;
+			case Car.CAR__TYPE: result = test.novisitexceptions.Car.readCar(in); break;
+			case Circle.CIRCLE__TYPE: result = test.novisitexceptions.Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.novisitexceptions.Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -169,10 +212,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		assert typeField == 0;
 		int type = in.nextInt();
 		switch (type) {
-			case Group.GROUP__TYPE_ID: result = test.noreflection.Group.create(); break;
-			case Car.CAR__TYPE_ID: result = test.noreflection.Car.create(); break;
-			case Circle.CIRCLE__TYPE_ID: result = test.noreflection.Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.noreflection.Rectangle.create(); break;
+			case Group.GROUP__TYPE_ID: result = test.novisitexceptions.Group.create(); break;
+			case Car.CAR__TYPE_ID: result = test.novisitexceptions.Car.create(); break;
+			case Circle.CIRCLE__TYPE_ID: result = test.novisitexceptions.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE_ID: result = test.novisitexceptions.Rectangle.create(); break;
 			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
 		}
 		while (in.hasNext()) {
@@ -193,7 +236,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Accepts the given visitor. */
-	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
+	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
 
 }

@@ -6,13 +6,13 @@ package test.nolistener;
 public abstract class AtomicShape extends Shape {
 
 	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
-	public interface Visitor<R,A> {
+	public interface Visitor<R,A,E extends Throwable> {
 
 		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg);
+		R visit(Circle self, A arg) throws E;
 
 		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg);
+		R visit(Rectangle self, A arg) throws E;
 
 	}
 
@@ -58,12 +58,12 @@ public abstract class AtomicShape extends Shape {
 	}
 
 	/** Accepts the given visitor. */
-	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
+	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 
 
 	@Override
-	public final <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
-		return visit((Visitor<R,A>) v, arg);
+	public final <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+		return visit((Visitor<R,A,E>) v, arg);
 	}
 
 }

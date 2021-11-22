@@ -1,4 +1,4 @@
-package test.notypekind;
+package test.novisitexceptions;
 
 /**
  * A circle {@link Shape}.
@@ -33,6 +33,11 @@ public class Circle extends AtomicShape {
 	 */
 	protected Circle() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.CIRCLE;
 	}
 
 	/**
@@ -138,7 +143,7 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

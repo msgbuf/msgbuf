@@ -1,4 +1,4 @@
-package test.notypekind;
+package test.novisitexceptions;
 
 /**
  * A rectangle.
@@ -41,6 +41,11 @@ public class Rectangle extends AtomicShape {
 	 */
 	protected Rectangle() {
 		super();
+	}
+
+	@Override
+	public TypeKind kind() {
+		return TypeKind.RECTANGLE;
 	}
 
 	/**
@@ -179,7 +184,7 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

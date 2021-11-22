@@ -184,7 +184,7 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A> R visit(AtomicShape.Visitor<R,A> v, A arg) {
+	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

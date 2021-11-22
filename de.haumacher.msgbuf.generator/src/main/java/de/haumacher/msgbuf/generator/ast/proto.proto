@@ -2,6 +2,7 @@ package de.haumacher.msgbuf.generator.ast;
 
 option NoBinary;
 option NoReflection;
+option NoVisitorExceptions;
 
 /** Base class for object that can be annotated. */
 abstract message WithOptions {

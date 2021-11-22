@@ -24,13 +24,13 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A> extends AtomicShape.Visitor<R,A> {
+	public interface Visitor<R,A,E extends Throwable> extends AtomicShape.Visitor<R,A,E> {
 
 		/** Visit case for {@link Group}.*/
-		R visit(Group self, A arg);
+		R visit(Group self, A arg) throws E;
 
 		/** Visit case for {@link Car}.*/
-		R visit(Car self, A arg);
+		R visit(Car self, A arg) throws E;
 
 	}
 
@@ -220,7 +220,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Accepts the given visitor. */
-	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
+	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 
 
 }

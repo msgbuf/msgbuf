@@ -1,4 +1,4 @@
-package test.nojson;
+package test.novisitexceptions;
 
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
@@ -11,6 +11,9 @@ public class Car extends Shape {
 	public static Car create() {
 		return new Car();
 	}
+
+	/** Identifier for the {@link Car} type in JSON format. */
+	public static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
 	public static final String WHEEL_1 = "wheel1";
@@ -153,6 +156,47 @@ public class Car extends Shape {
 		}
 	}
 
+	/** Reads a new instance from the given reader. */
+	public static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Car result = new Car();
+		in.beginObject();
+		result.readFields(in);
+		in.endObject();
+		return result;
+	}
+
+	@Override
+	public String jsonType() {
+		return CAR__TYPE;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		if (hasWheel1()) {
+			out.name(WHEEL_1);
+			getWheel1().writeContent(out);
+		}
+		if (hasWheel2()) {
+			out.name(WHEEL_2);
+			getWheel2().writeContent(out);
+		}
+		if (hasBody()) {
+			out.name(BODY);
+			getBody().writeContent(out);
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case WHEEL_1: setWheel1(test.novisitexceptions.Circle.readCircle(in)); break;
+			case WHEEL_2: setWheel2(test.novisitexceptions.Circle.readCircle(in)); break;
+			case BODY: setBody(test.novisitexceptions.Rectangle.readRectangle(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
 	@Override
 	public int typeId() {
 		return CAR__TYPE_ID;
@@ -190,15 +234,15 @@ public class Car extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1__ID: setWheel1(test.nojson.Circle.readCircle(in)); break;
-			case WHEEL_2__ID: setWheel2(test.nojson.Circle.readCircle(in)); break;
-			case BODY__ID: setBody(test.nojson.Rectangle.readRectangle(in)); break;
+			case WHEEL_1__ID: setWheel1(test.novisitexceptions.Circle.readCircle(in)); break;
+			case WHEEL_2__ID: setWheel2(test.novisitexceptions.Circle.readCircle(in)); break;
+			case BODY__ID: setBody(test.novisitexceptions.Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

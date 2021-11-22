@@ -15,13 +15,13 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 	}
 
 	/** Visitor interface for the {@link BaseMsg} hierarchy.*/
-	public interface Visitor<R,A> {
+	public interface Visitor<R,A,E extends Throwable> {
 
 		/** Visit case for {@link SomeName}.*/
-		R visit(SomeName self, A arg);
+		R visit(SomeName self, A arg) throws E;
 
 		/** Visit case for {@link AnnotatedMessage}.*/
-		R visit(AnnotatedMessage self, A arg);
+		R visit(AnnotatedMessage self, A arg) throws E;
 
 	}
 
@@ -125,7 +125,7 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 	}
 
 	/** Accepts the given visitor. */
-	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
+	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 
 
 }
