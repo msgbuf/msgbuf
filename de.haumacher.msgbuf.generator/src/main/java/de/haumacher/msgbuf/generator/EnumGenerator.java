@@ -43,7 +43,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 		}
 		nl();
 		docComment(_def.getComment());
-		line("public enum " + CodeConvention.typeName(_def) + " {");
+		line("public enum " + CodeConvention.typeName(_def) + " implements de.haumacher.msgbuf.data.ProtocolEnum {");
 
 		generateConstants();
 		
@@ -63,6 +63,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 		line(" *");
 		line(" * @see #valueOfProtocol(String)");
 		line(" */");
+		line("@Override");
 		line("public String protocolName() {");
 		{
 			line("return _protocolName;");
