@@ -12,20 +12,7 @@ public class Group extends Shape {
 		return new Group();
 	}
 
-	/** @see #getShapes() */
-	public static final String SHAPES = "shapes";
-
-	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
-		@Override
-		protected void beforeAdd(int index, Shape element) {
-			_listener.beforeAdd(test.nothing.Group.this, SHAPES, index, element);
-		}
-
-		@Override
-		protected void afterRemove(int index, Shape element) {
-			_listener.afterRemove(test.nothing.Group.this, SHAPES, index, element);
-		}
-	};
+	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
 
 	/**
 	 * Creates a {@link Group} instance.
@@ -71,31 +58,6 @@ public class Group extends Shape {
 	public final Group removeShape(Shape value) {
 		_shapes.remove(value);
 		return this;
-	}
-
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			SHAPES));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case SHAPES: return getShapes();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case SHAPES: setShapes((java.util.List<Shape>) value); break;
-			default: super.set(field, value); break;
-		}
 	}
 
 }

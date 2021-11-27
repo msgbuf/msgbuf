@@ -1,6 +1,6 @@
 package test.reservedname.data;
 
-public enum Foo {
+public enum Foo implements de.haumacher.msgbuf.data.ProtocolEnum {
 
 	;
 
@@ -15,6 +15,7 @@ public enum Foo {
 	 *
 	 * @see #valueOfProtocol(String)
 	 */
+	@Override
 	public String protocolName() {
 		return _protocolName;
 	}

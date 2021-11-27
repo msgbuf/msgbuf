@@ -107,6 +107,11 @@ public class DefinitionFile extends WithOptions {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return DEFINITION_FILE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			PACKAGE, 
@@ -142,11 +147,6 @@ public class DefinitionFile extends WithOptions {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return DEFINITION_FILE__TYPE;
 	}
 
 	@Override

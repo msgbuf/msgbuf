@@ -86,6 +86,11 @@ public class Rectangle extends AtomicShape {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return RECTANGLE__TYPE;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Rectangle result = new Rectangle();
@@ -93,11 +98,6 @@ public class Rectangle extends AtomicShape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return RECTANGLE__TYPE;
 	}
 
 	@Override

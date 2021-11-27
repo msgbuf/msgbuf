@@ -85,6 +85,11 @@ public class MapType extends Type {
 		return _valueType != null;
 	}
 
+	@Override
+	public String jsonType() {
+		return MAP_TYPE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			KEY_TYPE, 
@@ -120,11 +125,6 @@ public class MapType extends Type {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return MAP_TYPE__TYPE;
 	}
 
 	@Override

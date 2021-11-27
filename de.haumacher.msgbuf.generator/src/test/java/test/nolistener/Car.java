@@ -122,6 +122,11 @@ public class Car extends Shape {
 		return _body != null;
 	}
 
+	@Override
+	public String jsonType() {
+		return CAR__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			WHEEL_1, 
@@ -160,11 +165,6 @@ public class Car extends Shape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return CAR__TYPE;
 	}
 
 	@Override

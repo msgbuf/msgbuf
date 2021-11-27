@@ -1,6 +1,6 @@
 package test.nullable.data;
 
-public enum Decision {
+public enum Decision implements de.haumacher.msgbuf.data.ProtocolEnum {
 
 	YES("YES"),
 
@@ -19,6 +19,7 @@ public enum Decision {
 	 *
 	 * @see #valueOfProtocol(String)
 	 */
+	@Override
 	public String protocolName() {
 		return _protocolName;
 	}

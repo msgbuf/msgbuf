@@ -13,6 +13,9 @@ import java.util.List;
  */
 public interface ReflectiveDataObject {
 
+	/** The type identifier for this concrete sub-type. */
+	public abstract String jsonType();
+
 	/**
 	 * All properties that are supported by this object.
 	 * 

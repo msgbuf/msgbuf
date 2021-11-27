@@ -77,6 +77,11 @@ public class Group extends Shape {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return GROUP__TYPE;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Group result = new Group();
@@ -84,11 +89,6 @@ public class Group extends Shape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return GROUP__TYPE;
 	}
 
 	@Override

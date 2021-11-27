@@ -2,7 +2,7 @@ package test.enumeration.data;
 
 public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
-	public enum Corpus {
+	public enum Corpus implements de.haumacher.msgbuf.data.ProtocolEnum {
 
 		UNIVERSAL("UNIVERSAL"),
 
@@ -31,6 +31,7 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 		 *
 		 * @see #valueOfProtocol(String)
 		 */
+		@Override
 		public String protocolName() {
 			return _protocolName;
 		}
@@ -205,6 +206,11 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	public SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
+	}
+
+	@Override
+	public String jsonType() {
+		return SEARCH_REQUEST__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

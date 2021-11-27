@@ -77,6 +77,11 @@ public class EnumDef extends Definition {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return ENUM_DEF__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			CONSTANTS));
@@ -109,11 +114,6 @@ public class EnumDef extends Definition {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return ENUM_DEF__TYPE;
 	}
 
 	@Override

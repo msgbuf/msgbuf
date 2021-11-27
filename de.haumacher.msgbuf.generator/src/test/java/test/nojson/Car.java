@@ -12,6 +12,9 @@ public class Car extends Shape {
 		return new Car();
 	}
 
+	/** Identifier for the {@link Car} type in JSON format. */
+	public static final String CAR__TYPE = "Car";
+
 	/** @see #getWheel1() */
 	public static final String WHEEL_1 = "wheel1";
 
@@ -120,6 +123,11 @@ public class Car extends Shape {
 	 */
 	public final boolean hasBody() {
 		return _body != null;
+	}
+
+	@Override
+	public String jsonType() {
+		return CAR__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

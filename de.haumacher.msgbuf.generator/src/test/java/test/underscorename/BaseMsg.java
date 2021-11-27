@@ -71,9 +71,6 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 		out.endArray();
 	}
 
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
 	/** The binary identifier for this concrete type in the polymorphic {@link BaseMsg} hierarchy. */
 	public abstract int typeId();
 

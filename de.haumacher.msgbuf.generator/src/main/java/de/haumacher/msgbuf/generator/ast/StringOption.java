@@ -50,6 +50,11 @@ public class StringOption extends Option {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return STRING_OPTION__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			VALUE));
@@ -82,11 +87,6 @@ public class StringOption extends Option {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return STRING_OPTION__TYPE;
 	}
 
 	@Override

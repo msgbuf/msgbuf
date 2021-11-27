@@ -5,6 +5,7 @@ package test.nothing;
 option NoJson;
 option NoBinary;
 option NoReflection;
+option NoListener;
 option NoVisitor;
 option NoTypeKind;
 

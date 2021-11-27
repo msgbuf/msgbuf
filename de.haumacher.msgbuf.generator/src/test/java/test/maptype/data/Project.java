@@ -77,6 +77,11 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return PROJECT__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			NAME, 

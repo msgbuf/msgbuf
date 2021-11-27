@@ -125,6 +125,11 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 			return this;
 		}
 
+		@Override
+		public String jsonType() {
+			return RESULT__TYPE;
+		}
+
 		private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 			java.util.Arrays.asList(
 				URL, 
@@ -341,6 +346,11 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	public SearchResponse unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
+	}
+
+	@Override
+	public String jsonType() {
+		return SEARCH_RESPONSE__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

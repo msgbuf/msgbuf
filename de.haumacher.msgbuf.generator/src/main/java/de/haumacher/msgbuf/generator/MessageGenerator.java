@@ -235,6 +235,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_listener) {
 			generateListener();
 		}
+		if (_reflection || _json) {
+			reflectionType();
+		}
 		if (_reflection) {
 			generateReflection();
 		}
@@ -361,7 +364,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void generateConstants() {
-		if (_json && !_def.isAbstract()) {
+		if ((_json || _reflection) && !_def.isAbstract()) {
 			nl();
 			line("/** Identifier for the {@link " + typeName(_def) + "} type in JSON format. */");
 			line("public static final String " + jsonTypeConstant(_def) + " = " + jsonTypeID(_def) + ";");
@@ -705,6 +708,26 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		}
 	}
 
+	private void reflectionType() {
+		if (!(_reflection && _def.isAbstract())) {
+			nl();
+			if (!_reflection && isBaseClass()) {
+				line("/** The type identifier for this concrete subtype. */");
+			} else {
+				line("@Override");
+			}
+			if (_def.isAbstract()) {
+				line("public abstract String jsonType();");
+			} else {
+				line("public String jsonType() {");
+				{
+					line("return " + jsonTypeConstant(_def) + ";");
+				}
+				line("}");
+			}
+		}
+	}
+
 	private void reflectionPropertiesConstant() {
 		nl();
 		line("private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(");
@@ -821,24 +844,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				line("writeContent(out);");
 			}
 			line("}");
-			
-			if (_def.isAbstract()) {
-				nl();
-				line("/** The type identifier for this concrete subtype. */");
-				line("public abstract String jsonType();");
-			}
 		}
-		
-		if (_def.getExtendedDef() != null && !_def.isAbstract()) {
-			nl();
-			line("@Override");
-			line("public String jsonType() {");
-			{
-				line("return " + jsonTypeConstant(_def) + ";");
-			}
-			line("}");
-		}
-		
+
 		if (hasFields()) {
 			nl();
 			line("@Override");

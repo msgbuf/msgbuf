@@ -122,6 +122,11 @@ public class Car extends Shape {
 		return _body != null;
 	}
 
+	@Override
+	public String jsonType() {
+		return CAR__TYPE;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Car result = new Car();
@@ -129,11 +134,6 @@ public class Car extends Shape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return CAR__TYPE;
 	}
 
 	@Override

@@ -86,6 +86,11 @@ public class Rectangle extends AtomicShape {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return RECTANGLE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			WIDTH, 
@@ -121,11 +126,6 @@ public class Rectangle extends AtomicShape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return RECTANGLE__TYPE;
 	}
 
 	@Override

@@ -82,6 +82,11 @@ public class Group extends Shape {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return GROUP__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			SHAPES));
@@ -114,11 +119,6 @@ public class Group extends Shape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return GROUP__TYPE;
 	}
 
 	@Override

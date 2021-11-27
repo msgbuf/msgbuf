@@ -12,6 +12,9 @@ public class Group extends Shape {
 		return new Group();
 	}
 
+	/** Identifier for the {@link Group} type in JSON format. */
+	public static final String GROUP__TYPE = "Group";
+
 	/** @see #getShapes() */
 	public static final String SHAPES = "shapes";
 
@@ -82,6 +85,11 @@ public class Group extends Shape {
 	public final Group removeShape(Shape value) {
 		_shapes.remove(value);
 		return this;
+	}
+
+	@Override
+	public String jsonType() {
+		return GROUP__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

@@ -155,9 +155,6 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		out.endArray();
 	}
 
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);

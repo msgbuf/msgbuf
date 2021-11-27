@@ -2,7 +2,7 @@ package test.options.data;
 
 public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
-	public enum EnumNotAllowingAlias {
+	public enum EnumNotAllowingAlias implements de.haumacher.msgbuf.data.ProtocolEnum {
 
 		UNKNOWN("UNKNOWN"),
 
@@ -21,6 +21,7 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 		 *
 		 * @see #valueOfProtocol(String)
 		 */
+		@Override
 		public String protocolName() {
 			return _protocolName;
 		}
@@ -95,6 +96,11 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	public MyMessage2 unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		return this;
+	}
+
+	@Override
+	public String jsonType() {
+		return MY_MESSAGE_2__TYPE;
 	}
 
 	/** Reads a new instance from the given reader. */

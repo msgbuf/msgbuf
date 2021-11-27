@@ -90,6 +90,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		return this;
 	}
 
+	/** The type identifier for this concrete subtype. */
+	public abstract String jsonType();
+
 	/** Reads a new instance from the given reader. */
 	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Shape result;
@@ -113,9 +116,6 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		writeContent(out);
 		out.endArray();
 	}
-
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {

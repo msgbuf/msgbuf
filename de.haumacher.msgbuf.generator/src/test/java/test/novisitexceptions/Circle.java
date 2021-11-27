@@ -56,6 +56,11 @@ public class Circle extends AtomicShape {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return CIRCLE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			RADIUS));
@@ -88,11 +93,6 @@ public class Circle extends AtomicShape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return CIRCLE__TYPE;
 	}
 
 	@Override

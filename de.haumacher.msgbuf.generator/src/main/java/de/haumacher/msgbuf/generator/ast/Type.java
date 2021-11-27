@@ -81,9 +81,6 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 		out.endArray();
 	}
 
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 

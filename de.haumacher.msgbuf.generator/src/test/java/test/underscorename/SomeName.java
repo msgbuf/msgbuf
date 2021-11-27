@@ -50,6 +50,11 @@ public class SomeName extends BaseMsg {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return SOME_NAME__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			MY_FIELD));
@@ -82,11 +87,6 @@ public class SomeName extends BaseMsg {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return SOME_NAME__TYPE;
 	}
 
 	@Override

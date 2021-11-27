@@ -55,6 +55,11 @@ public class Circle extends AtomicShape {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return CIRCLE__TYPE;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Circle result = new Circle();
@@ -62,11 +67,6 @@ public class Circle extends AtomicShape {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return CIRCLE__TYPE;
 	}
 
 	@Override

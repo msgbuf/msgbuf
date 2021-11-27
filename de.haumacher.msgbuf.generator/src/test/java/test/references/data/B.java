@@ -146,6 +146,11 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return B__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			NAME, 

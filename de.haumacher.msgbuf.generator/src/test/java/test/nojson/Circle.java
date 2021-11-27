@@ -12,6 +12,9 @@ public class Circle extends AtomicShape {
 		return new Circle();
 	}
 
+	/** Identifier for the {@link Circle} type in JSON format. */
+	public static final String CIRCLE__TYPE = "Circle";
+
 	/** @see #getRadius() */
 	public static final String RADIUS = "r";
 
@@ -51,6 +54,11 @@ public class Circle extends AtomicShape {
 		_listener.beforeSet(this, RADIUS, value);
 		_radius = value;
 		return this;
+	}
+
+	@Override
+	public String jsonType() {
+		return CIRCLE__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

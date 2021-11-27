@@ -35,6 +35,11 @@ public class SampleMessage extends de.haumacher.msgbuf.data.AbstractDataObject i
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return SAMPLE_MESSAGE__TYPE;
+	}
+
 	/** Reads a new instance from the given reader. */
 	public static SampleMessage readSampleMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		SampleMessage result = new SampleMessage();

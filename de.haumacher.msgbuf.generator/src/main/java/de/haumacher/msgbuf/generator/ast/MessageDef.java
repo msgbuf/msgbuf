@@ -277,6 +277,11 @@ public class MessageDef extends Definition {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return MESSAGE_DEF__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			ABSTRACT, 
@@ -327,11 +332,6 @@ public class MessageDef extends Definition {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return MESSAGE_DEF__TYPE;
 	}
 
 	@Override

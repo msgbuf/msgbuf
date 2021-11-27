@@ -87,6 +87,11 @@ public class CustomType extends Type {
 		return _definition != null;
 	}
 
+	@Override
+	public String jsonType() {
+		return CUSTOM_TYPE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			NAME, 
@@ -122,11 +127,6 @@ public class CustomType extends Type {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return CUSTOM_TYPE__TYPE;
 	}
 
 	@Override

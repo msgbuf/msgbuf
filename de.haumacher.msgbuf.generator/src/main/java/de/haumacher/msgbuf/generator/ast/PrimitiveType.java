@@ -8,7 +8,7 @@ public class PrimitiveType extends Type {
 	/**
 	 * Supported built-in types.
 	 */
-	public enum Kind {
+	public enum Kind implements de.haumacher.msgbuf.data.ProtocolEnum {
 
 		/**
 		 * A 32 bit integer.
@@ -74,6 +74,7 @@ public class PrimitiveType extends Type {
 		 *
 		 * @see #valueOfProtocol(String)
 		 */
+		@Override
 		public String protocolName() {
 			return _protocolName;
 		}
@@ -202,6 +203,11 @@ public class PrimitiveType extends Type {
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return PRIMITIVE_TYPE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			KIND));
@@ -234,11 +240,6 @@ public class PrimitiveType extends Type {
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return PRIMITIVE_TYPE__TYPE;
 	}
 
 	@Override

@@ -23,6 +23,9 @@ public abstract class AtomicShape extends Shape {
 		super();
 	}
 
+	@Override
+	public abstract String jsonType();
+
 	/** Reads a new instance from the given reader. */
 	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		AtomicShape result;

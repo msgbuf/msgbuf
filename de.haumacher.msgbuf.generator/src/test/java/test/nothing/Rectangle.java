@@ -12,12 +12,6 @@ public class Rectangle extends AtomicShape {
 		return new Rectangle();
 	}
 
-	/** @see #getWidth() */
-	public static final String WIDTH = "w";
-
-	/** @see #getHeight() */
-	public static final String HEIGHT = "h";
-
 	private int _width = 0;
 
 	private int _height = 0;
@@ -48,7 +42,6 @@ public class Rectangle extends AtomicShape {
 	 * @see #getWidth()
 	 */
 	public final Rectangle setWidth(int value) {
-		_listener.beforeSet(this, WIDTH, value);
 		_width = value;
 		return this;
 	}
@@ -66,37 +59,8 @@ public class Rectangle extends AtomicShape {
 	 * @see #getHeight()
 	 */
 	public final Rectangle setHeight(int value) {
-		_listener.beforeSet(this, HEIGHT, value);
 		_height = value;
 		return this;
-	}
-
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			WIDTH, 
-			HEIGHT));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case WIDTH: return getWidth();
-			case HEIGHT: return getHeight();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case WIDTH: setWidth((int) value); break;
-			case HEIGHT: setHeight((int) value); break;
-			default: super.set(field, value); break;
-		}
 	}
 
 }

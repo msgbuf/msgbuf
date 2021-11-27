@@ -12,6 +12,9 @@ public class Rectangle extends AtomicShape {
 		return new Rectangle();
 	}
 
+	/** Identifier for the {@link Rectangle} type in JSON format. */
+	public static final String RECTANGLE__TYPE = "Rectangle";
+
 	/** @see #getWidth() */
 	public static final String WIDTH = "w";
 
@@ -83,6 +86,11 @@ public class Rectangle extends AtomicShape {
 		_listener.beforeSet(this, HEIGHT, value);
 		_height = value;
 		return this;
+	}
+
+	@Override
+	public String jsonType() {
+		return RECTANGLE__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

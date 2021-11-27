@@ -339,6 +339,11 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return NULLABLE_VALUES__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			INT, 

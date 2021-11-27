@@ -99,6 +99,11 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		return _type != null;
 	}
 
+	@Override
+	public String jsonType() {
+		return FIELD__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			TRANSIENT, 
@@ -137,11 +142,6 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		result.readFields(in);
 		in.endObject();
 		return result;
-	}
-
-	@Override
-	public String jsonType() {
-		return FIELD__TYPE;
 	}
 
 	@Override

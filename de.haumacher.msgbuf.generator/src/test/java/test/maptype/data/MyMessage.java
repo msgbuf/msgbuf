@@ -117,6 +117,11 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		return this;
 	}
 
+	@Override
+	public String jsonType() {
+		return MY_MESSAGE__TYPE;
+	}
+
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			PROJECTS, 
