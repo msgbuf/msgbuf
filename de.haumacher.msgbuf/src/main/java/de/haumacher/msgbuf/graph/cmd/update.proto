@@ -1,0 +1,42 @@
+package de.haumacher.msgbuf.graph.cmd;
+
+/**
+ * Base class of commands that encode changes to data objects.
+ */
+abstract message Command {
+	/** The network ID of the changed object. */
+	@Name("id")
+	int id;
+	
+	/** The name of the changed property of the object with the given {@link #id}. */
+	@Name("p")
+	string property;
+
+	/** Cache for the reference to the changed graph node itself. */	
+	transient de.haumacher.msgbuf.graph.SharedGraphNode node;
+}
+
+/** An operation setting the value of a property to a new value. */
+@Name("S")
+message SetProperty extends Command {}
+
+/** Base class for operations internally changing the values of repeated properties. */
+abstract message ListUpdate extends Command {
+	/** The list index that is modified. */
+	@Name("i")
+	int index;
+	
+	/** Pointer to chain updates for the same property. */
+	transient ListUpdate next;
+}
+
+/** An insert operation to a list value. */
+@Name("I")
+message InsertElement extends ListUpdate {
+	/** Cache for the actual value that was inserted to the given {@link #index}. */
+	transient java.lang.Object element;
+}
+
+/** The removal of an element of a list value. */
+@Name("R")
+message RemoveElement extends ListUpdate {}

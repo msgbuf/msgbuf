@@ -3,7 +3,10 @@
  */
 package de.haumacher.msgbuf.graph;
 
+import java.io.IOException;
 import java.util.function.Consumer;
+
+import de.haumacher.msgbuf.json.JsonWriter;
 
 /**
  * API for resolving cross-references in serialized object graphs.
@@ -24,16 +27,33 @@ public interface Scope {
 	 *        The callback to invoke with the object identified with the given ID as soon as this object becomes
 	 *        available.
 	 */
-	void resolve(Object id, Consumer<?> setter);
+	void resolve(int id, Consumer<SharedGraphNode> setter);
+	
+	SharedGraphNode resolveOrFail(int id);
 
-	/**
-	 * Enter an object with an ID to this scope.
+	/** 
+	 * TODO
 	 *
-	 * @param id
-	 *        The ID for the given object.
-	 * @param obj
-	 *        The object that is identified with the given ID.
+	 * @param out
+	 * @param abstractSharedGraphNode
+	 * @throws IOException 
 	 */
-	void enter(Object id, Object obj);
+	void write(JsonWriter out, AbstractSharedGraphNode node) throws IOException;
+
+	/** 
+	 * TODO
+	 *
+	 * @param node
+	 * @return
+	 */
+	int enter(AbstractSharedGraphNode node);
+
+	/** 
+	 * TODO
+	 *
+	 * @param node
+	 * @param id
+	 */
+	void enter(AbstractSharedGraphNode node, int id);
 
 }

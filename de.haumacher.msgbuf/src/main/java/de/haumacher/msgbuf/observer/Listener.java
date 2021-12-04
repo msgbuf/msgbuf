@@ -134,7 +134,7 @@ public interface Listener {
 	 * @return The new value to store in the listener field.
 	 */
 	public static Listener register(Listener current, Listener added) {
-		if (current == NONE) {
+		if (current == NONE || current == added) {
 			return added;
 		}
 		

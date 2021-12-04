@@ -50,7 +50,7 @@ public abstract class AbstractDataObject implements DataObject {
 	 * @param in
 	 *        The reader to take the input from.
 	 */
-	protected final void readFields(JsonReader in) throws java.io.IOException {
+	protected final void readFields(JsonReader in) throws IOException {
 		while (in.hasNext()) {
 			String field = in.nextName();
 			readField(in, field);
@@ -65,8 +65,7 @@ public abstract class AbstractDataObject implements DataObject {
 	 * @param field
 	 *        The name of the field whose value should be read.
 	 */
-	protected void readField(de.haumacher.msgbuf.json.JsonReader in,
-			String field) throws java.io.IOException {
+	protected void readField(JsonReader in, String field) throws IOException {
 		in.skipValue();
 	}
 

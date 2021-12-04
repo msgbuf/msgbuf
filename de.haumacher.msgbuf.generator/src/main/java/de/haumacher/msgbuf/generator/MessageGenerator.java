@@ -38,6 +38,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 
 	private final NameTable _table;
 	private final MessageDef _def;
+	private boolean _graph;
 	private boolean _json;
 	private boolean _binary;
 	private boolean _reflection;
@@ -55,9 +56,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		_table = table;
 		_options = options;
 		_def = def;
-		_json = !isTrue(options.get("NoJson"), false);
-		_binary = !isTrue(options.get("NoBinary"), false);
-		_listener = !isTrue(options.get("NoListener"), false);
+		_graph = isTrue(options.get("SharedGraph"), false);
+		_json = _graph || !isTrue(options.get("NoJson"), false);
+		_binary = !_graph && !isTrue(options.get("NoBinary"), false);
+		_listener = _graph || !isTrue(options.get("NoListener"), false);
 		_reflection = _listener || !isTrue(options.get("NoReflection"), false);
 		_visitor = !isTrue(options.get("NoVisitor"), false);
 		_visitEx= !isTrue(options.get("NoVisitorExceptions"), false);
@@ -143,6 +145,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private String getExtends() {
+		if (_graph) {
+			return " extends de.haumacher.msgbuf.graph.AbstractSharedGraphNode";
+		}
 		if (_json) {
 			return " extends de.haumacher.msgbuf.data.AbstractDataObject";
 		} else {
@@ -161,10 +166,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_binary) {
 			generalizations.add("de.haumacher.msgbuf.binary.BinaryDataObject");
 		}
-		if (_listener) {
-			generalizations.add("de.haumacher.msgbuf.observer.Observable");
-		} else if (_reflection) {
-			generalizations.add("de.haumacher.msgbuf.data.ReflectiveDataObject");
+		if (!_graph) {
+			if (_listener) {
+				generalizations.add("de.haumacher.msgbuf.observer.Observable");
+			} else if (_reflection) {
+				generalizations.add("de.haumacher.msgbuf.data.ReflectiveDataObject");
+			}
 		}
 		
 		addMixins(generalizations);
@@ -675,7 +682,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void generateListener() {
-		if (isBaseClass()) {
+		if (!_graph && isBaseClass()) {
 			nl();
 			line("protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;");
 
@@ -769,7 +776,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			for (Field field : getFields()) {
 				line("case " + constant(field) + ": return " + getterName(field) + "()" + ";");
 			}
-			if (_def.getExtendedDef() == null) {
+			if (!_graph && _def.getExtendedDef() == null) {
 				String reflectionSuper = _listener ? "de.haumacher.msgbuf.observer.Observable" : "de.haumacher.msgbuf.data.ReflectiveDataObject";
 				line("default: return " + reflectionSuper + ".super.get(field);");
 			} else {
@@ -805,53 +812,92 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private void generateJson() {
 		nl();
 		line("/** Reads a new instance from the given reader. */");
-		line("public static " + typeName(_def) + " " + readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
+		line("public static " + typeName(_def) + " " + readerName(_def) + "(" + scopeParam() + "de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
 		{
+			if (_graph) {
+				line("if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {");
+				{
+					line("return (" + typeName(_def) + ") scope.resolveOrFail(in.nextInt());");
+				}
+				line("}");
+			}
+
 			if (_def.isAbstract()) {
 				line(typeName(_def) + " result;");
 				line("in.beginArray();");
 				line("String type = in.nextString();");
+				if (_graph) {
+					line("int id = in.nextInt();");
+				}
 				line("switch (type) {");
 				for (MessageDef specialization : getTransitiveSpecializations(_def)) {
 					if (specialization.isAbstract()) {
 						continue;
 					}
-					line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(in); break;");
+					if (_graph) {
+						line("case " + jsonTypeConstantRef(specialization) + ": result = " + typeName(specialization) + ".create(); break;");
+					} else {
+						line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(" + scopeArg() + "in); break;");
+					}
 				}
 				line("default: in.skipValue(); result = null; break;");
 				line("}");
+				if (_graph) {
+					line("if (result != null) {");
+					{
+						line("scope.enter(result, id);");
+						line("in.beginObject();");
+						line("result.readFields(" + scopeArg() + "in);");
+						line("in.endObject();");
+					}
+					line("}");
+				}
 				line("in.endArray();");
 			} else {
-				line(typeName(_def) + " result = new " + typeName(_def) + "();");
+				if (_graph) {
+					line("in.beginArray();");
+					line("String type = in.nextString();");
+					line("assert " + jsonTypeConstant(_def) + ".equals(type);");
+					line("int id = in.nextInt();");
+				}
+				line(typeName(_def) + " result = " + "new " + typeName(_def) + "();");
+				if (_graph) {
+					line("scope.enter(result, id);");
+				}
 				line("in.beginObject();");
-				line("result.readFields(in);");
+				line("result.readFields(" + scopeArg() + "in);");
 				line("in.endObject();");
+				if (_graph) {
+					line("in.endArray();");
+				}
 			}
 			line("return result;");
 		}
 		line("}");
 		
-		if (isBaseClass()) {
-			nl();
-			line("@Override");
-			line("public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
-			if (_def.isAbstract()) {
-				line("out.beginArray();");
-				line("out.value(jsonType());");
-				line("writeContent(out);");
-				line("out.endArray();");
-			} else {
-				line("writeContent(out);");
+		if (!_graph) {
+			if (isBaseClass()) {
+				nl();
+				line("@Override");
+				line("public final void writeTo(" + scopeParam() + "de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
+				if (_def.isAbstract()) {
+					line("out.beginArray();");
+					line("out.value(jsonType());");
+					line("writeContent(" + scopeArg() + "out);");
+					line("out.endArray();");
+				} else {
+					line("writeContent(out);");
+				}
+				line("}");
 			}
-			line("}");
 		}
 
 		if (hasFields()) {
 			nl();
 			line("@Override");
-			line("protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
+			line("protected void writeFields(" + scopeParam() + "de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
 			{
-				line("super.writeFields(out);");
+				line("super.writeFields(" + scopeArg() + "out);");
 				for (Field field : getFields()) {
 					if (field.isTransient() || field.isDerived()) {
 						continue;
@@ -861,37 +907,129 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 						line("if (" + hasName(field) + "()" + ") {");
 					}
 					line("out.name(" + constant(field) + ");");
-					if (field.isRepeated()) {
-						line("out.beginArray();");
-						line("for (" + mkType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
-						{
-							jsonOutValue(field.getType(), "x");
-						}
-						line("}");
-						line("out.endArray();");
-					} else {
-						jsonOutValue(field.getType(), getterCall(field));
-					}
+					writeFieldValue(field);
 					if (nullable) {
 						line("}");
 					}
 				}
 			}
 			line("}");
-		
+			
+			if (_graph) {
+				nl();
+				line("@Override");
+				line("public void writeFieldValue(" + scopeParam() + "de.haumacher.msgbuf.json.JsonWriter out, String field) throws java.io.IOException {");
+				{
+					line("switch (field) {");
+					for (Field field : getFields()) {
+						line("case " + constant(field) + ": {");
+						{
+							boolean nullable = Util.isNullable(field);
+							if (nullable) {
+								line("if (" + hasName(field) + "()" + ") {");
+							}
+							writeFieldValue(field);
+							if (nullable) {
+								line("} else {");
+								{
+									line("out.nullValue();");
+								}
+								line("}");
+							}
+							line("break;");
+						}
+						line("}");
+					}
+					line("default: " + "super.writeFieldValue(" + scopeArg() + "out, field);");
+					line("}");
+				}
+				line("}");
+			}
+			
 			nl();
 			line("@Override");
-			line("protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {");
+			line((_graph ? "public" : "protected") + " void readField(" + scopeParam() + "de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {");
 			{
 				line("switch (field) {");
 				for (Field field : getFields()) {
 					jsonReadField(field);
 				}
-				line("default: super.readField(in, field);");
+				line("default: super.readField(" + scopeArg() + "in, field);");
 				line("}");
 			}
 			line("}");
+
+			if (_graph) {
+				List<Field> fieldsWithElements = getFields().stream().filter(field -> !field.isTransient() && !field.isDerived() && field.isRepeated()).collect(Collectors.toList());
+				if (!fieldsWithElements.isEmpty()) {
+					nl();
+					line("@Override");
+					line("public void writeElement(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonWriter out, String field, Object element) throws java.io.IOException {");
+					{
+						line("switch (field) {");
+						{
+							for (Field field : fieldsWithElements) {
+								line("case " + constant(field) + ": {");
+								{
+									jsonOutValue(field.getType(), "((" + mkType(field.getType()) + ") element)");
+									line("break;");
+								}
+								line("}");
+							}
+							line("default: super.writeElement(scope, out, field, element);");
+						}
+						line("}");
+					}
+					line("}");
+					
+					nl();
+					line("@Override");
+					line("public Object readElement(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {");
+					{
+						line("switch (field) {");
+						{
+							for (Field field : fieldsWithElements) {
+								line("case " + constant(field) + ": {");
+								{
+									line("return " + jsonReadEntry(field.getType()) + ";");
+								}
+								line("}");
+							}
+							line("default: return super.readElement(scope, in, field);");
+						}
+						line("}");
+					}
+					line("}");
+				}
+			}
 		}
+	}
+
+	/** 
+	 * TODO
+	 *
+	 * @param field
+	 */
+	private void writeFieldValue(Field field) {
+		if (field.isRepeated()) {
+			line("out.beginArray();");
+			line("for (" + mkType(field.getType()) +" x : " + getterName(field) + "()" + ") {");
+			{
+				jsonOutValue(field.getType(), "x");
+			}
+			line("}");
+			line("out.endArray();");
+		} else {
+			jsonOutValue(field.getType(), getterCall(field));
+		}
+	}
+
+	private String scopeParam() {
+		return _graph ? "de.haumacher.msgbuf.graph.Scope scope, " : "";
+	}
+	
+	private String scopeArg() {
+		return _graph ? "scope, " : "";
 	}
 
 	private void jsonReadField(Field field) {
@@ -967,7 +1105,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(in)";
+			return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(" + scopeArg() + "in)";
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
@@ -1030,10 +1168,10 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			}
 		} else if (type instanceof CustomType) {
 			CustomType customType = (CustomType) type;
-			if (isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
-				line(x + ".writeContent(out);");
+			if (!_graph && isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
+				line(x + ".writeContent(" + scopeArg() + "out);");
 			} else {
-				line(x + ".writeTo(out);");
+				line(x + ".writeTo(" + scopeArg() + "out);");
 			}
 		} else if (type instanceof MapType) {
 			MapType mapType = (MapType) type;
