@@ -164,9 +164,9 @@ public class Generator {
 	
 	class PackageGenerator implements Definition.Visitor<Void, Void> {
 		private File _dir;
-		private Map<String, Option<?>> _options;
+		private Map<String, Option> _options;
 
-		public PackageGenerator(File dir, Map<String, Option<?>> options) {
+		public PackageGenerator(File dir, Map<String, Option> options) {
 			_dir = dir;
 			_options = options;
 		}

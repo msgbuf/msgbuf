@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for possible {@link Field} types.
  */
-public abstract class Type<S extends Type<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
+public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link Type} hierarchy. */
 	public enum TypeKind {
@@ -41,29 +41,26 @@ public abstract class Type<S extends Type<S>> extends de.haumacher.msgbuf.data.A
 		super();
 	}
 
-	/** This instance with the concrete type. */
-	protected abstract S self();
-
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public S registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public Type registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return self();
+		return this;
 	}
 
 	@Override
-	public S unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public Type unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-		return self();
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Type<?> readType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Type<?> result;
+	public static Type readType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Type result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

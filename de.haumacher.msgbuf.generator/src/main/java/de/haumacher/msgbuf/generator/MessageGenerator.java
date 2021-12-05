@@ -47,13 +47,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	private boolean _visitEx;
 	private boolean _typeKind;
 
-	private Map<String, Option<?>> _options;
+	private Map<String, Option> _options;
 	private boolean _listener;
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
 	 */
-	public MessageGenerator(NameTable table, Map<String, Option<?>> options, MessageDef def) {
+	public MessageGenerator(NameTable table, Map<String, Option> options, MessageDef def) {
 		_table = table;
 		_options = options;
 		_def = def;
@@ -67,7 +67,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		_typeKind = !isTrue(options.get("NoTypeKind"), false);
 	}
 	
-	private boolean isTrue(Option<?> option, boolean defaultValue) {
+	private boolean isTrue(Option option, boolean defaultValue) {
 		return option == null ? defaultValue : ((Flag) option).isValue();
 	}
 	
@@ -134,10 +134,27 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 	
 	private String typeParam() {
-		if (_def.isAbstract()) {
+		if (hasTypeParam(_def)) {
 			return "<S extends " + typeName(_def) + "<S>>";
 		}
 		return "";
+	}
+
+	static boolean hasTypeParam(MessageDef def) {
+		if (def == null) {
+			return false;
+		}
+		
+		if (!def.isAbstract()) {
+			return false;
+		}
+		
+		if (hasFields(def)) {
+			// Setters require the concrete return type for call chaining.
+			return true;
+		}
+		
+		return hasTypeParam(def.getExtendedDef());
 	}
 
 	private String mkAbstract() {
@@ -148,7 +165,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		if (_def.getExtends() == null) {
 			return getExtends() + getImplements();
 		} else {
-			return " extends " + qTypeName(_def.getExtends()) + (_def.getExtendedDef().isAbstract() ? "<" + (_def.isAbstract() ? "S" : typeName(_def)) + ">" : "") + getMixins();
+			String superTypeParam = hasTypeParam(_def.getExtendedDef()) ? "<" + (hasTypeParam(_def) ? "S" : typeName(_def)) + ">" : "";
+			return " extends " + qTypeName(_def.getExtends()) + superTypeParam + getMixins();
 		}
 	}
 
@@ -192,7 +210,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void addMixins(List<String> generalizations) {
-		Option<?> operations = _def.getOptions().get("Operations");
+		Option operations = _def.getOptions().get("Operations");
 		if (operations != null) {
 			if (operations instanceof StringOption) {
 				StringOption singleOperation = (StringOption) operations;
@@ -272,20 +290,18 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void generateSelfLookup() {
-		if (!isConcreteBaseClass()) {
-			if (isBaseClass()) {
-				nl();
-				line("/** This instance with the concrete type. */");
-				line("protected abstract S self();");
-			} else if (!_def.isAbstract()) {
-				nl();
-				line("@Override");
-				line("protected final " + typeName(_def) + " self() {");
-				{
-					line("return this;");
-				}
-				line("}");
+		if (hasTypeParam(_def) && !hasTypeParam(_def.getExtendedDef())) {
+			nl();
+			line("/** This instance with the concrete type. */");
+			line("protected abstract S self();");
+		} else if (!_def.isAbstract() && hasTypeParam(_def.getExtendedDef())) {
+			nl();
+			line("@Override");
+			line("protected final " + typeName(_def) + " self() {");
+			{
+				line("return this;");
 			}
+			line("}");
 		}
 	}
 
@@ -432,7 +448,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private String getFieldNameString(Field field) {
-		Optional<Option<?>> fieldName = Util.getOption(field, "Name");
+		Optional<Option> fieldName = Util.getOption(field, "Name");
 		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
 		return CodeUtil.stringLiteral(name);
 	}
@@ -554,7 +570,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		line(" * @see #" + getterName(field) + "()");
 		line(" */");
 		line(setterModifier(field) + "final " + selfType() + " " + setterName(field) + "(" + mkType(field) + " " + "value" + ")" + " {");
-		Type<?> type = field.getType();
+		Type type = field.getType();
 		{
 			if (!Util.isNullable(field) && !(type instanceof PrimitiveType)) {
 				line("if (value == null) throw new IllegalArgumentException(" +
@@ -598,7 +614,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private Field reverseEnd(Field field) {
-		Type<?> type = field.getType();
+		Type type = field.getType();
 		if (type instanceof CustomType) {
 			Definition<?> typeDef = ((CustomType) type).getDefinition();
 			if (typeDef instanceof MessageDef) {
@@ -618,7 +634,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void accessorAdder(Field field) {
-		Type<?> type = field.getType();
+		Type type = field.getType();
 		if (field.isRepeated()) {
 			nl();
 			line("/**");
@@ -734,17 +750,13 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private void generateChainRef() {
-		if (isConcreteBaseClass()) {
-			line("return this;");
-		} else {
+		if (hasTypeParam(_def)) {
 			line("return self();");
+		} else {
+			line("return this;");
 		}
 	}
 
-	private boolean isConcreteBaseClass() {
-		return isBaseClass() && !_def.isAbstract();
-	}
-	
 	private void generateReflection() {
 		if (hasFields()) {
 			reflectionPropertiesConstant();
@@ -1070,7 +1082,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			return;
 		}
 		
-		Type<?> type = field.getType();
+		Type type = field.getType();
 		if (field.isRepeated()) {
 			line("case " + constant(field) + ": {");
 			{
@@ -1088,8 +1100,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			MapType mapType = (MapType) type;
 			line("case " + constant(field) + ": {");
 			{
-				Type<?> keyType = mapType.getKeyType();
-				Type<?> valueType = mapType.getValueType();
+				Type keyType = mapType.getKeyType();
+				Type valueType = mapType.getValueType();
 				if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
 					line("in.beginObject();");
 					line("while (in.hasNext()) {");
@@ -1128,7 +1140,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		}
 	}
 
-	private String jsonReadEntry(Type<?> type) {
+	private String jsonReadEntry(Type type) {
 		if (type instanceof PrimitiveType) {
 			return jsonType(((PrimitiveType) type).getKind());
 		}
@@ -1145,7 +1157,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private String jsonTypeID(MessageDef def) {
-		Optional<Option<?>> nameOption = Util.getOption(def, "Name");
+		Optional<Option> nameOption = Util.getOption(def, "Name");
 		String typeId = nameOption.isPresent() ? ((StringOption) nameOption.get()).getValue() : def.getName();
 		return CodeUtil.stringLiteral(typeId);
 	}
@@ -1184,11 +1196,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
-	private void jsonOutValue(Type<?> type, String x) {
+	private void jsonOutValue(Type type, String x) {
 		jsonOutValue(type, x, 0);
 	}
 
-	private void jsonOutValue(Type<?> type, String x, int depth) {
+	private void jsonOutValue(Type type, String x, int depth) {
 		if (type instanceof PrimitiveType) {
 			switch (((PrimitiveType) type).getKind()) {
 			case BYTES: {
@@ -1212,8 +1224,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		} else if (type instanceof MapType) {
 			MapType mapType = (MapType) type;
 			
-			Type<?> keyType = mapType.getKeyType();
-			Type<?> valueType = mapType.getValueType();
+			Type keyType = mapType.getKeyType();
+			Type valueType = mapType.getValueType();
 			if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
 				line("out.beginObject();");
 				String entry = "entry";
@@ -1355,7 +1367,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		}
 	}
 
-	private void binaryWriteValue(Type<?> type, String x) {
+	private void binaryWriteValue(Type type, String x) {
 		if (type instanceof PrimitiveType) {
 			line("out.value(" + x + ");");
 		} else if (type instanceof CustomType) {
@@ -1426,11 +1438,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private String thisType() {
-		return typeName(_def) + (_def.isAbstract() ? "<?>" : "");
+		return typeName(_def) + (hasTypeParam(_def) ? "<?>" : "");
 	}
 
 	private String selfType() {
-		if (_def.isAbstract()) {
+		if (hasTypeParam(_def)) {
 			return "S";
 		} else {
 			return typeName(_def);
@@ -1445,7 +1457,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			return;
 		}
 
-		Type<?> type = field.getType();
+		Type type = field.getType();
 		if (field.isRepeated()) {
 			line("case " + binaryConstant(field) + ": {");
 			{
@@ -1463,8 +1475,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			MapType mapType = (MapType) type;
 			line("case " + binaryConstant(field) + ": {");
 			{
-				Type<?> keyType = mapType.getKeyType();
-				Type<?> valueType = mapType.getValueType();
+				Type keyType = mapType.getKeyType();
+				Type valueType = mapType.getValueType();
 				
 				line("in.beginArray();");
 				line("while (in.hasNext()) {");
@@ -1494,7 +1506,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		}
 	}
 
-	private String binaryReadEntry(Type<?> type) {
+	private String binaryReadEntry(Type type) {
 		if (type instanceof PrimitiveType) {
 			return mkBinaryReadValue(((PrimitiveType) type).getKind());
 		}
@@ -1548,7 +1560,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		throw new RuntimeException("No such type: " + kind);
 	}
 
-	private DataType mkBinaryType(Type<?> type) {
+	private DataType mkBinaryType(Type type) {
 		if (type instanceof PrimitiveType) {
 			return mkBinaryType(((PrimitiveType) type).getKind());
 		} else if (type instanceof CustomType) {
@@ -1644,7 +1656,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private boolean hasFields() {
-		return !getFields().isEmpty();
+		return hasFields(_def);
+	}
+	
+	static boolean hasFields(MessageDef def) {
+		return !def.getFields().isEmpty();
 	}
 
 	private List<Field> getFields() {

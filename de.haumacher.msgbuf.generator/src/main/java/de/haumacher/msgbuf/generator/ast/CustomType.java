@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * A custom type is either a {@link EnumDef}, or a {@link MessageDef}.
  */
-public class CustomType extends Type<CustomType> {
+public class CustomType extends Type {
 
 	/**
 	 * Creates a {@link CustomType} instance.
@@ -37,11 +37,6 @@ public class CustomType extends Type<CustomType> {
 	}
 
 	@Override
-	protected final CustomType self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.CUSTOM_TYPE;
 	}
@@ -59,7 +54,7 @@ public class CustomType extends Type<CustomType> {
 	public final CustomType setName(QName value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -82,7 +77,7 @@ public class CustomType extends Type<CustomType> {
 	public final CustomType setDefinition(Definition<?> value) {
 		_listener.beforeSet(this, DEFINITION, value);
 		_definition = value;
-		return self();
+		return this;
 	}
 
 	/**

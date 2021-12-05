@@ -48,7 +48,7 @@ public class Rectangle extends AtomicShape<Rectangle> {
 	 */
 	public final Rectangle setWidth(int value) {
 		_width = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class Rectangle extends AtomicShape<Rectangle> {
 	 */
 	public final Rectangle setHeight(int value) {
 		_height = value;
-		return self();
+		return this;
 	}
 
 }

@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public class AnnotatedMessage extends BaseMsg<AnnotatedMessage> {
+public class AnnotatedMessage extends BaseMsg {
 
 	/**
 	 * Creates a {@link AnnotatedMessage} instance.
@@ -33,11 +33,6 @@ public class AnnotatedMessage extends BaseMsg<AnnotatedMessage> {
 	}
 
 	@Override
-	protected final AnnotatedMessage self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.ANNOTATED_MESSAGE;
 	}
@@ -52,7 +47,7 @@ public class AnnotatedMessage extends BaseMsg<AnnotatedMessage> {
 	public final AnnotatedMessage setAnnotatedField(String value) {
 		_listener.beforeSet(this, ANNOTATED_FIELD, value);
 		_annotatedField = value;
-		return self();
+		return this;
 	}
 
 	@Override

@@ -59,12 +59,12 @@ public class Util {
 		return toString(part.getOwner()) + "#" + part.getName();
 	}
 
-	public static Optional<Option<?>> getOption(WithOptions<?> field, String optionName) {
+	public static Optional<Option> getOption(WithOptions<?> field, String optionName) {
 		return Optional.ofNullable(field.getOptions().get(optionName));
 	}
 
 	public static boolean getFlag(WithOptions<?> field, String optionName) {
-		Optional<Option<?>> option = getOption(field, optionName);
+		Optional<Option> option = getOption(field, optionName);
 		return option.isPresent() ? ((Flag) option.get()).isValue() : false;
 	}
 
@@ -76,7 +76,7 @@ public class Util {
 		return isEnumType(field.getType());
 	}
 
-	private static boolean isEnumType(Type<?> type) {
+	private static boolean isEnumType(Type type) {
 		return type instanceof CustomType && ((CustomType) type).getDefinition() instanceof EnumDef;
 	}
 	

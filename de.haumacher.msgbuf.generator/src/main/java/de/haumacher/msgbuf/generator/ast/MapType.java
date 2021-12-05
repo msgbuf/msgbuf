@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A {@link Type} that is composed of a key and a value.
  */
-public class MapType extends Type<MapType> {
+public class MapType extends Type {
 
 	/**
 	 * Creates a {@link MapType} instance.
@@ -21,9 +21,9 @@ public class MapType extends Type<MapType> {
 	/** @see #getValueType() */
 	public static final String VALUE_TYPE = "valueType";
 
-	private Type<?> _keyType = null;
+	private Type _keyType = null;
 
-	private Type<?> _valueType = null;
+	private Type _valueType = null;
 
 	/**
 	 * Creates a {@link MapType} instance.
@@ -35,11 +35,6 @@ public class MapType extends Type<MapType> {
 	}
 
 	@Override
-	protected final MapType self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.MAP_TYPE;
 	}
@@ -47,17 +42,17 @@ public class MapType extends Type<MapType> {
 	/**
 	 * The key type of this map.
 	 */
-	public final Type<?> getKeyType() {
+	public final Type getKeyType() {
 		return _keyType;
 	}
 
 	/**
 	 * @see #getKeyType()
 	 */
-	public final MapType setKeyType(Type<?> value) {
+	public final MapType setKeyType(Type value) {
 		_listener.beforeSet(this, KEY_TYPE, value);
 		_keyType = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -70,17 +65,17 @@ public class MapType extends Type<MapType> {
 	/**
 	 * The value type of this map.
 	 */
-	public final Type<?> getValueType() {
+	public final Type getValueType() {
 		return _valueType;
 	}
 
 	/**
 	 * @see #getValueType()
 	 */
-	public final MapType setValueType(Type<?> value) {
+	public final MapType setValueType(Type value) {
 		_listener.beforeSet(this, VALUE_TYPE, value);
 		_valueType = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -117,8 +112,8 @@ public class MapType extends Type<MapType> {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case KEY_TYPE: setKeyType((Type<?>) value); break;
-			case VALUE_TYPE: setValueType((Type<?>) value); break;
+			case KEY_TYPE: setKeyType((Type) value); break;
+			case VALUE_TYPE: setValueType((Type) value); break;
 			default: super.set(field, value); break;
 		}
 	}

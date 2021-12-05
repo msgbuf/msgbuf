@@ -33,15 +33,15 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 		return field.isRepeated() ? "java.util.List<" + mkTypeWrapped(field.getType()) + ">" : mkType(field.getType(), Util.isNullable(field));
 	}
 
-	public static String mkType(Type<?> type) {
+	public static String mkType(Type type) {
 		return mkType(type, false);
 	}
 	
-	public static String mkType(Type<?> type, boolean nullable) {
+	public static String mkType(Type type, boolean nullable) {
 		return type.visit(INSTANCE, Boolean.valueOf(nullable));
 	}
 	
-	public static String mkTypeWrapped(Type<?> type) {
+	public static String mkTypeWrapped(Type type) {
 		return type.visit(INSTANCE, Boolean.TRUE);
 	}
 	
@@ -54,7 +54,7 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	public String visit(CustomType type, Boolean wrapped) {
 		Definition<?> definition = type.getDefinition();
 		if (definition instanceof MessageDef) {
-			return qTypeName(type.getName()) + (((MessageDef) definition).isAbstract() ? "<?>" : "");
+			return qTypeName(type.getName()) + (MessageGenerator.hasTypeParam((MessageDef) definition) ? "<?>" : "");
 		} else {
 			return qTypeName(type.getName());
 		}

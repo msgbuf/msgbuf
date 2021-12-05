@@ -43,7 +43,7 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 	/** @see #getOptions() */
 	public static final String OPTIONS = "options";
 
-	private final java.util.Map<String, Option<?>> _options = new java.util.HashMap<>();
+	private final java.util.Map<String, Option> _options = new java.util.HashMap<>();
 
 	/**
 	 * Creates a {@link WithOptions} instance.
@@ -61,14 +61,14 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 	/**
 	 * Annotations to this definition.
 	 */
-	public final java.util.Map<String, Option<?>> getOptions() {
+	public final java.util.Map<String, Option> getOptions() {
 		return _options;
 	}
 
 	/**
 	 * @see #getOptions()
 	 */
-	public final S setOptions(java.util.Map<String, Option<?>> value) {
+	public final S setOptions(java.util.Map<String, Option> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'options' cannot be null.");
 		_options.clear();
 		_options.putAll(value);
@@ -78,7 +78,7 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 	/**
 	 * Adds a value to the {@link #getOptions()} map.
 	 */
-	public final S putOption(String key, Option<?> value) {
+	public final S putOption(String key, Option value) {
 		if (_options.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
 		}
@@ -128,7 +128,7 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case OPTIONS: setOptions((java.util.Map<String, Option<?>>) value); break;
+			case OPTIONS: setOptions((java.util.Map<String, Option>) value); break;
 		}
 	}
 
@@ -163,7 +163,7 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 		super.writeFields(out);
 		out.name(OPTIONS);
 		out.beginObject();
-		for (java.util.Map.Entry<String,Option<?>> entry : getOptions().entrySet()) {
+		for (java.util.Map.Entry<String,Option> entry : getOptions().entrySet()) {
 			out.name(entry.getKey());
 			entry.getValue().writeTo(out);
 		}

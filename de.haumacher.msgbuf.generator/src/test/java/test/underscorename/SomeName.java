@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public class SomeName extends BaseMsg<SomeName> {
+public class SomeName extends BaseMsg {
 
 	/**
 	 * Creates a {@link SomeName} instance.
@@ -33,11 +33,6 @@ public class SomeName extends BaseMsg<SomeName> {
 	}
 
 	@Override
-	protected final SomeName self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.SOME_NAME;
 	}
@@ -52,7 +47,7 @@ public class SomeName extends BaseMsg<SomeName> {
 	public final SomeName setMyField(String value) {
 		_listener.beforeSet(this, MY_FIELD, value);
 		_myField = value;
-		return self();
+		return this;
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 
 	private boolean _repeated = false;
 
-	private Type<?> _type = null;
+	private Type _type = null;
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -62,7 +62,7 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	public final Field setTransient(boolean value) {
 		_listener.beforeSet(this, TRANSIENT, value);
 		_transient = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -78,23 +78,23 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	public final Field setRepeated(boolean value) {
 		_listener.beforeSet(this, REPEATED, value);
 		_repeated = value;
-		return self();
+		return this;
 	}
 
 	/**
 	 * The type of values that can be stored in this field.
 	 */
-	public final Type<?> getType() {
+	public final Type getType() {
 		return _type;
 	}
 
 	/**
 	 * @see #getType()
 	 */
-	public final Field setType(Type<?> value) {
+	public final Field setType(Type value) {
 		_listener.beforeSet(this, TYPE, value);
 		_type = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 		switch (field) {
 			case TRANSIENT: setTransient((boolean) value); break;
 			case REPEATED: setRepeated((boolean) value); break;
-			case TYPE: setType((Type<?>) value); break;
+			case TYPE: setType((Type) value); break;
 			default: super.set(field, value); break;
 		}
 	}

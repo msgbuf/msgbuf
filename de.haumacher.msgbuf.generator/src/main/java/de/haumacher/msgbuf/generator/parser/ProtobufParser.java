@@ -74,7 +74,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public void optionAssignment(WithOptions<?> part) throws ParseException {
-  Option<?> option;
+  Option option;
   Token t;
     t = jj_consume_token(NAME);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -89,8 +89,8 @@ public class ProtobufParser implements ProtobufParserConstants {
     }
   }
 
-  final public Option<?> value() throws ParseException {
-  Option<?> result;
+  final public Option value() throws ParseException {
+  Option result;
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STRING:
@@ -367,11 +367,11 @@ public class ProtobufParser implements ProtobufParserConstants {
 
   final public Field field() throws ParseException {
   Field result = Field.create();
-  Type<?> type;
+  Type type;
   String name;
   Token index;
   Token comment;
-  Option<?> option;
+  Option option;
   Token optionName;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TRANSIENT:
@@ -420,7 +420,7 @@ public class ProtobufParser implements ProtobufParserConstants {
 
   final public WithOptions<?> javaAnnotationsFor(WithOptions<?> result) throws ParseException {
   Token optionName;
-  Option<?> option;
+  Option option;
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -568,8 +568,8 @@ public class ProtobufParser implements ProtobufParserConstants {
     jj_consume_token(36);
   }
 
-  final public Type<?> type() throws ParseException {
-  Type<?> result;
+  final public Type type() throws ParseException {
+  Type result;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INT_TYPE:
     case LONG_TYPE:
@@ -632,8 +632,8 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public MapType map() throws ParseException {
-  Type<?> keyType;
-  Type<?> valueType;
+  Type keyType;
+  Type valueType;
     jj_consume_token(MAP);
     jj_consume_token(43);
     keyType = type();

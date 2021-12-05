@@ -63,7 +63,7 @@ public class Group extends Shape<Group> {
 		if (value == null) throw new IllegalArgumentException("Property 'shapes' cannot be null.");
 		_shapes.clear();
 		_shapes.addAll(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class Group extends Shape<Group> {
 	 */
 	public final Group addShape(Shape<?> value) {
 		_shapes.add(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Group extends Shape<Group> {
 	 */
 	public final Group removeShape(Shape<?> value) {
 		_shapes.remove(value);
-		return self();
+		return this;
 	}
 
 	@Override

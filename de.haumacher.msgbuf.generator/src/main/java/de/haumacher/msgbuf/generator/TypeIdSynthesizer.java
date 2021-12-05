@@ -91,7 +91,7 @@ public class TypeIdSynthesizer implements Definition.Visitor<Void, Void> {
 	}
 
 	private void enterAnnotatedLocal(Map<Integer, MessageDef> typeById, MessageDef def) {
-		Optional<Option<?>> option = Util.getOption(def, "type_id");
+		Optional<Option> option = Util.getOption(def, "type_id");
 		if (option.isPresent()) {
 			int id = (int) ((NumberOption) option.get()).getValue();
 			def.setId(id);

@@ -57,7 +57,7 @@ public class Circle extends AtomicShape<Circle> {
 	 */
 	public final Circle setRadius(int value) {
 		_radius = value;
-		return self();
+		return this;
 	}
 
 	@Override

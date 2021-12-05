@@ -62,7 +62,7 @@ public class Car extends Shape<Car> {
 	public final Car setWheel1(Circle value) {
 		_listener.beforeSet(this, WHEEL_1, value);
 		_wheel1 = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Car extends Shape<Car> {
 	public final Car setWheel2(Circle value) {
 		_listener.beforeSet(this, WHEEL_2, value);
 		_wheel2 = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Car extends Shape<Car> {
 	public final Car setBody(Rectangle value) {
 		_listener.beforeSet(this, BODY, value);
 		_body = value;
-		return self();
+		return this;
 	}
 
 	/**

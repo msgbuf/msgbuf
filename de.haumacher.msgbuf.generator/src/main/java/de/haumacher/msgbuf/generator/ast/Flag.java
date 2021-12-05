@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Option} annotating a boolean value
  */
-public class Flag extends Option<Flag> {
+public class Flag extends Option {
 
 	/**
 	 * Creates a {@link Flag} instance.
@@ -30,11 +30,6 @@ public class Flag extends Option<Flag> {
 	}
 
 	@Override
-	protected final Flag self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.FLAG;
 	}
@@ -52,7 +47,7 @@ public class Flag extends Option<Flag> {
 	public final Flag setValue(boolean value) {
 		_listener.beforeSet(this, VALUE, value);
 		_value = value;
-		return self();
+		return this;
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class CodeConvention {
 	}
 
 	public static String getterName(Field field) {
-		Type<?> type = field.getType();
+		Type type = field.getType();
 		if (type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BOOL && !Util.isNullable(field)) {
 			return "is" + suffix(field);
 		} else {

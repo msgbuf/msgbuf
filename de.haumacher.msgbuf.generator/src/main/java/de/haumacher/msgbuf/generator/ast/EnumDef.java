@@ -63,7 +63,7 @@ public class EnumDef extends Definition<EnumDef> {
 		if (value == null) throw new IllegalArgumentException("Property 'constants' cannot be null.");
 		_constants.clear();
 		_constants.addAll(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class EnumDef extends Definition<EnumDef> {
 	 */
 	public final EnumDef addConstant(Constant value) {
 		_constants.add(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class EnumDef extends Definition<EnumDef> {
 	 */
 	public final EnumDef removeConstant(Constant value) {
 		_constants.remove(value);
-		return self();
+		return this;
 	}
 
 	@Override

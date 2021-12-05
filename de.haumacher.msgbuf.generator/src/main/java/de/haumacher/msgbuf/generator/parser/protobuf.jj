@@ -126,7 +126,7 @@ void optionStatement(WithOptions<?> part) :
 
 void optionAssignment(WithOptions<?> part) :
 {
-  Option<?> option;
+  Option option;
   Token t;
 }
 {
@@ -138,9 +138,9 @@ void optionAssignment(WithOptions<?> part) :
   )
 }
 
-Option<?> value() :
+Option value() :
 {
-  Option<?> result;
+  Option result;
   Token t;
 }
 {
@@ -301,11 +301,11 @@ MessageDef message() :
 Field field() :
 {
   Field result = Field.create();
-  Type<?> type;
+  Type type;
   String name;
   Token index;
   Token comment;
-  Option<?> option;
+  Option option;
   Token optionName;
 }
 {
@@ -354,7 +354,7 @@ WithOptions<?> javaAnnotations() :
 WithOptions<?> javaAnnotationsFor(WithOptions<?> result) :
 {
   Token optionName;
-  Option<?> option;
+  Option option;
 }
 {
   (
@@ -414,9 +414,9 @@ void oneof() :
   "}"
 }
 
-Type<?> type() :
+Type type() :
 {
-  Type<?> result;
+  Type result;
 }
 {
   (    result=primitiveType()
@@ -459,8 +459,8 @@ CustomType customType() :
 
 MapType map() :
 {
-  Type<?> keyType;
-  Type<?> valueType;
+  Type keyType;
+  Type valueType;
 }
 {
   < MAP > "<" keyType=type() "," valueType=type() ">"

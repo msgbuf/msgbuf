@@ -69,7 +69,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	public final DefinitionFile setPackage(QName value) {
 		_listener.beforeSet(this, PACKAGE, value);
 		_package = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	 */
 	public final DefinitionFile addDefinition(Definition<?> value) {
 		_definitions.add(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	 */
 	public final DefinitionFile removeDefinition(Definition<?> value) {
 		_definitions.remove(value);
-		return self();
+		return this;
 	}
 
 	@Override

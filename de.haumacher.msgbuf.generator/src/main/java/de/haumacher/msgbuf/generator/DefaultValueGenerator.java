@@ -37,7 +37,7 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 		}
 	}
 
-	public static String mkDefaultValue(Type<?> type) {
+	public static String mkDefaultValue(Type type) {
 		return type.visit(INSTANCE, null);
 	}
 

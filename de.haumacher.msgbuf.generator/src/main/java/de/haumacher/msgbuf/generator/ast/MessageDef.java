@@ -112,7 +112,7 @@ public class MessageDef extends Definition<MessageDef> {
 	public final MessageDef setAbstract(boolean value) {
 		_listener.beforeSet(this, ABSTRACT, value);
 		_abstract = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class MessageDef extends Definition<MessageDef> {
 	public final MessageDef setExtends(QName value) {
 		_listener.beforeSet(this, EXTENDS, value);
 		_extends = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class MessageDef extends Definition<MessageDef> {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class MessageDef extends Definition<MessageDef> {
 	 */
 	public final MessageDef addDefinition(Definition<?> value) {
 		_definitions.add(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class MessageDef extends Definition<MessageDef> {
 	 */
 	public final MessageDef removeDefinition(Definition<?> value) {
 		_definitions.remove(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class MessageDef extends Definition<MessageDef> {
 		if (value == null) throw new IllegalArgumentException("Property 'fields' cannot be null.");
 		_fields.clear();
 		_fields.addAll(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class MessageDef extends Definition<MessageDef> {
 	 */
 	public final MessageDef addField(Field value) {
 		_fields.add(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class MessageDef extends Definition<MessageDef> {
 	 */
 	public final MessageDef removeField(Field value) {
 		_fields.remove(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class MessageDef extends Definition<MessageDef> {
 		if (value == null) throw new IllegalArgumentException("Property 'specializations' cannot be null.");
 		_specializations.clear();
 		_specializations.addAll(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class MessageDef extends Definition<MessageDef> {
 	 */
 	public final MessageDef addSpecialization(MessageDef value) {
 		_specializations.add(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class MessageDef extends Definition<MessageDef> {
 	 */
 	public final MessageDef removeSpecialization(MessageDef value) {
 		_specializations.remove(value);
-		return self();
+		return this;
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class MessageDef extends Definition<MessageDef> {
 	public final MessageDef setExtendedDef(MessageDef value) {
 		_listener.beforeSet(this, EXTENDED_DEF, value);
 		_extendedDef = value;
-		return self();
+		return this;
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class MessageDef extends Definition<MessageDef> {
 	public final MessageDef setId(int value) {
 		_listener.beforeSet(this, ID, value);
 		_id = value;
-		return self();
+		return this;
 	}
 
 	@Override
