@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Option} annotating an int value
  */
-public class NumberOption extends Option {
+public class NumberOption extends Option<NumberOption> {
 
 	/**
 	 * Creates a {@link NumberOption} instance.
@@ -30,6 +30,11 @@ public class NumberOption extends Option {
 	}
 
 	@Override
+	protected NumberOption self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.NUMBER_OPTION;
 	}
@@ -47,7 +52,7 @@ public class NumberOption extends Option {
 	public final NumberOption setValue(double value) {
 		_listener.beforeSet(this, VALUE, value);
 		_value = value;
-		return this;
+		return self();
 	}
 
 	@Override

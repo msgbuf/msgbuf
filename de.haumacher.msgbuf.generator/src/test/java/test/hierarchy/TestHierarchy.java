@@ -27,7 +27,7 @@ import test.hierarchy.data.Shape;
 public class TestHierarchy extends TestCase {
 
 	public void testPolymorphism() throws IOException {
-		Shape shape = Group.create()
+		Shape<?> shape = Group.create()
 			.addShape(Circle.create().setRadius(5).setXCoordinate(1).setYCoordinate(2))
 			.addShape(Rectangle.create().setWidth(10).setHeight(3).setXCoordinate(2).setYCoordinate(3))
 			.addShape(
@@ -39,40 +39,40 @@ public class TestHierarchy extends TestCase {
 		assertCopy(shape, this::checkCopyPolymorphic);
 	}
 
-	private void checkCopyPolymorphic(Shape copy) {
+	private void checkCopyPolymorphic(Shape<?> copy) {
 		assertTrue(copy instanceof Group);
-		List<Shape> contentsCopy = ((Group) copy).getShapes();
+		List<Shape<?>> contentsCopy = ((Group) copy).getShapes();
 		assertEquals(3, contentsCopy.size());
 		assertTrue(contentsCopy.get(0) instanceof Circle);
 	}
 
 	public void testMonomorphicReferences() throws IOException {
 		Car shape = Car.create()
-			.setWheel1((Circle) Circle.create().setRadius(10).setXCoordinate(30).setYCoordinate(10))
-			.setWheel2((Circle) Circle.create().setRadius(10).setXCoordinate(50).setYCoordinate(10))
-			.setBody((Rectangle) Rectangle.create().setWidth(40).setHeight(20).setXCoordinate(20).setYCoordinate(5)); 
+			.setWheel1(Circle.create().setRadius(10).setXCoordinate(30).setYCoordinate(10))
+			.setWheel2(Circle.create().setRadius(10).setXCoordinate(50).setYCoordinate(10))
+			.setBody(Rectangle.create().setWidth(40).setHeight(20).setXCoordinate(20).setYCoordinate(5)); 
 
 		assertCopy(shape, this::checkCopyMonomorphic);
 	}
 
-	private void checkCopyMonomorphic(Shape copy) {
+	private void checkCopyMonomorphic(Shape<?> copy) {
 		assertTrue(copy instanceof Car);
 		assertEquals(30, ((Car) copy).getWheel1().getXCoordinate());
 		assertEquals(50, ((Car) copy).getWheel2().getXCoordinate());
 		assertEquals(20, ((Car) copy).getBody().getXCoordinate());
 	}
 	
-	private void assertCopy(Shape shape, Consumer<Shape> check) throws IOException {
+	private void assertCopy(Shape<?> shape, Consumer<Shape<?>> check) throws IOException {
 		check.accept(writeAndReadBackJson(shape));
 		check.accept(writeAndReadBackBinary(shape));
 	}
 
-	private Shape writeAndReadBackJson(Shape shape) throws IOException {
+	private Shape<?> writeAndReadBackJson(Shape<?> shape) throws IOException {
 		String data = shape.toString();
 		return Shape.readShape(new JsonReader(new StringR(data)));
 	}
 	
-	private Shape writeAndReadBackBinary(Shape shape) throws IOException {
+	private Shape<?> writeAndReadBackBinary(Shape<?> shape) throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		shape.writeTo(new OctetDataWriter(buffer));
 		return Shape.readShape(new OctetDataReader(new ByteArrayInputStream(buffer.toByteArray())));

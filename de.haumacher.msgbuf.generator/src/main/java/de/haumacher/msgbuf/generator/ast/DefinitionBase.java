@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for type and field definitions.
  */
-public abstract class DefinitionBase extends WithOptions {
+public abstract class DefinitionBase<S extends DefinitionBase<S>> extends WithOptions<S> {
 
 	/** Visitor interface for the {@link DefinitionBase} hierarchy.*/
 	public interface Visitor<R,A> extends Part.Visitor<R,A>, Definition.Visitor<R,A> {
@@ -34,10 +34,10 @@ public abstract class DefinitionBase extends WithOptions {
 	/**
 	 * @see #getComment()
 	 */
-	public final DefinitionBase setComment(String value) {
+	public final S setComment(String value) {
 		_listener.beforeSet(this, COMMENT, value);
 		_comment = value;
-		return this;
+		return self();
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -66,8 +66,8 @@ public abstract class DefinitionBase extends WithOptions {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static DefinitionBase readDefinitionBase(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		DefinitionBase result;
+	public static DefinitionBase<?> readDefinitionBase(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		DefinitionBase<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

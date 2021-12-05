@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Member of a {@link Definition}.
  */
-public abstract class Part extends DefinitionBase {
+public abstract class Part<S extends Part<S>> extends DefinitionBase<S> {
 
 	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -29,7 +29,7 @@ public abstract class Part extends DefinitionBase {
 
 	private int _index = 0;
 
-	private transient Definition _owner = null;
+	private transient Definition<?> _owner = null;
 
 	/**
 	 * Creates a {@link Part} instance.
@@ -48,10 +48,10 @@ public abstract class Part extends DefinitionBase {
 	/**
 	 * @see #getName()
 	 */
-	public final Part setName(String value) {
+	public final S setName(String value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -64,26 +64,26 @@ public abstract class Part extends DefinitionBase {
 	/**
 	 * @see #getIndex()
 	 */
-	public final Part setIndex(int value) {
+	public final S setIndex(int value) {
 		_listener.beforeSet(this, INDEX, value);
 		_index = value;
-		return this;
+		return self();
 	}
 
 	/**
 	 * The {@link Definition} definint this {@link Part}.
 	 */
-	public final Definition getOwner() {
+	public final Definition<?> getOwner() {
 		return _owner;
 	}
 
 	/**
 	 * @see #getOwner()
 	 */
-	public final Part setOwner(Definition value) {
+	public final S setOwner(Definition<?> value) {
 		_listener.beforeSet(this, OWNER, value);
 		_owner = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -119,14 +119,14 @@ public abstract class Part extends DefinitionBase {
 		switch (field) {
 			case NAME: setName((String) value); break;
 			case INDEX: setIndex((int) value); break;
-			case OWNER: setOwner((Definition) value); break;
+			case OWNER: setOwner((Definition<?>) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Part readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Part result;
+	public static Part<?> readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Part<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

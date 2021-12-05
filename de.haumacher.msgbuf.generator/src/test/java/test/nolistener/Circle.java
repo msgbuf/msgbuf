@@ -3,7 +3,7 @@ package test.nolistener;
 /**
  * A circle {@link Shape}.
  */
-public class Circle extends AtomicShape {
+public class Circle extends AtomicShape<Circle> {
 
 	/**
 	 * Creates a {@link Circle} instance.
@@ -36,6 +36,11 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
+	protected Circle self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.CIRCLE;
 	}
@@ -52,7 +57,7 @@ public class Circle extends AtomicShape {
 	 */
 	public final Circle setRadius(int value) {
 		_radius = value;
-		return this;
+		return self();
 	}
 
 	@Override

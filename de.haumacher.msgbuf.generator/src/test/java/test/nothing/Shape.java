@@ -3,7 +3,7 @@ package test.nothing;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape {
+public abstract class Shape<S extends Shape<S>> {
 
 	private int _xCoordinate = 0;
 
@@ -16,6 +16,9 @@ public abstract class Shape {
 		super();
 	}
 
+	/** This instance with the concrete type. */
+	protected abstract S self();
+
 	/**
 	 * X coordinate of the origin of the coordinate system of this {@link Shape}.
 	 */
@@ -26,9 +29,9 @@ public abstract class Shape {
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public final Shape setXCoordinate(int value) {
+	public final S setXCoordinate(int value) {
 		_xCoordinate = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -41,9 +44,9 @@ public abstract class Shape {
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public final Shape setYCoordinate(int value) {
+	public final S setYCoordinate(int value) {
 		_yCoordinate = value;
-		return this;
+		return self();
 	}
 
 }

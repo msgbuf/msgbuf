@@ -16,7 +16,7 @@ public interface FieldOperations {
 	/**
 	 * Annotations to this definition.
 	 */
-	java.util.Map<String, Option> getOptions();
+	java.util.Map<String, Option<?>> getOptions();
 	
 
 	/** Whether this field cannot be set by the application */

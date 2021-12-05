@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A field definition of a {@link MessageDef}.
  */
-public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOperations {
+public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.FieldOperations {
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -28,7 +28,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 
 	private boolean _repeated = false;
 
-	private Type _type = null;
+	private Type<?> _type = null;
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -37,6 +37,11 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	 */
 	protected Field() {
 		super();
+	}
+
+	@Override
+	protected Field self() {
+		return this;
 	}
 
 	@Override
@@ -57,7 +62,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	public final Field setTransient(boolean value) {
 		_listener.beforeSet(this, TRANSIENT, value);
 		_transient = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -73,23 +78,23 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	public final Field setRepeated(boolean value) {
 		_listener.beforeSet(this, REPEATED, value);
 		_repeated = value;
-		return this;
+		return self();
 	}
 
 	/**
 	 * The type of values that can be stored in this field.
 	 */
-	public final Type getType() {
+	public final Type<?> getType() {
 		return _type;
 	}
 
 	/**
 	 * @see #getType()
 	 */
-	public final Field setType(Type value) {
+	public final Field setType(Type<?> value) {
 		_listener.beforeSet(this, TYPE, value);
 		_type = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -130,7 +135,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		switch (field) {
 			case TRANSIENT: setTransient((boolean) value); break;
 			case REPEATED: setRepeated((boolean) value); break;
-			case TYPE: setType((Type) value); break;
+			case TYPE: setType((Type<?>) value); break;
 			default: super.set(field, value); break;
 		}
 	}

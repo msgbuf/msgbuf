@@ -152,7 +152,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 	 * The name of the given enumeration classifier as used in the protocol (e.g. JSON format).
 	 */
 	private String protocolName(Constant constant) {
-		Option nameOption = constant.getOptions().get("Name");
+		Option<?> nameOption = constant.getOptions().get("Name");
 		if (nameOption != null) {
 			if (nameOption instanceof StringOption) {
 				return ((StringOption) nameOption).getValue();

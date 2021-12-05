@@ -3,7 +3,7 @@ package test.nothing;
 /**
  * A rectangle.
  */
-public class Rectangle extends AtomicShape {
+public class Rectangle extends AtomicShape<Rectangle> {
 
 	/**
 	 * Creates a {@link Rectangle} instance.
@@ -25,6 +25,11 @@ public class Rectangle extends AtomicShape {
 		super();
 	}
 
+	@Override
+	protected Rectangle self() {
+		return this;
+	}
+
 	/**
 	 * The width of this {@link Rectangle}.
 	 *
@@ -43,7 +48,7 @@ public class Rectangle extends AtomicShape {
 	 */
 	public final Rectangle setWidth(int value) {
 		_width = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -60,7 +65,7 @@ public class Rectangle extends AtomicShape {
 	 */
 	public final Rectangle setHeight(int value) {
 		_height = value;
-		return this;
+		return self();
 	}
 
 }

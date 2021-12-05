@@ -37,7 +37,7 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 		}
 	}
 
-	public static String mkDefaultValue(Type type) {
+	public static String mkDefaultValue(Type<?> type) {
 		return type.visit(INSTANCE, null);
 	}
 
@@ -69,7 +69,7 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 
 	@Override
 	public String visit(CustomType self, Void arg) {
-		Definition definition = self.getDefinition();
+		Definition<?> definition = self.getDefinition();
 		if (definition instanceof EnumDef) {
 			return qTypeName(definition) + "." + classifierName(((EnumDef) definition).getConstants().get(0));
 		} else {

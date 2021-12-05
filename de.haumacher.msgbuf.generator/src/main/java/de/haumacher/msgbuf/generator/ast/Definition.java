@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class of a definition in a {@link DefinitionFile}.
  */
-public abstract class Definition extends DefinitionBase {
+public abstract class Definition<S extends Definition<S>> extends DefinitionBase<S> {
 
 	/** Visitor interface for the {@link Definition} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -48,10 +48,10 @@ public abstract class Definition extends DefinitionBase {
 	/**
 	 * @see #getName()
 	 */
-	public final Definition setName(String value) {
+	public final S setName(String value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -64,10 +64,10 @@ public abstract class Definition extends DefinitionBase {
 	/**
 	 * @see #getFile()
 	 */
-	public final Definition setFile(DefinitionFile value) {
+	public final S setFile(DefinitionFile value) {
 		_listener.beforeSet(this, FILE, value);
 		_file = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -91,10 +91,10 @@ public abstract class Definition extends DefinitionBase {
 	/**
 	 * @see #getOuter()
 	 */
-	public final Definition setOuter(MessageDef value) {
+	public final S setOuter(MessageDef value) {
 		_listener.beforeSet(this, OUTER, value);
 		_outer = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -136,8 +136,8 @@ public abstract class Definition extends DefinitionBase {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Definition readDefinition(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Definition result;
+	public static Definition<?> readDefinition(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Definition<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

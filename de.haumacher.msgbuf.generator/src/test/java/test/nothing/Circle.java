@@ -3,7 +3,7 @@ package test.nothing;
 /**
  * A circle {@link Shape}.
  */
-public class Circle extends AtomicShape {
+public class Circle extends AtomicShape<Circle> {
 
 	/**
 	 * Creates a {@link Circle} instance.
@@ -23,6 +23,11 @@ public class Circle extends AtomicShape {
 		super();
 	}
 
+	@Override
+	protected Circle self() {
+		return this;
+	}
+
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 */
@@ -35,7 +40,7 @@ public class Circle extends AtomicShape {
 	 */
 	public final Circle setRadius(int value) {
 		_radius = value;
-		return this;
+		return self();
 	}
 
 }

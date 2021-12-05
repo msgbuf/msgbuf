@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
+public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -57,6 +57,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		super();
 	}
 
+	/** This instance with the concrete type. */
+	protected abstract S self();
+
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
@@ -70,9 +73,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public final Shape setXCoordinate(int value) {
+	public final S setXCoordinate(int value) {
 		_xCoordinate = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -85,17 +88,17 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public final Shape setYCoordinate(int value) {
+	public final S setYCoordinate(int value) {
 		_yCoordinate = value;
-		return this;
+		return self();
 	}
 
 	/** The type identifier for this concrete subtype. */
 	public abstract String jsonType();
 
 	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape result;
+	public static Shape<?> readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Shape<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -162,9 +165,9 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static Shape<?> readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Shape result;
+		Shape<?> result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();

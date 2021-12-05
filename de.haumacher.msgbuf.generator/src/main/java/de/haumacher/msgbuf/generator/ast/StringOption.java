@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Option} annotating a string value
  */
-public class StringOption extends Option {
+public class StringOption extends Option<StringOption> {
 
 	/**
 	 * Creates a {@link StringOption} instance.
@@ -30,6 +30,11 @@ public class StringOption extends Option {
 	}
 
 	@Override
+	protected StringOption self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.STRING_OPTION;
 	}
@@ -47,7 +52,7 @@ public class StringOption extends Option {
 	public final StringOption setValue(String value) {
 		_listener.beforeSet(this, VALUE, value);
 		_value = value;
-		return this;
+		return self();
 	}
 
 	@Override

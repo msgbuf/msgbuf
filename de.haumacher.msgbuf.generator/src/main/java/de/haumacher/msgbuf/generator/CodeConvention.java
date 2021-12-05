@@ -27,7 +27,7 @@ import de.haumacher.msgbuf.generator.ast.Type;
 public class CodeConvention {
 
 	public static String qTypeName(CustomType def) {
-		Definition definition = def.getDefinition();
+		Definition<?> definition = def.getDefinition();
 		if (definition == null) {
 			return qTypeName(def.getName());
 		} else {
@@ -35,7 +35,7 @@ public class CodeConvention {
 		}
 	}
 	
-	public static String qTypeName(Definition def) {
+	public static String qTypeName(Definition<?> def) {
 		String scope;
 		
 		DefinitionFile file = def.getFile();
@@ -66,7 +66,7 @@ public class CodeConvention {
 		return result.toString();
 	}
 
-	public static String typeName(Definition def) {
+	public static String typeName(Definition<?> def) {
 		return typeName(def.getName());
 	}
 
@@ -97,7 +97,7 @@ public class CodeConvention {
 	}
 
 	public static String getterName(Field field) {
-		Type type = field.getType();
+		Type<?> type = field.getType();
 		if (type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BOOL && !Util.isNullable(field)) {
 			return "is" + suffix(field);
 		} else {
@@ -151,7 +151,7 @@ public class CodeConvention {
 		return "read" + name;
 	}
 
-	public static String readerName(Definition def) {
+	public static String readerName(Definition<?> def) {
 		return readerName(def.getName());
 	}
 

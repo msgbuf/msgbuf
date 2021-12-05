@@ -24,7 +24,7 @@ public class FieldIDSynthesizer implements Definition.Visitor<Map<Integer, Strin
 	 * Assigns IDs in the given file.
 	 */
 	public void process(DefinitionFile file) {
-		for (Definition def : file.getDefinitions()) {
+		for (Definition<?> def : file.getDefinitions()) {
 			def.visit(this, null);
 		}
 	}
@@ -94,7 +94,7 @@ public class FieldIDSynthesizer implements Definition.Visitor<Map<Integer, Strin
 			}
 		}
 		
-		for (Definition inner : self.getDefinitions()) {
+		for (Definition<?> inner : self.getDefinitions()) {
 			inner.visit(this, arg);
 		}
 

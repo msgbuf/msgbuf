@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for object that can be annotated.
  */
-public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
+public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link WithOptions} hierarchy. */
 	public enum TypeKind {
@@ -43,7 +43,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	/** @see #getOptions() */
 	public static final String OPTIONS = "options";
 
-	private final java.util.Map<String, Option> _options = new java.util.HashMap<>();
+	private final java.util.Map<String, Option<?>> _options = new java.util.HashMap<>();
 
 	/**
 	 * Creates a {@link WithOptions} instance.
@@ -52,57 +52,60 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		super();
 	}
 
+	/** This instance with the concrete type. */
+	protected abstract S self();
+
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
 	/**
 	 * Annotations to this definition.
 	 */
-	public final java.util.Map<String, Option> getOptions() {
+	public final java.util.Map<String, Option<?>> getOptions() {
 		return _options;
 	}
 
 	/**
 	 * @see #getOptions()
 	 */
-	public final WithOptions setOptions(java.util.Map<String, Option> value) {
+	public final S setOptions(java.util.Map<String, Option<?>> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'options' cannot be null.");
 		_options.clear();
 		_options.putAll(value);
-		return this;
+		return self();
 	}
 
 	/**
 	 * Adds a value to the {@link #getOptions()} map.
 	 */
-	public final WithOptions putOption(String key, Option value) {
+	public final S putOption(String key, Option<?> value) {
 		if (_options.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
 		}
 		_options.put(key, value);
-		return this;
+		return self();
 	}
 
 	/**
 	 * Removes a key from the {@link #getOptions()} map.
 	 */
-	public final WithOptions removeOption(String key) {
+	public final S removeOption(String key) {
 		_options.remove(key);
-		return this;
+		return self();
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public WithOptions registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public S registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return this;
+		return self();
 	}
 
 	@Override
-	public WithOptions unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public S unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-		return this;
+		return self();
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -125,13 +128,13 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case OPTIONS: setOptions((java.util.Map<String, Option>) value); break;
+			case OPTIONS: setOptions((java.util.Map<String, Option<?>>) value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static WithOptions readWithOptions(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		WithOptions result;
+	public static WithOptions<?> readWithOptions(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		WithOptions<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -160,7 +163,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		super.writeFields(out);
 		out.name(OPTIONS);
 		out.beginObject();
-		for (java.util.Map.Entry<String,Option> entry : getOptions().entrySet()) {
+		for (java.util.Map.Entry<String,Option<?>> entry : getOptions().entrySet()) {
 			out.name(entry.getKey());
 			entry.getValue().writeTo(out);
 		}

@@ -3,7 +3,7 @@ package test.nothing;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public class Car extends Shape {
+public class Car extends Shape<Car> {
 
 	/**
 	 * Creates a {@link Car} instance.
@@ -27,6 +27,11 @@ public class Car extends Shape {
 		super();
 	}
 
+	@Override
+	protected Car self() {
+		return this;
+	}
+
 	/**
 	 * The front wheel.
 	 */
@@ -39,7 +44,7 @@ public class Car extends Shape {
 	 */
 	public final Car setWheel1(Circle value) {
 		_wheel1 = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -61,7 +66,7 @@ public class Car extends Shape {
 	 */
 	public final Car setWheel2(Circle value) {
 		_wheel2 = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -83,7 +88,7 @@ public class Car extends Shape {
 	 */
 	public final Car setBody(Rectangle value) {
 		_body = value;
-		return this;
+		return self();
 	}
 
 	/**

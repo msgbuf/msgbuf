@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A primitive built-in {@link Type}.
  */
-public class PrimitiveType extends Type {
+public class PrimitiveType extends Type<PrimitiveType> {
 
 	/**
 	 * Supported built-in types.
@@ -182,6 +182,11 @@ public class PrimitiveType extends Type {
 	}
 
 	@Override
+	protected PrimitiveType self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.PRIMITIVE_TYPE;
 	}
@@ -200,7 +205,7 @@ public class PrimitiveType extends Type {
 		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
 		_listener.beforeSet(this, KIND, value);
 		_kind = value;
-		return this;
+		return self();
 	}
 
 	@Override

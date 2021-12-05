@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see #getDefinitions()
  */
-public class DefinitionFile extends WithOptions {
+public class DefinitionFile extends WithOptions<DefinitionFile> {
 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
@@ -25,14 +25,14 @@ public class DefinitionFile extends WithOptions {
 
 	private QName _package = null;
 
-	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
+	private final java.util.List<Definition<?>> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition<?>>() {
 		@Override
-		protected void beforeAdd(int index, Definition element) {
+		protected void beforeAdd(int index, Definition<?> element) {
 			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
 		}
 
 		@Override
-		protected void afterRemove(int index, Definition element) {
+		protected void afterRemove(int index, Definition<?> element) {
 			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
 		}
 	};
@@ -44,6 +44,11 @@ public class DefinitionFile extends WithOptions {
 	 */
 	protected DefinitionFile() {
 		super();
+	}
+
+	@Override
+	protected DefinitionFile self() {
+		return this;
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class DefinitionFile extends WithOptions {
 	public final DefinitionFile setPackage(QName value) {
 		_listener.beforeSet(this, PACKAGE, value);
 		_package = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -77,34 +82,34 @@ public class DefinitionFile extends WithOptions {
 	/**
 	 * All definitions in this file.
 	 */
-	public final java.util.List<Definition> getDefinitions() {
+	public final java.util.List<Definition<?>> getDefinitions() {
 		return _definitions;
 	}
 
 	/**
 	 * @see #getDefinitions()
 	 */
-	public final DefinitionFile setDefinitions(java.util.List<Definition> value) {
+	public final DefinitionFile setDefinitions(java.util.List<Definition<?>> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
-		return this;
+		return self();
 	}
 
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
 	 */
-	public final DefinitionFile addDefinition(Definition value) {
+	public final DefinitionFile addDefinition(Definition<?> value) {
 		_definitions.add(value);
-		return this;
+		return self();
 	}
 
 	/**
 	 * Removes a value from the {@link #getDefinitions()} list.
 	 */
-	public final DefinitionFile removeDefinition(Definition value) {
+	public final DefinitionFile removeDefinition(Definition<?> value) {
 		_definitions.remove(value);
-		return this;
+		return self();
 	}
 
 	@Override
@@ -135,7 +140,7 @@ public class DefinitionFile extends WithOptions {
 	public void set(String field, Object value) {
 		switch (field) {
 			case PACKAGE: setPackage((QName) value); break;
-			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
+			case DEFINITIONS: setDefinitions((java.util.List<Definition<?>>) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -158,7 +163,7 @@ public class DefinitionFile extends WithOptions {
 		}
 		out.name(DEFINITIONS);
 		out.beginArray();
-		for (Definition x : getDefinitions()) {
+		for (Definition<?> x : getDefinitions()) {
 			x.writeTo(out);
 		}
 		out.endArray();

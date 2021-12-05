@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Definition} of a data class.
  */
-public class MessageDef extends Definition {
+public class MessageDef extends Definition<MessageDef> {
 
 	/**
 	 * Creates a {@link MessageDef} instance.
@@ -40,14 +40,14 @@ public class MessageDef extends Definition {
 
 	private QName _extends = null;
 
-	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
+	private final java.util.List<Definition<?>> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition<?>>() {
 		@Override
-		protected void beforeAdd(int index, Definition element) {
+		protected void beforeAdd(int index, Definition<?> element) {
 			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, DEFINITIONS, index, element);
 		}
 
 		@Override
-		protected void afterRemove(int index, Definition element) {
+		protected void afterRemove(int index, Definition<?> element) {
 			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, DEFINITIONS, index, element);
 		}
 	};
@@ -90,6 +90,11 @@ public class MessageDef extends Definition {
 	}
 
 	@Override
+	protected MessageDef self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.MESSAGE_DEF;
 	}
@@ -107,7 +112,7 @@ public class MessageDef extends Definition {
 	public final MessageDef setAbstract(boolean value) {
 		_listener.beforeSet(this, ABSTRACT, value);
 		_abstract = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -123,7 +128,7 @@ public class MessageDef extends Definition {
 	public final MessageDef setExtends(QName value) {
 		_listener.beforeSet(this, EXTENDS, value);
 		_extends = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -136,34 +141,34 @@ public class MessageDef extends Definition {
 	/**
 	 * Ohter {@link Definition}s that are local to this data class.
 	 */
-	public final java.util.List<Definition> getDefinitions() {
+	public final java.util.List<Definition<?>> getDefinitions() {
 		return _definitions;
 	}
 
 	/**
 	 * @see #getDefinitions()
 	 */
-	public final MessageDef setDefinitions(java.util.List<Definition> value) {
+	public final MessageDef setDefinitions(java.util.List<Definition<?>> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
-		return this;
+		return self();
 	}
 
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
 	 */
-	public final MessageDef addDefinition(Definition value) {
+	public final MessageDef addDefinition(Definition<?> value) {
 		_definitions.add(value);
-		return this;
+		return self();
 	}
 
 	/**
 	 * Removes a value from the {@link #getDefinitions()} list.
 	 */
-	public final MessageDef removeDefinition(Definition value) {
+	public final MessageDef removeDefinition(Definition<?> value) {
 		_definitions.remove(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -186,7 +191,7 @@ public class MessageDef extends Definition {
 		if (value == null) throw new IllegalArgumentException("Property 'fields' cannot be null.");
 		_fields.clear();
 		_fields.addAll(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -194,7 +199,7 @@ public class MessageDef extends Definition {
 	 */
 	public final MessageDef addField(Field value) {
 		_fields.add(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -202,7 +207,7 @@ public class MessageDef extends Definition {
 	 */
 	public final MessageDef removeField(Field value) {
 		_fields.remove(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -219,7 +224,7 @@ public class MessageDef extends Definition {
 		if (value == null) throw new IllegalArgumentException("Property 'specializations' cannot be null.");
 		_specializations.clear();
 		_specializations.addAll(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -227,7 +232,7 @@ public class MessageDef extends Definition {
 	 */
 	public final MessageDef addSpecialization(MessageDef value) {
 		_specializations.add(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -235,7 +240,7 @@ public class MessageDef extends Definition {
 	 */
 	public final MessageDef removeSpecialization(MessageDef value) {
 		_specializations.remove(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -251,7 +256,7 @@ public class MessageDef extends Definition {
 	public final MessageDef setExtendedDef(MessageDef value) {
 		_listener.beforeSet(this, EXTENDED_DEF, value);
 		_extendedDef = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -274,7 +279,7 @@ public class MessageDef extends Definition {
 	public final MessageDef setId(int value) {
 		_listener.beforeSet(this, ID, value);
 		_id = value;
-		return this;
+		return self();
 	}
 
 	@Override
@@ -316,7 +321,7 @@ public class MessageDef extends Definition {
 		switch (field) {
 			case ABSTRACT: setAbstract((boolean) value); break;
 			case EXTENDS: setExtends((QName) value); break;
-			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
+			case DEFINITIONS: setDefinitions((java.util.List<Definition<?>>) value); break;
 			case FIELDS: setFields((java.util.List<Field>) value); break;
 			case SPECIALIZATIONS: setSpecializations((java.util.List<MessageDef>) value); break;
 			case EXTENDED_DEF: setExtendedDef((MessageDef) value); break;
@@ -345,7 +350,7 @@ public class MessageDef extends Definition {
 		}
 		out.name(DEFINITIONS);
 		out.beginArray();
-		for (Definition x : getDefinitions()) {
+		for (Definition<?> x : getDefinitions()) {
 			x.writeTo(out);
 		}
 		out.endArray();

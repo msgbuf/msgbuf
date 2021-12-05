@@ -3,7 +3,7 @@ package test.novisit;
 /**
  * A rectangle.
  */
-public class Rectangle extends AtomicShape {
+public class Rectangle extends AtomicShape<Rectangle> {
 
 	/**
 	 * Creates a {@link Rectangle} instance.
@@ -44,6 +44,11 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
+	protected Rectangle self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.RECTANGLE;
 	}
@@ -67,7 +72,7 @@ public class Rectangle extends AtomicShape {
 	public final Rectangle setWidth(int value) {
 		_listener.beforeSet(this, WIDTH, value);
 		_width = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -85,7 +90,7 @@ public class Rectangle extends AtomicShape {
 	public final Rectangle setHeight(int value) {
 		_listener.beforeSet(this, HEIGHT, value);
 		_height = value;
-		return this;
+		return self();
 	}
 
 	@Override

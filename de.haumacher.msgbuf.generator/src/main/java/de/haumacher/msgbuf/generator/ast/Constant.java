@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see EnumDef#getConstants()
  */
-public class Constant extends Part {
+public class Constant extends Part<Constant> {
 
 	/**
 	 * Creates a {@link Constant} instance.
@@ -24,6 +24,11 @@ public class Constant extends Part {
 	 */
 	protected Constant() {
 		super();
+	}
+
+	@Override
+	protected Constant self() {
+		return this;
 	}
 
 	@Override

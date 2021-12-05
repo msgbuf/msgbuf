@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Container for temporary collecting annotations without further semantics.
  */
-public class OptionContainer extends WithOptions {
+public class OptionContainer extends WithOptions<OptionContainer> {
 
 	/**
 	 * Creates a {@link OptionContainer} instance.
@@ -22,6 +22,11 @@ public class OptionContainer extends WithOptions {
 	 */
 	protected OptionContainer() {
 		super();
+	}
+
+	@Override
+	protected OptionContainer self() {
+		return this;
 	}
 
 	@Override

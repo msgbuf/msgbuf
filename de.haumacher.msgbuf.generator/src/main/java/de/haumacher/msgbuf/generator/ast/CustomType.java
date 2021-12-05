@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * A custom type is either a {@link EnumDef}, or a {@link MessageDef}.
  */
-public class CustomType extends Type {
+public class CustomType extends Type<CustomType> {
 
 	/**
 	 * Creates a {@link CustomType} instance.
@@ -25,7 +25,7 @@ public class CustomType extends Type {
 
 	private QName _name = null;
 
-	private transient Definition _definition = null;
+	private transient Definition<?> _definition = null;
 
 	/**
 	 * Creates a {@link CustomType} instance.
@@ -34,6 +34,11 @@ public class CustomType extends Type {
 	 */
 	protected CustomType() {
 		super();
+	}
+
+	@Override
+	protected CustomType self() {
+		return this;
 	}
 
 	@Override
@@ -54,7 +59,7 @@ public class CustomType extends Type {
 	public final CustomType setName(QName value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -67,17 +72,17 @@ public class CustomType extends Type {
 	/**
 	 * Resolved reference of the {@link Definition} defining the {@link #getName() referenced type}.
 	 */
-	public final Definition getDefinition() {
+	public final Definition<?> getDefinition() {
 		return _definition;
 	}
 
 	/**
 	 * @see #getDefinition()
 	 */
-	public final CustomType setDefinition(Definition value) {
+	public final CustomType setDefinition(Definition<?> value) {
 		_listener.beforeSet(this, DEFINITION, value);
 		_definition = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -115,7 +120,7 @@ public class CustomType extends Type {
 	public void set(String field, Object value) {
 		switch (field) {
 			case NAME: setName((QName) value); break;
-			case DEFINITION: setDefinition((Definition) value); break;
+			case DEFINITION: setDefinition((Definition<?>) value); break;
 			default: super.set(field, value); break;
 		}
 	}

@@ -12,7 +12,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   final public DefinitionFile file() throws ParseException {
   DefinitionFile result = DefinitionFile.create();
   QName pkgName;
-  Definition def;
+  Definition<?> def;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SYNTAX:
       jj_consume_token(SYNTAX);
@@ -67,14 +67,14 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public void optionStatement(WithOptions part) throws ParseException {
+  final public void optionStatement(WithOptions<?> part) throws ParseException {
     jj_consume_token(OPTION);
     optionAssignment(part);
     jj_consume_token(34);
   }
 
-  final public void optionAssignment(WithOptions part) throws ParseException {
-  Option option;
+  final public void optionAssignment(WithOptions<?> part) throws ParseException {
+  Option<?> option;
   Token t;
     t = jj_consume_token(NAME);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -89,8 +89,8 @@ public class ProtobufParser implements ProtobufParserConstants {
     }
   }
 
-  final public Option value() throws ParseException {
-  Option result;
+  final public Option<?> value() throws ParseException {
+  Option<?> result;
   Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STRING:
@@ -118,10 +118,10 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public Definition definition() throws ParseException {
+  final public Definition<?> definition() throws ParseException {
   String comment;
-  Definition result;
-  WithOptions options;
+  Definition<?> result;
+  WithOptions<?> options;
     comment = Util.stripComment(token.next);
     options = javaAnnotations();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -143,10 +143,10 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public DefinitionBase memberDefinition() throws ParseException {
+  final public DefinitionBase<?> memberDefinition() throws ParseException {
   String comment;
-  DefinitionBase result;
-  WithOptions options;
+  DefinitionBase<?> result;
+  WithOptions<?> options;
     comment = Util.stripComment(token.next);
     options = javaAnnotations();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -269,7 +269,7 @@ public class ProtobufParser implements ProtobufParserConstants {
   MessageDef result = MessageDef.create();
   String name;
   QName generalization;
-  WithOptions def;
+  WithOptions<?> def;
   Field field;
   Token comment;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -345,7 +345,7 @@ public class ProtobufParser implements ProtobufParserConstants {
       if (def instanceof Field) {
             result.addField((Field) def);
       } else {
-            result.addDefinition((Definition) def);
+            result.addDefinition((Definition<?>) def);
       }
         break;
       case ONEOF:
@@ -367,11 +367,11 @@ public class ProtobufParser implements ProtobufParserConstants {
 
   final public Field field() throws ParseException {
   Field result = Field.create();
-  Type type;
+  Type<?> type;
   String name;
   Token index;
   Token comment;
-  Option option;
+  Option<?> option;
   Token optionName;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TRANSIENT:
@@ -411,16 +411,16 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public WithOptions javaAnnotations() throws ParseException {
-  WithOptions result;
+  final public WithOptions<?> javaAnnotations() throws ParseException {
+  WithOptions<?> result;
     result = javaAnnotationsFor(null);
     {if (true) return result;}
     throw new Error("Missing return statement in function");
   }
 
-  final public WithOptions javaAnnotationsFor(WithOptions result) throws ParseException {
+  final public WithOptions<?> javaAnnotationsFor(WithOptions<?> result) throws ParseException {
   Token optionName;
-  Option option;
+  Option<?> option;
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -450,7 +450,7 @@ public class ProtobufParser implements ProtobufParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public void partOptions(Part part) throws ParseException {
+  final public void partOptions(Part<?> part) throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 40:
       jj_consume_token(40);
@@ -568,8 +568,8 @@ public class ProtobufParser implements ProtobufParserConstants {
     jj_consume_token(36);
   }
 
-  final public Type type() throws ParseException {
-  Type result;
+  final public Type<?> type() throws ParseException {
+  Type<?> result;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INT_TYPE:
     case LONG_TYPE:
@@ -632,8 +632,8 @@ public class ProtobufParser implements ProtobufParserConstants {
   }
 
   final public MapType map() throws ParseException {
-  Type keyType;
-  Type valueType;
+  Type<?> keyType;
+  Type<?> valueType;
     jj_consume_token(MAP);
     jj_consume_token(43);
     keyType = type();

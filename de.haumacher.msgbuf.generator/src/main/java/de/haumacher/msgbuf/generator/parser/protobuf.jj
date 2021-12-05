@@ -91,7 +91,7 @@ DefinitionFile file() :
 {
   DefinitionFile result = DefinitionFile.create();
   QName pkgName;
-  Definition def;
+  Definition<?> def;
 }
 {
   (    < SYNTAX > "=" < STRING > ";"
@@ -117,16 +117,16 @@ DefinitionFile file() :
   }
 }
 
-void optionStatement(WithOptions part) :
+void optionStatement(WithOptions<?> part) :
 {
 }
 {
   < OPTION > optionAssignment(part) ";"
 }
 
-void optionAssignment(WithOptions part) :
+void optionAssignment(WithOptions<?> part) :
 {
-  Option option;
+  Option<?> option;
   Token t;
 }
 {
@@ -138,9 +138,9 @@ void optionAssignment(WithOptions part) :
   )
 }
 
-Option value() :
+Option<?> value() :
 {
-  Option result;
+  Option<?> result;
   Token t;
 }
 {
@@ -158,11 +158,11 @@ Option value() :
   }
 }
 
-Definition definition() :
+Definition<?> definition() :
 {
   String comment;
-  Definition result;
-  WithOptions options;
+  Definition<?> result;
+  WithOptions<?> options;
 }
 {
   { comment = Util.stripComment(token.next); }
@@ -178,11 +178,11 @@ Definition definition() :
   }
 }
 
-DefinitionBase memberDefinition() :
+DefinitionBase<?> memberDefinition() :
 {
   String comment;
-  DefinitionBase result;
-  WithOptions options;
+  DefinitionBase<?> result;
+  WithOptions<?> options;
 }
 {
   { comment = Util.stripComment(token.next); }
@@ -259,7 +259,7 @@ MessageDef message() :
   MessageDef result = MessageDef.create();
   String name;
   QName generalization;
-  WithOptions def;
+  WithOptions<?> def;
   Field field;
   Token comment;
 }
@@ -286,7 +286,7 @@ MessageDef message() :
       if (def instanceof Field) {
 	    result.addField((Field) def);
       } else {
-	    result.addDefinition((Definition) def);
+	    result.addDefinition((Definition<?>) def);
       }
     } 
   | oneof()
@@ -301,11 +301,11 @@ MessageDef message() :
 Field field() :
 {
   Field result = Field.create();
-  Type type;
+  Type<?> type;
   String name;
   Token index;
   Token comment;
-  Option option;
+  Option<?> option;
   Token optionName;
 }
 {
@@ -340,9 +340,9 @@ Field field() :
   {
     return result;  }}
 
-WithOptions javaAnnotations() :
+WithOptions<?> javaAnnotations() :
 {
-  WithOptions result;
+  WithOptions<?> result;
 }
 {
   result=javaAnnotationsFor(null)
@@ -351,10 +351,10 @@ WithOptions javaAnnotations() :
   }
 }
 
-WithOptions javaAnnotationsFor(WithOptions result) :
+WithOptions<?> javaAnnotationsFor(WithOptions<?> result) :
 {
   Token optionName;
-  Option option;
+  Option<?> option;
 }
 {
   (
@@ -373,7 +373,7 @@ WithOptions javaAnnotationsFor(WithOptions result) :
   }
 }
 
-void partOptions(Part part) :
+void partOptions(Part<?> part) :
 {
 }
 {
@@ -414,9 +414,9 @@ void oneof() :
   "}"
 }
 
-Type type() :
+Type<?> type() :
 {
-  Type result;
+  Type<?> result;
 }
 {
   (    result=primitiveType()
@@ -459,8 +459,8 @@ CustomType customType() :
 
 MapType map() :
 {
-  Type keyType;
-  Type valueType;
+  Type<?> keyType;
+  Type<?> valueType;
 }
 {
   < MAP > "<" keyType=type() "," valueType=type() ">"

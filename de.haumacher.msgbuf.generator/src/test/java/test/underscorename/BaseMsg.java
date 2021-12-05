@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public abstract class BaseMsg<S extends BaseMsg<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link BaseMsg} hierarchy. */
 	public enum TypeKind {
@@ -32,26 +32,29 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 		super();
 	}
 
+	/** This instance with the concrete type. */
+	protected abstract S self();
+
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public BaseMsg registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public S registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return this;
+		return self();
 	}
 
 	@Override
-	public BaseMsg unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public S unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-		return this;
+		return self();
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static BaseMsg readbase_msg(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		BaseMsg result;
+	public static BaseMsg<?> readbase_msg(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		BaseMsg<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -95,9 +98,9 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static BaseMsg readbase_msg(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static BaseMsg<?> readbase_msg(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		BaseMsg result;
+		BaseMsg<?> result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();

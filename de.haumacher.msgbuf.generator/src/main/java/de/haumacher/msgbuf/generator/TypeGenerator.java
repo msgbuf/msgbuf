@@ -6,8 +6,10 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
+import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
+import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.Type;
 
@@ -31,15 +33,15 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 		return field.isRepeated() ? "java.util.List<" + mkTypeWrapped(field.getType()) + ">" : mkType(field.getType(), Util.isNullable(field));
 	}
 
-	public static String mkType(Type type) {
+	public static String mkType(Type<?> type) {
 		return mkType(type, false);
 	}
 	
-	public static String mkType(Type type, boolean nullable) {
+	public static String mkType(Type<?> type, boolean nullable) {
 		return type.visit(INSTANCE, Boolean.valueOf(nullable));
 	}
 	
-	public static String mkTypeWrapped(Type type) {
+	public static String mkTypeWrapped(Type<?> type) {
 		return type.visit(INSTANCE, Boolean.TRUE);
 	}
 	
@@ -50,7 +52,12 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		return qTypeName(type.getName());
+		Definition<?> definition = type.getDefinition();
+		if (definition instanceof MessageDef) {
+			return qTypeName(type.getName()) + (((MessageDef) definition).isAbstract() ? "<?>" : "");
+		} else {
+			return qTypeName(type.getName());
+		}
 	}
 	
 	@Override

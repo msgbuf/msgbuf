@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public abstract class AtomicShape extends Shape {
+public abstract class AtomicShape<S extends AtomicShape<S>> extends Shape<S> {
 
 	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
@@ -24,11 +24,11 @@ public abstract class AtomicShape extends Shape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static AtomicShape<?> readAtomicShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
-			return (AtomicShape) scope.resolveOrFail(in.nextInt());
+			return (AtomicShape<?>) scope.resolveOrFail(in.nextInt());
 		}
-		AtomicShape result;
+		AtomicShape<?> result;
 		in.beginArray();
 		String type = in.nextString();
 		int id = in.nextInt();

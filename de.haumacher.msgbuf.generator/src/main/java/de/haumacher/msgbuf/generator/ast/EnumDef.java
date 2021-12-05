@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Definition} of an enumeration.
  */
-public class EnumDef extends Definition {
+public class EnumDef extends Definition<EnumDef> {
 
 	/**
 	 * Creates a {@link EnumDef} instance.
@@ -40,6 +40,11 @@ public class EnumDef extends Definition {
 	}
 
 	@Override
+	protected EnumDef self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.ENUM_DEF;
 	}
@@ -58,7 +63,7 @@ public class EnumDef extends Definition {
 		if (value == null) throw new IllegalArgumentException("Property 'constants' cannot be null.");
 		_constants.clear();
 		_constants.addAll(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -66,7 +71,7 @@ public class EnumDef extends Definition {
 	 */
 	public final EnumDef addConstant(Constant value) {
 		_constants.add(value);
-		return this;
+		return self();
 	}
 
 	/**
@@ -74,7 +79,7 @@ public class EnumDef extends Definition {
 	 */
 	public final EnumDef removeConstant(Constant value) {
 		_constants.remove(value);
-		return this;
+		return self();
 	}
 
 	@Override

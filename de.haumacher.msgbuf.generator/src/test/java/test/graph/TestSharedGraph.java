@@ -68,8 +68,8 @@ public class TestSharedGraph extends TestCase {
 		
 		// Modifiy graph on the client and transmit changes back.
 		((Car) clientGroup.getShapes().get(1))
-			.setWheel1((Circle) Circle.create().setRadius(5).setXCoordinate(25).setYCoordinate(30))
-			.setWheel2((Circle) Circle.create().setRadius(5).setXCoordinate(45).setYCoordinate(30))
+			.setWheel1(Circle.create().setRadius(5).setXCoordinate(25).setYCoordinate(30))
+			.setWheel2(Circle.create().setRadius(5).setXCoordinate(45).setYCoordinate(30))
 			.getBody().setWidth(50);
 		
 		syncGraph(_client, _server);
@@ -83,7 +83,7 @@ public class TestSharedGraph extends TestCase {
 	 * Test that the same object can be referenced multiple times but is only transmitted once.
 	 */
 	public void testSameTarget() throws IOException {
-		Circle sharedServerWheel = (Circle) Circle.create().setRadius(20).setXCoordinate(10).setYCoordinate(10);
+		Circle sharedServerWheel = Circle.create().setRadius(20).setXCoordinate(10).setYCoordinate(10);
 		Car serverGroup = Car.create().setWheel1(sharedServerWheel).setWheel2(sharedServerWheel);
 		serverGroup.registerListener(_server);
 		
@@ -92,7 +92,7 @@ public class TestSharedGraph extends TestCase {
 		assertSame(clientGroup.getWheel1(), clientGroup.getWheel2());
 	}
 
-	private <S extends Shape> S transmit(Scope server, Scope client, S shape) throws IOException {
+	private <S extends Shape<?>> S transmit(Scope server, Scope client, S shape) throws IOException {
 		StringW dataMessage = new StringW();
 		shape.writeTo(server, new JsonWriter(dataMessage));
 

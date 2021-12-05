@@ -3,7 +3,7 @@ package test.nojson;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public class Car extends Shape {
+public class Car extends Shape<Car> {
 
 	/**
 	 * Creates a {@link Car} instance.
@@ -52,6 +52,11 @@ public class Car extends Shape {
 	}
 
 	@Override
+	protected Car self() {
+		return this;
+	}
+
+	@Override
 	public TypeKind kind() {
 		return TypeKind.CAR;
 	}
@@ -69,7 +74,7 @@ public class Car extends Shape {
 	public final Car setWheel1(Circle value) {
 		_listener.beforeSet(this, WHEEL_1, value);
 		_wheel1 = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -92,7 +97,7 @@ public class Car extends Shape {
 	public final Car setWheel2(Circle value) {
 		_listener.beforeSet(this, WHEEL_2, value);
 		_wheel2 = value;
-		return this;
+		return self();
 	}
 
 	/**
@@ -115,7 +120,7 @@ public class Car extends Shape {
 	public final Car setBody(Rectangle value) {
 		_listener.beforeSet(this, BODY, value);
 		_body = value;
-		return this;
+		return self();
 	}
 
 	/**
