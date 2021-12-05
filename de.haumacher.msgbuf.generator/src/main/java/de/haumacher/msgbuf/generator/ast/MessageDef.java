@@ -90,7 +90,7 @@ public class MessageDef extends Definition<MessageDef> {
 	}
 
 	@Override
-	protected MessageDef self() {
+	protected final MessageDef self() {
 		return this;
 	}
 

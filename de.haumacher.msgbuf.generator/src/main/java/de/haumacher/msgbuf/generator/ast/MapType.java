@@ -35,7 +35,7 @@ public class MapType extends Type<MapType> {
 	}
 
 	@Override
-	protected MapType self() {
+	protected final MapType self() {
 		return this;
 	}
 

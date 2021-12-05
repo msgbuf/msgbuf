@@ -40,7 +40,7 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	}
 
 	@Override
-	protected Field self() {
+	protected final Field self() {
 		return this;
 	}
 

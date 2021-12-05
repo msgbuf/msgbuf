@@ -33,7 +33,7 @@ public class AnnotatedMessage extends BaseMsg<AnnotatedMessage> {
 	}
 
 	@Override
-	protected AnnotatedMessage self() {
+	protected final AnnotatedMessage self() {
 		return this;
 	}
 

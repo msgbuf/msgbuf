@@ -37,7 +37,7 @@ public class CustomType extends Type<CustomType> {
 	}
 
 	@Override
-	protected CustomType self() {
+	protected final CustomType self() {
 		return this;
 	}
 

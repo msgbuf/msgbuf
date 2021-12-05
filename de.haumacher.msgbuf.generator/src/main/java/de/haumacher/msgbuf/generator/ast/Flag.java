@@ -30,7 +30,7 @@ public class Flag extends Option<Flag> {
 	}
 
 	@Override
-	protected Flag self() {
+	protected final Flag self() {
 		return this;
 	}
 

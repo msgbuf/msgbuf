@@ -280,7 +280,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			} else if (!_def.isAbstract()) {
 				nl();
 				line("@Override");
-				line("protected " + typeName(_def) + " self() {");
+				line("protected final " + typeName(_def) + " self() {");
 				{
 					line("return this;");
 				}

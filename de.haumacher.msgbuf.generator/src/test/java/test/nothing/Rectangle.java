@@ -26,7 +26,7 @@ public class Rectangle extends AtomicShape<Rectangle> {
 	}
 
 	@Override
-	protected Rectangle self() {
+	protected final Rectangle self() {
 		return this;
 	}
 

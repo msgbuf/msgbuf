@@ -27,7 +27,7 @@ public class Constant extends Part<Constant> {
 	}
 
 	@Override
-	protected Constant self() {
+	protected final Constant self() {
 		return this;
 	}
 

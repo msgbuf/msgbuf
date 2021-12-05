@@ -52,7 +52,7 @@ public class Car extends Shape<Car> {
 	}
 
 	@Override
-	protected Car self() {
+	protected final Car self() {
 		return this;
 	}
 

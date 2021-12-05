@@ -30,7 +30,7 @@ public class NumberOption extends Option<NumberOption> {
 	}
 
 	@Override
-	protected NumberOption self() {
+	protected final NumberOption self() {
 		return this;
 	}
 

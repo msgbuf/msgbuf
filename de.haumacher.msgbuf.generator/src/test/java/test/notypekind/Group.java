@@ -46,7 +46,7 @@ public class Group extends Shape<Group> {
 	}
 
 	@Override
-	protected Group self() {
+	protected final Group self() {
 		return this;
 	}
 

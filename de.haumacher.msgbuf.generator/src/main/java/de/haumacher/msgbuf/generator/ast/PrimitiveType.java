@@ -182,7 +182,7 @@ public class PrimitiveType extends Type<PrimitiveType> {
 	}
 
 	@Override
-	protected PrimitiveType self() {
+	protected final PrimitiveType self() {
 		return this;
 	}
 

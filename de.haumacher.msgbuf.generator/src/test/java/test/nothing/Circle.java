@@ -24,7 +24,7 @@ public class Circle extends AtomicShape<Circle> {
 	}
 
 	@Override
-	protected Circle self() {
+	protected final Circle self() {
 		return this;
 	}
 

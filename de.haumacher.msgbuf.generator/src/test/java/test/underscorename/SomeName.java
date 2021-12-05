@@ -33,7 +33,7 @@ public class SomeName extends BaseMsg<SomeName> {
 	}
 
 	@Override
-	protected SomeName self() {
+	protected final SomeName self() {
 		return this;
 	}
 

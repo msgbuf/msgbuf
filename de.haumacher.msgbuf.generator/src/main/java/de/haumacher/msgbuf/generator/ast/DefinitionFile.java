@@ -47,7 +47,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	}
 
 	@Override
-	protected DefinitionFile self() {
+	protected final DefinitionFile self() {
 		return this;
 	}
 

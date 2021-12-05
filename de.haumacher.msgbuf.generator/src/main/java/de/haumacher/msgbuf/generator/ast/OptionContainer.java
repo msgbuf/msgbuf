@@ -25,7 +25,7 @@ public class OptionContainer extends WithOptions<OptionContainer> {
 	}
 
 	@Override
-	protected OptionContainer self() {
+	protected final OptionContainer self() {
 		return this;
 	}
 

@@ -40,7 +40,7 @@ public class EnumDef extends Definition<EnumDef> {
 	}
 
 	@Override
-	protected EnumDef self() {
+	protected final EnumDef self() {
 		return this;
 	}
 

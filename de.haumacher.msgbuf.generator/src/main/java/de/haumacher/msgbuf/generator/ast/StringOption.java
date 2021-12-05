@@ -30,7 +30,7 @@ public class StringOption extends Option<StringOption> {
 	}
 
 	@Override
-	protected StringOption self() {
+	protected final StringOption self() {
 		return this;
 	}
 
