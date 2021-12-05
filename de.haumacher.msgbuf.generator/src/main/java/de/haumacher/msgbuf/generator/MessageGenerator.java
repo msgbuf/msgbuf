@@ -845,10 +845,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				if (_graph) {
 					line("if (result != null) {");
 					{
-						line("scope.enter(result, id);");
-						line("in.beginObject();");
-						line("result.readFields(" + scopeArg() + "in);");
-						line("in.endObject();");
+						line("scope.readData(result, id, in);");
 					}
 					line("}");
 				}
@@ -862,13 +859,12 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				}
 				line(typeName(_def) + " result = " + "new " + typeName(_def) + "();");
 				if (_graph) {
-					line("scope.enter(result, id);");
-				}
-				line("in.beginObject();");
-				line("result.readFields(" + scopeArg() + "in);");
-				line("in.endObject();");
-				if (_graph) {
+					line("scope.readData(result, id, in);");
 					line("in.endArray();");
+				} else {
+					line("in.beginObject();");
+					line("result.readFields(" + scopeArg() + "in);");
+					line("in.endObject();");
 				}
 			}
 			line("return result;");

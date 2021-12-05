@@ -4,8 +4,8 @@
 package de.haumacher.msgbuf.graph;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
+import de.haumacher.msgbuf.json.JsonReader;
 import de.haumacher.msgbuf.json.JsonWriter;
 
 /**
@@ -14,46 +14,39 @@ import de.haumacher.msgbuf.json.JsonWriter;
 public interface Scope {
 
 	/**
-	 * Looks up the object with the given ID and passes it to the given {@link Consumer}.
+	 * Looks up the object with the given ID.
 	 * 
-	 * <p>
-	 * The call to the given consumer happens either as direct callback, if the object with the given ID is already
-	 * available, or as soon as it becomes available in the future.
-	 * </p>
-	 *
 	 * @param id
 	 *        The ID of the requested object.
-	 * @param setter
-	 *        The callback to invoke with the object identified with the given ID as soon as this object becomes
-	 *        available.
+	 * @return The object with the given ID.
+	 * @throws IllegalArgumentException
+	 *         If there is no object with the requested ID.
 	 */
-	void resolve(int id, Consumer<SharedGraphNode> setter);
-	
 	SharedGraphNode resolveOrFail(int id);
 
-	/** 
-	 * TODO
+	/**
+	 * Writes the given graph node to the given writer.
+	 * 
+	 * <p>
+	 * If the node has already an ID in this scope, only the ID is transmitted as plain numeric value. Otherwise, a
+	 * fresh ID is assigned to the node and the the full data of the given node is transmitted (by calling back to
+	 * {@link SharedGraphNode#writeData(Scope, JsonWriter, int)}).
+	 * </p>
 	 *
 	 * @param out
-	 * @param abstractSharedGraphNode
-	 * @throws IOException 
-	 */
-	void write(JsonWriter out, AbstractSharedGraphNode node) throws IOException;
-
-	/** 
-	 * TODO
-	 *
+	 *        The {@link JsonWriter} to write to.
 	 * @param node
-	 * @return
+	 *        The graph node to transmit.
 	 */
-	int enter(AbstractSharedGraphNode node);
+	void writeRefOrData(JsonWriter out, SharedGraphNode node) throws IOException;
 
 	/** 
 	 * TODO
 	 *
 	 * @param node
 	 * @param id
+	 * @throws IOException 
 	 */
-	void enter(AbstractSharedGraphNode node, int id);
+	void readData(SharedGraphNode node, int id, JsonReader in) throws IOException;
 
 }

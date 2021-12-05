@@ -130,10 +130,7 @@ public abstract class Shape extends de.haumacher.msgbuf.graph.AbstractSharedGrap
 			default: in.skipValue(); result = null; break;
 		}
 		if (result != null) {
-			scope.enter(result, id);
-			in.beginObject();
-			result.readFields(scope, in);
-			in.endObject();
+			scope.readData(result, id, in);
 		}
 		in.endArray();
 		return result;

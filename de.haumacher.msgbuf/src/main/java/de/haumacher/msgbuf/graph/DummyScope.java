@@ -6,8 +6,8 @@ package de.haumacher.msgbuf.graph;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
+import de.haumacher.msgbuf.json.JsonReader;
 import de.haumacher.msgbuf.json.JsonWriter;
 
 /**
@@ -20,33 +20,25 @@ class DummyScope implements Scope {
 	private Map<Object, Integer> _ids = new HashMap<>();
 
 	@Override
-	public void resolve(int id, Consumer<SharedGraphNode> setter) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public SharedGraphNode resolveOrFail(int id) {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public int enter(AbstractSharedGraphNode node) {
-		Integer id = _ids.get(node);
-		if (id == null) {
-			id = Integer.valueOf(_nextId++);
-			enter(node, id);
-		}
-		return id.intValue();
+	public void readData(SharedGraphNode node, int id, JsonReader in) {
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public void enter(AbstractSharedGraphNode node, int id) {
-		_ids.put(node, id);
-	}
-
-	@Override
-	public void write(JsonWriter out, AbstractSharedGraphNode node) throws IOException {
-		node.writeTo(this, out, enter(node));
+	public void writeRefOrData(JsonWriter out, SharedGraphNode node) throws IOException {
+		Integer id = _ids.get(node);
+		if (id == null) {
+			id = Integer.valueOf(_nextId++);
+			_ids.put(node, id);
+			node.writeData(this, out, id.intValue());
+		} else {
+			out.value(id.intValue());
+		}
 	}
 
 }

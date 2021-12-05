@@ -1,6 +1,6 @@
 package test.nullable.data;
 
-public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/**
 	 * Creates a {@link NullableValues} instance.
@@ -68,29 +68,9 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	private String _string = null;
 
-	private java.util.List<Integer> _intList = new de.haumacher.msgbuf.util.ReferenceList<Integer>() {
-		@Override
-		protected void beforeAdd(int index, Integer element) {
-			_listener.beforeAdd(test.nullable.data.NullableValues.this, INT_LIST, index, element);
-		}
+	private java.util.List<Integer> _intList = null;
 
-		@Override
-		protected void afterRemove(int index, Integer element) {
-			_listener.afterRemove(test.nullable.data.NullableValues.this, INT_LIST, index, element);
-		}
-	};
-
-	private java.util.List<String> _stringList = new de.haumacher.msgbuf.util.ReferenceList<String>() {
-		@Override
-		protected void beforeAdd(int index, String element) {
-			_listener.beforeAdd(test.nullable.data.NullableValues.this, STRING_LIST, index, element);
-		}
-
-		@Override
-		protected void afterRemove(int index, String element) {
-			_listener.afterRemove(test.nullable.data.NullableValues.this, STRING_LIST, index, element);
-		}
-	};
+	private java.util.List<String> _stringList = null;
 
 	private java.util.Map<String, Integer> _stringIntMap = null;
 
@@ -113,7 +93,6 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getInt()
 	 */
 	public final NullableValues setInt(Integer value) {
-		_listener.beforeSet(this, INT, value);
 		_int = value;
 		return this;
 	}
@@ -133,7 +112,6 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getLong()
 	 */
 	public final NullableValues setLong(Long value) {
-		_listener.beforeSet(this, LONG, value);
 		_long = value;
 		return this;
 	}
@@ -153,7 +131,6 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getBoolean()
 	 */
 	public final NullableValues setBoolean(Boolean value) {
-		_listener.beforeSet(this, BOOLEAN, value);
 		_boolean = value;
 		return this;
 	}
@@ -173,7 +150,6 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getString()
 	 */
 	public final NullableValues setString(String value) {
-		_listener.beforeSet(this, STRING, value);
 		_string = value;
 		return this;
 	}
@@ -313,7 +289,6 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 * @see #getOptionalDecision()
 	 */
 	public final NullableValues setOptionalDecision(Decision value) {
-		_listener.beforeSet(this, OPTIONAL_DECISION, value);
 		_optionalDecision = value;
 		return this;
 	}
@@ -323,20 +298,6 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 */
 	public final boolean hasOptionalDecision() {
 		return _optionalDecision != null;
-	}
-
-	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
-
-	@Override
-	public NullableValues registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return this;
-	}
-
-	@Override
-	public NullableValues unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-		return this;
 	}
 
 	@Override
@@ -371,7 +332,7 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 			case STRING_LIST: return getStringList();
 			case STRING_INT_MAP: return getStringIntMap();
 			case OPTIONAL_DECISION: return getOptionalDecision();
-			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
+			default: return de.haumacher.msgbuf.data.ReflectiveDataObject.super.get(field);
 		}
 	}
 

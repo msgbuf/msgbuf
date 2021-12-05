@@ -121,10 +121,7 @@ public class Group extends Shape {
 		assert GROUP__TYPE.equals(type);
 		int id = in.nextInt();
 		Group result = new Group();
-		scope.enter(result, id);
-		in.beginObject();
-		result.readFields(scope, in);
-		in.endObject();
+		scope.readData(result, id, in);
 		in.endArray();
 		return result;
 	}

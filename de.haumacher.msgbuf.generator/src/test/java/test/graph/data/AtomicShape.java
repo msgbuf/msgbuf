@@ -38,10 +38,7 @@ public abstract class AtomicShape extends Shape {
 			default: in.skipValue(); result = null; break;
 		}
 		if (result != null) {
-			scope.enter(result, id);
-			in.beginObject();
-			result.readFields(scope, in);
-			in.endObject();
+			scope.readData(result, id, in);
 		}
 		in.endArray();
 		return result;

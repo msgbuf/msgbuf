@@ -24,8 +24,10 @@ public abstract class AbstractSharedGraphNode implements SharedGraphNode {
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
-	@Override
-	public int id() {
+	/**
+	 * The ID of this node in it's default {@link Scope}.
+	 */
+	public final int id() {
 		return _id;
 	}
 	
@@ -56,35 +58,22 @@ public abstract class AbstractSharedGraphNode implements SharedGraphNode {
 	
 	@Override
 	public void writeTo(Scope scope, JsonWriter out) throws IOException {
-		scope.write(out, this);
+		scope.writeRefOrData(out, this);
 	}
 	
-	void writeTo(Scope scope, JsonWriter out, int id) throws IOException {
+	@Override
+	public final void writeData(Scope scope, JsonWriter out, int id) throws IOException {
 		out.beginArray();
-		out.value(jsonType());
-		out.value(id);
-		writeContent(scope, out);
+		{
+			out.value(jsonType());
+			out.value(id);
+			out.beginObject();
+			{
+				writeFields(scope, out);
+			}
+			out.endObject();
+		}
 		out.endArray();
-	}
-
-	/**
-	 * Writes a JSON object containing keys for all fields of this object.
-	 * 
-	 * <p>
-	 * In contrast to {@link #writeTo(Scope, JsonWriter)}, the resulting object contains no type information. Therefore,
-	 * this method must only be called directly, if the reader knows the type of the object to read from the context.
-	 * For reading the data, a per-type generated <code>read[type-name]()</code> method must be called.
-	 * </p>
-	 *
-	 * @param scope
-	 *        The shared graph {@link Scope}.
-	 * @param out
-	 *        The writer to write to.
-	 */
-	protected final void writeContent(Scope scope, JsonWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(scope, out);
-		out.endObject();
 	}
 
 	/**
@@ -101,15 +90,8 @@ public abstract class AbstractSharedGraphNode implements SharedGraphNode {
 		// No fields.
 	}
 	
-	/**
-	 * Reads all fields of this instance from the given input.
-	 *
-	 * @param scope
-	 *        The shared graph {@link Scope}.
-	 * @param in
-	 *        The reader to take the input from.
-	 */
-	protected final void readFields(Scope scope, JsonReader in) throws IOException {
+	@Override
+	public final void readFields(Scope scope, JsonReader in) throws IOException {
 		while (in.hasNext()) {
 			String field = in.nextName();
 			readField(scope, in, field);

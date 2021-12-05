@@ -159,10 +159,7 @@ public class Car extends Shape {
 		assert CAR__TYPE.equals(type);
 		int id = in.nextInt();
 		Car result = new Car();
-		scope.enter(result, id);
-		in.beginObject();
-		result.readFields(scope, in);
-		in.endObject();
+		scope.readData(result, id, in);
 		in.endArray();
 		return result;
 	}

@@ -5,8 +5,8 @@ package de.haumacher.msgbuf.graph;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.function.Consumer;
 
+import de.haumacher.msgbuf.json.JsonReader;
 import de.haumacher.msgbuf.json.JsonWriter;
 
 /**
@@ -17,21 +17,6 @@ import de.haumacher.msgbuf.json.JsonWriter;
 public interface ScopeMixin extends Scope {
 
 	@Override
-	default void resolve(int id, Consumer<SharedGraphNode> setter) {
-		SharedGraphNode obj = index().get(id);
-		if (obj == null) {
-			Consumer<SharedGraphNode> first = references().put(id, setter);
-			if (first != null) {
-				Consumer<SharedGraphNode> next = setter;
-				references().put(id, value -> {first.accept(value); next.accept(value);}); 
-			}
-		} else {
-			Consumer<SharedGraphNode> resolver = setter;
-			resolver.accept(obj);
-		}
-	}
-	
-	@Override
 	default SharedGraphNode resolveOrFail(int id) {
 		SharedGraphNode result = index().get(id);
 		if (result == null) {
@@ -40,37 +25,49 @@ public interface ScopeMixin extends Scope {
 		return result;
 	}
 	
-	@Override
-	default int enter(AbstractSharedGraphNode node) {
-		int id = node.id();
-		if (id == 0) {
-			id = newId();
-			enter(node, id);
-		}
-		return id;
-	}
-	
-	@Override
-	default void enter(AbstractSharedGraphNode node, int id) {
-		node.initId(id);
+	/**
+	 * Assigns the given ID to the given node.
+	 */
+	default void enter(SharedGraphNode node, int id) {
+		initId(node, id);
 		SharedGraphNode clash = index().put(id, node);
 		assert clash == null : "Clash of ID " + id + ": " + clash + " vs. " + node;
 	}
+	
+	@Override
+	default void readData(SharedGraphNode node, int id, JsonReader in) throws IOException {
+		enter(node, id);
+		in.beginObject();
+		node.readFields(this, in);
+		in.endObject();
+	}
 
 	@Override
-	default void write(JsonWriter out, AbstractSharedGraphNode node) throws IOException {
-		node.writeTo(this, out, enter(node));
-	}
-	
-	/**
-	 * Checks whether all references have been resolved.
-	 */
-	default void finish() {
-		if (references().size() > 0) {
-			throw new IllegalStateException("Unresolved references: " + references().keySet());
+	default void writeRefOrData(JsonWriter out, SharedGraphNode node) throws IOException {
+		int id = id(node);
+		if (id == 0) {
+			id = newId();
+			enter(node, id);
+			node.writeData(this, out, id);
+		} else {
+			out.value(id);
 		}
 	}
 	
+	/** 
+	 * Looks up the ID of the given node in this {@link Scope}.
+	 * 
+	 * @see #initId(SharedGraphNode, int)
+	 */
+	int id(SharedGraphNode node);
+
+	/** 
+	 * Assigns the given ID to the given node.
+	 * 
+	 * @see #id(SharedGraphNode)
+	 */
+	void initId(SharedGraphNode node, int id);
+
 	/**
 	 * Creates a fresh ID.
 	 */
@@ -80,10 +77,5 @@ public interface ScopeMixin extends Scope {
 	 * The index implementation associating object with IDs.
 	 */
 	Map<Object, SharedGraphNode> index();
-
-	/**
-	 * The mapping of IDs to callbacks that expect a value for such IDs.
-	 */
-	Map<Object, Consumer<SharedGraphNode>> references();
 
 }

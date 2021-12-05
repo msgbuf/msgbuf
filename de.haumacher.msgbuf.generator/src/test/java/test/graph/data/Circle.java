@@ -90,10 +90,7 @@ public class Circle extends AtomicShape {
 		assert CIRCLE__TYPE.equals(type);
 		int id = in.nextInt();
 		Circle result = new Circle();
-		scope.enter(result, id);
-		in.beginObject();
-		result.readFields(scope, in);
-		in.endObject();
+		scope.readData(result, id, in);
 		in.endArray();
 		return result;
 	}
