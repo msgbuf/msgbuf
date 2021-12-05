@@ -30,6 +30,7 @@ import de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.ast.WithOptions.TypeKind;
 
 /**
  * {@link Generator} for message data classes.
@@ -837,7 +838,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 					if (_graph) {
 						line("case " + jsonTypeConstantRef(specialization) + ": result = " + typeName(specialization) + ".create(); break;");
 					} else {
-						line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(" + scopeArg() + "in); break;");
+						line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(in); break;");
 					}
 				}
 				line("default: in.skipValue(); result = null; break;");
@@ -1101,7 +1102,11 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(" + scopeArg() + "in)";
+			if (messageType.getDefinition().kind() == TypeKind.ENUM_DEF) {
+				return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(in)";
+			} else {
+				return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(" + scopeArg() + "in)";
+			}
 		}
 		throw new RuntimeException("Unsupported: " + type);
 	}
@@ -1166,6 +1171,8 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 			CustomType customType = (CustomType) type;
 			if (!_graph && isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
 				line(x + ".writeContent(" + scopeArg() + "out);");
+			} else if (customType.getDefinition().kind() == TypeKind.ENUM_DEF) {
+				line(x + ".writeTo(out);");
 			} else {
 				line(x + ".writeTo(" + scopeArg() + "out);");
 			}
