@@ -57,7 +57,7 @@ public abstract class AbstractSharedGraphNode implements SharedGraphNode {
 	}
 	
 	@Override
-	public void writeTo(Scope scope, JsonWriter out) throws IOException {
+	public final void writeTo(Scope scope, JsonWriter out) throws IOException {
 		scope.writeRefOrData(out, this);
 	}
 	
@@ -105,13 +105,13 @@ public abstract class AbstractSharedGraphNode implements SharedGraphNode {
 	}
 	
 	@Override
-	public void writeElement(Scope scope, JsonWriter out, String property, Object element) throws IOException {
+	public void writeElement(Scope scope, JsonWriter out, String field, Object element) throws IOException {
 		// Unknown.
 		out.nullValue();
 	}
 
 	@Override
-	public Object readElement(Scope scope, JsonReader in, String property) throws IOException {
+	public Object readElement(Scope scope, JsonReader in, String field) throws IOException {
 		// Unknown.
 		in.skipValue();
 		return null;

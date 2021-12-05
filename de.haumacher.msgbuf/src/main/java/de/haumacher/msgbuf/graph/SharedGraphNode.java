@@ -10,45 +10,30 @@ import de.haumacher.msgbuf.json.JsonWriter;
 import de.haumacher.msgbuf.observer.Observable;
 
 /**
- * TODO
- *
- * @author <a href="mailto:haui@haumacher.de">Bernhard Haumacher</a>
+ * Object in a shared graph.
+ * 
+ * <p>
+ * A shared graph is a collection of interconnected objects that exist on multiple host computers. All graphs are
+ * observed for modifications. Modifications on one host can be transmitted as patch to all other participants and
+ * applied there to keep the shared graph in sync.
+ * </p>
  */
 public interface SharedGraphNode extends Observable {
 
-	/** 
-	 * TODO
-	 *
-	 * @param arg
-	 * @param property
-	 * @param element
-	 * @throws IOException 
-	 */
-	void writeElement(Scope scope, JsonWriter arg, String property, Object element) throws IOException;
-
-	/** 
-	 * TODO
-	 *
-	 * @param arg
-	 * @param property
-	 * @return
-	 */
-	Object readElement(Scope scope, JsonReader arg, String property) throws IOException;
-
 	/**
-	 * Reads the given field from the given input.
+	 * Writes this node to the given writer.
 	 * 
+	 * <p>
+	 * Depending on the given {@link Scope}, only a reference to this object is transmitted, if this node is already
+	 * known by the {@link Scope}. Otherwise, the {@link #writeData(Scope, JsonWriter, int) complete object} data is
+	 * transmitted.
+	 * </p>
+	 *
 	 * @param scope
-	 *        The shared graph {@link Scope}.
-	 * @param in
-	 *        The reader to take the value from.
-	 * @param field
-	 *        The name of the field whose value should be read.
+	 *        The shared graph {@link Scope} that handles object references.
+	 * @param out
+	 *        The writer to write to.
 	 */
-	void readField(Scope scope, JsonReader in, String field) throws IOException;
-	
-	void writeFieldValue(Scope scope, JsonWriter in, String field) throws IOException;
-	
 	void writeTo(Scope scope, JsonWriter out) throws IOException;
 
 	/**
@@ -60,7 +45,7 @@ public interface SharedGraphNode extends Observable {
 	 * </p>
 	 *
 	 * @param scope
-	 *        The current {@link Scope} that assigns IDs.
+	 *        The shared graph {@link Scope} that handles object references.
 	 * @param out
 	 *        The writer to write to.
 	 * @param id
@@ -72,10 +57,62 @@ public interface SharedGraphNode extends Observable {
 	 * Reads all fields of this instance from the given input.
 	 *
 	 * @param scope
-	 *        The shared graph {@link Scope}.
+	 *        The shared graph {@link Scope} that handles object references.
 	 * @param in
 	 *        The reader to take the input from.
 	 */
 	void readFields(Scope scope, JsonReader in) throws IOException;
+
+	/**
+	 * Writes a single value that is currently assigned to the field with the given name to the given writer.
+	 *
+	 * @param scope
+	 *        The shared graph {@link Scope} that handles object references.
+	 * @param out
+	 *        The writer to write to.
+	 * @param field
+	 *        The name of the field whose value should be written.
+	 */
+	void writeFieldValue(Scope scope, JsonWriter out, String field) throws IOException;
+
+	/**
+	 * Reads the given field from the given input.
+	 * 
+	 * @param scope
+	 *        The shared graph {@link Scope} that handles object references.
+	 * @param in
+	 *        The reader to take the value from.
+	 * @param field
+	 *        The name of the field whose value should be read.
+	 */
+	void readField(Scope scope, JsonReader in, String field) throws IOException;
+
+	/**
+	 * Writes the given element value that is compatible with the repeated field with the given name to the given
+	 * output.
+	 *
+	 * @param scope
+	 *        The shared graph {@link Scope} that handles object references.
+	 * @param out
+	 *        The writer to write to.
+	 * @param field
+	 *        The name of the field whose element should be written.
+	 * @param element
+	 *        The element value of the given field.
+	 */
+	void writeElement(Scope scope, JsonWriter out, String field, Object element) throws IOException;
+
+	/**
+	 * Read an element of the repeated field with the given name.
+	 *
+	 * @param scope
+	 *        The shared graph {@link Scope} that handles object references.
+	 * @param in
+	 *        The reader to take the value from.
+	 * @param field
+	 *        The repeated field where an element value should be read for.
+	 * @return The read element value.
+	 */
+	Object readElement(Scope scope, JsonReader in, String field) throws IOException;
 
 }
