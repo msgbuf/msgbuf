@@ -32,7 +32,7 @@
 		<connection>scm:git:https://github.com/msgbuf/msgbuf.git</connection>
 		<developerConnection>scm:git:https://github.com/msgbuf/msgbuf.git</developerConnection>
 	  <tag>HEAD</tag>
-  </scm>
+	</scm>
 
 	<dependencies>
 		<dependency>
