@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MsgBuf Project Nature
 Bundle-SymbolicName: de.haumacher.msgbuf.eclipse;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.2.qualifier
 Require-Bundle: org.eclipse.core.resources;bundle-version="3.13.700",
  org.eclipse.core.runtime,
  org.eclipse.ui,
- de.haumacher.msgbuf.generator;bundle-version="1.0.0"
+ de.haumacher.msgbuf.generator;bundle-version="1.0.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: haumacher.de
