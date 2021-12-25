@@ -7,7 +7,12 @@ Export-Package: de.haumacher.msgbuf,
  de.haumacher.msgbuf.binary,
  de.haumacher.msgbuf.coder,
  de.haumacher.msgbuf.data,
+ de.haumacher.msgbuf.graph,
+ de.haumacher.msgbuf.graph.cmd,
  de.haumacher.msgbuf.io,
- de.haumacher.msgbuf.json
+ de.haumacher.msgbuf.json,
+ de.haumacher.msgbuf.observer,
+ de.haumacher.msgbuf.server.io,
+ de.haumacher.msgbuf.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: haumacher.de
