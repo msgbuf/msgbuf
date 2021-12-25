@@ -381,6 +381,9 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		
 		if (_json || _reflection) {
 			for (Field field : getFields()) {
+				if (!_reflection && field.isTransient()) {
+					continue;
+				}
 				nl();
 				line("/** @see #" + getterCall(field) + " */");
 				line((_reflection ? "public " : "private ") + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
