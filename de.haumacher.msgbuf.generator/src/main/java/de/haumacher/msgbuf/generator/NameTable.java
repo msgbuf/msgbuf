@@ -20,12 +20,12 @@ import de.haumacher.msgbuf.generator.ast.QName;
 public class NameTable implements Definition.Visitor<Void, Void> {
 	
 	private final Map<String, Package> _packageByName = new HashMap<>();
-	private final Map<String, Definition<?>> _definitionByName = new HashMap<>();
+	private final Map<String, Definition> _definitionByName = new HashMap<>();
 	
 	public void enter(DefinitionFile file) {
 		Package pkg = mkPackage(file.getPackage());
 		
-		for (Definition<?> def : file.getDefinitions()) {
+		for (Definition def : file.getDefinitions()) {
 			pkg.enter(file, def);
 			def.visit(this, null);
 		}
@@ -46,14 +46,14 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		for (Field part : self.getFields()) {
 			part.setOwner(self);
 		}
-		for (Definition<?> inner : self.getDefinitions()) {
+		for (Definition inner : self.getDefinitions()) {
 			inner.setOuter(self);
 			inner.visit(this, arg);
 		}
 		return null;
 	}
 
-	private void enterDef(Definition<?> def) {
+	private void enterDef(Definition def) {
 		_definitionByName.put(def.getName(), def);
 	}
 	
@@ -76,7 +76,7 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		
 		private final String _name;
 		
-		private final Map<String, Definition<?>> _definitionsByName = new HashMap<>();
+		private final Map<String, Definition> _definitionsByName = new HashMap<>();
 
 		/** 
 		 * Creates a {@link Package}.
@@ -93,9 +93,9 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		 * TODO
 		 * @param file 
 		 */
-		public void enter(DefinitionFile file, Definition<?> def) {
+		public void enter(DefinitionFile file, Definition def) {
 			def.setFile(file);
-			Definition<?> clash = _definitionsByName.put(def.getName(), def);
+			Definition clash = _definitionsByName.put(def.getName(), def);
 			if (clash != null) {
 				error("Duplicate definition '" + def.getName() + "' in package '" + getName() + "'.");
 			}
@@ -112,7 +112,7 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 	/** 
 	 * TODO
 	 */
-	public Definition<?> lookup(MessageDef context, QName name) {
+	public Definition lookup(MessageDef context, QName name) {
 		return _definitionByName.get(Util.last(name));
 	}
 }

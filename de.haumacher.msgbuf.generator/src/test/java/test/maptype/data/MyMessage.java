@@ -44,30 +44,39 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	/**
 	 * @see #getProjects()
 	 */
-	public final MyMessage setProjects(java.util.Map<String, Project> value) {
+	public MyMessage setProjects(java.util.Map<String, Project> value) {
+		internalSetProjects(value);
+		return this;
+	}
+	/** Internal setter for {@link #getProjects()} without chain call utility. */
+	protected final void internalSetProjects(java.util.Map<String, Project> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'projects' cannot be null.");
 		_projects.clear();
 		_projects.putAll(value);
+	}
+
+
+	/**
+	 * Adds a key value pair to the {@link #getProjects()} map.
+	 */
+	public MyMessage putProject(String key, Project value) {
+		internalPutProject(key, value);
 		return this;
 	}
 
-	/**
-	 * Adds a value to the {@link #getProjects()} map.
-	 */
-	public final MyMessage putProject(String key, Project value) {
+	/** Implementation of {@link #putProject(String, Project)} without chain call utility. */
+	protected final void  internalPutProject(String key, Project value) {
 		if (_projects.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'projects' already contains a value for key '" + key + "'.");
 		}
 		_projects.put(key, value);
-		return this;
 	}
 
 	/**
 	 * Removes a key from the {@link #getProjects()} map.
 	 */
-	public final MyMessage removeProject(String key) {
+	public final void removeProject(String key) {
 		_projects.remove(key);
-		return this;
 	}
 
 	public final java.util.Map<Integer, String> getRating() {
@@ -77,44 +86,61 @@ public class MyMessage extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	/**
 	 * @see #getRating()
 	 */
-	public final MyMessage setRating(java.util.Map<Integer, String> value) {
+	public MyMessage setRating(java.util.Map<Integer, String> value) {
+		internalSetRating(value);
+		return this;
+	}
+	/** Internal setter for {@link #getRating()} without chain call utility. */
+	protected final void internalSetRating(java.util.Map<Integer, String> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'rating' cannot be null.");
 		_rating.clear();
 		_rating.putAll(value);
+	}
+
+
+	/**
+	 * Adds a key value pair to the {@link #getRating()} map.
+	 */
+	public MyMessage putRating(int key, String value) {
+		internalPutRating(key, value);
 		return this;
 	}
 
-	/**
-	 * Adds a value to the {@link #getRating()} map.
-	 */
-	public final MyMessage putRating(int key, String value) {
+	/** Implementation of {@link #putRating(int, String)} without chain call utility. */
+	protected final void  internalPutRating(int key, String value) {
 		if (_rating.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'rating' already contains a value for key '" + key + "'.");
 		}
 		_rating.put(key, value);
-		return this;
 	}
 
 	/**
 	 * Removes a key from the {@link #getRating()} map.
 	 */
-	public final MyMessage removeRating(int key) {
+	public final void removeRating(int key) {
 		_rating.remove(key);
-		return this;
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
 	public MyMessage registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public MyMessage unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class TypeIdSynthesizer implements Definition.Visitor<Void, Void> {
 	 * Starts the ID assignment process.
 	 */
 	public void process(DefinitionFile file) {
-		for (Definition<?> def : file.getDefinitions()) {
+		for (Definition def : file.getDefinitions()) {
 			def.visit(this, null);
 		}
 	}
@@ -35,7 +35,7 @@ public class TypeIdSynthesizer implements Definition.Visitor<Void, Void> {
 
 	@Override
 	public Void visit(MessageDef self, Void arg) {
-		for (Definition<?> def : self.getDefinitions()) {
+		for (Definition def : self.getDefinitions()) {
 			def.visit(this, null);
 		}
 		

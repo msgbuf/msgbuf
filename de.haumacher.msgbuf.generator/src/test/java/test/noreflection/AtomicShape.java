@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public abstract class AtomicShape<S extends AtomicShape<S>> extends Shape<S> {
+public abstract class AtomicShape extends Shape {
 
 	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
@@ -24,11 +24,23 @@ public abstract class AtomicShape<S extends AtomicShape<S>> extends Shape<S> {
 	}
 
 	@Override
+	public AtomicShape setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	@Override
+	public AtomicShape setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
+
+	@Override
 	public abstract String jsonType();
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape<?> readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		AtomicShape<?> result;
+	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -41,9 +53,9 @@ public abstract class AtomicShape<S extends AtomicShape<S>> extends Shape<S> {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape<?> readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		AtomicShape<?> result;
+		AtomicShape result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();

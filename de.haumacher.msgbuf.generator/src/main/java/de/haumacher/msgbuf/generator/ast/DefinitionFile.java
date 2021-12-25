@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see #getDefinitions()
  */
-public class DefinitionFile extends WithOptions<DefinitionFile> {
+public class DefinitionFile extends WithOptions {
 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
@@ -25,14 +25,14 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 
 	private QName _package = null;
 
-	private final java.util.List<Definition<?>> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition<?>>() {
+	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
 		@Override
-		protected void beforeAdd(int index, Definition<?> element) {
+		protected void beforeAdd(int index, Definition element) {
 			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
 		}
 
 		@Override
-		protected void afterRemove(int index, Definition<?> element) {
+		protected void afterRemove(int index, Definition element) {
 			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
 		}
 	};
@@ -44,11 +44,6 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	 */
 	protected DefinitionFile() {
 		super();
-	}
-
-	@Override
-	protected final DefinitionFile self() {
-		return this;
 	}
 
 	@Override
@@ -66,11 +61,16 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	/**
 	 * @see #getPackage()
 	 */
-	public final DefinitionFile setPackage(QName value) {
-		_listener.beforeSet(this, PACKAGE, value);
-		_package = value;
+	public DefinitionFile setPackage(QName value) {
+		internalSetPackage(value);
 		return this;
 	}
+	/** Internal setter for {@link #getPackage()} without chain call utility. */
+	protected final void internalSetPackage(QName value) {
+		_listener.beforeSet(this, PACKAGE, value);
+		_package = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getPackage()} has a value.
@@ -82,33 +82,54 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	/**
 	 * All definitions in this file.
 	 */
-	public final java.util.List<Definition<?>> getDefinitions() {
+	public final java.util.List<Definition> getDefinitions() {
 		return _definitions;
 	}
 
 	/**
 	 * @see #getDefinitions()
 	 */
-	public final DefinitionFile setDefinitions(java.util.List<Definition<?>> value) {
+	public DefinitionFile setDefinitions(java.util.List<Definition> value) {
+		internalSetDefinitions(value);
+		return this;
+	}
+	/** Internal setter for {@link #getDefinitions()} without chain call utility. */
+	protected final void internalSetDefinitions(java.util.List<Definition> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
 	 */
-	public final DefinitionFile addDefinition(Definition<?> value) {
-		_definitions.add(value);
+	public DefinitionFile addDefinition(Definition value) {
+		internalAddDefinition(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addDefinition(Definition)} without chain call utility. */
+	protected final void internalAddDefinition(Definition value) {
+		_definitions.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getDefinitions()} list.
 	 */
-	public final DefinitionFile removeDefinition(Definition<?> value) {
+	public final void removeDefinition(Definition value) {
 		_definitions.remove(value);
+	}
+
+	@Override
+	public DefinitionFile setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public DefinitionFile putOption(String key, Option value) {
+		internalPutOption(key, value);
 		return this;
 	}
 
@@ -140,7 +161,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 	public void set(String field, Object value) {
 		switch (field) {
 			case PACKAGE: setPackage((QName) value); break;
-			case DEFINITIONS: setDefinitions((java.util.List<Definition<?>>) value); break;
+			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -163,7 +184,7 @@ public class DefinitionFile extends WithOptions<DefinitionFile> {
 		}
 		out.name(DEFINITIONS);
 		out.beginArray();
-		for (Definition<?> x : getDefinitions()) {
+		for (Definition x : getDefinitions()) {
 			x.writeTo(out);
 		}
 		out.endArray();

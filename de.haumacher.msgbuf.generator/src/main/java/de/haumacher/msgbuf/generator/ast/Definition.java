@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class of a definition in a {@link DefinitionFile}.
  */
-public abstract class Definition<S extends Definition<S>> extends DefinitionBase<S> {
+public abstract class Definition extends DefinitionBase {
 
 	/** Visitor interface for the {@link Definition} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -48,11 +48,16 @@ public abstract class Definition<S extends Definition<S>> extends DefinitionBase
 	/**
 	 * @see #getName()
 	 */
-	public final S setName(String value) {
+	public Definition setName(String value) {
+		internalSetName(value);
+		return this;
+	}
+	/** Internal setter for {@link #getName()} without chain call utility. */
+	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
-		return self();
 	}
+
 
 	/**
 	 * Reference back to the {@link DefinitionFile} that contains this definition.
@@ -64,11 +69,16 @@ public abstract class Definition<S extends Definition<S>> extends DefinitionBase
 	/**
 	 * @see #getFile()
 	 */
-	public final S setFile(DefinitionFile value) {
+	public Definition setFile(DefinitionFile value) {
+		internalSetFile(value);
+		return this;
+	}
+	/** Internal setter for {@link #getFile()} without chain call utility. */
+	protected final void internalSetFile(DefinitionFile value) {
 		_listener.beforeSet(this, FILE, value);
 		_file = value;
-		return self();
 	}
+
 
 	/**
 	 * Checks, whether {@link #getFile()} has a value.
@@ -91,17 +101,40 @@ public abstract class Definition<S extends Definition<S>> extends DefinitionBase
 	/**
 	 * @see #getOuter()
 	 */
-	public final S setOuter(MessageDef value) {
+	public Definition setOuter(MessageDef value) {
+		internalSetOuter(value);
+		return this;
+	}
+	/** Internal setter for {@link #getOuter()} without chain call utility. */
+	protected final void internalSetOuter(MessageDef value) {
 		_listener.beforeSet(this, OUTER, value);
 		_outer = value;
-		return self();
 	}
+
 
 	/**
 	 * Checks, whether {@link #getOuter()} has a value.
 	 */
 	public final boolean hasOuter() {
 		return _outer != null;
+	}
+
+	@Override
+	public Definition setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+
+	@Override
+	public Definition setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public Definition putOption(String key, Option value) {
+		internalPutOption(key, value);
+		return this;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -136,8 +169,8 @@ public abstract class Definition<S extends Definition<S>> extends DefinitionBase
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Definition<?> readDefinition(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Definition<?> result;
+	public static Definition readDefinition(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Definition result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

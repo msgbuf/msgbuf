@@ -52,14 +52,22 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 
 	@Override
 	public Option registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public Option unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	/** Reads a new instance from the given reader. */

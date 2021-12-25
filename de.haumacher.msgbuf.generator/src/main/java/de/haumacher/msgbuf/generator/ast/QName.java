@@ -49,40 +49,57 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	/**
 	 * @see #getNames()
 	 */
-	public final QName setNames(java.util.List<String> value) {
-		_names.clear();
-		_names.addAll(value);
+	public QName setNames(java.util.List<String> value) {
+		internalSetNames(value);
 		return this;
 	}
+	/** Internal setter for {@link #getNames()} without chain call utility. */
+	protected final void internalSetNames(java.util.List<String> value) {
+		_names.clear();
+		_names.addAll(value);
+	}
+
 
 	/**
 	 * Adds a value to the {@link #getNames()} list.
 	 */
-	public final QName addName(String value) {
-		_names.add(value);
+	public QName addName(String value) {
+		internalAddName(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addName(String)} without chain call utility. */
+	protected final void internalAddName(String value) {
+		_names.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getNames()} list.
 	 */
-	public final QName removeName(String value) {
+	public final void removeName(String value) {
 		_names.remove(value);
-		return this;
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
 	public QName registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public QName unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	@Override

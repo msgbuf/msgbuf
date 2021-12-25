@@ -92,10 +92,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getInt()
 	 */
-	public final NullableValues setInt(Integer value) {
-		_int = value;
+	public NullableValues setInt(Integer value) {
+		internalSetInt(value);
 		return this;
 	}
+	/** Internal setter for {@link #getInt()} without chain call utility. */
+	protected final void internalSetInt(Integer value) {
+		_int = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getInt()} has a value.
@@ -111,10 +116,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getLong()
 	 */
-	public final NullableValues setLong(Long value) {
-		_long = value;
+	public NullableValues setLong(Long value) {
+		internalSetLong(value);
 		return this;
 	}
+	/** Internal setter for {@link #getLong()} without chain call utility. */
+	protected final void internalSetLong(Long value) {
+		_long = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getLong()} has a value.
@@ -130,10 +140,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getBoolean()
 	 */
-	public final NullableValues setBoolean(Boolean value) {
-		_boolean = value;
+	public NullableValues setBoolean(Boolean value) {
+		internalSetBoolean(value);
 		return this;
 	}
+	/** Internal setter for {@link #getBoolean()} without chain call utility. */
+	protected final void internalSetBoolean(Boolean value) {
+		_boolean = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getBoolean()} has a value.
@@ -149,10 +164,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getString()
 	 */
-	public final NullableValues setString(String value) {
-		_string = value;
+	public NullableValues setString(String value) {
+		internalSetString(value);
 		return this;
 	}
+	/** Internal setter for {@link #getString()} without chain call utility. */
+	protected final void internalSetString(String value) {
+		_string = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getString()} has a value.
@@ -168,29 +188,38 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getIntList()
 	 */
-	public final NullableValues setIntList(java.util.List<Integer> value) {
+	public NullableValues setIntList(java.util.List<Integer> value) {
+		internalSetIntList(value);
+		return this;
+	}
+	/** Internal setter for {@link #getIntList()} without chain call utility. */
+	protected final void internalSetIntList(java.util.List<Integer> value) {
 		if (_intList == null) _intList = new java.util.ArrayList<>();
 		_intList.clear();
 		_intList.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getIntList()} list.
 	 */
-	public final NullableValues addIntList(int value) {
+	public NullableValues addIntList(int value) {
+		internalAddIntList(value);
+		return this;
+	}
+
+	/** Implementation of {@link #addIntList(int)} without chain call utility. */
+	protected final void internalAddIntList(int value) {
 		if (_intList == null) _intList = new java.util.ArrayList<>();
 		_intList.add(value);
-		return this;
 	}
 
 	/**
 	 * Removes a value from the {@link #getIntList()} list.
 	 */
-	public final NullableValues removeIntList(int value) {
+	public final void removeIntList(int value) {
 		if (_intList == null) _intList = new java.util.ArrayList<>();
 		_intList.remove(value);
-		return this;
 	}
 
 	/**
@@ -207,29 +236,38 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getStringList()
 	 */
-	public final NullableValues setStringList(java.util.List<String> value) {
+	public NullableValues setStringList(java.util.List<String> value) {
+		internalSetStringList(value);
+		return this;
+	}
+	/** Internal setter for {@link #getStringList()} without chain call utility. */
+	protected final void internalSetStringList(java.util.List<String> value) {
 		if (_stringList == null) _stringList = new java.util.ArrayList<>();
 		_stringList.clear();
 		_stringList.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getStringList()} list.
 	 */
-	public final NullableValues addStringList(String value) {
+	public NullableValues addStringList(String value) {
+		internalAddStringList(value);
+		return this;
+	}
+
+	/** Implementation of {@link #addStringList(String)} without chain call utility. */
+	protected final void internalAddStringList(String value) {
 		if (_stringList == null) _stringList = new java.util.ArrayList<>();
 		_stringList.add(value);
-		return this;
 	}
 
 	/**
 	 * Removes a value from the {@link #getStringList()} list.
 	 */
-	public final NullableValues removeStringList(String value) {
+	public final void removeStringList(String value) {
 		if (_stringList == null) _stringList = new java.util.ArrayList<>();
 		_stringList.remove(value);
-		return this;
 	}
 
 	/**
@@ -246,32 +284,41 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getStringIntMap()
 	 */
-	public final NullableValues setStringIntMap(java.util.Map<String, Integer> value) {
+	public NullableValues setStringIntMap(java.util.Map<String, Integer> value) {
+		internalSetStringIntMap(value);
+		return this;
+	}
+	/** Internal setter for {@link #getStringIntMap()} without chain call utility. */
+	protected final void internalSetStringIntMap(java.util.Map<String, Integer> value) {
 		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
 		_stringIntMap.clear();
 		_stringIntMap.putAll(value);
+	}
+
+
+	/**
+	 * Adds a key value pair to the {@link #getStringIntMap()} map.
+	 */
+	public NullableValues putStringIntMap(String key, int value) {
+		internalPutStringIntMap(key, value);
 		return this;
 	}
 
-	/**
-	 * Adds a value to the {@link #getStringIntMap()} map.
-	 */
-	public final NullableValues putStringIntMap(String key, int value) {
+	/** Implementation of {@link #putStringIntMap(String, int)} without chain call utility. */
+	protected final void  internalPutStringIntMap(String key, int value) {
 		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
 		if (_stringIntMap.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'stringIntMap' already contains a value for key '" + key + "'.");
 		}
 		_stringIntMap.put(key, value);
-		return this;
 	}
 
 	/**
 	 * Removes a key from the {@link #getStringIntMap()} map.
 	 */
-	public final NullableValues removeStringIntMap(String key) {
+	public final void removeStringIntMap(String key) {
 		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
 		_stringIntMap.remove(key);
-		return this;
 	}
 
 	/**
@@ -288,10 +335,15 @@ public class NullableValues extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getOptionalDecision()
 	 */
-	public final NullableValues setOptionalDecision(Decision value) {
-		_optionalDecision = value;
+	public NullableValues setOptionalDecision(Decision value) {
+		internalSetOptionalDecision(value);
 		return this;
 	}
+	/** Internal setter for {@link #getOptionalDecision()} without chain call utility. */
+	protected final void internalSetOptionalDecision(Decision value) {
+		_optionalDecision = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getOptionalDecision()} has a value.

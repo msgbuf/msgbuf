@@ -44,11 +44,16 @@ public class StringOption extends Option {
 	/**
 	 * @see #getValue()
 	 */
-	public final StringOption setValue(String value) {
-		_listener.beforeSet(this, VALUE, value);
-		_value = value;
+	public StringOption setValue(String value) {
+		internalSetValue(value);
 		return this;
 	}
+	/** Internal setter for {@link #getValue()} without chain call utility. */
+	protected final void internalSetValue(String value) {
+		_listener.beforeSet(this, VALUE, value);
+		_value = value;
+	}
+
 
 	@Override
 	public String jsonType() {

@@ -6,10 +6,8 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
-import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
-import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.Type;
 
@@ -52,12 +50,7 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		Definition<?> definition = type.getDefinition();
-		if (definition instanceof MessageDef) {
-			return qTypeName(type.getName()) + (MessageGenerator.hasTypeParam((MessageDef) definition) ? "<?>" : "");
-		} else {
-			return qTypeName(type.getName());
-		}
+		return qTypeName(type.getName());
 	}
 	
 	@Override

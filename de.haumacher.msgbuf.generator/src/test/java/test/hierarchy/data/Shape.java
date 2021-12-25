@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -57,9 +57,6 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 		super();
 	}
 
-	/** This instance with the concrete type. */
-	protected abstract S self();
-
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
@@ -73,11 +70,16 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public final S setXCoordinate(int value) {
+	public Shape setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
+	protected final void internalSetXCoordinate(int value) {
 		_listener.beforeSet(this, X_COORDINATE, value);
 		_xCoordinate = value;
-		return self();
 	}
+
 
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
@@ -89,24 +91,37 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public final S setYCoordinate(int value) {
+	public Shape setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
+	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
+	protected final void internalSetYCoordinate(int value) {
 		_listener.beforeSet(this, Y_COORDINATE, value);
 		_yCoordinate = value;
-		return self();
 	}
+
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public S registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		internalRegisterListener(l);
+		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return self();
 	}
 
 	@Override
-	public S unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		internalUnregisterListener(l);
+		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-		return self();
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -137,8 +152,8 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape<?> readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape<?> result;
+	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Shape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -205,9 +220,9 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape<?> readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Shape<?> result;
+		Shape result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();

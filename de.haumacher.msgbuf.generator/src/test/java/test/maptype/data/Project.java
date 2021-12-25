@@ -44,11 +44,16 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	/**
 	 * @see #getName()
 	 */
-	public final Project setName(String value) {
-		_listener.beforeSet(this, NAME, value);
-		_name = value;
+	public Project setName(String value) {
+		internalSetName(value);
 		return this;
 	}
+	/** Internal setter for {@link #getName()} without chain call utility. */
+	protected final void internalSetName(String value) {
+		_listener.beforeSet(this, NAME, value);
+		_name = value;
+	}
+
 
 	public final double getCost() {
 		return _cost;
@@ -57,24 +62,37 @@ public class Project extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	/**
 	 * @see #getCost()
 	 */
-	public final Project setCost(double value) {
-		_listener.beforeSet(this, COST, value);
-		_cost = value;
+	public Project setCost(double value) {
+		internalSetCost(value);
 		return this;
 	}
+	/** Internal setter for {@link #getCost()} without chain call utility. */
+	protected final void internalSetCost(double value) {
+		_listener.beforeSet(this, COST, value);
+		_cost = value;
+	}
+
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
 	public Project registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public Project unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	@Override

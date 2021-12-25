@@ -25,7 +25,7 @@ public class CustomType extends Type {
 
 	private QName _name = null;
 
-	private transient Definition<?> _definition = null;
+	private transient Definition _definition = null;
 
 	/**
 	 * Creates a {@link CustomType} instance.
@@ -51,11 +51,16 @@ public class CustomType extends Type {
 	/**
 	 * @see #getName()
 	 */
-	public final CustomType setName(QName value) {
-		_listener.beforeSet(this, NAME, value);
-		_name = value;
+	public CustomType setName(QName value) {
+		internalSetName(value);
 		return this;
 	}
+	/** Internal setter for {@link #getName()} without chain call utility. */
+	protected final void internalSetName(QName value) {
+		_listener.beforeSet(this, NAME, value);
+		_name = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getName()} has a value.
@@ -67,18 +72,23 @@ public class CustomType extends Type {
 	/**
 	 * Resolved reference of the {@link Definition} defining the {@link #getName() referenced type}.
 	 */
-	public final Definition<?> getDefinition() {
+	public final Definition getDefinition() {
 		return _definition;
 	}
 
 	/**
 	 * @see #getDefinition()
 	 */
-	public final CustomType setDefinition(Definition<?> value) {
-		_listener.beforeSet(this, DEFINITION, value);
-		_definition = value;
+	public CustomType setDefinition(Definition value) {
+		internalSetDefinition(value);
 		return this;
 	}
+	/** Internal setter for {@link #getDefinition()} without chain call utility. */
+	protected final void internalSetDefinition(Definition value) {
+		_listener.beforeSet(this, DEFINITION, value);
+		_definition = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getDefinition()} has a value.
@@ -115,7 +125,7 @@ public class CustomType extends Type {
 	public void set(String field, Object value) {
 		switch (field) {
 			case NAME: setName((QName) value); break;
-			case DEFINITION: setDefinition((Definition<?>) value); break;
+			case DEFINITION: setDefinition((Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}

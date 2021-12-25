@@ -44,11 +44,16 @@ public class AnnotatedMessage extends BaseMsg {
 	/**
 	 * @see #getAnnotatedField()
 	 */
-	public final AnnotatedMessage setAnnotatedField(String value) {
-		_listener.beforeSet(this, ANNOTATED_FIELD, value);
-		_annotatedField = value;
+	public AnnotatedMessage setAnnotatedField(String value) {
+		internalSetAnnotatedField(value);
 		return this;
 	}
+	/** Internal setter for {@link #getAnnotatedField()} without chain call utility. */
+	protected final void internalSetAnnotatedField(String value) {
+		_listener.beforeSet(this, ANNOTATED_FIELD, value);
+		_annotatedField = value;
+	}
+
 
 	@Override
 	public String jsonType() {

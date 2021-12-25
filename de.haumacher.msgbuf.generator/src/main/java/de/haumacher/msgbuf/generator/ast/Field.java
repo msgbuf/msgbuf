@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A field definition of a {@link MessageDef}.
  */
-public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.FieldOperations {
+public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOperations {
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -40,11 +40,6 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	}
 
 	@Override
-	protected final Field self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.FIELD;
 	}
@@ -59,11 +54,16 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	/**
 	 * @see #isTransient()
 	 */
-	public final Field setTransient(boolean value) {
-		_listener.beforeSet(this, TRANSIENT, value);
-		_transient = value;
+	public Field setTransient(boolean value) {
+		internalSetTransient(value);
 		return this;
 	}
+	/** Internal setter for {@link #isTransient()} without chain call utility. */
+	protected final void internalSetTransient(boolean value) {
+		_listener.beforeSet(this, TRANSIENT, value);
+		_transient = value;
+	}
+
 
 	/**
 	 * Whether this field contains multiple values of its {@link #getType()}.
@@ -75,11 +75,16 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	/**
 	 * @see #isRepeated()
 	 */
-	public final Field setRepeated(boolean value) {
-		_listener.beforeSet(this, REPEATED, value);
-		_repeated = value;
+	public Field setRepeated(boolean value) {
+		internalSetRepeated(value);
 		return this;
 	}
+	/** Internal setter for {@link #isRepeated()} without chain call utility. */
+	protected final void internalSetRepeated(boolean value) {
+		_listener.beforeSet(this, REPEATED, value);
+		_repeated = value;
+	}
+
 
 	/**
 	 * The type of values that can be stored in this field.
@@ -91,17 +96,58 @@ public class Field extends Part<Field> implements de.haumacher.msgbuf.generator.
 	/**
 	 * @see #getType()
 	 */
-	public final Field setType(Type value) {
-		_listener.beforeSet(this, TYPE, value);
-		_type = value;
+	public Field setType(Type value) {
+		internalSetType(value);
 		return this;
 	}
+	/** Internal setter for {@link #getType()} without chain call utility. */
+	protected final void internalSetType(Type value) {
+		_listener.beforeSet(this, TYPE, value);
+		_type = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getType()} has a value.
 	 */
 	public final boolean hasType() {
 		return _type != null;
+	}
+
+	@Override
+	public Field setName(String value) {
+		internalSetName(value);
+		return this;
+	}
+
+	@Override
+	public Field setIndex(int value) {
+		internalSetIndex(value);
+		return this;
+	}
+
+	@Override
+	public Field setOwner(Definition value) {
+		internalSetOwner(value);
+		return this;
+	}
+
+	@Override
+	public Field setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+
+	@Override
+	public Field setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public Field putOption(String key, Option value) {
+		internalPutOption(key, value);
+		return this;
 	}
 
 	@Override

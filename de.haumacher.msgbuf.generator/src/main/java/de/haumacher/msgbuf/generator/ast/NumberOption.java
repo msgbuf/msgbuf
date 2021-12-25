@@ -44,11 +44,16 @@ public class NumberOption extends Option {
 	/**
 	 * @see #getValue()
 	 */
-	public final NumberOption setValue(double value) {
-		_listener.beforeSet(this, VALUE, value);
-		_value = value;
+	public NumberOption setValue(double value) {
+		internalSetValue(value);
 		return this;
 	}
+	/** Internal setter for {@link #getValue()} without chain call utility. */
+	protected final void internalSetValue(double value) {
+		_listener.beforeSet(this, VALUE, value);
+		_value = value;
+	}
+
 
 	@Override
 	public String jsonType() {

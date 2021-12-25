@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Member of a {@link Definition}.
  */
-public abstract class Part<S extends Part<S>> extends DefinitionBase<S> {
+public abstract class Part extends DefinitionBase {
 
 	/** Visitor interface for the {@link Part} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -29,7 +29,7 @@ public abstract class Part<S extends Part<S>> extends DefinitionBase<S> {
 
 	private int _index = 0;
 
-	private transient Definition<?> _owner = null;
+	private transient Definition _owner = null;
 
 	/**
 	 * Creates a {@link Part} instance.
@@ -48,11 +48,16 @@ public abstract class Part<S extends Part<S>> extends DefinitionBase<S> {
 	/**
 	 * @see #getName()
 	 */
-	public final S setName(String value) {
+	public Part setName(String value) {
+		internalSetName(value);
+		return this;
+	}
+	/** Internal setter for {@link #getName()} without chain call utility. */
+	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
-		return self();
 	}
+
 
 	/**
 	 * The numeric identifier for this member.
@@ -64,33 +69,61 @@ public abstract class Part<S extends Part<S>> extends DefinitionBase<S> {
 	/**
 	 * @see #getIndex()
 	 */
-	public final S setIndex(int value) {
+	public Part setIndex(int value) {
+		internalSetIndex(value);
+		return this;
+	}
+	/** Internal setter for {@link #getIndex()} without chain call utility. */
+	protected final void internalSetIndex(int value) {
 		_listener.beforeSet(this, INDEX, value);
 		_index = value;
-		return self();
 	}
+
 
 	/**
 	 * The {@link Definition} definint this {@link Part}.
 	 */
-	public final Definition<?> getOwner() {
+	public final Definition getOwner() {
 		return _owner;
 	}
 
 	/**
 	 * @see #getOwner()
 	 */
-	public final S setOwner(Definition<?> value) {
+	public Part setOwner(Definition value) {
+		internalSetOwner(value);
+		return this;
+	}
+	/** Internal setter for {@link #getOwner()} without chain call utility. */
+	protected final void internalSetOwner(Definition value) {
 		_listener.beforeSet(this, OWNER, value);
 		_owner = value;
-		return self();
 	}
+
 
 	/**
 	 * Checks, whether {@link #getOwner()} has a value.
 	 */
 	public final boolean hasOwner() {
 		return _owner != null;
+	}
+
+	@Override
+	public Part setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+
+	@Override
+	public Part setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public Part putOption(String key, Option value) {
+		internalPutOption(key, value);
+		return this;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -119,14 +152,14 @@ public abstract class Part<S extends Part<S>> extends DefinitionBase<S> {
 		switch (field) {
 			case NAME: setName((String) value); break;
 			case INDEX: setIndex((int) value); break;
-			case OWNER: setOwner((Definition<?>) value); break;
+			case OWNER: setOwner((Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Part<?> readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Part<?> result;
+	public static Part readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Part result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

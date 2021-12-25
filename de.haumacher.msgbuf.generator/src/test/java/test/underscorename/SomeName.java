@@ -44,11 +44,16 @@ public class SomeName extends BaseMsg {
 	/**
 	 * @see #getMyField()
 	 */
-	public final SomeName setMyField(String value) {
-		_listener.beforeSet(this, MY_FIELD, value);
-		_myField = value;
+	public SomeName setMyField(String value) {
+		internalSetMyField(value);
 		return this;
 	}
+	/** Internal setter for {@link #getMyField()} without chain call utility. */
+	protected final void internalSetMyField(String value) {
+		_listener.beforeSet(this, MY_FIELD, value);
+		_myField = value;
+	}
+
 
 	@Override
 	public String jsonType() {

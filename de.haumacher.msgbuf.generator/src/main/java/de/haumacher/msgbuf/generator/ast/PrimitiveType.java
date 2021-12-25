@@ -196,12 +196,17 @@ public class PrimitiveType extends Type {
 	/**
 	 * @see #getKind()
 	 */
-	public final PrimitiveType setKind(Kind value) {
+	public PrimitiveType setKind(Kind value) {
+		internalSetKind(value);
+		return this;
+	}
+	/** Internal setter for {@link #getKind()} without chain call utility. */
+	protected final void internalSetKind(Kind value) {
 		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
 		_listener.beforeSet(this, KIND, value);
 		_kind = value;
-		return this;
 	}
+
 
 	@Override
 	public String jsonType() {

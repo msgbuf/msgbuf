@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Definition} of an enumeration.
  */
-public class EnumDef extends Definition<EnumDef> {
+public class EnumDef extends Definition {
 
 	/**
 	 * Creates a {@link EnumDef} instance.
@@ -40,11 +40,6 @@ public class EnumDef extends Definition<EnumDef> {
 	}
 
 	@Override
-	protected final EnumDef self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.ENUM_DEF;
 	}
@@ -59,26 +54,71 @@ public class EnumDef extends Definition<EnumDef> {
 	/**
 	 * @see #getConstants()
 	 */
-	public final EnumDef setConstants(java.util.List<Constant> value) {
+	public EnumDef setConstants(java.util.List<Constant> value) {
+		internalSetConstants(value);
+		return this;
+	}
+	/** Internal setter for {@link #getConstants()} without chain call utility. */
+	protected final void internalSetConstants(java.util.List<Constant> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'constants' cannot be null.");
 		_constants.clear();
 		_constants.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getConstants()} list.
 	 */
-	public final EnumDef addConstant(Constant value) {
-		_constants.add(value);
+	public EnumDef addConstant(Constant value) {
+		internalAddConstant(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addConstant(Constant)} without chain call utility. */
+	protected final void internalAddConstant(Constant value) {
+		_constants.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getConstants()} list.
 	 */
-	public final EnumDef removeConstant(Constant value) {
+	public final void removeConstant(Constant value) {
 		_constants.remove(value);
+	}
+
+	@Override
+	public EnumDef setName(String value) {
+		internalSetName(value);
+		return this;
+	}
+
+	@Override
+	public EnumDef setFile(DefinitionFile value) {
+		internalSetFile(value);
+		return this;
+	}
+
+	@Override
+	public EnumDef setOuter(MessageDef value) {
+		internalSetOuter(value);
+		return this;
+	}
+
+	@Override
+	public EnumDef setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+
+	@Override
+	public EnumDef setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public EnumDef putOption(String key, Option value) {
+		internalPutOption(key, value);
 		return this;
 	}
 

@@ -3,7 +3,7 @@ package test.nolistener;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -57,9 +57,6 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 		super();
 	}
 
-	/** This instance with the concrete type. */
-	protected abstract S self();
-
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
@@ -73,10 +70,15 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public final S setXCoordinate(int value) {
-		_xCoordinate = value;
-		return self();
+	public Shape setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
 	}
+	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
+	protected final void internalSetXCoordinate(int value) {
+		_xCoordinate = value;
+	}
+
 
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
@@ -88,10 +90,15 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public final S setYCoordinate(int value) {
-		_yCoordinate = value;
-		return self();
+	public Shape setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
 	}
+	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
+	protected final void internalSetYCoordinate(int value) {
+		_yCoordinate = value;
+	}
+
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
@@ -121,8 +128,8 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape<?> readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape<?> result;
+	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		Shape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -189,9 +196,9 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.data
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape<?> readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Shape<?> result;
+		Shape result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();

@@ -66,11 +66,16 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	/**
 	 * @see #getName()
 	 */
-	public final B setName(String value) {
-		_listener.beforeSet(this, NAME, value);
-		_name = value;
+	public B setName(String value) {
+		internalSetName(value);
 		return this;
 	}
+	/** Internal setter for {@link #getName()} without chain call utility. */
+	protected final void internalSetName(String value) {
+		_listener.beforeSet(this, NAME, value);
+		_name = value;
+	}
+
 
 	public final java.util.List<A> getInBs() {
 		return _inBs;
@@ -79,27 +84,36 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	/**
 	 * @see #getInBs()
 	 */
-	final B setInBs(java.util.List<A> value) {
+	B setInBs(java.util.List<A> value) {
+		internalSetInBs(value);
+		return this;
+	}
+	/** Internal setter for {@link #getInBs()} without chain call utility. */
+	protected final void internalSetInBs(java.util.List<A> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'inBs' cannot be null.");
 		_inBs.clear();
 		_inBs.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getInBs()} list.
 	 */
-	final B addInBs(A value) {
-		_inBs.add(value);
+	B addInBs(A value) {
+		internalAddInBs(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addInBs(A)} without chain call utility. */
+	protected final void internalAddInBs(A value) {
+		_inBs.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getInBs()} list.
 	 */
-	final B removeInBs(A value) {
+	final void removeInBs(A value) {
 		_inBs.remove(value);
-		return this;
 	}
 
 	public final java.util.List<A> getInB() {
@@ -109,41 +123,58 @@ public class B extends de.haumacher.msgbuf.data.AbstractDataObject implements de
 	/**
 	 * @see #getInB()
 	 */
-	final B setInB(java.util.List<A> value) {
+	B setInB(java.util.List<A> value) {
+		internalSetInB(value);
+		return this;
+	}
+	/** Internal setter for {@link #getInB()} without chain call utility. */
+	protected final void internalSetInB(java.util.List<A> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'inB' cannot be null.");
 		_inB.clear();
 		_inB.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getInB()} list.
 	 */
-	final B addInB(A value) {
-		_inB.add(value);
+	B addInB(A value) {
+		internalAddInB(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addInB(A)} without chain call utility. */
+	protected final void internalAddInB(A value) {
+		_inB.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getInB()} list.
 	 */
-	final B removeInB(A value) {
+	final void removeInB(A value) {
 		_inB.remove(value);
-		return this;
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
 	public B registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public B unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	@Override

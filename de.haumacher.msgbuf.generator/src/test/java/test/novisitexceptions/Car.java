@@ -3,7 +3,7 @@ package test.novisitexceptions;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public class Car extends Shape<Car> {
+public class Car extends Shape {
 
 	/**
 	 * Creates a {@link Car} instance.
@@ -52,11 +52,6 @@ public class Car extends Shape<Car> {
 	}
 
 	@Override
-	protected final Car self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.CAR;
 	}
@@ -71,11 +66,16 @@ public class Car extends Shape<Car> {
 	/**
 	 * @see #getWheel1()
 	 */
-	public final Car setWheel1(Circle value) {
-		_listener.beforeSet(this, WHEEL_1, value);
-		_wheel1 = value;
+	public Car setWheel1(Circle value) {
+		internalSetWheel1(value);
 		return this;
 	}
+	/** Internal setter for {@link #getWheel1()} without chain call utility. */
+	protected final void internalSetWheel1(Circle value) {
+		_listener.beforeSet(this, WHEEL_1, value);
+		_wheel1 = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getWheel1()} has a value.
@@ -94,11 +94,16 @@ public class Car extends Shape<Car> {
 	/**
 	 * @see #getWheel2()
 	 */
-	public final Car setWheel2(Circle value) {
-		_listener.beforeSet(this, WHEEL_2, value);
-		_wheel2 = value;
+	public Car setWheel2(Circle value) {
+		internalSetWheel2(value);
 		return this;
 	}
+	/** Internal setter for {@link #getWheel2()} without chain call utility. */
+	protected final void internalSetWheel2(Circle value) {
+		_listener.beforeSet(this, WHEEL_2, value);
+		_wheel2 = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getWheel2()} has a value.
@@ -117,17 +122,34 @@ public class Car extends Shape<Car> {
 	/**
 	 * @see #getBody()
 	 */
-	public final Car setBody(Rectangle value) {
-		_listener.beforeSet(this, BODY, value);
-		_body = value;
+	public Car setBody(Rectangle value) {
+		internalSetBody(value);
 		return this;
 	}
+	/** Internal setter for {@link #getBody()} without chain call utility. */
+	protected final void internalSetBody(Rectangle value) {
+		_listener.beforeSet(this, BODY, value);
+		_body = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getBody()} has a value.
 	 */
 	public final boolean hasBody() {
 		return _body != null;
+	}
+
+	@Override
+	public Car setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	@Override
+	public Car setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
 	}
 
 	@Override

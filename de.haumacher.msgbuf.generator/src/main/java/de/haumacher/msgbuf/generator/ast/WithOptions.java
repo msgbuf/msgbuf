@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for object that can be annotated.
  */
-public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
+public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link WithOptions} hierarchy. */
 	public enum TypeKind {
@@ -52,9 +52,6 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 		super();
 	}
 
-	/** This instance with the concrete type. */
-	protected abstract S self();
-
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
@@ -68,44 +65,61 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 	/**
 	 * @see #getOptions()
 	 */
-	public final S setOptions(java.util.Map<String, Option> value) {
+	public WithOptions setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+	/** Internal setter for {@link #getOptions()} without chain call utility. */
+	protected final void internalSetOptions(java.util.Map<String, Option> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'options' cannot be null.");
 		_options.clear();
 		_options.putAll(value);
-		return self();
 	}
 
+
 	/**
-	 * Adds a value to the {@link #getOptions()} map.
+	 * Adds a key value pair to the {@link #getOptions()} map.
 	 */
-	public final S putOption(String key, Option value) {
+	public WithOptions putOption(String key, Option value) {
+		internalPutOption(key, value);
+		return this;
+	}
+
+	/** Implementation of {@link #putOption(String, Option)} without chain call utility. */
+	protected final void  internalPutOption(String key, Option value) {
 		if (_options.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
 		}
 		_options.put(key, value);
-		return self();
 	}
 
 	/**
 	 * Removes a key from the {@link #getOptions()} map.
 	 */
-	public final S removeOption(String key) {
+	public final void removeOption(String key) {
 		_options.remove(key);
-		return self();
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public S registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public WithOptions registerListener(de.haumacher.msgbuf.observer.Listener l) {
+		internalRegisterListener(l);
+		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-		return self();
 	}
 
 	@Override
-	public S unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public WithOptions unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		internalUnregisterListener(l);
+		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-		return self();
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -133,8 +147,8 @@ public abstract class WithOptions<S extends WithOptions<S>> extends de.haumacher
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static WithOptions<?> readWithOptions(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		WithOptions<?> result;
+	public static WithOptions readWithOptions(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		WithOptions result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

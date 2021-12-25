@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * An abstract base class for all shapes
  */
-public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.graph.AbstractSharedGraphNode {
+public abstract class Shape extends de.haumacher.msgbuf.graph.AbstractSharedGraphNode {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {
@@ -51,9 +51,6 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.grap
 		super();
 	}
 
-	/** This instance with the concrete type. */
-	protected abstract S self();
-
 	/** The type code of this instance. */
 	public abstract TypeKind kind();
 
@@ -67,11 +64,16 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.grap
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public final S setXCoordinate(int value) {
+	public Shape setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
+	protected final void internalSetXCoordinate(int value) {
 		_listener.beforeSet(this, X_COORDINATE, value);
 		_xCoordinate = value;
-		return self();
 	}
+
 
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
@@ -83,11 +85,16 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.grap
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public final S setYCoordinate(int value) {
+	public Shape setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
+	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
+	protected final void internalSetYCoordinate(int value) {
 		_listener.beforeSet(this, Y_COORDINATE, value);
 		_yCoordinate = value;
-		return self();
 	}
+
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
@@ -117,11 +124,11 @@ public abstract class Shape<S extends Shape<S>> extends de.haumacher.msgbuf.grap
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape<?> readShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static Shape readShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
-			return (Shape<?>) scope.resolveOrFail(in.nextInt());
+			return (Shape) scope.resolveOrFail(in.nextInt());
 		}
-		Shape<?> result;
+		Shape result;
 		in.beginArray();
 		String type = in.nextString();
 		int id = in.nextInt();

@@ -49,11 +49,16 @@ public class MapType extends Type {
 	/**
 	 * @see #getKeyType()
 	 */
-	public final MapType setKeyType(Type value) {
-		_listener.beforeSet(this, KEY_TYPE, value);
-		_keyType = value;
+	public MapType setKeyType(Type value) {
+		internalSetKeyType(value);
 		return this;
 	}
+	/** Internal setter for {@link #getKeyType()} without chain call utility. */
+	protected final void internalSetKeyType(Type value) {
+		_listener.beforeSet(this, KEY_TYPE, value);
+		_keyType = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getKeyType()} has a value.
@@ -72,11 +77,16 @@ public class MapType extends Type {
 	/**
 	 * @see #getValueType()
 	 */
-	public final MapType setValueType(Type value) {
-		_listener.beforeSet(this, VALUE_TYPE, value);
-		_valueType = value;
+	public MapType setValueType(Type value) {
+		internalSetValueType(value);
 		return this;
 	}
+	/** Internal setter for {@link #getValueType()} without chain call utility. */
+	protected final void internalSetValueType(Type value) {
+		_listener.beforeSet(this, VALUE_TYPE, value);
+		_valueType = value;
+	}
+
 
 	/**
 	 * Checks, whether {@link #getValueType()} has a value.

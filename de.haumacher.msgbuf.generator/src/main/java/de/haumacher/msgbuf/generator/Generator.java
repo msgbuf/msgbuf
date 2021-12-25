@@ -97,7 +97,7 @@ public class Generator {
 			File dir = mkdir(file.getPackage());
 			
 			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions());
-			for (Definition<?> def : file.getDefinitions()) {
+			for (Definition def : file.getDefinitions()) {
 				def.visit(packageGenerator, null);
 			}
 		}
@@ -142,7 +142,7 @@ public class Generator {
 					}
 				}
 				
-				for (Definition<?> inner : def.getDefinitions()) {
+				for (Definition inner : def.getDefinitions()) {
 					inner.visit(this, arg);
 				}
 				
@@ -157,7 +157,7 @@ public class Generator {
 				return null;
 			}
 		};
-		for (Definition<?> def : file.getDefinitions()) {
+		for (Definition def : file.getDefinitions()) {
 			def.visit(indexer, null);
 		}
 	}
@@ -181,7 +181,7 @@ public class Generator {
 			return generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, def));
 		}
 		
-		private <D extends Definition<?>> Void generateJava(String name, FileGenerator generator) {
+		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {
 			File out = new File(_dir, name + ".java");
 			try (FileOutputStream os = new FileOutputStream(out)) {
 				try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {

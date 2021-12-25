@@ -63,11 +63,16 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/**
 		 * @see #getUrl()
 		 */
-		public final Result setUrl(String value) {
-			_listener.beforeSet(this, URL, value);
-			_url = value;
+		public Result setUrl(String value) {
+			internalSetUrl(value);
 			return this;
 		}
+		/** Internal setter for {@link #getUrl()} without chain call utility. */
+		protected final void internalSetUrl(String value) {
+			_listener.beforeSet(this, URL, value);
+			_url = value;
+		}
+
 
 		public final String getTitle() {
 			return _title;
@@ -76,11 +81,16 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/**
 		 * @see #getTitle()
 		 */
-		public final Result setTitle(String value) {
-			_listener.beforeSet(this, TITLE, value);
-			_title = value;
+		public Result setTitle(String value) {
+			internalSetTitle(value);
 			return this;
 		}
+		/** Internal setter for {@link #getTitle()} without chain call utility. */
+		protected final void internalSetTitle(String value) {
+			_listener.beforeSet(this, TITLE, value);
+			_title = value;
+		}
+
 
 		public final java.util.List<String> getSnippets() {
 			return _snippets;
@@ -89,40 +99,57 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 		/**
 		 * @see #getSnippets()
 		 */
-		public final Result setSnippets(java.util.List<String> value) {
-			_snippets.clear();
-			_snippets.addAll(value);
+		public Result setSnippets(java.util.List<String> value) {
+			internalSetSnippets(value);
 			return this;
 		}
+		/** Internal setter for {@link #getSnippets()} without chain call utility. */
+		protected final void internalSetSnippets(java.util.List<String> value) {
+			_snippets.clear();
+			_snippets.addAll(value);
+		}
+
 
 		/**
 		 * Adds a value to the {@link #getSnippets()} list.
 		 */
-		public final Result addSnippet(String value) {
-			_snippets.add(value);
+		public Result addSnippet(String value) {
+			internalAddSnippet(value);
 			return this;
+		}
+
+		/** Implementation of {@link #addSnippet(String)} without chain call utility. */
+		protected final void internalAddSnippet(String value) {
+			_snippets.add(value);
 		}
 
 		/**
 		 * Removes a value from the {@link #getSnippets()} list.
 		 */
-		public final Result removeSnippet(String value) {
+		public final void removeSnippet(String value) {
 			_snippets.remove(value);
-			return this;
 		}
 
 		protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 		@Override
 		public Result registerListener(de.haumacher.msgbuf.observer.Listener l) {
-			_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+			internalRegisterListener(l);
 			return this;
+		}
+
+		protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+			_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 		}
 
 		@Override
 		public Result unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-			_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+			internalUnregisterListener(l);
 			return this;
+		}
+
+		protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+			_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 		}
 
 		@Override
@@ -311,41 +338,58 @@ public class SearchResponse extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getResults()
 	 */
-	public final SearchResponse setResults(java.util.List<Result> value) {
+	public SearchResponse setResults(java.util.List<Result> value) {
+		internalSetResults(value);
+		return this;
+	}
+	/** Internal setter for {@link #getResults()} without chain call utility. */
+	protected final void internalSetResults(java.util.List<Result> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'results' cannot be null.");
 		_results.clear();
 		_results.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getResults()} list.
 	 */
-	public final SearchResponse addResult(Result value) {
-		_results.add(value);
+	public SearchResponse addResult(Result value) {
+		internalAddResult(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addResult(Result)} without chain call utility. */
+	protected final void internalAddResult(Result value) {
+		_results.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getResults()} list.
 	 */
-	public final SearchResponse removeResult(Result value) {
+	public final void removeResult(Result value) {
 		_results.remove(value);
-		return this;
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
 	public SearchResponse registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public SearchResponse unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	@Override

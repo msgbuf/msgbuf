@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A circle {@link Shape}.
  */
-public class Circle extends AtomicShape<Circle> {
+public class Circle extends AtomicShape {
 
 	/**
 	 * Creates a {@link Circle} instance.
@@ -36,11 +36,6 @@ public class Circle extends AtomicShape<Circle> {
 	}
 
 	@Override
-	protected final Circle self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.CIRCLE;
 	}
@@ -55,8 +50,25 @@ public class Circle extends AtomicShape<Circle> {
 	/**
 	 * @see #getRadius()
 	 */
-	public final Circle setRadius(int value) {
+	public Circle setRadius(int value) {
+		internalSetRadius(value);
+		return this;
+	}
+	/** Internal setter for {@link #getRadius()} without chain call utility. */
+	protected final void internalSetRadius(int value) {
 		_radius = value;
+	}
+
+
+	@Override
+	public Circle setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	@Override
+	public Circle setYCoordinate(int value) {
+		internalSetYCoordinate(value);
 		return this;
 	}
 

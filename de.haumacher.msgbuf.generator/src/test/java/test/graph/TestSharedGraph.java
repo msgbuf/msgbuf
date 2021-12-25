@@ -92,7 +92,7 @@ public class TestSharedGraph extends TestCase {
 		assertSame(clientGroup.getWheel1(), clientGroup.getWheel2());
 	}
 
-	private <S extends Shape<?>> S transmit(Scope server, Scope client, S shape) throws IOException {
+	private <S extends Shape> S transmit(Scope server, Scope client, S shape) throws IOException {
 		StringW dataMessage = new StringW();
 		shape.writeTo(server, new JsonWriter(dataMessage));
 

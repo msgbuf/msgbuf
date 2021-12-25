@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * A rectangle.
  */
-public class Rectangle extends AtomicShape<Rectangle> {
+public class Rectangle extends AtomicShape {
 
 	/**
 	 * Creates a {@link Rectangle} instance.
@@ -44,11 +44,6 @@ public class Rectangle extends AtomicShape<Rectangle> {
 	}
 
 	@Override
-	protected final Rectangle self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.RECTANGLE;
 	}
@@ -69,11 +64,16 @@ public class Rectangle extends AtomicShape<Rectangle> {
 	/**
 	 * @see #getWidth()
 	 */
-	public final Rectangle setWidth(int value) {
-		_listener.beforeSet(this, WIDTH, value);
-		_width = value;
+	public Rectangle setWidth(int value) {
+		internalSetWidth(value);
 		return this;
 	}
+	/** Internal setter for {@link #getWidth()} without chain call utility. */
+	protected final void internalSetWidth(int value) {
+		_listener.beforeSet(this, WIDTH, value);
+		_width = value;
+	}
+
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -87,9 +87,26 @@ public class Rectangle extends AtomicShape<Rectangle> {
 	/**
 	 * @see #getHeight()
 	 */
-	public final Rectangle setHeight(int value) {
+	public Rectangle setHeight(int value) {
+		internalSetHeight(value);
+		return this;
+	}
+	/** Internal setter for {@link #getHeight()} without chain call utility. */
+	protected final void internalSetHeight(int value) {
 		_listener.beforeSet(this, HEIGHT, value);
 		_height = value;
+	}
+
+
+	@Override
+	public Rectangle setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	@Override
+	public Rectangle setYCoordinate(int value) {
+		internalSetYCoordinate(value);
 		return this;
 	}
 

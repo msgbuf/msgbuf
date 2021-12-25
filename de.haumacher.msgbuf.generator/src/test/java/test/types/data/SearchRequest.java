@@ -52,11 +52,16 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/**
 	 * @see #getQuery()
 	 */
-	public final SearchRequest setQuery(String value) {
-		_listener.beforeSet(this, QUERY, value);
-		_query = value;
+	public SearchRequest setQuery(String value) {
+		internalSetQuery(value);
 		return this;
 	}
+	/** Internal setter for {@link #getQuery()} without chain call utility. */
+	protected final void internalSetQuery(String value) {
+		_listener.beforeSet(this, QUERY, value);
+		_query = value;
+	}
+
 
 	public final int getPageNumber() {
 		return _pageNumber;
@@ -65,11 +70,16 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/**
 	 * @see #getPageNumber()
 	 */
-	public final SearchRequest setPageNumber(int value) {
-		_listener.beforeSet(this, PAGE_NUMBER, value);
-		_pageNumber = value;
+	public SearchRequest setPageNumber(int value) {
+		internalSetPageNumber(value);
 		return this;
 	}
+	/** Internal setter for {@link #getPageNumber()} without chain call utility. */
+	protected final void internalSetPageNumber(int value) {
+		_listener.beforeSet(this, PAGE_NUMBER, value);
+		_pageNumber = value;
+	}
+
 
 	public final int getResultPerPage() {
 		return _resultPerPage;
@@ -78,24 +88,37 @@ public class SearchRequest extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/**
 	 * @see #getResultPerPage()
 	 */
-	public final SearchRequest setResultPerPage(int value) {
-		_listener.beforeSet(this, RESULT_PER_PAGE, value);
-		_resultPerPage = value;
+	public SearchRequest setResultPerPage(int value) {
+		internalSetResultPerPage(value);
 		return this;
 	}
+	/** Internal setter for {@link #getResultPerPage()} without chain call utility. */
+	protected final void internalSetResultPerPage(int value) {
+		_listener.beforeSet(this, RESULT_PER_PAGE, value);
+		_resultPerPage = value;
+	}
+
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
 	public SearchRequest registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
+		internalRegisterListener(l);
 		return this;
+	}
+
+	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
 	}
 
 	@Override
 	public SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
+		internalUnregisterListener(l);
 		return this;
+	}
+
+	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for type and field definitions.
  */
-public abstract class DefinitionBase<S extends DefinitionBase<S>> extends WithOptions<S> {
+public abstract class DefinitionBase extends WithOptions {
 
 	/** Visitor interface for the {@link DefinitionBase} hierarchy.*/
 	public interface Visitor<R,A> extends Part.Visitor<R,A>, Definition.Visitor<R,A> {
@@ -34,10 +34,27 @@ public abstract class DefinitionBase<S extends DefinitionBase<S>> extends WithOp
 	/**
 	 * @see #getComment()
 	 */
-	public final S setComment(String value) {
+	public DefinitionBase setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+	/** Internal setter for {@link #getComment()} without chain call utility. */
+	protected final void internalSetComment(String value) {
 		_listener.beforeSet(this, COMMENT, value);
 		_comment = value;
-		return self();
+	}
+
+
+	@Override
+	public DefinitionBase setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public DefinitionBase putOption(String key, Option value) {
+		internalPutOption(key, value);
+		return this;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
@@ -66,8 +83,8 @@ public abstract class DefinitionBase<S extends DefinitionBase<S>> extends WithOp
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static DefinitionBase<?> readDefinitionBase(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		DefinitionBase<?> result;
+	public static DefinitionBase readDefinitionBase(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		DefinitionBase result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

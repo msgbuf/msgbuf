@@ -27,7 +27,7 @@ import de.haumacher.msgbuf.generator.ast.Type;
 public class CodeConvention {
 
 	public static String qTypeName(CustomType def) {
-		Definition<?> definition = def.getDefinition();
+		Definition definition = def.getDefinition();
 		if (definition == null) {
 			return qTypeName(def.getName());
 		} else {
@@ -35,7 +35,7 @@ public class CodeConvention {
 		}
 	}
 	
-	public static String qTypeName(Definition<?> def) {
+	public static String qTypeName(Definition def) {
 		String scope;
 		
 		DefinitionFile file = def.getFile();
@@ -66,7 +66,7 @@ public class CodeConvention {
 		return result.toString();
 	}
 
-	public static String typeName(Definition<?> def) {
+	public static String typeName(Definition def) {
 		return typeName(def.getName());
 	}
 
@@ -114,6 +114,15 @@ public class CodeConvention {
 		}
 	}
 
+	public static String internalAdderName(Field field) {
+		String suffix = singularSuffix(field);
+		if (field.getType() instanceof MapType) {
+			return "internalPut" + suffix;
+		} else {
+			return "internalAdd" + suffix;
+		}
+	}
+	
 	public static String removerName(Field field) {
 		String suffix = singularSuffix(field);
 		return "remove" + suffix;
@@ -147,11 +156,15 @@ public class CodeConvention {
 		return "set" + suffix(field);
 	}
 
+	public static String internalSetterName(Field field) {
+		return "internalSet" + suffix(field);
+	}
+	
 	public static String readerName(String name) {
 		return "read" + name;
 	}
 
-	public static String readerName(Definition<?> def) {
+	public static String readerName(Definition def) {
 		return readerName(def.getName());
 	}
 

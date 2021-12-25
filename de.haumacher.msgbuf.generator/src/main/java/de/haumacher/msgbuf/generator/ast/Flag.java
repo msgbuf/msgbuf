@@ -44,11 +44,16 @@ public class Flag extends Option {
 	/**
 	 * @see #isValue()
 	 */
-	public final Flag setValue(boolean value) {
-		_listener.beforeSet(this, VALUE, value);
-		_value = value;
+	public Flag setValue(boolean value) {
+		internalSetValue(value);
 		return this;
 	}
+	/** Internal setter for {@link #isValue()} without chain call utility. */
+	protected final void internalSetValue(boolean value) {
+		_listener.beforeSet(this, VALUE, value);
+		_value = value;
+	}
+
 
 	@Override
 	public String jsonType() {

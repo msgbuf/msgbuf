@@ -41,7 +41,7 @@ public class Util {
 		return stringLiteral.substring(1, stringLiteral.length() - 1).replaceAll("\\\\(.)", "$1");
 	}
 
-	public static String toString(Definition<?> def) {
+	public static String toString(Definition def) {
 		MessageDef outer = def.getOuter();
 		if (outer == null) {
 			QName pkg = def.getFile().getPackage();
@@ -55,15 +55,15 @@ public class Util {
 		}
 	}
 
-	public static String toString(Part<?> part) {
+	public static String toString(Part part) {
 		return toString(part.getOwner()) + "#" + part.getName();
 	}
 
-	public static Optional<Option> getOption(WithOptions<?> field, String optionName) {
+	public static Optional<Option> getOption(WithOptions field, String optionName) {
 		return Optional.ofNullable(field.getOptions().get(optionName));
 	}
 
-	public static boolean getFlag(WithOptions<?> field, String optionName) {
+	public static boolean getFlag(WithOptions field, String optionName) {
 		Optional<Option> option = getOption(field, optionName);
 		return option.isPresent() ? ((Flag) option.get()).isValue() : false;
 	}

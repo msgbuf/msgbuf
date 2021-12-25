@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A group of shapes.
  */
-public class Group extends Shape<Group> {
+public class Group extends Shape {
 
 	/**
 	 * Creates a {@link Group} instance.
@@ -18,14 +18,14 @@ public class Group extends Shape<Group> {
 	/** @see #getShapes() */
 	public static final String SHAPES = "shapes";
 
-	private final java.util.List<Shape<?>> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape<?>>() {
+	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
 		@Override
-		protected void beforeAdd(int index, Shape<?> element) {
+		protected void beforeAdd(int index, Shape element) {
 			_listener.beforeAdd(test.graph.data.Group.this, SHAPES, index, element);
 		}
 
 		@Override
-		protected void afterRemove(int index, Shape<?> element) {
+		protected void afterRemove(int index, Shape element) {
 			_listener.afterRemove(test.graph.data.Group.this, SHAPES, index, element);
 		}
 	};
@@ -40,11 +40,6 @@ public class Group extends Shape<Group> {
 	}
 
 	@Override
-	protected final Group self() {
-		return this;
-	}
-
-	@Override
 	public TypeKind kind() {
 		return TypeKind.GROUP;
 	}
@@ -56,33 +51,54 @@ public class Group extends Shape<Group> {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	public final java.util.List<Shape<?>> getShapes() {
+	public final java.util.List<Shape> getShapes() {
 		return _shapes;
 	}
 
 	/**
 	 * @see #getShapes()
 	 */
-	public final Group setShapes(java.util.List<Shape<?>> value) {
+	public Group setShapes(java.util.List<Shape> value) {
+		internalSetShapes(value);
+		return this;
+	}
+	/** Internal setter for {@link #getShapes()} without chain call utility. */
+	protected final void internalSetShapes(java.util.List<Shape> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'shapes' cannot be null.");
 		_shapes.clear();
 		_shapes.addAll(value);
-		return this;
 	}
+
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	public final Group addShape(Shape<?> value) {
-		_shapes.add(value);
+	public Group addShape(Shape value) {
+		internalAddShape(value);
 		return this;
+	}
+
+	/** Implementation of {@link #addShape(Shape)} without chain call utility. */
+	protected final void internalAddShape(Shape value) {
+		_shapes.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	public final Group removeShape(Shape<?> value) {
+	public final void removeShape(Shape value) {
 		_shapes.remove(value);
+	}
+
+	@Override
+	public Group setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	@Override
+	public Group setYCoordinate(int value) {
+		internalSetYCoordinate(value);
 		return this;
 	}
 
@@ -111,7 +127,7 @@ public class Group extends Shape<Group> {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case SHAPES: setShapes((java.util.List<Shape<?>>) value); break;
+			case SHAPES: setShapes((java.util.List<Shape>) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -136,7 +152,7 @@ public class Group extends Shape<Group> {
 		super.writeFields(scope, out);
 		out.name(SHAPES);
 		out.beginArray();
-		for (Shape<?> x : getShapes()) {
+		for (Shape x : getShapes()) {
 			x.writeTo(scope, out);
 		}
 		out.endArray();
@@ -147,7 +163,7 @@ public class Group extends Shape<Group> {
 		switch (field) {
 			case SHAPES: {
 				out.beginArray();
-				for (Shape<?> x : getShapes()) {
+				for (Shape x : getShapes()) {
 					x.writeTo(scope, out);
 				}
 				out.endArray();
@@ -176,7 +192,7 @@ public class Group extends Shape<Group> {
 	public void writeElement(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonWriter out, String field, Object element) throws java.io.IOException {
 		switch (field) {
 			case SHAPES: {
-				((Shape<?>) element).writeTo(scope, out);
+				((Shape) element).writeTo(scope, out);
 				break;
 			}
 			default: super.writeElement(scope, out, field, element);

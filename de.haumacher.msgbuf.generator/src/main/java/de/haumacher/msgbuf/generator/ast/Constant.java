@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see EnumDef#getConstants()
  */
-public class Constant extends Part<Constant> {
+public class Constant extends Part {
 
 	/**
 	 * Creates a {@link Constant} instance.
@@ -27,13 +27,44 @@ public class Constant extends Part<Constant> {
 	}
 
 	@Override
-	protected final Constant self() {
+	public TypeKind kind() {
+		return TypeKind.CONSTANT;
+	}
+
+	@Override
+	public Constant setName(String value) {
+		internalSetName(value);
 		return this;
 	}
 
 	@Override
-	public TypeKind kind() {
-		return TypeKind.CONSTANT;
+	public Constant setIndex(int value) {
+		internalSetIndex(value);
+		return this;
+	}
+
+	@Override
+	public Constant setOwner(Definition value) {
+		internalSetOwner(value);
+		return this;
+	}
+
+	@Override
+	public Constant setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+
+	@Override
+	public Constant setOptions(java.util.Map<String, Option> value) {
+		internalSetOptions(value);
+		return this;
+	}
+
+	@Override
+	public Constant putOption(String key, Option value) {
+		internalPutOption(key, value);
+		return this;
 	}
 
 	@Override
