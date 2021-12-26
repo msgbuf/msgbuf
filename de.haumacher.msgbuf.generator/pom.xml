@@ -2,9 +2,37 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.haumacher.msgbuf.generator</groupId>
-	<artifactId>de.haumacher.msgbuf.generator</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+
+	<parent>
+		<groupId>de.haumacher.msgbuf</groupId>
+		<version>1.0.3-SNAPSHOT</version>
+		<artifactId>msgbuf-parent</artifactId>
+		
+		<relativePath>../msgbuf-parent</relativePath>
+	</parent>
+	
+	<artifactId>msgbuf-generator</artifactId>
+
+	<name>MsgBuf Generator</name>
+	<url>https://github.com/msgbuf/msgbuf</url>
+	<description>
+		Code generator for GWT-compatible Java data classes suitable for typed client-server messaging.
+	</description>
+	
+	<developers>
+		<developer>
+			<name>Bernhard Haumacher</name>
+			<email>haui@haumacher.de</email>
+			<organization>haumacher.de</organization>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>GPL-3.0-or-later</name>
+			<url>https://spdx.org/licenses/GPL-3.0-or-later.html</url>
+		</license>
+	</licenses>
 
 	<dependencies>
 		<dependency>
@@ -35,6 +63,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
+			    <version>3.2.4</version>
 				<executions>
 					<execution>
 						<goals>
@@ -42,7 +71,7 @@
 						</goals>
 						<configuration>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
-							 <shadedClassifierName>full</shadedClassifierName>
+							<shadedClassifierName>full</shadedClassifierName>
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">

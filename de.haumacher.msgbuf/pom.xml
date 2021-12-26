@@ -1,9 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.haumacher.msgbuf</groupId>
+	<parent>
+		<groupId>de.haumacher.msgbuf</groupId>
+		<version>1.0.3-SNAPSHOT</version>
+		<artifactId>msgbuf-parent</artifactId>
+		
+		<relativePath>../msgbuf-parent</relativePath>
+	</parent>
+
 	<artifactId>msgbuf-api</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
 
 	<name>MsgBuf API</name>
 	<url>https://github.com/msgbuf/msgbuf</url>
@@ -22,7 +28,7 @@
 
 	<licenses>
 		<license>
-			<name>The Apache License, Version 2.0</name>
+			<name>Apache-2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
@@ -52,62 +58,6 @@
 
 	<build>
 		<plugins>
-
-			<!-- Use Java 8. -->
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-			<!-- Setting resources encoding for a platform-independent build. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-			<!-- Source attachement required for Maven Central deployment -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- JavaDoc attachement required for Maven Central deployment -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.3.1</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<doclint>-missing</doclint>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!-- GPG signing of artifacts required for Maven Central deployment -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -149,7 +99,6 @@
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>false</autoReleaseAfterClose>
-
 				</configuration>
 			</plugin>
 		</plugins>
