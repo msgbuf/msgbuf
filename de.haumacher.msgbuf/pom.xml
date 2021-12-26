@@ -5,8 +5,6 @@
 		<groupId>de.haumacher.msgbuf</groupId>
 		<version>1.0.3-SNAPSHOT</version>
 		<artifactId>msgbuf-parent</artifactId>
-		
-		<relativePath>../msgbuf-parent</relativePath>
 	</parent>
 
 	<artifactId>msgbuf-api</artifactId>
