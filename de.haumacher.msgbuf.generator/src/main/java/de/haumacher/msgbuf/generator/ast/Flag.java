@@ -35,7 +35,7 @@ public class Flag extends Option {
 	}
 
 	/**
-	 * The boolean value assigned to the option {@link #name}.
+	 * The boolean value assigned to the option.
 	 */
 	public final boolean isValue() {
 		return _value;

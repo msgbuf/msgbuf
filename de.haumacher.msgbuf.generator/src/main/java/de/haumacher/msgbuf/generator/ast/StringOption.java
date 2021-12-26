@@ -35,7 +35,7 @@ public class StringOption extends Option {
 	}
 
 	/**
-	 * The string value assigned to the option {@link #name}.
+	 * The string value assigned to the option.
 	 */
 	public final String getValue() {
 		return _value;

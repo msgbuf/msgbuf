@@ -35,7 +35,7 @@ public class NumberOption extends Option {
 	}
 
 	/**
-	 * The number assigned to the option {@link #name}.
+	 * The number assigned to the option.
 	 */
 	public final double getValue() {
 		return _value;

@@ -219,19 +219,19 @@ abstract message Option {
 
 /** {@link Option} annotating a string value */
 message StringOption extends Option {
-	/** The string value assigned to the option {@link #name}. */
+	/** The string value assigned to the option. */
 	string value;
 }
 
 /** {@link Option} annotating an int value */
 message NumberOption extends Option {
-	/** The number assigned to the option {@link #name}. */
+	/** The number assigned to the option. */
 	double value;
 }
 
 /** {@link Option} annotating a boolean value */
 message Flag extends Option {
-	/** The boolean value assigned to the option {@link #name}. */
+	/** The boolean value assigned to the option. */
 	boolean value;
 }
 
