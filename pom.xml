@@ -3,9 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.haumacher.msgbuf</groupId>
+	<parent>
+		<groupId>de.haumacher.msgbuf</groupId>
+		<version>1.0.3-SNAPSHOT</version>
+		<artifactId>msgbuf-parent</artifactId>
+	</parent>
+
 	<artifactId>msgbuf</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
