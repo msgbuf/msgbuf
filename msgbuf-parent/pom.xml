@@ -9,11 +9,6 @@
 
 	<packaging>pom</packaging>
 
-	<modules>
-		<module>../de.haumacher.msgbuf</module>
-		<module>../de.haumacher.msgbuf.generator</module>
-	</modules>
-
 	<scm>
 		<url>https://github.com/msgbuf/msgbuf</url>
 		<connection>scm:git:https://github.com/msgbuf/msgbuf.git</connection>
