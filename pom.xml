@@ -14,6 +14,28 @@
 		<module>de.haumacher.msgbuf.generator</module>
 	</modules>
 
+	<name>MsgBuf Parent</name>
+	<url>https://github.com/msgbuf/msgbuf</url>
+	<description>
+		Parent module for building the `msgbuf` library for GWT-compatible Java data classes 
+		suitable for typed client-server messaging.
+	</description>
+	
+	<developers>
+		<developer>
+			<name>Bernhard Haumacher</name>
+			<email>haui@haumacher.de</email>
+			<organization>haumacher.de</organization>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>Apache-2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
 	<scm>
 		<url>https://github.com/msgbuf/msgbuf</url>
 		<connection>scm:git:https://github.com/msgbuf/msgbuf.git</connection>
