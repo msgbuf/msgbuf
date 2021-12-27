@@ -3,7 +3,7 @@
 
 	<parent>
 		<groupId>de.haumacher.msgbuf</groupId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.3</version>
 		<artifactId>msgbuf-parent</artifactId>
 	</parent>
 
