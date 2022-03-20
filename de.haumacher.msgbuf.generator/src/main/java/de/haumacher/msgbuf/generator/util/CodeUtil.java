@@ -1,14 +1,12 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package de.haumacher.msgbuf.generator;
+package de.haumacher.msgbuf.generator.util;
 
 import java.util.regex.Pattern;
 
 /**
  * Utilities for code generation.
- *
- * @author <a href="mailto:haui@haumacher.de">Bernhard Haumacher</a>
  */
 public class CodeUtil {
 	
@@ -21,6 +19,9 @@ public class CodeUtil {
 		"_+");
 
 
+	/**
+	 * Converts the given '_' separated string to <code>CamelCase</code>.
+	 */
 	public static String camelCase(String name) {
 		StringBuilder result = new StringBuilder();
 		for (String part : name.split("_+")) {
@@ -29,10 +30,16 @@ public class CodeUtil {
 		return result.toString();
 	}
 
+	/**
+	 * Makes the first character upper-case in the given string.
+	 */
 	public static String firstUpperCase(String name) {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
+	/**
+	 * Converts a <code>CamelCase</code> name into a '_' separated name in all upper case.
+	 */
 	public static String allUpperCase(String name) {
 		StringBuilder result = new StringBuilder();
 		boolean first = true;
@@ -47,6 +54,9 @@ public class CodeUtil {
 		return result.toString();
 	}
 
+	/**
+	 * Makes the first character lower-case in the given string.
+	 */
 	public static String firstLowerCase(String name) {
 		return Character.toLowerCase(name.charAt(0)) + name.substring(1);
 	}

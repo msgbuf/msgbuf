@@ -13,6 +13,7 @@ import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.NumberOption;
 import de.haumacher.msgbuf.generator.ast.Option;
+import de.haumacher.msgbuf.generator.common.Util;
 
 /**
  * Assigns type IDs in polymorphic hierarchies.

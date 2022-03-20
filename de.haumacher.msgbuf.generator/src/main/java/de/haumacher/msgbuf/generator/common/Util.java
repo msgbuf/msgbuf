@@ -1,11 +1,14 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package de.haumacher.msgbuf.generator;
+package de.haumacher.msgbuf.generator.common;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import de.haumacher.msgbuf.generator.CodeConvention;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
@@ -20,7 +23,7 @@ import de.haumacher.msgbuf.generator.ast.WithOptions;
 import de.haumacher.msgbuf.generator.parser.Token;
 
 /**
- * TODO
+ * Utilities for accessing <code>msgbuf</code> model.
  */
 public class Util {
 
@@ -69,15 +72,28 @@ public class Util {
 	}
 
 	public static boolean isNullable(Field field) {
-		return getFlag(field, "Nullable") || (field.getType() instanceof CustomType && !field.isRepeated() && !hasEnumType(field));
+		return getFlag(field, "Nullable") || (!field.isRepeated() && isNullable(field.getType()));
 	}
 
-	private static boolean hasEnumType(Field field) {
-		return isEnumType(field.getType());
+	public static boolean isNullable(Type type) {
+		return type instanceof CustomType && !isEnumType(type);
 	}
 
 	private static boolean isEnumType(Type type) {
 		return type instanceof CustomType && ((CustomType) type).getDefinition() instanceof EnumDef;
+	}
+
+	public static List<MessageDef> concreteTransitiveSpecializations(MessageDef def) {
+		return transitiveSpecializations(def).stream().filter(m -> !m.isAbstract()).collect(Collectors.toList());
+	}
+
+	private static ArrayList<MessageDef> transitiveSpecializations(MessageDef def) {
+		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
+		int n = 0;
+		while (n < result.size()) {
+			result.addAll(result.get(n++).getSpecializations());
+		}
+		return result;
 	}
 	
 }

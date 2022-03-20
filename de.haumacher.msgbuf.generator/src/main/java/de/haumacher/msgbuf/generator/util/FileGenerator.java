@@ -1,18 +1,17 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package de.haumacher.msgbuf.generator;
+package de.haumacher.msgbuf.generator.util;
 
 import java.io.IOException;
 
 /**
- * TODO
+ * Common interface for code generators.
  */
 public interface FileGenerator {
 
 	/** 
-	 * TODO
-	 * @throws IOException 
+	 * Generates the file contents to the given {@link Appendable}. 
 	 */
 	void generate(Appendable out) throws IOException;
 

@@ -4,14 +4,13 @@
 package de.haumacher.msgbuf.generator;
 
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
-import static de.haumacher.msgbuf.generator.CodeUtil.*;
 import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
+import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -31,11 +30,15 @@ import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
 import de.haumacher.msgbuf.generator.ast.WithOptions.TypeKind;
+import de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol;
+import de.haumacher.msgbuf.generator.common.Util;
+import de.haumacher.msgbuf.generator.util.AbstractJavaGenerator;
+import de.haumacher.msgbuf.generator.util.CodeUtil;
 
 /**
  * {@link Generator} for message data classes.
  */
-public class MessageGenerator extends AbstractFileGenerator implements Definition.Visitor<Void, Void> {
+public class MessageGenerator extends AbstractJavaGenerator implements Definition.Visitor<Void, Void> {
 
 	private final NameTable _table;
 	private final MessageDef _def;
@@ -410,9 +413,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private String getFieldNameString(Field field) {
-		Optional<Option> fieldName = Util.getOption(field, "Name");
-		String name = fieldName.isPresent() ? ((StringOption) fieldName.get()).getValue() : field.getName();
-		return CodeUtil.stringLiteral(name);
+		return CodeUtil.stringLiteral(MsgBufJsonProtocol.fieldId(field));
 	}
 
 	private void generateConstructor() {
@@ -905,10 +906,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 					line("int id = in.nextInt();");
 				}
 				line("switch (type) {");
-				for (MessageDef specialization : getTransitiveSpecializations(_def)) {
-					if (specialization.isAbstract()) {
-						continue;
-					}
+				for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
 					if (_graph) {
 						line("case " + jsonTypeConstantRef(specialization) + ": result = " + typeName(specialization) + ".create(); break;");
 					} else {
@@ -1181,9 +1179,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 	}
 
 	private String jsonTypeID(MessageDef def) {
-		Optional<Option> nameOption = Util.getOption(def, "Name");
-		String typeId = nameOption.isPresent() ? ((StringOption) nameOption.get()).getValue() : def.getName();
-		return CodeUtil.stringLiteral(typeId);
+		return CodeUtil.stringLiteral(MsgBufJsonProtocol.typeId(def));
 	}
 
 	private String jsonType(PrimitiveType.Kind primitive) {
@@ -1413,10 +1409,7 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 				line("assert typeField == 0;");
 				line("int type = in.nextInt();");
 				line("switch (type) {");
-				for (MessageDef specialization : getTransitiveSpecializations(_def)) {
-					if (specialization.isAbstract()) {
-						continue;
-					}
+				for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
 					line("case " + mkBinaryTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + factoryName(specialization) + "(); break;");
 				}
 				line("default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;");
@@ -1702,15 +1695,6 @@ public class MessageGenerator extends AbstractFileGenerator implements Definitio
 		} else {
 			return getRoot(extendedDef);
 		}
-	}
-
-	private List<MessageDef> getTransitiveSpecializations(MessageDef def) {
-		ArrayList<MessageDef> result = new ArrayList<MessageDef>(def.getSpecializations());
-		int n = 0;
-		while (n < result.size()) {
-			result.addAll(result.get(n++).getSpecializations());
-		}
-		return result;
 	}
 
 	private boolean isMonomorphicReferenceToTypeInPolymorphicHierarchy(CustomType customType) {

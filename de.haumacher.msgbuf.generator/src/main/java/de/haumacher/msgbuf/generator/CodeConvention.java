@@ -3,7 +3,7 @@
  */
 package de.haumacher.msgbuf.generator;
 
-import static de.haumacher.msgbuf.generator.CodeUtil.*;
+import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +18,8 @@ import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.common.Util;
+import de.haumacher.msgbuf.generator.util.CodeUtil;
 
 /**
  * Utility methods defining technical names of generated classes.

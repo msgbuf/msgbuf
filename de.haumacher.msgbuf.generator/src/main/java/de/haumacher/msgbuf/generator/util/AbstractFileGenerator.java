@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package de.haumacher.msgbuf.generator;
+package de.haumacher.msgbuf.generator.util;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * TODO
+ * Base class for code generators.
  */
 public abstract class AbstractFileGenerator implements FileGenerator {
 
@@ -39,11 +39,17 @@ public abstract class AbstractFileGenerator implements FileGenerator {
 		}
 	}
 	
-	protected void generateInner(AbstractFileGenerator outer) {
+	/**
+	 * Generates the contents as inner class of the given outer generator.
+	 */
+	public void generateInner(AbstractFileGenerator outer) {
 		setIndent(outer.getIndent());
 		generate(outer._out);
 	}
-	
+
+	/**
+	 * The current indentation level.
+	 */
 	public int getIndent() {
 		return _indent;
 	}
@@ -54,15 +60,7 @@ public abstract class AbstractFileGenerator implements FileGenerator {
 
 	protected abstract void generate();
 	
-	protected void docComment(String comment) {
-		if (!comment.isEmpty()) {
-			line("/**");
-			for (String line : comment.split("\n")) {
-				line(" *" + (line.isEmpty() ? "" : " " + line));
-			}
-			line(" */");
-		}
-	}
+	protected abstract void docComment(String comment);
 
 	protected void line(String line) {
 		lineStart(line);

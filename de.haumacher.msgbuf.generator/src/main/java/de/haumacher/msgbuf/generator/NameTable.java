@@ -13,6 +13,7 @@ import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.QName;
+import de.haumacher.msgbuf.generator.common.Util;
 
 /**
  * TODO

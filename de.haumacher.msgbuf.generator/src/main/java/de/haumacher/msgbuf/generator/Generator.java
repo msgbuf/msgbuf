@@ -26,11 +26,14 @@ import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
+import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.dart.DartLibGenerator;
 import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
 import de.haumacher.msgbuf.generator.parser.ProtobufParserConstants;
 import de.haumacher.msgbuf.generator.parser.Token;
+import de.haumacher.msgbuf.generator.util.FileGenerator;
 
 /**
  * Main entry point to the <code>msgbuf</code> generator.
@@ -99,6 +102,11 @@ public class Generator {
 			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions());
 			for (Definition def : file.getDefinitions()) {
 				def.visit(packageGenerator, null);
+			}
+			
+			Option dartLib = file.getOptions().get("DartLib");
+			if (dartLib != null) {
+				new DartLibGenerator(new File(_out, ((StringOption) dartLib).getValue()), file).run();
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 package de.haumacher.msgbuf.generator;
 
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
+import static de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,14 +13,15 @@ import java.util.Set;
 import de.haumacher.msgbuf.generator.ast.Constant;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
-import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.QName;
-import de.haumacher.msgbuf.generator.ast.StringOption;
+import de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol;
+import de.haumacher.msgbuf.generator.util.AbstractJavaGenerator;
+import de.haumacher.msgbuf.generator.util.CodeUtil;
 
 /**
  * Generates a binding for a protocol enumeration.
  */
-public class EnumGenerator extends AbstractFileGenerator {
+public class EnumGenerator extends AbstractJavaGenerator {
 
 	private EnumDef _def;
 
@@ -78,7 +80,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 			line("if (protocolName == null) { return null; }");
 			line("switch (protocolName) {");
 			for (Constant constant : constants) {
-				line("case " + CodeUtil.stringLiteral(protocolName(constant)) + ": return " + CodeConvention.classifierName(constant) + ";");
+				line("case " + CodeUtil.stringLiteral(MsgBufJsonProtocol.classifierId(constant)) + ": return " + CodeConvention.classifierName(constant) + ";");
 			}
 			line("}");
 			line("return " + defaultValue() + ";");
@@ -137,7 +139,7 @@ public class EnumGenerator extends AbstractFileGenerator {
 		for (Constant constant : _def.getConstants()) {
 			nl();
 			docComment(constant.getComment());
-			line(CodeConvention.classifierName(constant) + "(" + CodeUtil.stringLiteral(protocolName(constant)) +  "),");
+			line(CodeConvention.classifierName(constant) + "(" + CodeUtil.stringLiteral(classifierId(constant)) +  "),");
 		}
 		nl();
 		line(";");
@@ -146,21 +148,6 @@ public class EnumGenerator extends AbstractFileGenerator {
 	private String defaultValue() {
 		List<Constant> constants = _def.getConstants();
 		return constants.size() > 0 ? CodeConvention.classifierName(constants.get(0)) : "null";
-	}
-
-	/**
-	 * The name of the given enumeration classifier as used in the protocol (e.g. JSON format).
-	 */
-	private String protocolName(Constant constant) {
-		Option nameOption = constant.getOptions().get("Name");
-		if (nameOption != null) {
-			if (nameOption instanceof StringOption) {
-				return ((StringOption) nameOption).getValue();
-			} else {
-				// TODO: Error.
-			}
-		}
-		return constant.getName();
 	}
 
 }

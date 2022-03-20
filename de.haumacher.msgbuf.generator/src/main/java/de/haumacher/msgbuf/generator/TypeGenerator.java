@@ -10,6 +10,7 @@ import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.common.Util;
 
 /**
  * Generator for Java types of {@link Field}s.
