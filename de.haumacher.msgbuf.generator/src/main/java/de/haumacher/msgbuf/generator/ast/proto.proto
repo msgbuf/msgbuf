@@ -3,6 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 option NoBinary;
 option NoReflection;
 option NoVisitorExceptions;
+option NoInterfaces;
 
 /** Base class for object that can be annotated. */
 abstract message WithOptions {
@@ -164,16 +165,32 @@ message PrimitiveType extends Type {
 	enum Kind {
 		/** A 32 bit integer. */
 	    INT32;
+
+		/** An unsigned 32 bit integer. */
 	    UINT32;
+
+		/** A signed 32 bit integer. */
 	    SINT32;
+
+		/** A 32 bit integer without runlength encoding. */
 	    FIXED32;
+	    
+		/** A signed 32 bit integer without runlength encoding. */
 	    SFIXED32;
 	    
 		/** A 64 bit integer. */
 	    INT64;
+	    
+		/** An unsigned 64 bit integer. */
 	    UINT64;
+	    
+		/** A signed 64 bit integer. */
 	    SINT64;
+	    
+		/** A 64 bit integer without runlength encoding. */
 	    FIXED64;
+	    
+		/** A signed 64 bit integer without runlength encoding. */
 	    SFIXED64;
 
 		/** A boolean. */

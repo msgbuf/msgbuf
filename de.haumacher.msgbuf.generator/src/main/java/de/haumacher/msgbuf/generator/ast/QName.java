@@ -9,7 +9,7 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	 * Creates a {@link QName} instance.
 	 */
 	public static QName create() {
-		return new QName();
+		return new de.haumacher.msgbuf.generator.ast.QName();
 	}
 
 	/** Identifier for the {@link QName} type in JSON format. */
@@ -21,19 +21,19 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	private final java.util.List<String> _names = new de.haumacher.msgbuf.util.ReferenceList<String>() {
 		@Override
 		protected void beforeAdd(int index, String element) {
-			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.QName.this, NAMES, index, element);
+			_listener.beforeAdd(QName.this, NAMES, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, String element) {
-			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.QName.this, NAMES, index, element);
+			_listener.afterRemove(QName.this, NAMES, index, element);
 		}
 	};
 
 	/**
 	 * Creates a {@link QName} instance.
 	 *
-	 * @see #create()
+	 * @see QName#create()
 	 */
 	protected QName() {
 		super();
@@ -49,16 +49,16 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	/**
 	 * @see #getNames()
 	 */
-	public QName setNames(java.util.List<String> value) {
+	public QName setNames(java.util.List<? extends String> value) {
 		internalSetNames(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getNames()} without chain call utility. */
-	protected final void internalSetNames(java.util.List<String> value) {
+	protected final void internalSetNames(java.util.List<? extends String> value) {
 		_names.clear();
 		_names.addAll(value);
 	}
-
 
 	/**
 	 * Adds a value to the {@link #getNames()} list.
@@ -120,23 +120,21 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	public Object get(String field) {
 		switch (field) {
 			case NAMES: return getNames();
-			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
+			default: return null;
 		}
 	}
 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAMES: setNames((java.util.List<String>) value); break;
+			case NAMES: internalSetNames(de.haumacher.msgbuf.util.Conversions.asList(String.class, value)); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static QName readQName(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		QName result = new QName();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.QName result = new de.haumacher.msgbuf.generator.ast.QName();
+		result.readContent(in);
 		return result;
 	}
 

@@ -9,7 +9,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	 * Creates a {@link Field} instance.
 	 */
 	public static Field create() {
-		return new Field();
+		return new de.haumacher.msgbuf.generator.ast.Field();
 	}
 
 	/** Identifier for the {@link Field} type in JSON format. */
@@ -33,7 +33,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	/**
 	 * Creates a {@link Field} instance.
 	 *
-	 * @see #create()
+	 * @see Field#create()
 	 */
 	protected Field() {
 		super();
@@ -58,12 +58,12 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		internalSetTransient(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #isTransient()} without chain call utility. */
 	protected final void internalSetTransient(boolean value) {
 		_listener.beforeSet(this, TRANSIENT, value);
 		_transient = value;
 	}
-
 
 	/**
 	 * Whether this field contains multiple values of its {@link #getType()}.
@@ -79,12 +79,12 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		internalSetRepeated(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #isRepeated()} without chain call utility. */
 	protected final void internalSetRepeated(boolean value) {
 		_listener.beforeSet(this, REPEATED, value);
 		_repeated = value;
 	}
-
 
 	/**
 	 * The type of values that can be stored in this field.
@@ -100,12 +100,12 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		internalSetType(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getType()} without chain call utility. */
 	protected final void internalSetType(Type value) {
 		_listener.beforeSet(this, TYPE, value);
 		_type = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getType()} has a value.
@@ -179,19 +179,17 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case TRANSIENT: setTransient((boolean) value); break;
-			case REPEATED: setRepeated((boolean) value); break;
-			case TYPE: setType((Type) value); break;
+			case TRANSIENT: internalSetTransient((boolean) value); break;
+			case REPEATED: internalSetRepeated((boolean) value); break;
+			case TYPE: internalSetType((Type) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static Field readField(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Field result = new Field();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.Field result = new de.haumacher.msgbuf.generator.ast.Field();
+		result.readContent(in);
 		return result;
 	}
 

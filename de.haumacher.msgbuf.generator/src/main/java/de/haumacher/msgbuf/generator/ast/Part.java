@@ -52,12 +52,12 @@ public abstract class Part extends DefinitionBase {
 		internalSetName(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getName()} without chain call utility. */
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
 	}
-
 
 	/**
 	 * The numeric identifier for this member.
@@ -73,12 +73,12 @@ public abstract class Part extends DefinitionBase {
 		internalSetIndex(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getIndex()} without chain call utility. */
 	protected final void internalSetIndex(int value) {
 		_listener.beforeSet(this, INDEX, value);
 		_index = value;
 	}
-
 
 	/**
 	 * The {@link Definition} definint this {@link Part}.
@@ -94,12 +94,12 @@ public abstract class Part extends DefinitionBase {
 		internalSetOwner(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getOwner()} without chain call utility. */
 	protected final void internalSetOwner(Definition value) {
 		_listener.beforeSet(this, OWNER, value);
 		_owner = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getOwner()} has a value.
@@ -150,9 +150,9 @@ public abstract class Part extends DefinitionBase {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: setName((String) value); break;
-			case INDEX: setIndex((int) value); break;
-			case OWNER: setOwner((Definition) value); break;
+			case NAME: internalSetName((String) value); break;
+			case INDEX: internalSetIndex((int) value); break;
+			case OWNER: internalSetOwner((Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -192,10 +192,9 @@ public abstract class Part extends DefinitionBase {
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
-
 	@Override
 	public final <R,A> R visit(DefinitionBase.Visitor<R,A> v, A arg) {
-		return visit((Visitor<R,A>) v, arg);
+		return visit((Part.Visitor<R,A>) v, arg);
 	}
 
 }

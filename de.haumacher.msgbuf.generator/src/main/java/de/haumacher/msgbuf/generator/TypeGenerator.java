@@ -5,6 +5,8 @@ package de.haumacher.msgbuf.generator;
 
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 
+import java.util.function.Function;
+
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
@@ -22,14 +24,29 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	/**
 	 * Singleton {@link TypeGenerator} instance.
 	 */
-	public static final TypeGenerator INSTANCE = new TypeGenerator();
+	public static final TypeGenerator INSTANCE = new TypeGenerator(CodeConvention::typeName);
+	
+	/**
+	 * Singleton {@link TypeGenerator} instance.
+	 */
+	public static final TypeGenerator IMPL_INSTANCE = new TypeGenerator(CodeConvention::implName);
+	
+	private Function<String, String> _typeNameConvention;
 
-	private TypeGenerator() {
-		// Singleton constructor.
+	private TypeGenerator(Function<String, String> typeNameConvention) {
+		_typeNameConvention = typeNameConvention;
 	}
 
 	public static String mkType(Field field) {
-		return field.isRepeated() ? "java.util.List<" + mkTypeWrapped(field.getType()) + ">" : mkType(field.getType(), Util.isNullable(field));
+		return mkType(field, false);
+	}
+	
+	public static String mkTypeReadOnly(Field field) {
+		return mkType(field, true);
+	}
+	
+	private static String mkType(Field field, boolean readOnly) {
+		return field.isRepeated() ? "java.util.List<" + (readOnly ? "? extends " : "") + mkTypeWrapped(field.getType()) + ">" : mkType(field.getType(), Util.isNullable(field));
 	}
 
 	public static String mkType(Type type) {
@@ -44,6 +61,10 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 		return type.visit(INSTANCE, Boolean.TRUE);
 	}
 	
+	public static String mkTypeWrappedImpl(Type type) {
+		return type.visit(IMPL_INSTANCE, Boolean.TRUE);
+	}
+	
 	@Override
 	public String visit(MapType type, Boolean wrapped) {
 		return "java.util.Map<" + mkTypeWrapped(type.getKeyType()) + ", " + mkTypeWrapped(type.getValueType()) + ">";
@@ -51,7 +72,7 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		return qTypeName(type.getName());
+		return qName(type.getName(), _typeNameConvention);
 	}
 	
 	@Override

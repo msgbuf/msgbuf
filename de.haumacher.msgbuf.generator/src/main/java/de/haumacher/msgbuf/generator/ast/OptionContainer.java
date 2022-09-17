@@ -9,7 +9,7 @@ public class OptionContainer extends WithOptions {
 	 * Creates a {@link OptionContainer} instance.
 	 */
 	public static OptionContainer create() {
-		return new OptionContainer();
+		return new de.haumacher.msgbuf.generator.ast.OptionContainer();
 	}
 
 	/** Identifier for the {@link OptionContainer} type in JSON format. */
@@ -18,7 +18,7 @@ public class OptionContainer extends WithOptions {
 	/**
 	 * Creates a {@link OptionContainer} instance.
 	 *
-	 * @see #create()
+	 * @see OptionContainer#create()
 	 */
 	protected OptionContainer() {
 		super();
@@ -48,10 +48,8 @@ public class OptionContainer extends WithOptions {
 
 	/** Reads a new instance from the given reader. */
 	public static OptionContainer readOptionContainer(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		OptionContainer result = new OptionContainer();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.OptionContainer result = new de.haumacher.msgbuf.generator.ast.OptionContainer();
+		result.readContent(in);
 		return result;
 	}
 

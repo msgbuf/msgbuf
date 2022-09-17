@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public abstract class AtomicShape extends Shape {
+public interface AtomicShape extends Shape {
 
 	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
@@ -16,27 +16,14 @@ public abstract class AtomicShape extends Shape {
 
 	}
 
-	/**
-	 * Creates a {@link AtomicShape} instance.
-	 */
-	protected AtomicShape() {
-		super();
-	}
+	@Override
+	AtomicShape setXCoordinate(int value);
 
 	@Override
-	public AtomicShape setXCoordinate(int value) {
-		internalSetXCoordinate(value);
-		return this;
-	}
-
-	@Override
-	public AtomicShape setYCoordinate(int value) {
-		internalSetYCoordinate(value);
-		return this;
-	}
+	AtomicShape setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	static AtomicShape readAtomicShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
 			return (AtomicShape) scope.resolveOrFail(in.nextInt());
 		}
@@ -58,11 +45,5 @@ public abstract class AtomicShape extends Shape {
 
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
-
-
-	@Override
-	public final <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
-		return visit((Visitor<R,A,E>) v, arg);
-	}
 
 }

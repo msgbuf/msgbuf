@@ -69,13 +69,13 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 		internalSetOptions(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getOptions()} without chain call utility. */
 	protected final void internalSetOptions(java.util.Map<String, Option> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'options' cannot be null.");
 		_options.clear();
 		_options.putAll(value);
 	}
-
 
 	/**
 	 * Adds a key value pair to the {@link #getOptions()} map.
@@ -135,14 +135,14 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	public Object get(String field) {
 		switch (field) {
 			case OPTIONS: return getOptions();
-			default: return de.haumacher.msgbuf.observer.Observable.super.get(field);
+			default: return null;
 		}
 	}
 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case OPTIONS: setOptions((java.util.Map<String, Option>) value); break;
+			case OPTIONS: internalSetOptions((java.util.Map<String, Option>) value); break;
 		}
 	}
 
@@ -201,6 +201,5 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
-
 
 }

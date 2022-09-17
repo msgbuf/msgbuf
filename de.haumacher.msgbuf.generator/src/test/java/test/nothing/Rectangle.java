@@ -3,26 +3,13 @@ package test.nothing;
 /**
  * A rectangle.
  */
-public class Rectangle extends AtomicShape {
+public interface Rectangle extends AtomicShape {
 
 	/**
 	 * Creates a {@link Rectangle} instance.
 	 */
-	public static Rectangle create() {
-		return new Rectangle();
-	}
-
-	private int _width = 0;
-
-	private int _height = 0;
-
-	/**
-	 * Creates a {@link Rectangle} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Rectangle() {
-		super();
+	static Rectangle create() {
+		return new test.nothing.Rectangle_Impl();
 	}
 
 	/**
@@ -34,55 +21,29 @@ public class Rectangle extends AtomicShape {
 	 *
 	 * @see #getHeight()
 	 */
-	public final int getWidth() {
-		return _width;
-	}
+	int getWidth();
 
 	/**
 	 * @see #getWidth()
 	 */
-	public Rectangle setWidth(int value) {
-		internalSetWidth(value);
-		return this;
-	}
-	/** Internal setter for {@link #getWidth()} without chain call utility. */
-	protected final void internalSetWidth(int value) {
-		_width = value;
-	}
-
+	Rectangle setWidth(int value);
 
 	/**
 	 * The width of this {@link Rectangle}.
 	 *
 	 * @see #getWidth()
 	 */
-	public final int getHeight() {
-		return _height;
-	}
+	int getHeight();
 
 	/**
 	 * @see #getHeight()
 	 */
-	public Rectangle setHeight(int value) {
-		internalSetHeight(value);
-		return this;
-	}
-	/** Internal setter for {@link #getHeight()} without chain call utility. */
-	protected final void internalSetHeight(int value) {
-		_height = value;
-	}
-
+	Rectangle setHeight(int value);
 
 	@Override
-	public Rectangle setXCoordinate(int value) {
-		internalSetXCoordinate(value);
-		return this;
-	}
+	Rectangle setXCoordinate(int value);
 
 	@Override
-	public Rectangle setYCoordinate(int value) {
-		internalSetYCoordinate(value);
-		return this;
-	}
+	Rectangle setYCoordinate(int value);
 
 }

@@ -38,12 +38,12 @@ public abstract class DefinitionBase extends WithOptions {
 		internalSetComment(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getComment()} without chain call utility. */
 	protected final void internalSetComment(String value) {
 		_listener.beforeSet(this, COMMENT, value);
 		_comment = value;
 	}
-
 
 	@Override
 	public DefinitionBase setOptions(java.util.Map<String, Option> value) {
@@ -77,7 +77,7 @@ public abstract class DefinitionBase extends WithOptions {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case COMMENT: setComment((String) value); break;
+			case COMMENT: internalSetComment((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -116,10 +116,9 @@ public abstract class DefinitionBase extends WithOptions {
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
-
 	@Override
 	public final <R,A> R visit(WithOptions.Visitor<R,A> v, A arg) {
-		return visit((Visitor<R,A>) v, arg);
+		return visit((DefinitionBase.Visitor<R,A>) v, arg);
 	}
 
 }

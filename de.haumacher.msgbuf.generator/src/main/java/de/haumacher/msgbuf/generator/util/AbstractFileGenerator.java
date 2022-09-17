@@ -67,6 +67,30 @@ public abstract class AbstractFileGenerator implements FileGenerator {
 		nl();
 	}
 
+	protected void line(String... parts) {
+		lineStart(joinNonEmptyWithSpace(parts));
+		nl();
+	}
+
+	private String joinNonEmptyWithSpace(String... parts) {
+		StringBuilder buffer = new StringBuilder();
+		boolean first = true;
+		for (String part : parts) {
+			if (part == null || part.isEmpty()) {
+				continue;
+			}
+			
+			if (first) {
+				first = false;
+			} else {
+				buffer.append(" ");
+			}
+			buffer.append(part);
+		}
+		String line = buffer.toString();
+		return line;
+	}
+	
 	protected void lineStart(String line) {
 		int closing = countClose(line);
 		int delta = countDelta(line);

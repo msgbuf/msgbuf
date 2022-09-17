@@ -52,12 +52,12 @@ public abstract class Definition extends DefinitionBase {
 		internalSetName(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getName()} without chain call utility. */
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
 	}
-
 
 	/**
 	 * Reference back to the {@link DefinitionFile} that contains this definition.
@@ -73,12 +73,12 @@ public abstract class Definition extends DefinitionBase {
 		internalSetFile(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getFile()} without chain call utility. */
 	protected final void internalSetFile(DefinitionFile value) {
 		_listener.beforeSet(this, FILE, value);
 		_file = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getFile()} has a value.
@@ -105,12 +105,12 @@ public abstract class Definition extends DefinitionBase {
 		internalSetOuter(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getOuter()} without chain call utility. */
 	protected final void internalSetOuter(MessageDef value) {
 		_listener.beforeSet(this, OUTER, value);
 		_outer = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getOuter()} has a value.
@@ -161,9 +161,9 @@ public abstract class Definition extends DefinitionBase {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: setName((String) value); break;
-			case FILE: setFile((DefinitionFile) value); break;
-			case OUTER: setOuter((MessageDef) value); break;
+			case NAME: internalSetName((String) value); break;
+			case FILE: internalSetFile((DefinitionFile) value); break;
+			case OUTER: internalSetOuter((MessageDef) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -200,10 +200,9 @@ public abstract class Definition extends DefinitionBase {
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
-
 	@Override
 	public final <R,A> R visit(DefinitionBase.Visitor<R,A> v, A arg) {
-		return visit((Visitor<R,A>) v, arg);
+		return visit((Definition.Visitor<R,A>) v, arg);
 	}
 
 }

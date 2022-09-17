@@ -186,7 +186,11 @@ public class Generator {
 		
 		@Override
 		public Void visit(MessageDef def, Void arg) {
-			return generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, def));
+			boolean noInterfaces = MessageGenerator.isTrue(_options.get("NoInterfaces"), false);
+			if (!noInterfaces) {
+				generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, true, def));
+			}
+			return generateJava(noInterfaces ? CodeConvention.typeName(def) : CodeConvention.implName(def), new MessageGenerator(_table, _options, false, def));
 		}
 		
 		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {

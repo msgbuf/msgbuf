@@ -1,6 +1,6 @@
 package test.options.data;
 
-public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public interface MyMessage2 extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	public enum EnumNotAllowingAlias implements de.haumacher.msgbuf.data.ProtocolEnum {
 
@@ -68,98 +68,33 @@ public class MyMessage2 extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	/**
 	 * Creates a {@link MyMessage2} instance.
 	 */
-	public static MyMessage2 create() {
-		return new MyMessage2();
+	static MyMessage2 create() {
+		return new test.options.data.MyMessage2_Impl();
 	}
 
 	/** Identifier for the {@link MyMessage2} type in JSON format. */
-	public static final String MY_MESSAGE_2__TYPE = "MyMessage2";
-
-	/**
-	 * Creates a {@link MyMessage2} instance.
-	 *
-	 * @see #create()
-	 */
-	protected MyMessage2() {
-		super();
-	}
-
-	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+	static final String MY_MESSAGE_2__TYPE = "MyMessage2";
 
 	@Override
-	public MyMessage2 registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		internalRegisterListener(l);
-		return this;
-	}
-
-	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-	}
+	public MyMessage2 registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public MyMessage2 unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		internalUnregisterListener(l);
-		return this;
-	}
+	public MyMessage2 unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-	}
-
-	@Override
-	public String jsonType() {
-		return MY_MESSAGE_2__TYPE;
-	}
 
 	/** Reads a new instance from the given reader. */
-	public static MyMessage2 readMyMessage2(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		MyMessage2 result = new MyMessage2();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+	static MyMessage2 readMyMessage2(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.options.data.MyMessage2_Impl result = new test.options.data.MyMessage2_Impl();
+		result.readContent(in);
 		return result;
 	}
 
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		writeContent(out);
-	}
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		writeFields(out);
-		out.endObject();
-	}
-
-	/**
-	 * Serializes all fields of this instance to the given binary output.
-	 *
-	 * @param out
-	 *        The binary output to write to.
-	 * @throws java.io.IOException If writing fails.
-	 */
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		// No fields to write, hook for subclasses.
-	}
-
 	/** Reads a new instance from the given reader. */
-	public static MyMessage2 readMyMessage2(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static MyMessage2 readMyMessage2(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		MyMessage2 result = new MyMessage2();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
+		MyMessage2 result = test.options.data.MyMessage2_Impl.readMyMessage2_Content(in);
 		in.endObject();
 		return result;
-	}
-
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
 	}
 
 }

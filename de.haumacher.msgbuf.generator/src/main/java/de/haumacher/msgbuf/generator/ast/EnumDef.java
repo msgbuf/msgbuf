@@ -9,7 +9,7 @@ public class EnumDef extends Definition {
 	 * Creates a {@link EnumDef} instance.
 	 */
 	public static EnumDef create() {
-		return new EnumDef();
+		return new de.haumacher.msgbuf.generator.ast.EnumDef();
 	}
 
 	/** Identifier for the {@link EnumDef} type in JSON format. */
@@ -21,19 +21,19 @@ public class EnumDef extends Definition {
 	private final java.util.List<Constant> _constants = new de.haumacher.msgbuf.util.ReferenceList<Constant>() {
 		@Override
 		protected void beforeAdd(int index, Constant element) {
-			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.EnumDef.this, CONSTANTS, index, element);
+			_listener.beforeAdd(EnumDef.this, CONSTANTS, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, Constant element) {
-			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.EnumDef.this, CONSTANTS, index, element);
+			_listener.afterRemove(EnumDef.this, CONSTANTS, index, element);
 		}
 	};
 
 	/**
 	 * Creates a {@link EnumDef} instance.
 	 *
-	 * @see #create()
+	 * @see EnumDef#create()
 	 */
 	protected EnumDef() {
 		super();
@@ -54,17 +54,17 @@ public class EnumDef extends Definition {
 	/**
 	 * @see #getConstants()
 	 */
-	public EnumDef setConstants(java.util.List<Constant> value) {
+	public EnumDef setConstants(java.util.List<? extends Constant> value) {
 		internalSetConstants(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getConstants()} without chain call utility. */
-	protected final void internalSetConstants(java.util.List<Constant> value) {
+	protected final void internalSetConstants(java.util.List<? extends Constant> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'constants' cannot be null.");
 		_constants.clear();
 		_constants.addAll(value);
 	}
-
 
 	/**
 	 * Adds a value to the {@link #getConstants()} list.
@@ -147,17 +147,15 @@ public class EnumDef extends Definition {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case CONSTANTS: setConstants((java.util.List<Constant>) value); break;
+			case CONSTANTS: internalSetConstants(de.haumacher.msgbuf.util.Conversions.asList(Constant.class, value)); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static EnumDef readEnumDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		EnumDef result = new EnumDef();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.EnumDef result = new de.haumacher.msgbuf.generator.ast.EnumDef();
+		result.readContent(in);
 		return result;
 	}
 

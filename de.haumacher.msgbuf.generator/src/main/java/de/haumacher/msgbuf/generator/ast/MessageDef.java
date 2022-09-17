@@ -9,7 +9,7 @@ public class MessageDef extends Definition {
 	 * Creates a {@link MessageDef} instance.
 	 */
 	public static MessageDef create() {
-		return new MessageDef();
+		return new de.haumacher.msgbuf.generator.ast.MessageDef();
 	}
 
 	/** Identifier for the {@link MessageDef} type in JSON format. */
@@ -43,36 +43,36 @@ public class MessageDef extends Definition {
 	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
 		@Override
 		protected void beforeAdd(int index, Definition element) {
-			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, DEFINITIONS, index, element);
+			_listener.beforeAdd(MessageDef.this, DEFINITIONS, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, Definition element) {
-			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, DEFINITIONS, index, element);
+			_listener.afterRemove(MessageDef.this, DEFINITIONS, index, element);
 		}
 	};
 
 	private final java.util.List<Field> _fields = new de.haumacher.msgbuf.util.ReferenceList<Field>() {
 		@Override
 		protected void beforeAdd(int index, Field element) {
-			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, FIELDS, index, element);
+			_listener.beforeAdd(MessageDef.this, FIELDS, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, Field element) {
-			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, FIELDS, index, element);
+			_listener.afterRemove(MessageDef.this, FIELDS, index, element);
 		}
 	};
 
 	private transient final java.util.List<MessageDef> _specializations = new de.haumacher.msgbuf.util.ReferenceList<MessageDef>() {
 		@Override
 		protected void beforeAdd(int index, MessageDef element) {
-			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.MessageDef.this, SPECIALIZATIONS, index, element);
+			_listener.beforeAdd(MessageDef.this, SPECIALIZATIONS, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, MessageDef element) {
-			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.MessageDef.this, SPECIALIZATIONS, index, element);
+			_listener.afterRemove(MessageDef.this, SPECIALIZATIONS, index, element);
 		}
 	};
 
@@ -83,7 +83,7 @@ public class MessageDef extends Definition {
 	/**
 	 * Creates a {@link MessageDef} instance.
 	 *
-	 * @see #create()
+	 * @see MessageDef#create()
 	 */
 	protected MessageDef() {
 		super();
@@ -108,12 +108,12 @@ public class MessageDef extends Definition {
 		internalSetAbstract(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #isAbstract()} without chain call utility. */
 	protected final void internalSetAbstract(boolean value) {
 		_listener.beforeSet(this, ABSTRACT, value);
 		_abstract = value;
 	}
-
 
 	/**
 	 * Optional reference to another {@link MessageDef} whoes fields are inherited.
@@ -129,12 +129,12 @@ public class MessageDef extends Definition {
 		internalSetExtends(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getExtends()} without chain call utility. */
 	protected final void internalSetExtends(QName value) {
 		_listener.beforeSet(this, EXTENDS, value);
 		_extends = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getExtends()} has a value.
@@ -153,17 +153,17 @@ public class MessageDef extends Definition {
 	/**
 	 * @see #getDefinitions()
 	 */
-	public MessageDef setDefinitions(java.util.List<Definition> value) {
+	public MessageDef setDefinitions(java.util.List<? extends Definition> value) {
 		internalSetDefinitions(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getDefinitions()} without chain call utility. */
-	protected final void internalSetDefinitions(java.util.List<Definition> value) {
+	protected final void internalSetDefinitions(java.util.List<? extends Definition> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
 	}
-
 
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
@@ -201,17 +201,17 @@ public class MessageDef extends Definition {
 	/**
 	 * @see #getFields()
 	 */
-	public MessageDef setFields(java.util.List<Field> value) {
+	public MessageDef setFields(java.util.List<? extends Field> value) {
 		internalSetFields(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getFields()} without chain call utility. */
-	protected final void internalSetFields(java.util.List<Field> value) {
+	protected final void internalSetFields(java.util.List<? extends Field> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'fields' cannot be null.");
 		_fields.clear();
 		_fields.addAll(value);
 	}
-
 
 	/**
 	 * Adds a value to the {@link #getFields()} list.
@@ -243,17 +243,17 @@ public class MessageDef extends Definition {
 	/**
 	 * @see #getSpecializations()
 	 */
-	public MessageDef setSpecializations(java.util.List<MessageDef> value) {
+	public MessageDef setSpecializations(java.util.List<? extends MessageDef> value) {
 		internalSetSpecializations(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getSpecializations()} without chain call utility. */
-	protected final void internalSetSpecializations(java.util.List<MessageDef> value) {
+	protected final void internalSetSpecializations(java.util.List<? extends MessageDef> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'specializations' cannot be null.");
 		_specializations.clear();
 		_specializations.addAll(value);
 	}
-
 
 	/**
 	 * Adds a value to the {@link #getSpecializations()} list.
@@ -289,12 +289,12 @@ public class MessageDef extends Definition {
 		internalSetExtendedDef(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getExtendedDef()} without chain call utility. */
 	protected final void internalSetExtendedDef(MessageDef value) {
 		_listener.beforeSet(this, EXTENDED_DEF, value);
 		_extendedDef = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getExtendedDef()} has a value.
@@ -317,12 +317,12 @@ public class MessageDef extends Definition {
 		internalSetId(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getId()} without chain call utility. */
 	protected final void internalSetId(int value) {
 		_listener.beforeSet(this, ID, value);
 		_id = value;
 	}
-
 
 	@Override
 	public MessageDef setName(String value) {
@@ -397,23 +397,21 @@ public class MessageDef extends Definition {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case ABSTRACT: setAbstract((boolean) value); break;
-			case EXTENDS: setExtends((QName) value); break;
-			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
-			case FIELDS: setFields((java.util.List<Field>) value); break;
-			case SPECIALIZATIONS: setSpecializations((java.util.List<MessageDef>) value); break;
-			case EXTENDED_DEF: setExtendedDef((MessageDef) value); break;
-			case ID: setId((int) value); break;
+			case ABSTRACT: internalSetAbstract((boolean) value); break;
+			case EXTENDS: internalSetExtends((QName) value); break;
+			case DEFINITIONS: internalSetDefinitions(de.haumacher.msgbuf.util.Conversions.asList(Definition.class, value)); break;
+			case FIELDS: internalSetFields(de.haumacher.msgbuf.util.Conversions.asList(Field.class, value)); break;
+			case SPECIALIZATIONS: internalSetSpecializations(de.haumacher.msgbuf.util.Conversions.asList(MessageDef.class, value)); break;
+			case EXTENDED_DEF: internalSetExtendedDef((MessageDef) value); break;
+			case ID: internalSetId((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static MessageDef readMessageDef(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		MessageDef result = new MessageDef();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.MessageDef result = new de.haumacher.msgbuf.generator.ast.MessageDef();
+		result.readContent(in);
 		return result;
 	}
 

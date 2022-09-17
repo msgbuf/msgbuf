@@ -96,5 +96,4 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
-
 }

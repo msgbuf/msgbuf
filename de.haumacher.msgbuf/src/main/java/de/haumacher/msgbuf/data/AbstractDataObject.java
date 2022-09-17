@@ -14,18 +14,7 @@ import de.haumacher.msgbuf.json.JsonWriter;
  */
 public abstract class AbstractDataObject implements DataObject {
 
-	/**
-	 * Writes a JSON object containing keys for all fields of this object.
-	 * 
-	 * <p>
-	 * In contrast to {@link #writeTo(JsonWriter)}, the resulting object contains no type information. Therefore, this
-	 * method must only be called directly, if the reader knows the type of the object to read from the context. For
-	 * reading the data, a per-type generated <code>read[type-name]()</code> method must be called.
-	 * </p>
-	 *
-	 * @param out
-	 *        The writer to write to.
-	 */
+	@Override
 	public final void writeContent(JsonWriter out) throws java.io.IOException {
 		out.beginObject();
 		writeFields(out);
@@ -44,6 +33,13 @@ public abstract class AbstractDataObject implements DataObject {
 		// No fields.
 	}
 
+	@Override
+	public final void readContent(JsonReader in) throws java.io.IOException {
+		in.beginObject();
+		readFields(in);
+		in.endObject();
+	}
+
 	/**
 	 * Reads all fields of this instance from the given input.
 	 *
@@ -56,7 +52,7 @@ public abstract class AbstractDataObject implements DataObject {
 			readField(in, field);
 		}
 	}
-
+	
 	/**
 	 * Reads the given field from the given input.
 	 * 
@@ -79,4 +75,5 @@ public abstract class AbstractDataObject implements DataObject {
 		}
 		return out.toString();
 	}
+	
 }

@@ -11,7 +11,7 @@ public class CustomType extends Type {
 	 * Creates a {@link CustomType} instance.
 	 */
 	public static CustomType create() {
-		return new CustomType();
+		return new de.haumacher.msgbuf.generator.ast.CustomType();
 	}
 
 	/** Identifier for the {@link CustomType} type in JSON format. */
@@ -30,7 +30,7 @@ public class CustomType extends Type {
 	/**
 	 * Creates a {@link CustomType} instance.
 	 *
-	 * @see #create()
+	 * @see CustomType#create()
 	 */
 	protected CustomType() {
 		super();
@@ -55,12 +55,12 @@ public class CustomType extends Type {
 		internalSetName(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getName()} without chain call utility. */
 	protected final void internalSetName(QName value) {
 		_listener.beforeSet(this, NAME, value);
 		_name = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getName()} has a value.
@@ -83,12 +83,12 @@ public class CustomType extends Type {
 		internalSetDefinition(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getDefinition()} without chain call utility. */
 	protected final void internalSetDefinition(Definition value) {
 		_listener.beforeSet(this, DEFINITION, value);
 		_definition = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getDefinition()} has a value.
@@ -124,18 +124,16 @@ public class CustomType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: setName((QName) value); break;
-			case DEFINITION: setDefinition((Definition) value); break;
+			case NAME: internalSetName((QName) value); break;
+			case DEFINITION: internalSetDefinition((Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		CustomType result = new CustomType();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.CustomType result = new de.haumacher.msgbuf.generator.ast.CustomType();
+		result.readContent(in);
 		return result;
 	}
 

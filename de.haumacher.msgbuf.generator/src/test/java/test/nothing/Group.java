@@ -3,24 +3,13 @@ package test.nothing;
 /**
  * A group of shapes.
  */
-public class Group extends Shape {
+public interface Group extends Shape {
 
 	/**
 	 * Creates a {@link Group} instance.
 	 */
-	public static Group create() {
-		return new Group();
-	}
-
-	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
-
-	/**
-	 * Creates a {@link Group} instance.
-	 *
-	 * @see #create()
-	 */
-	protected Group() {
-		super();
+	static Group create() {
+		return new test.nothing.Group_Impl();
 	}
 
 	/**
@@ -30,55 +19,27 @@ public class Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	public final java.util.List<Shape> getShapes() {
-		return _shapes;
-	}
+	java.util.List<Shape> getShapes();
 
 	/**
 	 * @see #getShapes()
 	 */
-	public Group setShapes(java.util.List<Shape> value) {
-		internalSetShapes(value);
-		return this;
-	}
-	/** Internal setter for {@link #getShapes()} without chain call utility. */
-	protected final void internalSetShapes(java.util.List<Shape> value) {
-		if (value == null) throw new IllegalArgumentException("Property 'shapes' cannot be null.");
-		_shapes.clear();
-		_shapes.addAll(value);
-	}
-
+	Group setShapes(java.util.List<? extends Shape> value);
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	public Group addShape(Shape value) {
-		internalAddShape(value);
-		return this;
-	}
-
-	/** Implementation of {@link #addShape(Shape)} without chain call utility. */
-	protected final void internalAddShape(Shape value) {
-		_shapes.add(value);
-	}
+	Group addShape(Shape value);
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	public final void removeShape(Shape value) {
-		_shapes.remove(value);
-	}
+	void removeShape(Shape value);
 
 	@Override
-	public Group setXCoordinate(int value) {
-		internalSetXCoordinate(value);
-		return this;
-	}
+	Group setXCoordinate(int value);
 
 	@Override
-	public Group setYCoordinate(int value) {
-		internalSetYCoordinate(value);
-		return this;
-	}
+	Group setYCoordinate(int value);
 
 }

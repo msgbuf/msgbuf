@@ -9,7 +9,7 @@ public class Flag extends Option {
 	 * Creates a {@link Flag} instance.
 	 */
 	public static Flag create() {
-		return new Flag();
+		return new de.haumacher.msgbuf.generator.ast.Flag();
 	}
 
 	/** Identifier for the {@link Flag} type in JSON format. */
@@ -23,7 +23,7 @@ public class Flag extends Option {
 	/**
 	 * Creates a {@link Flag} instance.
 	 *
-	 * @see #create()
+	 * @see Flag#create()
 	 */
 	protected Flag() {
 		super();
@@ -48,12 +48,12 @@ public class Flag extends Option {
 		internalSetValue(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #isValue()} without chain call utility. */
 	protected final void internalSetValue(boolean value) {
 		_listener.beforeSet(this, VALUE, value);
 		_value = value;
 	}
-
 
 	@Override
 	public String jsonType() {
@@ -80,17 +80,15 @@ public class Flag extends Option {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case VALUE: setValue((boolean) value); break;
+			case VALUE: internalSetValue((boolean) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static Flag readFlag(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Flag result = new Flag();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.Flag result = new de.haumacher.msgbuf.generator.ast.Flag();
+		result.readContent(in);
 		return result;
 	}
 

@@ -92,5 +92,4 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
-
 }

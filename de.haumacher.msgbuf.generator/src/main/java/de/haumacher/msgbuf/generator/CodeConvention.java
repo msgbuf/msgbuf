@@ -6,6 +6,7 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.haumacher.msgbuf.generator.ast.Constant;
@@ -38,20 +39,36 @@ public class CodeConvention {
 	}
 	
 	public static String qTypeName(Definition def) {
+		return qName(def, CodeConvention::typeName);
+	}
+	
+	public static String qImplName(Definition def) {
+		return qName(def, CodeConvention::implName);
+	}
+	
+	public static String qName(Definition def, Function<String, String> localNameConvention) {
 		String scope;
 		
 		DefinitionFile file = def.getFile();
 		if (file == null) {
-			scope = qTypeName(def.getOuter()) + ".";
+			scope = qName(def.getOuter(), localNameConvention) + ".";
 		} else {
 			QName pkg = file.getPackage();
 			scope = pkg.getNames().size() == 0 ? "" : qName(pkg) + ".";
 		}
 		
-		return scope + typeName(def);
+		return scope + localNameConvention.apply(def.getName());
 	}
 
 	public static String qTypeName(QName qName) {
+		return qName(qName, CodeConvention::typeName);
+	}
+	
+	public static String qImplName(QName qName) {
+		return qName(qName, CodeConvention::implName);
+	}
+	
+	public static String qName(QName qName, Function<String, String> localNameConvention) {
 		StringBuilder result = new StringBuilder();
 		List<String> names = qName.getNames();
 		for (int n = 0, cnt = names.size(); n < cnt; n++) {
@@ -62,7 +79,7 @@ public class CodeConvention {
 			if (n < cnt - 1) {
 				result.append(part);
 			} else {
-				result.append(typeName(part));
+				result.append(localNameConvention.apply(part));
 			}
 		}
 		return result.toString();
@@ -76,6 +93,14 @@ public class CodeConvention {
 		return camelCase(name);
 	}
 
+	public static String implName(Definition def) {
+		return implName(def.getName());
+	}
+
+	public static String implName(String name) {
+		return typeName(name) + "_Impl";
+	}
+	
 	public static String suffix(Field field) {
 		return camelCase(field.getName());
 	}
@@ -166,10 +191,18 @@ public class CodeConvention {
 		return "read" + name;
 	}
 
+	public static String readerNameContent(String name) {
+		return "read" + name + "_Content";
+	}
+	
 	public static String readerName(Definition def) {
 		return readerName(def.getName());
 	}
 
+	public static String readerNameContent(Definition def) {
+		return readerNameContent(def.getName());
+	}
+	
 	public static String packageName(QName packageName) {
 		return qName(packageName);
 	}

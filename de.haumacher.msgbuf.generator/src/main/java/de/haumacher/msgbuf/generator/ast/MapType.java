@@ -9,7 +9,7 @@ public class MapType extends Type {
 	 * Creates a {@link MapType} instance.
 	 */
 	public static MapType create() {
-		return new MapType();
+		return new de.haumacher.msgbuf.generator.ast.MapType();
 	}
 
 	/** Identifier for the {@link MapType} type in JSON format. */
@@ -28,7 +28,7 @@ public class MapType extends Type {
 	/**
 	 * Creates a {@link MapType} instance.
 	 *
-	 * @see #create()
+	 * @see MapType#create()
 	 */
 	protected MapType() {
 		super();
@@ -53,12 +53,12 @@ public class MapType extends Type {
 		internalSetKeyType(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getKeyType()} without chain call utility. */
 	protected final void internalSetKeyType(Type value) {
 		_listener.beforeSet(this, KEY_TYPE, value);
 		_keyType = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getKeyType()} has a value.
@@ -81,12 +81,12 @@ public class MapType extends Type {
 		internalSetValueType(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getValueType()} without chain call utility. */
 	protected final void internalSetValueType(Type value) {
 		_listener.beforeSet(this, VALUE_TYPE, value);
 		_valueType = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getValueType()} has a value.
@@ -122,18 +122,16 @@ public class MapType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case KEY_TYPE: setKeyType((Type) value); break;
-			case VALUE_TYPE: setValueType((Type) value); break;
+			case KEY_TYPE: internalSetKeyType((Type) value); break;
+			case VALUE_TYPE: internalSetValueType((Type) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static MapType readMapType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		MapType result = new MapType();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.MapType result = new de.haumacher.msgbuf.generator.ast.MapType();
+		result.readContent(in);
 		return result;
 	}
 

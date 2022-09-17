@@ -11,7 +11,7 @@ public class DefinitionFile extends WithOptions {
 	 * Creates a {@link DefinitionFile} instance.
 	 */
 	public static DefinitionFile create() {
-		return new DefinitionFile();
+		return new de.haumacher.msgbuf.generator.ast.DefinitionFile();
 	}
 
 	/** Identifier for the {@link DefinitionFile} type in JSON format. */
@@ -28,19 +28,19 @@ public class DefinitionFile extends WithOptions {
 	private final java.util.List<Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<Definition>() {
 		@Override
 		protected void beforeAdd(int index, Definition element) {
-			_listener.beforeAdd(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
+			_listener.beforeAdd(DefinitionFile.this, DEFINITIONS, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, Definition element) {
-			_listener.afterRemove(de.haumacher.msgbuf.generator.ast.DefinitionFile.this, DEFINITIONS, index, element);
+			_listener.afterRemove(DefinitionFile.this, DEFINITIONS, index, element);
 		}
 	};
 
 	/**
 	 * Creates a {@link DefinitionFile} instance.
 	 *
-	 * @see #create()
+	 * @see DefinitionFile#create()
 	 */
 	protected DefinitionFile() {
 		super();
@@ -65,12 +65,12 @@ public class DefinitionFile extends WithOptions {
 		internalSetPackage(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getPackage()} without chain call utility. */
 	protected final void internalSetPackage(QName value) {
 		_listener.beforeSet(this, PACKAGE, value);
 		_package = value;
 	}
-
 
 	/**
 	 * Checks, whether {@link #getPackage()} has a value.
@@ -89,17 +89,17 @@ public class DefinitionFile extends WithOptions {
 	/**
 	 * @see #getDefinitions()
 	 */
-	public DefinitionFile setDefinitions(java.util.List<Definition> value) {
+	public DefinitionFile setDefinitions(java.util.List<? extends Definition> value) {
 		internalSetDefinitions(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getDefinitions()} without chain call utility. */
-	protected final void internalSetDefinitions(java.util.List<Definition> value) {
+	protected final void internalSetDefinitions(java.util.List<? extends Definition> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'definitions' cannot be null.");
 		_definitions.clear();
 		_definitions.addAll(value);
 	}
-
 
 	/**
 	 * Adds a value to the {@link #getDefinitions()} list.
@@ -160,18 +160,16 @@ public class DefinitionFile extends WithOptions {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case PACKAGE: setPackage((QName) value); break;
-			case DEFINITIONS: setDefinitions((java.util.List<Definition>) value); break;
+			case PACKAGE: internalSetPackage((QName) value); break;
+			case DEFINITIONS: internalSetDefinitions(de.haumacher.msgbuf.util.Conversions.asList(Definition.class, value)); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static DefinitionFile readDefinitionFile(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		DefinitionFile result = new DefinitionFile();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.DefinitionFile result = new de.haumacher.msgbuf.generator.ast.DefinitionFile();
+		result.readContent(in);
 		return result;
 	}
 

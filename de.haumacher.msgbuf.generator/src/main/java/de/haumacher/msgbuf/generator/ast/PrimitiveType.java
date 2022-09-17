@@ -15,12 +15,24 @@ public class PrimitiveType extends Type {
 		 */
 		INT_32("INT32"),
 
+		/**
+		 * An unsigned 32 bit integer.
+		 */
 		UINT_32("UINT32"),
 
+		/**
+		 * A signed 32 bit integer.
+		 */
 		SINT_32("SINT32"),
 
+		/**
+		 * A 32 bit integer without runlength encoding.
+		 */
 		FIXED_32("FIXED32"),
 
+		/**
+		 * A signed 32 bit integer without runlength encoding.
+		 */
 		SFIXED_32("SFIXED32"),
 
 		/**
@@ -28,12 +40,24 @@ public class PrimitiveType extends Type {
 		 */
 		INT_64("INT64"),
 
+		/**
+		 * An unsigned 64 bit integer.
+		 */
 		UINT_64("UINT64"),
 
+		/**
+		 * A signed 64 bit integer.
+		 */
 		SINT_64("SINT64"),
 
+		/**
+		 * A 64 bit integer without runlength encoding.
+		 */
 		FIXED_64("FIXED64"),
 
+		/**
+		 * A signed 64 bit integer without runlength encoding.
+		 */
 		SFIXED_64("SFIXED64"),
 
 		/**
@@ -161,7 +185,7 @@ public class PrimitiveType extends Type {
 	 * Creates a {@link PrimitiveType} instance.
 	 */
 	public static PrimitiveType create() {
-		return new PrimitiveType();
+		return new de.haumacher.msgbuf.generator.ast.PrimitiveType();
 	}
 
 	/** Identifier for the {@link PrimitiveType} type in JSON format. */
@@ -175,7 +199,7 @@ public class PrimitiveType extends Type {
 	/**
 	 * Creates a {@link PrimitiveType} instance.
 	 *
-	 * @see #create()
+	 * @see PrimitiveType#create()
 	 */
 	protected PrimitiveType() {
 		super();
@@ -200,13 +224,13 @@ public class PrimitiveType extends Type {
 		internalSetKind(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getKind()} without chain call utility. */
 	protected final void internalSetKind(Kind value) {
 		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
 		_listener.beforeSet(this, KIND, value);
 		_kind = value;
 	}
-
 
 	@Override
 	public String jsonType() {
@@ -233,17 +257,15 @@ public class PrimitiveType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case KIND: setKind((Kind) value); break;
+			case KIND: internalSetKind((Kind) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		PrimitiveType result = new PrimitiveType();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.PrimitiveType result = new de.haumacher.msgbuf.generator.ast.PrimitiveType();
+		result.readContent(in);
 		return result;
 	}
 

@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public interface BaseMsg extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
 
 	/** Type codes for the {@link BaseMsg} hierarchy. */
 	public enum TypeKind {
@@ -25,40 +25,17 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 
 	}
 
-	/**
-	 * Creates a {@link BaseMsg} instance.
-	 */
-	protected BaseMsg() {
-		super();
-	}
-
 	/** The type code of this instance. */
-	public abstract TypeKind kind();
-
-	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
+	TypeKind kind();
 
 	@Override
-	public BaseMsg registerListener(de.haumacher.msgbuf.observer.Listener l) {
-		internalRegisterListener(l);
-		return this;
-	}
-
-	protected final void internalRegisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.register(_listener, l);
-	}
+	public BaseMsg registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public BaseMsg unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		internalUnregisterListener(l);
-		return this;
-	}
-
-	protected final void internalUnregisterListener(de.haumacher.msgbuf.observer.Listener l) {
-		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
-	}
+	public BaseMsg unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	public static BaseMsg readbase_msg(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	static BaseMsg readbase_msg(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		BaseMsg result;
 		in.beginArray();
 		String type = in.nextString();
@@ -71,66 +48,26 @@ public abstract class BaseMsg extends de.haumacher.msgbuf.data.AbstractDataObjec
 		return result;
 	}
 
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
-		out.beginArray();
-		out.value(jsonType());
-		writeContent(out);
-		out.endArray();
-	}
-
 	/** The binary identifier for this concrete type in the polymorphic {@link BaseMsg} hierarchy. */
-	public abstract int typeId();
-
-	@Override
-	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.beginObject();
-		out.name(0);
-		out.value(typeId());
-		writeFields(out);
-		out.endObject();
-	}
-
-	/**
-	 * Serializes all fields of this instance to the given binary output.
-	 *
-	 * @param out
-	 *        The binary output to write to.
-	 * @throws java.io.IOException If writing fails.
-	 */
-	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		// No fields to write, hook for subclasses.
-	}
+	abstract int typeId();
 
 	/** Reads a new instance from the given reader. */
-	public static BaseMsg readbase_msg(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static BaseMsg readbase_msg(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		BaseMsg result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
+		BaseMsg result;
 		switch (type) {
-			case SomeName.SOME_NAME__TYPE_ID: result = test.underscorename.SomeName.create(); break;
-			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE_ID: result = test.underscorename.AnnotatedMessage.create(); break;
-			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
-		}
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
+			case SomeName.SOME_NAME__TYPE_ID: result = test.underscorename.SomeName_Impl.readsome_name_Content(in); break;
+			case AnnotatedMessage.ANNOTATED_MESSAGE__TYPE_ID: result = test.underscorename.AnnotatedMessage_Impl.readannotated_message_Content(in); break;
+			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
 		return result;
 	}
 
-	/** Consumes the value for the field with the given ID and assigns its value. */
-	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
-		switch (field) {
-			default: in.skipValue(); 
-		}
-	}
-
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
-
 
 }

@@ -3,25 +3,12 @@ package test.nothing;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public abstract class AtomicShape extends Shape {
-
-	/**
-	 * Creates a {@link AtomicShape} instance.
-	 */
-	protected AtomicShape() {
-		super();
-	}
+public interface AtomicShape extends Shape {
 
 	@Override
-	public AtomicShape setXCoordinate(int value) {
-		internalSetXCoordinate(value);
-		return this;
-	}
+	AtomicShape setXCoordinate(int value);
 
 	@Override
-	public AtomicShape setYCoordinate(int value) {
-		internalSetYCoordinate(value);
-		return this;
-	}
+	AtomicShape setYCoordinate(int value);
 
 }

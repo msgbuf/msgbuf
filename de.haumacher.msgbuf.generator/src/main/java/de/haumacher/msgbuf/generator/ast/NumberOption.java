@@ -9,7 +9,7 @@ public class NumberOption extends Option {
 	 * Creates a {@link NumberOption} instance.
 	 */
 	public static NumberOption create() {
-		return new NumberOption();
+		return new de.haumacher.msgbuf.generator.ast.NumberOption();
 	}
 
 	/** Identifier for the {@link NumberOption} type in JSON format. */
@@ -23,7 +23,7 @@ public class NumberOption extends Option {
 	/**
 	 * Creates a {@link NumberOption} instance.
 	 *
-	 * @see #create()
+	 * @see NumberOption#create()
 	 */
 	protected NumberOption() {
 		super();
@@ -48,12 +48,12 @@ public class NumberOption extends Option {
 		internalSetValue(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getValue()} without chain call utility. */
 	protected final void internalSetValue(double value) {
 		_listener.beforeSet(this, VALUE, value);
 		_value = value;
 	}
-
 
 	@Override
 	public String jsonType() {
@@ -80,17 +80,15 @@ public class NumberOption extends Option {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case VALUE: setValue((double) value); break;
+			case VALUE: internalSetValue((double) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static NumberOption readNumberOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		NumberOption result = new NumberOption();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.NumberOption result = new de.haumacher.msgbuf.generator.ast.NumberOption();
+		result.readContent(in);
 		return result;
 	}
 

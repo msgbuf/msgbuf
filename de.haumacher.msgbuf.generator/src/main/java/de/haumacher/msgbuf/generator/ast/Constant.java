@@ -11,7 +11,7 @@ public class Constant extends Part {
 	 * Creates a {@link Constant} instance.
 	 */
 	public static Constant create() {
-		return new Constant();
+		return new de.haumacher.msgbuf.generator.ast.Constant();
 	}
 
 	/** Identifier for the {@link Constant} type in JSON format. */
@@ -20,7 +20,7 @@ public class Constant extends Part {
 	/**
 	 * Creates a {@link Constant} instance.
 	 *
-	 * @see #create()
+	 * @see Constant#create()
 	 */
 	protected Constant() {
 		super();
@@ -74,10 +74,8 @@ public class Constant extends Part {
 
 	/** Reads a new instance from the given reader. */
 	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Constant result = new Constant();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.Constant result = new de.haumacher.msgbuf.generator.ast.Constant();
+		result.readContent(in);
 		return result;
 	}
 

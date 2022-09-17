@@ -9,7 +9,7 @@ public class StringOption extends Option {
 	 * Creates a {@link StringOption} instance.
 	 */
 	public static StringOption create() {
-		return new StringOption();
+		return new de.haumacher.msgbuf.generator.ast.StringOption();
 	}
 
 	/** Identifier for the {@link StringOption} type in JSON format. */
@@ -23,7 +23,7 @@ public class StringOption extends Option {
 	/**
 	 * Creates a {@link StringOption} instance.
 	 *
-	 * @see #create()
+	 * @see StringOption#create()
 	 */
 	protected StringOption() {
 		super();
@@ -48,12 +48,12 @@ public class StringOption extends Option {
 		internalSetValue(value);
 		return this;
 	}
+
 	/** Internal setter for {@link #getValue()} without chain call utility. */
 	protected final void internalSetValue(String value) {
 		_listener.beforeSet(this, VALUE, value);
 		_value = value;
 	}
-
 
 	@Override
 	public String jsonType() {
@@ -80,17 +80,15 @@ public class StringOption extends Option {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case VALUE: setValue((String) value); break;
+			case VALUE: internalSetValue((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
 	public static StringOption readStringOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		StringOption result = new StringOption();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+		de.haumacher.msgbuf.generator.ast.StringOption result = new de.haumacher.msgbuf.generator.ast.StringOption();
+		result.readContent(in);
 		return result;
 	}
 

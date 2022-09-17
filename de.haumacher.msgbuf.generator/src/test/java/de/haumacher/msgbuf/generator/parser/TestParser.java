@@ -35,6 +35,7 @@ public class TestParser extends TestCase {
 
 	@Override
 	protected void runTest() throws Throwable {
+		System.out.println("Processing: " + _proto.getName());
 		Generator generator = new Generator();
 		generator.setOut(testDir());
 		generator.load(_proto);
