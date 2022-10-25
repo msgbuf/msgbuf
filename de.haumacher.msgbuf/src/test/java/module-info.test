@@ -1,0 +1,11 @@
+/*
+ * Copyright (c) 2022 Bernhard Haumacher et al. All Rights Reserved.
+ */
+/**
+ * <i>MsgBuf</i> API module.
+ */
+open module test.de.haumacher.msgbuf {
+	requires de.haumacher.msgbuf;
+	
+	requires junit;
+}
