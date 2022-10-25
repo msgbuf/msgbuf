@@ -10,9 +10,12 @@ import java.io.IOException;
  */
 public interface FileGenerator {
 
-	/** 
-	 * Generates the file contents to the given {@link Appendable}. 
+	/**
+	 * Generates the file contents to the given {@link Appendable}.
+	 * 
+	 * @param indent
+	 *        The initial indentation level to start with.
 	 */
-	void generate(Appendable out) throws IOException;
+	void generate(Appendable out, int indent) throws IOException;
 
 }

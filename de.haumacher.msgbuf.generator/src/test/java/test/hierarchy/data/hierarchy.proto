@@ -32,6 +32,7 @@ message Circle extends AtomicShape {
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #xCoordinate}, {@link #yCoordinate}).
 	 */
 	@Name("r")
+	@XmlName("radius")
 	int32 radius;
 }
 
@@ -71,7 +72,23 @@ message Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #xCoordinate}, {@link #yCoordinate}).
 	 * </p>
 	 */
+	@Embedded
 	repeated Shape shapes;
+}
+
+/**
+ * A shape that can be dynamically hidden.
+ */
+message Optional extends Shape {
+
+	/** Whether {@link #shape} is hidden. */
+	boolean hidden;
+
+	/**
+	 * A {@link Shape} that can be dynamically hidden..
+	 */
+	@Embedded
+	Shape shape;
 }
 
 /**

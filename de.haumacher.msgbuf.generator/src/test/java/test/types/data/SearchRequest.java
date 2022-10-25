@@ -73,4 +73,10 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 		return result;
 	}
 
+	/** Creates a new {@link SearchRequest} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static SearchRequest readSearchRequest(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.types.data.SearchRequest_Impl.readSearchRequest_XmlContent(in);
+	}
+
 }

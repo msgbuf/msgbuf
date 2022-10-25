@@ -174,6 +174,52 @@ class Group_Impl extends Shape_Impl implements Group {
 		}
 	}
 
+	/** XML element name representing a {@link Group} type. */
+	public static final String GROUP__XML_ELEMENT = "group";
+
+	/** XML attribute or element name of a {@link #getShapes} property. */
+	private static final String SHAPES__XML_ATTR = "shapes";
+
+	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Group_Impl readGroup_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		Group_Impl result = new Group_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case SHAPES__XML_ATTR: {
+				internalReadShapesListXml(in);
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
+	private void internalReadShapesListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addShape(test.novisitexceptions.Shape_Impl.readShape_XmlContent(in));
+		}
+	}
+
 	@Override
 	public <R,A> R visit(Shape.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);

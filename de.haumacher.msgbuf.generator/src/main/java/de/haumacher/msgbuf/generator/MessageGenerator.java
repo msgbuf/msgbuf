@@ -20,7 +20,6 @@ import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
-import de.haumacher.msgbuf.generator.ast.Flag;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
@@ -32,16 +31,17 @@ import de.haumacher.msgbuf.generator.ast.Type;
 import de.haumacher.msgbuf.generator.ast.WithOptions.TypeKind;
 import de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol;
 import de.haumacher.msgbuf.generator.common.Util;
-import de.haumacher.msgbuf.generator.util.AbstractJavaGenerator;
 import de.haumacher.msgbuf.generator.util.CodeUtil;
 
 /**
  * {@link Generator} for message data classes.
  */
-public class MessageGenerator extends AbstractJavaGenerator implements Definition.Visitor<Void, Void> {
+public class MessageGenerator extends AbstractMessageGenerator implements Definition.Visitor<Void, Void> {
 
 	private final NameTable _table;
 	private final MessageDef _def;
+	private final GeneratorPlugin _plugin;
+	
 	private boolean _graph;
 	private boolean _json;
 	private boolean _binary;
@@ -53,17 +53,17 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 	private Map<String, Option> _options;
 	private boolean _listener;
 	private boolean _interface;
-	private boolean _noInterfaces;
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
 	 */
-	public MessageGenerator(NameTable table, Map<String, Option> options, boolean isInterface, MessageDef def) {
+	public MessageGenerator(NameTable table, Map<String, Option> options, boolean isInterface, MessageDef def, GeneratorPlugin plugin) {
+		super(options);
 		_table = table;
 		_options = options;
 		_interface = isInterface;
 		_def = def;
-		_noInterfaces = isTrue(options.get("NoInterfaces"), false);
+		_plugin = plugin;
 		_graph = isTrue(options.get("SharedGraph"), false);
 		_json = _graph || !isTrue(options.get("NoJson"), false);
 		_binary = !_graph && !isTrue(options.get("NoBinary"), false);
@@ -72,10 +72,6 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 		_visitor = !isTrue(options.get("NoVisitor"), false);
 		_visitEx= !isTrue(options.get("NoVisitorExceptions"), false);
 		_typeKind = !isTrue(options.get("NoTypeKind"), false);
-	}
-	
-	public static boolean isTrue(Option option, boolean defaultValue) {
-		return option == null ? defaultValue : ((Flag) option).isValue();
 	}
 	
 	/**
@@ -263,6 +259,7 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 			generateFactoryMethod();
 		}
 		generateConstants();
+		
 		if (!_interface) {
 			generateFieldMembers();
 			generateConstructor();
@@ -292,7 +289,15 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 		if (_binary) {
 			generateBinaryIO();
 		}
+		
+		if (!_interface) {
+			include(_plugin.messageImplContents(getOptions(), _def));
+		}
 
+		if (_interface || _noInterfaces) {
+			include(_plugin.messageInterfaceContents(getOptions(), _def));
+		}
+		
 		if (_visitor) {
 			generateVisitMethods();
 		}
@@ -358,22 +363,6 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 		}
 	}
 
-	private List<MessageDef> concreteSpecializations(MessageDef def) {
-		ArrayList<MessageDef> result = new ArrayList<>();
-		addConcreteSpecializations(result, def);
-		return result;
-	}
-
-	private void addConcreteSpecializations(ArrayList<MessageDef> result, MessageDef def) {
-		for (MessageDef specialization : def.getSpecializations()) {
-			if (!specialization.isAbstract()) {
-				result.add(specialization);
-			}
-			
-			addConcreteSpecializations(result, specialization);
-		}
-	}
-
 	private void generateInnerDefinitions() {
 		for (Definition def : _def.getDefinitions()) {
 			def.visit(this, null);
@@ -383,14 +372,14 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 	@Override
 	public Void visit(EnumDef def, Void arg) {
 		if (_interface || _noInterfaces) {
-			new EnumGenerator(def).generateInner(this);
+			include(new EnumGenerator(def));
 		}
 		return null;
 	}
 
 	@Override
 	public Void visit(MessageDef def, Void arg) {
-		new MessageGenerator(_table, _options, _interface, def).generateInner(this);
+		include(new MessageGenerator(_table, _options, _interface, def, _plugin));
 		return null;
 	}
 
@@ -467,14 +456,6 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 			line("super();");
 		}
 		line("}");
-	}
-
-	private String implName(MessageDef def) {
-		if (_noInterfaces) {
-			return CodeConvention.typeName(def);
-		} else {
-			return CodeConvention.implName(def);
-		}
 	}
 
 	private void generateFieldMembers() {
@@ -1272,14 +1253,6 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 		}
 	}
 
-	private String qImplName(MessageDef def) {
-		if (_noInterfaces) {
-			return qTypeName(def);
-		} else {
-			return CodeConvention.qImplName(def);
-		}
-	}
-
 	private void writeFieldValue(Field field) {
 		if (field.isRepeated()) {
 			line("out.beginArray();");
@@ -1375,7 +1348,10 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 		else if (type instanceof CustomType) {
 			CustomType messageType = (CustomType) type;
 			QName name = messageType.getName();
-			if (messageType.getDefinition().kind() == TypeKind.ENUM_DEF) {
+			if (messageType.getDefinition() == null) {
+				System.err.println("ERROR: No definition found for type '" + type + "'.");
+				return "ERROR";
+			} else  if (messageType.getDefinition().kind() == TypeKind.ENUM_DEF) {
 				return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(in)";
 			} else {
 				return qTypeName(messageType) + "." + readerName(Util.last(name)) +  "(" + scopeArg() + "in)";
@@ -1442,6 +1418,8 @@ public class MessageGenerator extends AbstractJavaGenerator implements Definitio
 			CustomType customType = (CustomType) type;
 			if (!_graph && isMonomorphicReferenceToTypeInPolymorphicHierarchy(customType)) { 
 				line(x + ".writeContent(" + scopeArg() + "out);");
+			} else if (customType.getDefinition() == null) {
+				System.err.println("ERROR: No definition found for type '" + type + "'.");
 			} else if (customType.getDefinition().kind() == TypeKind.ENUM_DEF) {
 				line(x + ".writeTo(out);");
 			} else {

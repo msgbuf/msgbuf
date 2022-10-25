@@ -57,4 +57,10 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		return result;
 	}
 
+	/** Creates a new {@link B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static B readB(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.references.data.B_Impl.readB_XmlContent(in);
+	}
+
 }

@@ -56,4 +56,10 @@ public interface Circle extends AtomicShape {
 		return result;
 	}
 
+	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Circle readCircle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nolistener.Circle_Impl.readCircle_XmlContent(in);
+	}
+
 }

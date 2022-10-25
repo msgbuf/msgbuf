@@ -25,7 +25,7 @@ public interface Car extends Shape {
 	static final String BODY = "body";
 
 	/** Identifier for the {@link Car} type in binary format. */
-	static final int CAR__TYPE_ID = 4;
+	static final int CAR__TYPE_ID = 5;
 
 	/** Identifier for the property {@link #getWheel1()} in binary format. */
 	static final int WHEEL_1__ID = 3;
@@ -101,6 +101,12 @@ public interface Car extends Shape {
 		Car result = test.hierarchy.data.Car_Impl.readCar_Content(in);
 		in.endObject();
 		return result;
+	}
+
+	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Car readCar(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.hierarchy.data.Car_Impl.readCar_XmlContent(in);
 	}
 
 }

@@ -251,6 +251,97 @@ class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			}
 		}
 
+		/** XML element name representing a {@link Result} type. */
+		public static final String RESULT__XML_ELEMENT = "result";
+
+		/** XML attribute or element name of a {@link #getUrl} property. */
+		private static final String URL__XML_ATTR = "url";
+
+		/** XML attribute or element name of a {@link #getTitle} property. */
+		private static final String TITLE__XML_ATTR = "title";
+
+		/** XML attribute or element name of a {@link #getSnippets} property. */
+		private static final String SNIPPETS__XML_ATTR = "snippets";
+
+		/** Creates a new {@link Result} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+		public static Result_Impl readResult_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+			Result_Impl result = new Result_Impl();
+			result.readContentXml(in);
+			return result;
+		}
+
+		/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+		protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+			for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+				String name = in.getAttributeLocalName(n);
+				String value = in.getAttributeValue(n);
+
+				readFieldXmlAttribute(name, value);
+			}
+			while (true) {
+				int event = in.nextTag();
+				if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+					break;
+				}
+				assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+				String localName = in.getLocalName();
+				readFieldXmlElement(in, localName);
+			}
+		}
+
+		/** Parses the given attribute value and assigns it to the field with the given name. */
+		protected void readFieldXmlAttribute(String name, String value) {
+			switch (name) {
+				case URL__XML_ATTR: {
+					setUrl(value);
+					break;
+				}
+				case TITLE__XML_ATTR: {
+					setTitle(value);
+					break;
+				}
+				case SNIPPETS__XML_ATTR: {
+					setSnippets(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+					break;
+				}
+				default: {
+					// Skip unknown attribute.
+				}
+			}
+		}
+
+		/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+		protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+			switch (localName) {
+				case URL__XML_ATTR: {
+					setUrl(in.getElementText());
+					break;
+				}
+				case TITLE__XML_ATTR: {
+					setTitle(in.getElementText());
+					break;
+				}
+				case SNIPPETS__XML_ATTR: {
+					setSnippets(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+					break;
+				}
+				default: {
+					internalSkipUntilMatchingEndElement(in);
+				}
+			}
+		}
+
+		protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+			int level = 0;
+			while (true) {
+				switch (in.next()) {
+					case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+					case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+				}
+			}
+		}
+
 	}
 
 	private final java.util.List<Result> _results = new de.haumacher.msgbuf.util.ReferenceList<Result>() {
@@ -443,6 +534,82 @@ class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			}
 			break;
 			default: in.skipValue(); 
+		}
+	}
+
+	/** XML element name representing a {@link SearchResponse} type. */
+	public static final String SEARCH_RESPONSE__XML_ELEMENT = "search-response";
+
+	/** XML attribute or element name of a {@link #getResults} property. */
+	private static final String RESULTS__XML_ATTR = "results";
+
+	/** Creates a new {@link SearchResponse} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static SearchResponse_Impl readSearchResponse_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		SearchResponse_Impl result = new SearchResponse_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case RESULTS__XML_ATTR: {
+				internalReadResultsListXml(in);
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
+	private void internalReadResultsListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addResult(test.nested.data.SearchResponse_Impl.Result_Impl.readResult_XmlContent(in));
 		}
 	}
 

@@ -37,7 +37,7 @@ public class DartLibGenerator extends AbstractDartGenerator implements Definitio
 	public void run() {
 		System.out.println("Generating '" + _file + "'.");
 		try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(_file), "utf8")) {
-			generate(out);
+			generate(out, 0);
 		} catch (IOException ex) {
 			throw new IOError(ex);
 		}
@@ -133,13 +133,13 @@ public class DartLibGenerator extends AbstractDartGenerator implements Definitio
 
 	@Override
 	public Void visit(EnumDef self, Void arg) {
-		new DartEnumGenerator(self).generateInner(this);
+		include(new DartEnumGenerator(self));
 		return null;
 	}
 
 	@Override
 	public Void visit(MessageDef self, Void arg) {
-		new DartClassGenerator(self).generateInner(this);
+		include(new DartClassGenerator(self));
 		return null;
 	}
 

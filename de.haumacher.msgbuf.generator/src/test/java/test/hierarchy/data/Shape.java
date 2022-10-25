@@ -17,6 +17,9 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		/** Type literal for {@link Group}. */
 		GROUP,
 
+		/** Type literal for {@link Optional}. */
+		OPTIONAL,
+
 		/** Type literal for {@link Car}. */
 		CAR,
 		;
@@ -28,6 +31,9 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 
 		/** Visit case for {@link Group}.*/
 		R visit(Group self, A arg) throws E;
+
+		/** Visit case for {@link Optional}.*/
+		R visit(Optional self, A arg) throws E;
 
 		/** Visit case for {@link Car}.*/
 		R visit(Car self, A arg) throws E;
@@ -82,6 +88,7 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		String type = in.nextString();
 		switch (type) {
 			case Group.GROUP__TYPE: result = test.hierarchy.data.Group.readGroup(in); break;
+			case Optional.OPTIONAL__TYPE: result = test.hierarchy.data.Optional.readOptional(in); break;
 			case Car.CAR__TYPE: result = test.hierarchy.data.Car.readCar(in); break;
 			case Circle.CIRCLE__TYPE: result = test.hierarchy.data.Circle.readCircle(in); break;
 			case Rectangle.RECTANGLE__TYPE: result = test.hierarchy.data.Rectangle.readRectangle(in); break;
@@ -103,6 +110,7 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		Shape result;
 		switch (type) {
 			case Group.GROUP__TYPE_ID: result = test.hierarchy.data.Group_Impl.readGroup_Content(in); break;
+			case Optional.OPTIONAL__TYPE_ID: result = test.hierarchy.data.Optional_Impl.readOptional_Content(in); break;
 			case Car.CAR__TYPE_ID: result = test.hierarchy.data.Car_Impl.readCar_Content(in); break;
 			case Circle.CIRCLE__TYPE_ID: result = test.hierarchy.data.Circle_Impl.readCircle_Content(in); break;
 			case Rectangle.RECTANGLE__TYPE_ID: result = test.hierarchy.data.Rectangle_Impl.readRectangle_Content(in); break;
@@ -110,6 +118,12 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		}
 		in.endObject();
 		return result;
+	}
+
+	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Shape readShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.hierarchy.data.Shape_Impl.readShape_XmlContent(in);
 	}
 
 	/** Accepts the given visitor. */

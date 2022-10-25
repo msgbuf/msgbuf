@@ -174,6 +174,72 @@ class Group_Impl extends Shape_Impl implements Group {
 		}
 	}
 
+	/** XML element name representing a {@link Group} type. */
+	public static final String GROUP__XML_ELEMENT = "group";
+
+	/** XML attribute or element name of a {@link #getShapes} property. */
+	private static final String SHAPES__XML_ATTR = "shapes";
+
+	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Group_Impl readGroup_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		Group_Impl result = new Group_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case test.hierarchy.data.Circle_Impl.CIRCLE__XML_ELEMENT: {
+				addShape(test.hierarchy.data.Circle_Impl.readCircle_XmlContent(in));
+				break;
+			}
+			case test.hierarchy.data.Rectangle_Impl.RECTANGLE__XML_ELEMENT: {
+				addShape(test.hierarchy.data.Rectangle_Impl.readRectangle_XmlContent(in));
+				break;
+			}
+			case test.hierarchy.data.Group_Impl.GROUP__XML_ELEMENT: {
+				addShape(test.hierarchy.data.Group_Impl.readGroup_XmlContent(in));
+				break;
+			}
+			case test.hierarchy.data.Optional_Impl.OPTIONAL__XML_ELEMENT: {
+				addShape(test.hierarchy.data.Optional_Impl.readOptional_XmlContent(in));
+				break;
+			}
+			case test.hierarchy.data.Car_Impl.CAR__XML_ELEMENT: {
+				addShape(test.hierarchy.data.Car_Impl.readCar_XmlContent(in));
+				break;
+			}
+			case SHAPES__XML_ATTR: {
+				internalReadShapesListXml(in);
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
+	private void internalReadShapesListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addShape(test.hierarchy.data.Shape_Impl.readShape_XmlContent(in));
+		}
+	}
+
 	@Override
 	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);

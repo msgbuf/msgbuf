@@ -202,4 +202,10 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 		return result;
 	}
 
+	/** Creates a new {@link NullableValues} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static NullableValues readNullableValues(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nullable.data.NullableValues_Impl.readNullableValues_XmlContent(in);
+	}
+
 }

@@ -180,4 +180,10 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		return result;
 	}
 
+	/** Creates a new {@link A} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static A readA(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.references.data.A_Impl.readA_XmlContent(in);
+	}
+
 }

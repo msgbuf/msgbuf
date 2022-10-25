@@ -523,4 +523,134 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 		}
 	}
 
+	/** XML element name representing a {@link NullableValues} type. */
+	public static final String NULLABLE_VALUES__XML_ELEMENT = "nullable-values";
+
+	/** XML attribute or element name of a {@link #getInt} property. */
+	private static final String INT__XML_ATTR = "int";
+
+	/** XML attribute or element name of a {@link #getLong} property. */
+	private static final String LONG__XML_ATTR = "long";
+
+	/** XML attribute or element name of a {@link #getBoolean} property. */
+	private static final String BOOLEAN__XML_ATTR = "boolean";
+
+	/** XML attribute or element name of a {@link #getString} property. */
+	private static final String STRING__XML_ATTR = "string";
+
+	/** XML attribute or element name of a {@link #getIntList} property. */
+	private static final String INT_LIST__XML_ATTR = "int-list";
+
+	/** XML attribute or element name of a {@link #getStringList} property. */
+	private static final String STRING_LIST__XML_ATTR = "string-list";
+
+	/** XML attribute or element name of a {@link #getStringIntMap} property. */
+	private static final String STRING_INT_MAP__XML_ATTR = "string-int-map";
+
+	/** XML attribute or element name of a {@link #getOptionalDecision} property. */
+	private static final String OPTIONAL_DECISION__XML_ATTR = "optional-decision";
+
+	/** Creates a new {@link NullableValues} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static NullableValues_Impl readNullableValues_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		NullableValues_Impl result = new NullableValues_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case INT__XML_ATTR: {
+				setInt(Integer.parseInt(value));
+				break;
+			}
+			case LONG__XML_ATTR: {
+				setLong(Long.parseLong(value));
+				break;
+			}
+			case BOOLEAN__XML_ATTR: {
+				setBoolean(Boolean.parseBoolean(value));
+				break;
+			}
+			case STRING__XML_ATTR: {
+				setString(value);
+				break;
+			}
+			case INT_LIST__XML_ATTR: {
+				setIntList(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> Integer.parseInt(x)).collect(java.util.stream.Collectors.toList()));
+				break;
+			}
+			case STRING_LIST__XML_ATTR: {
+				setStringList(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+				break;
+			}
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case INT__XML_ATTR: {
+				setInt(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			case LONG__XML_ATTR: {
+				setLong(Long.parseLong(in.getElementText()));
+				break;
+			}
+			case BOOLEAN__XML_ATTR: {
+				setBoolean(Boolean.parseBoolean(in.getElementText()));
+				break;
+			}
+			case STRING__XML_ATTR: {
+				setString(in.getElementText());
+				break;
+			}
+			case INT_LIST__XML_ATTR: {
+				setIntList(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> Integer.parseInt(x)).collect(java.util.stream.Collectors.toList()));
+				break;
+			}
+			case STRING_LIST__XML_ATTR: {
+				setStringList(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
 }

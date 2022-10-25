@@ -41,4 +41,10 @@ public interface AtomicShape extends Shape {
 		return result;
 	}
 
+	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static AtomicShape readAtomicShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.novisit.AtomicShape_Impl.readAtomicShape_XmlContent(in);
+	}
+
 }

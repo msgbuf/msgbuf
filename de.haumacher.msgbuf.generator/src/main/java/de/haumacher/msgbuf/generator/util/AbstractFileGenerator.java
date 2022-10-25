@@ -30,23 +30,25 @@ public abstract class AbstractFileGenerator implements FileGenerator {
 	private int _indent = 0;
 
 	@Override
-	public void generate(Appendable out) {
+	public void generate(Appendable out, int indent) {
 		_out = out;
+		_indent = indent;
 		try {
 			generate();
 		} finally {
 			_out = null;
+			_indent = 0;
 		}
 	}
 	
-	/**
-	 * Generates the contents as inner class of the given outer generator.
-	 */
-	public void generateInner(AbstractFileGenerator outer) {
-		setIndent(outer.getIndent());
-		generate(outer._out);
+	protected void include(FileGenerator other) {
+		try {
+			other.generate(_out, _indent);
+		} catch (IOException ex) {
+			throw new IOError(ex);
+		}
 	}
-
+	
 	/**
 	 * The current indentation level.
 	 */
@@ -54,10 +56,6 @@ public abstract class AbstractFileGenerator implements FileGenerator {
 		return _indent;
 	}
 	
-	private void setIndent(int indent) {
-		_indent = indent;
-	}
-
 	protected abstract void generate();
 	
 	protected abstract void docComment(String comment);

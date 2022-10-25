@@ -203,4 +203,95 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 		}
 	}
 
+	/** XML element name representing a {@link SearchRequest} type. */
+	public static final String SEARCH_REQUEST__XML_ELEMENT = "search-request";
+
+	/** XML attribute or element name of a {@link #getQuery} property. */
+	private static final String QUERY__XML_ATTR = "query";
+
+	/** XML attribute or element name of a {@link #getPageNumber} property. */
+	private static final String PAGE_NUMBER__XML_ATTR = "page-number";
+
+	/** XML attribute or element name of a {@link #getResultPerPage} property. */
+	private static final String RESULT_PER_PAGE__XML_ATTR = "result-per-page";
+
+	/** Creates a new {@link SearchRequest} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static SearchRequest_Impl readSearchRequest_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		SearchRequest_Impl result = new SearchRequest_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case QUERY__XML_ATTR: {
+				setQuery(value);
+				break;
+			}
+			case PAGE_NUMBER__XML_ATTR: {
+				setPageNumber(Integer.parseInt(value));
+				break;
+			}
+			case RESULT_PER_PAGE__XML_ATTR: {
+				setResultPerPage(Integer.parseInt(value));
+				break;
+			}
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case QUERY__XML_ATTR: {
+				setQuery(in.getElementText());
+				break;
+			}
+			case PAGE_NUMBER__XML_ATTR: {
+				setPageNumber(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			case RESULT_PER_PAGE__XML_ATTR: {
+				setResultPerPage(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
 }

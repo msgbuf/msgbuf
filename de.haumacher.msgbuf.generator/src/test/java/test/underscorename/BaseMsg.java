@@ -67,6 +67,12 @@ public interface BaseMsg extends de.haumacher.msgbuf.data.DataObject, de.haumach
 		return result;
 	}
 
+	/** Creates a new {@link BaseMsg} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static BaseMsg readBase_msg(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.underscorename.BaseMsg_Impl.readBase_msg_XmlContent(in);
+	}
+
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 

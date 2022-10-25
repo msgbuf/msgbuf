@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.haumacher.msgbuf.generator.Generator;
+import de.haumacher.msgbuf.generator.GeneratorPlugin;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.parser.ParseException;
@@ -137,7 +138,7 @@ public class MsgBufBuilder extends IncrementalProjectBuilder {
 			Generator generator = new Generator();
 			generator.setOut(dir);
 			generator.load(definitionFile);
-			generator.generate();
+			generator.generate(GeneratorPlugin.none());
 			
 			try {
 				file.getParent().refreshLocal(IContainer.DEPTH_ONE, null);

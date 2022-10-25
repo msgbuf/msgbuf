@@ -53,6 +53,23 @@ public class CodeUtil {
 		}
 		return result.toString();
 	}
+	
+	/**
+	 * Converts a <code>CamelCase</code> name into a '-' separated name in all lower case.
+	 */
+	public static String xmlName(String name) {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for (String part : NAME_PART_PATTERN.split(name)) {
+			if (first) {
+				first = false;
+			} else {
+				result.append('-');
+			}
+			result.append(part.toLowerCase());
+		}
+		return result.toString();
+	}
 
 	/**
 	 * Makes the first character lower-case in the given string.

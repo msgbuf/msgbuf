@@ -81,7 +81,7 @@ public class Generator {
 		return file;
 	}
 	
-	public void generate() {
+	public void generate(GeneratorPlugin plugin) {
 		for (DefinitionFile file : _files) {
 			buildSpecializations(file);
 		}
@@ -99,7 +99,7 @@ public class Generator {
 		for (DefinitionFile file : _files) {
 			File dir = mkdir(file.getPackage());
 			
-			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions());
+			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions(), plugin);
 			for (Definition def : file.getDefinitions()) {
 				def.visit(packageGenerator, null);
 			}
@@ -171,12 +171,14 @@ public class Generator {
 	}
 	
 	class PackageGenerator implements Definition.Visitor<Void, Void> {
-		private File _dir;
-		private Map<String, Option> _options;
+		private final File _dir;
+		private final Map<String, Option> _options;
+		private final GeneratorPlugin _plugin;
 
-		public PackageGenerator(File dir, Map<String, Option> options) {
+		public PackageGenerator(File dir, Map<String, Option> options, GeneratorPlugin plugin) {
 			_dir = dir;
 			_options = options;
+			_plugin = plugin;
 		}
 
 		@Override
@@ -188,9 +190,9 @@ public class Generator {
 		public Void visit(MessageDef def, Void arg) {
 			boolean noInterfaces = MessageGenerator.isTrue(_options.get("NoInterfaces"), false);
 			if (!noInterfaces) {
-				generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, true, def));
+				generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, true, def, _plugin));
 			}
-			return generateJava(noInterfaces ? CodeConvention.typeName(def) : CodeConvention.implName(def), new MessageGenerator(_table, _options, false, def));
+			return generateJava(noInterfaces ? CodeConvention.typeName(def) : CodeConvention.implName(def), new MessageGenerator(_table, _options, false, def, _plugin));
 		}
 		
 		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {
@@ -198,7 +200,7 @@ public class Generator {
 			try (FileOutputStream os = new FileOutputStream(out)) {
 				try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
 					System.out.println("Generating '" + out + "'.");
-					generator.generate(w);
+					generator.generate(w, 0);
 				}
 			} catch (IOException ex) {
 				error("Error writing file '" + out + "'.", ex);
@@ -230,12 +232,13 @@ public class Generator {
 		}
 	}
 	
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (args.length == 0) {
 			printHelp();
 			return;
 		}
 		File out = null;
+		GeneratorPlugin plugin = GeneratorPlugin.none();
 		Generator generator = new Generator();
 		for (int n = 0, cnt = args.length; n < cnt; ) {
 			String arg = args[n++];
@@ -243,6 +246,9 @@ public class Generator {
 				out = new File(args[n++]);
 			} else if (arg.equals("-h")) {
 				printHelp();
+				return;
+			} else if (arg.equals("-p")) {
+				plugin = plugin.andThen((GeneratorPlugin) Class.forName(args[n++]).newInstance());
 				return;
 			} else {
 				File file = new File(arg);
@@ -255,7 +261,7 @@ public class Generator {
 		if (out != null) {
 			generator.setOut(out);
 		}
-		generator.generate();
+		generator.generate(plugin);
 	}
 
 	private static void printHelp() {

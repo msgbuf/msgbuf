@@ -206,6 +206,62 @@ public class Rectangle extends AtomicShape {
 		}
 	}
 
+	/** XML element name representing a {@link Rectangle} type. */
+	public static final String RECTANGLE__XML_ELEMENT = "rectangle";
+
+	/** XML attribute or element name of a {@link #getWidth} property. */
+	private static final String WIDTH__XML_ATTR = "w";
+
+	/** XML attribute or element name of a {@link #getHeight} property. */
+	private static final String HEIGHT__XML_ATTR = "h";
+
+	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Rectangle readRectangle_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		Rectangle result = new Rectangle();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case WIDTH__XML_ATTR: {
+				setWidth(Integer.parseInt(value));
+				break;
+			}
+			case HEIGHT__XML_ATTR: {
+				setHeight(Integer.parseInt(value));
+				break;
+			}
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case WIDTH__XML_ATTR: {
+				setWidth(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			case HEIGHT__XML_ATTR: {
+				setHeight(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
+	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Rectangle readRectangle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nointerfaces.Rectangle.readRectangle_XmlContent(in);
+	}
+
 	@Override
 	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);

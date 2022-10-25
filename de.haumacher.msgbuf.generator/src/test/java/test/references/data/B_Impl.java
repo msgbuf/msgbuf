@@ -233,4 +233,109 @@ class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements B {
 		}
 	}
 
+	/** XML element name representing a {@link B} type. */
+	public static final String B__XML_ELEMENT = "b";
+
+	/** XML attribute or element name of a {@link #getName} property. */
+	private static final String NAME__XML_ATTR = "name";
+
+	/** XML attribute or element name of a {@link #getInBs} property. */
+	private static final String IN_BS__XML_ATTR = "in-bs";
+
+	/** XML attribute or element name of a {@link #getInB} property. */
+	private static final String IN_B__XML_ATTR = "in-b";
+
+	/** Creates a new {@link B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static B_Impl readB_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		B_Impl result = new B_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case NAME__XML_ATTR: {
+				setName(value);
+				break;
+			}
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case NAME__XML_ATTR: {
+				setName(in.getElementText());
+				break;
+			}
+			case IN_BS__XML_ATTR: {
+				internalReadInBsListXml(in);
+				break;
+			}
+			case IN_B__XML_ATTR: {
+				internalReadInBListXml(in);
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
+	private void internalReadInBsListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addInBs(test.references.data.A_Impl.readA_XmlContent(in));
+		}
+	}
+
+	private void internalReadInBListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addInB(test.references.data.A_Impl.readA_XmlContent(in));
+		}
+	}
+
 }

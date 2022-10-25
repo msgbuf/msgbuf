@@ -8,6 +8,7 @@ option NoReflection;
 option NoListener;
 option NoVisitor;
 option NoTypeKind;
+option NoXml;
 
 /** 
  * An abstract base class for all shapes 

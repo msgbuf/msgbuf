@@ -44,4 +44,10 @@ public interface AnnotatedMessage extends BaseMsg {
 		return result;
 	}
 
+	/** Creates a new {@link AnnotatedMessage} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static AnnotatedMessage readAnnotated_message(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.underscorename.AnnotatedMessage_Impl.readAnnotated_message_XmlContent(in);
+	}
+
 }

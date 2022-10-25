@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import de.haumacher.msgbuf.generator.Generator;
+import de.haumacher.msgbuf.generator.plugins.XmlStreamingPlugin;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -39,7 +40,7 @@ public class TestParser extends TestCase {
 		Generator generator = new Generator();
 		generator.setOut(testDir());
 		generator.load(_proto);
-		generator.generate();
+		generator.generate(new XmlStreamingPlugin());
 	}
 
 	private static File testDir() {

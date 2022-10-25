@@ -96,6 +96,12 @@ public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.h
 		return result;
 	}
 
+	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Shape readShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nojson.Shape_Impl.readShape_XmlContent(in);
+	}
+
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 

@@ -171,4 +171,84 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 		}
 	}
 
+	/** XML element name representing a {@link Project} type. */
+	public static final String PROJECT__XML_ELEMENT = "project";
+
+	/** XML attribute or element name of a {@link #getName} property. */
+	private static final String NAME__XML_ATTR = "name";
+
+	/** XML attribute or element name of a {@link #getCost} property. */
+	private static final String COST__XML_ATTR = "cost";
+
+	/** Creates a new {@link Project} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Project_Impl readProject_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		Project_Impl result = new Project_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case NAME__XML_ATTR: {
+				setName(value);
+				break;
+			}
+			case COST__XML_ATTR: {
+				setCost(Double.parseDouble(value));
+				break;
+			}
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case NAME__XML_ATTR: {
+				setName(in.getElementText());
+				break;
+			}
+			case COST__XML_ATTR: {
+				setCost(Double.parseDouble(in.getElementText()));
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
 }

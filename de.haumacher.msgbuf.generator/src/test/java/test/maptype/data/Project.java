@@ -60,4 +60,10 @@ public interface Project extends de.haumacher.msgbuf.data.DataObject, de.haumach
 		return result;
 	}
 
+	/** Creates a new {@link Project} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Project readProject(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.maptype.data.Project_Impl.readProject_XmlContent(in);
+	}
+
 }

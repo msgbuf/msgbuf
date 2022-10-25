@@ -153,7 +153,7 @@ public class DartClassGenerator extends AbstractDartGenerator {
 
 							line("case " + jsonName(field) + ": {");
 							{
-								new ReadOperationBuilder(field).generateInner(this);
+								include(new ReadOperationBuilder(field));
 								line("break;");
 							}
 							line("}");
@@ -189,7 +189,7 @@ public class DartClassGenerator extends AbstractDartGenerator {
 						}
 						{
 							line("json.addKey(" + jsonName(field) + ");");
-							new WriteOperationBuilder(field.isRepeated(), field.getType(), var).generateInner(this);
+							this.include(new WriteOperationBuilder(field.isRepeated(), field.getType(), var));
 						}
 						if (nullable) {
 							line("}");

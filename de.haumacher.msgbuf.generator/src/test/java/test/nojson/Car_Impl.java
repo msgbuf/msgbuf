@@ -178,6 +178,55 @@ class Car_Impl extends Shape_Impl implements Car {
 		}
 	}
 
+	/** XML element name representing a {@link Car} type. */
+	public static final String CAR__XML_ELEMENT = "car";
+
+	/** XML attribute or element name of a {@link #getWheel1} property. */
+	private static final String WHEEL_1__XML_ATTR = "wheel-1";
+
+	/** XML attribute or element name of a {@link #getWheel2} property. */
+	private static final String WHEEL_2__XML_ATTR = "wheel-2";
+
+	/** XML attribute or element name of a {@link #getBody} property. */
+	private static final String BODY__XML_ATTR = "body";
+
+	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Car_Impl readCar_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		Car_Impl result = new Car_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case WHEEL_1__XML_ATTR: {
+				setWheel1(test.nojson.Circle_Impl.readCircle_XmlContent(in));
+				break;
+			}
+			case WHEEL_2__XML_ATTR: {
+				setWheel2(test.nojson.Circle_Impl.readCircle_XmlContent(in));
+				break;
+			}
+			case BODY__XML_ATTR: {
+				setBody(test.nojson.Rectangle_Impl.readRectangle_XmlContent(in));
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
 	@Override
 	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);

@@ -84,6 +84,12 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 			return result;
 		}
 
+		/** Creates a new {@link Result} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+		public static Result readResult(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+			in.nextTag();
+			return test.nested.data.SearchResponse_Impl.Result_Impl.readResult_XmlContent(in);
+		}
+
 	}
 
 	/**
@@ -139,6 +145,12 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		SearchResponse result = test.nested.data.SearchResponse_Impl.readSearchResponse_Content(in);
 		in.endObject();
 		return result;
+	}
+
+	/** Creates a new {@link SearchResponse} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static SearchResponse readSearchResponse(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nested.data.SearchResponse_Impl.readSearchResponse_XmlContent(in);
 	}
 
 }

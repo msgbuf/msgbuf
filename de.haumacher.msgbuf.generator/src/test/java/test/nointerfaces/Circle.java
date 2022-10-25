@@ -160,6 +160,51 @@ public class Circle extends AtomicShape {
 		}
 	}
 
+	/** XML element name representing a {@link Circle} type. */
+	public static final String CIRCLE__XML_ELEMENT = "circle";
+
+	/** XML attribute or element name of a {@link #getRadius} property. */
+	private static final String RADIUS__XML_ATTR = "r";
+
+	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Circle readCircle_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		Circle result = new Circle();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case RADIUS__XML_ATTR: {
+				setRadius(Integer.parseInt(value));
+				break;
+			}
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case RADIUS__XML_ATTR: {
+				setRadius(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
+	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Circle readCircle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nointerfaces.Circle.readCircle_XmlContent(in);
+	}
+
 	@Override
 	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);

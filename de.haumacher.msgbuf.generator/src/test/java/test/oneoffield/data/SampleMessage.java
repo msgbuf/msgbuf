@@ -34,4 +34,10 @@ public interface SampleMessage extends de.haumacher.msgbuf.data.DataObject, de.h
 		return result;
 	}
 
+	/** Creates a new {@link SampleMessage} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static SampleMessage readSampleMessage(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.oneoffield.data.SampleMessage_Impl.readSampleMessage_XmlContent(in);
+	}
+
 }

@@ -107,6 +107,45 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 		}
 	}
 
+	/** XML element name representing a {@link SomeName} type. */
+	public static final String SOME_NAME__XML_ELEMENT = "some-name";
+
+	/** XML attribute or element name of a {@link #getMyField} property. */
+	private static final String MY_FIELD__XML_ATTR = "my-field";
+
+	/** Creates a new {@link SomeName} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static SomeName_Impl readSome_name_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		SomeName_Impl result = new SomeName_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case MY_FIELD__XML_ATTR: {
+				setMyField(value);
+				break;
+			}
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case MY_FIELD__XML_ATTR: {
+				setMyField(in.getElementText());
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
 	@Override
 	public <R,A,E extends Throwable> R visit(BaseMsg.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);

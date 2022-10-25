@@ -600,4 +600,184 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 		}
 	}
 
+	/** XML element name representing a {@link A} type. */
+	public static final String A__XML_ELEMENT = "a";
+
+	/** XML attribute or element name of a {@link #getName} property. */
+	private static final String NAME__XML_ATTR = "name";
+
+	/** XML attribute or element name of a {@link #getContents} property. */
+	private static final String CONTENTS__XML_ATTR = "contents";
+
+	/** XML attribute or element name of a {@link #getChildren} property. */
+	private static final String CHILDREN__XML_ATTR = "children";
+
+	/** XML attribute or element name of a {@link #getBs} property. */
+	private static final String BS__XML_ATTR = "bs";
+
+	/** XML attribute or element name of a {@link #getB} property. */
+	private static final String B__XML_ATTR = "b";
+
+	/** XML attribute or element name of a {@link #getOther} property. */
+	private static final String OTHER__XML_ATTR = "other";
+
+	/** XML attribute or element name of a {@link #getOthers} property. */
+	private static final String OTHERS__XML_ATTR = "others";
+
+	/** XML attribute or element name of a {@link #getInOther} property. */
+	private static final String IN_OTHER__XML_ATTR = "in-other";
+
+	/** XML attribute or element name of a {@link #getInOthers} property. */
+	private static final String IN_OTHERS__XML_ATTR = "in-others";
+
+	/** Creates a new {@link A} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static A_Impl readA_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		A_Impl result = new A_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case NAME__XML_ATTR: {
+				setName(value);
+				break;
+			}
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case NAME__XML_ATTR: {
+				setName(in.getElementText());
+				break;
+			}
+			case CONTENTS__XML_ATTR: {
+				setContents(test.references.data.A_Impl.readA_XmlContent(in));
+				break;
+			}
+			case CHILDREN__XML_ATTR: {
+				internalReadChildrenListXml(in);
+				break;
+			}
+			case BS__XML_ATTR: {
+				internalReadBsListXml(in);
+				break;
+			}
+			case B__XML_ATTR: {
+				setB(test.references.data.B_Impl.readB_XmlContent(in));
+				break;
+			}
+			case OTHER__XML_ATTR: {
+				setOther(test.references.data.A_Impl.readA_XmlContent(in));
+				break;
+			}
+			case OTHERS__XML_ATTR: {
+				internalReadOthersListXml(in);
+				break;
+			}
+			case IN_OTHER__XML_ATTR: {
+				internalReadInOtherListXml(in);
+				break;
+			}
+			case IN_OTHERS__XML_ATTR: {
+				internalReadInOthersListXml(in);
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
+	private void internalReadChildrenListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addChildren(test.references.data.A_Impl.readA_XmlContent(in));
+		}
+	}
+
+	private void internalReadBsListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addBs(test.references.data.B_Impl.readB_XmlContent(in));
+		}
+	}
+
+	private void internalReadOthersListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addOthers(test.references.data.A_Impl.readA_XmlContent(in));
+		}
+	}
+
+	private void internalReadInOtherListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addInOther(test.references.data.A_Impl.readA_XmlContent(in));
+		}
+	}
+
+	private void internalReadInOthersListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addInOthers(test.references.data.A_Impl.readA_XmlContent(in));
+		}
+	}
+
 }

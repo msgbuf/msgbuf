@@ -74,4 +74,10 @@ public interface Rectangle extends AtomicShape {
 		return result;
 	}
 
+	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Rectangle readRectangle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.noreflection.Rectangle_Impl.readRectangle_XmlContent(in);
+	}
+
 }

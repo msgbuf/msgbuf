@@ -97,4 +97,10 @@ public interface MyMessage2 extends de.haumacher.msgbuf.data.DataObject, de.haum
 		return result;
 	}
 
+	/** Creates a new {@link MyMessage2} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static MyMessage2 readMyMessage2(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.options.data.MyMessage2_Impl.readMyMessage2_XmlContent(in);
+	}
+
 }

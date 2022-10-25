@@ -113,4 +113,103 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.graph.AbstractSharedGraphN
 		}
 	}
 
+	/** XML element name representing a {@link Shape} type. */
+	public static final String SHAPE__XML_ELEMENT = "shape";
+
+	/** XML attribute or element name of a {@link #getXCoordinate} property. */
+	private static final String X_COORDINATE__XML_ATTR = "x";
+
+	/** XML attribute or element name of a {@link #getYCoordinate} property. */
+	private static final String Y_COORDINATE__XML_ATTR = "y";
+
+	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Shape_Impl readShape_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		switch (in.getLocalName()) {
+			case Circle_Impl.CIRCLE__XML_ELEMENT: {
+				return test.graph.data.Circle_Impl.readCircle_XmlContent(in);
+			}
+
+			case Rectangle_Impl.RECTANGLE__XML_ELEMENT: {
+				return test.graph.data.Rectangle_Impl.readRectangle_XmlContent(in);
+			}
+
+			case Group_Impl.GROUP__XML_ELEMENT: {
+				return test.graph.data.Group_Impl.readGroup_XmlContent(in);
+			}
+
+			case Car_Impl.CAR__XML_ELEMENT: {
+				return test.graph.data.Car_Impl.readCar_XmlContent(in);
+			}
+
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+				return null;
+			}
+		}
+	}
+
+	/** Reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	protected final void readContentXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		for (int n = 0, cnt = in.getAttributeCount(); n < cnt; n++) {
+			String name = in.getAttributeLocalName(n);
+			String value = in.getAttributeValue(n);
+
+			readFieldXmlAttribute(name, value);
+		}
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+			assert event == javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+			String localName = in.getLocalName();
+			readFieldXmlElement(in, localName);
+		}
+	}
+
+	/** Parses the given attribute value and assigns it to the field with the given name. */
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case X_COORDINATE__XML_ATTR: {
+				setXCoordinate(Integer.parseInt(value));
+				break;
+			}
+			case Y_COORDINATE__XML_ATTR: {
+				setYCoordinate(Integer.parseInt(value));
+				break;
+			}
+			default: {
+				// Skip unknown attribute.
+			}
+		}
+	}
+
+	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case X_COORDINATE__XML_ATTR: {
+				setXCoordinate(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			case Y_COORDINATE__XML_ATTR: {
+				setYCoordinate(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+			}
+		}
+	}
+
+	protected static final void internalSkipUntilMatchingEndElement(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		int level = 0;
+		while (true) {
+			switch (in.next()) {
+				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
+				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
+			}
+		}
+	}
+
 }

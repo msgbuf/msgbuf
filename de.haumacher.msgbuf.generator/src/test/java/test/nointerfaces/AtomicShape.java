@@ -65,6 +65,51 @@ public abstract class AtomicShape extends Shape {
 		return result;
 	}
 
+	/** XML element name representing a {@link AtomicShape} type. */
+	public static final String ATOMIC_SHAPE__XML_ELEMENT = "atomic-shape";
+
+	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static AtomicShape readAtomicShape_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		switch (in.getLocalName()) {
+			case Circle.CIRCLE__XML_ELEMENT: {
+				return test.nointerfaces.Circle.readCircle_XmlContent(in);
+			}
+
+			case Rectangle.RECTANGLE__XML_ELEMENT: {
+				return test.nointerfaces.Rectangle.readRectangle_XmlContent(in);
+			}
+
+			default: {
+				internalSkipUntilMatchingEndElement(in);
+				return null;
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
+	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static AtomicShape readAtomicShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		in.nextTag();
+		return test.nointerfaces.AtomicShape.readAtomicShape_XmlContent(in);
+	}
+
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 

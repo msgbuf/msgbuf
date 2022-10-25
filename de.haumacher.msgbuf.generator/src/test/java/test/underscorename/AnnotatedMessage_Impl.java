@@ -107,6 +107,45 @@ class AnnotatedMessage_Impl extends BaseMsg_Impl implements AnnotatedMessage {
 		}
 	}
 
+	/** XML element name representing a {@link AnnotatedMessage} type. */
+	public static final String ANNOTATED_MESSAGE__XML_ELEMENT = "m1";
+
+	/** XML attribute or element name of a {@link #getAnnotatedField} property. */
+	private static final String ANNOTATED_FIELD__XML_ATTR = "f1";
+
+	/** Creates a new {@link AnnotatedMessage} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static AnnotatedMessage_Impl readAnnotated_message_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		AnnotatedMessage_Impl result = new AnnotatedMessage_Impl();
+		result.readContentXml(in);
+		return result;
+	}
+
+	@Override
+	protected void readFieldXmlAttribute(String name, String value) {
+		switch (name) {
+			case ANNOTATED_FIELD__XML_ATTR: {
+				setAnnotatedField(value);
+				break;
+			}
+			default: {
+				super.readFieldXmlAttribute(name, value);
+			}
+		}
+	}
+
+	@Override
+	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
+		switch (localName) {
+			case ANNOTATED_FIELD__XML_ATTR: {
+				setAnnotatedField(in.getElementText());
+				break;
+			}
+			default: {
+				super.readFieldXmlElement(in, localName);
+			}
+		}
+	}
+
 	@Override
 	public <R,A,E extends Throwable> R visit(BaseMsg.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
