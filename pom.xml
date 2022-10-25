@@ -150,6 +150,18 @@
 				</configuration>
 			</plugin>
 			
+			<!-- Check for well-known vulnerabilities. -->
+			<!-- Execute explicitly with `mvn dependency-check:check`. -->
+			<plugin>
+			    <groupId>org.owasp</groupId>
+			    <artifactId>dependency-check-maven</artifactId>
+			    <version>7.3.0</version>
+		        <configuration>
+	                <format>ALL</format>
+	                <skipProvidedScope>true</skipProvidedScope>
+		        </configuration>
+			</plugin>
+
 			<!-- 
 				To update dependencies to latest releases use: mvn versions:use-latest-releases
 			-->
