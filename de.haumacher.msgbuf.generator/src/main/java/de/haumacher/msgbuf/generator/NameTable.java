@@ -5,6 +5,7 @@ package de.haumacher.msgbuf.generator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import de.haumacher.msgbuf.generator.ast.Constant;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -13,7 +14,6 @@ import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.QName;
-import de.haumacher.msgbuf.generator.common.Util;
 
 /**
  * TODO
@@ -55,7 +55,9 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 	}
 
 	private void enterDef(Definition def) {
-		_definitionByName.put(def.getName(), def);
+		if (def.getOuter() == null) {
+			_definitionByName.put(def.getName(), def);
+		}
 	}
 	
 	private Package mkPackage(QName qName) {
@@ -114,6 +116,44 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 	 * TODO
 	 */
 	public Definition lookup(MessageDef context, QName name) {
-		return _definitionByName.get(Util.last(name));
+		String baseName = name.getNames().get(0);
+		
+		Definition base = lookupBase(context, baseName);
+		for (int n = 1; n < name.getNames().size(); n++) {
+			String nextName = name.getNames().get(n);
+			Definition inner = lookupInner(base, nextName);
+			if (inner == null) {
+				System.out.println("ERROR: Name cannot be resolved in '" + base.getName() + "': " + nextName);
+				return null;
+			}
+			base = inner;
+		}
+		
+		return base;
+	}
+
+	private Definition lookupInner(Definition base, String nextName) {
+		if (base instanceof MessageDef) {
+			Optional<Definition> match = ((MessageDef) base).getDefinitions().stream().filter(d -> nextName.equals(d.getName())).findFirst();
+			if (match.isPresent()) {
+				return match.get();
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	private Definition lookupBase(MessageDef context, String baseName) {
+		while (context != null) {
+			Definition inner = lookupInner(context, baseName);
+			if (inner != null) {
+				return inner;
+			}
+			context = context.getOuter();
+		}
+		
+		return _definitionByName.get(baseName);
 	}
 }
