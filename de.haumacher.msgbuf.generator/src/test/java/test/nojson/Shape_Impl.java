@@ -32,7 +32,7 @@ abstract class Shape_Impl implements Shape {
 
 	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
 	protected final void internalSetXCoordinate(int value) {
-		_listener.beforeSet(this, X_COORDINATE, value);
+		_listener.beforeSet(this, X_COORDINATE__PROP, value);
 		_xCoordinate = value;
 	}
 
@@ -49,7 +49,7 @@ abstract class Shape_Impl implements Shape {
 
 	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
 	protected final void internalSetYCoordinate(int value) {
-		_listener.beforeSet(this, Y_COORDINATE, value);
+		_listener.beforeSet(this, Y_COORDINATE__PROP, value);
 		_yCoordinate = value;
 	}
 
@@ -77,8 +77,8 @@ abstract class Shape_Impl implements Shape {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			X_COORDINATE, 
-			Y_COORDINATE));
+			X_COORDINATE__PROP, 
+			Y_COORDINATE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -88,8 +88,8 @@ abstract class Shape_Impl implements Shape {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case X_COORDINATE: return getXCoordinate();
-			case Y_COORDINATE: return getYCoordinate();
+			case X_COORDINATE__PROP: return getXCoordinate();
+			case Y_COORDINATE__PROP: return getYCoordinate();
 			default: return Shape.super.get(field);
 		}
 	}
@@ -97,8 +97,8 @@ abstract class Shape_Impl implements Shape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case X_COORDINATE: internalSetXCoordinate((int) value); break;
-			case Y_COORDINATE: internalSetYCoordinate((int) value); break;
+			case X_COORDINATE__PROP: internalSetXCoordinate((int) value); break;
+			case Y_COORDINATE__PROP: internalSetYCoordinate((int) value); break;
 		}
 	}
 

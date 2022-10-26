@@ -16,7 +16,7 @@ public interface Circle extends AtomicShape {
 	static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
-	static final String RADIUS = "r";
+	static final String RADIUS__PROP = "r";
 
 	/** Identifier for the {@link Circle} type in binary format. */
 	static final int CIRCLE__TYPE_ID = 1;

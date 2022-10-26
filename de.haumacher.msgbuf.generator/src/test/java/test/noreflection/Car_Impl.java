@@ -6,13 +6,13 @@ package test.noreflection;
 class Car_Impl extends Shape_Impl implements Car {
 
 	/** @see #getWheel1() */
-	private static final String WHEEL_1 = "wheel1";
+	private static final String WHEEL_1__PROP = "wheel1";
 
 	/** @see #getWheel2() */
-	private static final String WHEEL_2 = "wheel2";
+	private static final String WHEEL_2__PROP = "wheel2";
 
 	/** @see #getBody() */
-	private static final String BODY = "body";
+	private static final String BODY__PROP = "body";
 
 	private Circle _wheel1 = null;
 
@@ -118,15 +118,15 @@ class Car_Impl extends Shape_Impl implements Car {
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasWheel1()) {
-			out.name(WHEEL_1);
+			out.name(WHEEL_1__PROP);
 			getWheel1().writeContent(out);
 		}
 		if (hasWheel2()) {
-			out.name(WHEEL_2);
+			out.name(WHEEL_2__PROP);
 			getWheel2().writeContent(out);
 		}
 		if (hasBody()) {
-			out.name(BODY);
+			out.name(BODY__PROP);
 			getBody().writeContent(out);
 		}
 	}
@@ -134,9 +134,9 @@ class Car_Impl extends Shape_Impl implements Car {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1: setWheel1(test.noreflection.Circle.readCircle(in)); break;
-			case WHEEL_2: setWheel2(test.noreflection.Circle.readCircle(in)); break;
-			case BODY: setBody(test.noreflection.Rectangle.readRectangle(in)); break;
+			case WHEEL_1__PROP: setWheel1(test.noreflection.Circle.readCircle(in)); break;
+			case WHEEL_2__PROP: setWheel2(test.noreflection.Circle.readCircle(in)); break;
+			case BODY__PROP: setBody(test.noreflection.Rectangle.readRectangle(in)); break;
 			default: super.readField(in, field);
 		}
 	}

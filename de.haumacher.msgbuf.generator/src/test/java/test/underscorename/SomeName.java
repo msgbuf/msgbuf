@@ -13,7 +13,7 @@ public interface SomeName extends BaseMsg {
 	static final String SOME_NAME__TYPE = "some_name";
 
 	/** @see #getMyField() */
-	static final String MY_FIELD = "my_field";
+	static final String MY_FIELD__PROP = "my_field";
 
 	/** Identifier for the {@link SomeName} type in binary format. */
 	static final int SOME_NAME__TYPE_ID = 1;

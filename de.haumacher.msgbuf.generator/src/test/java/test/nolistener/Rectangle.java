@@ -16,10 +16,10 @@ public interface Rectangle extends AtomicShape {
 	static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
-	static final String WIDTH = "w";
+	static final String WIDTH__PROP = "w";
 
 	/** @see #getHeight() */
-	static final String HEIGHT = "h";
+	static final String HEIGHT__PROP = "h";
 
 	/** Identifier for the {@link Rectangle} type in binary format. */
 	static final int RECTANGLE__TYPE_ID = 2;

@@ -31,7 +31,7 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 
 	/** Internal setter for {@link #getMyField()} without chain call utility. */
 	protected final void internalSetMyField(String value) {
-		_listener.beforeSet(this, MY_FIELD, value);
+		_listener.beforeSet(this, MY_FIELD__PROP, value);
 		_myField = value;
 	}
 
@@ -42,7 +42,7 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			MY_FIELD));
+			MY_FIELD__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -52,7 +52,7 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case MY_FIELD: return getMyField();
+			case MY_FIELD__PROP: return getMyField();
 			default: return super.get(field);
 		}
 	}
@@ -60,7 +60,7 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case MY_FIELD: internalSetMyField((String) value); break;
+			case MY_FIELD__PROP: internalSetMyField((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -68,14 +68,14 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(MY_FIELD);
+		out.name(MY_FIELD__PROP);
 		out.value(getMyField());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case MY_FIELD: setMyField(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case MY_FIELD__PROP: setMyField(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}

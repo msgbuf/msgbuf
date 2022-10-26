@@ -38,7 +38,7 @@ class Car_Impl extends Shape_Impl implements Car {
 
 	/** Internal setter for {@link #getWheel1()} without chain call utility. */
 	protected final void internalSetWheel1(Circle value) {
-		_listener.beforeSet(this, WHEEL_1, value);
+		_listener.beforeSet(this, WHEEL_1__PROP, value);
 		_wheel1 = value;
 	}
 
@@ -60,7 +60,7 @@ class Car_Impl extends Shape_Impl implements Car {
 
 	/** Internal setter for {@link #getWheel2()} without chain call utility. */
 	protected final void internalSetWheel2(Circle value) {
-		_listener.beforeSet(this, WHEEL_2, value);
+		_listener.beforeSet(this, WHEEL_2__PROP, value);
 		_wheel2 = value;
 	}
 
@@ -82,7 +82,7 @@ class Car_Impl extends Shape_Impl implements Car {
 
 	/** Internal setter for {@link #getBody()} without chain call utility. */
 	protected final void internalSetBody(Rectangle value) {
-		_listener.beforeSet(this, BODY, value);
+		_listener.beforeSet(this, BODY__PROP, value);
 		_body = value;
 	}
 
@@ -110,9 +110,9 @@ class Car_Impl extends Shape_Impl implements Car {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			WHEEL_1, 
-			WHEEL_2, 
-			BODY));
+			WHEEL_1__PROP, 
+			WHEEL_2__PROP, 
+			BODY__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -122,9 +122,9 @@ class Car_Impl extends Shape_Impl implements Car {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case WHEEL_1: return getWheel1();
-			case WHEEL_2: return getWheel2();
-			case BODY: return getBody();
+			case WHEEL_1__PROP: return getWheel1();
+			case WHEEL_2__PROP: return getWheel2();
+			case BODY__PROP: return getBody();
 			default: return super.get(field);
 		}
 	}
@@ -132,9 +132,9 @@ class Car_Impl extends Shape_Impl implements Car {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case WHEEL_1: internalSetWheel1((Circle) value); break;
-			case WHEEL_2: internalSetWheel2((Circle) value); break;
-			case BODY: internalSetBody((Rectangle) value); break;
+			case WHEEL_1__PROP: internalSetWheel1((Circle) value); break;
+			case WHEEL_2__PROP: internalSetWheel2((Circle) value); break;
+			case BODY__PROP: internalSetBody((Rectangle) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -143,15 +143,15 @@ class Car_Impl extends Shape_Impl implements Car {
 	protected void writeFields(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(scope, out);
 		if (hasWheel1()) {
-			out.name(WHEEL_1);
+			out.name(WHEEL_1__PROP);
 			getWheel1().writeTo(scope, out);
 		}
 		if (hasWheel2()) {
-			out.name(WHEEL_2);
+			out.name(WHEEL_2__PROP);
 			getWheel2().writeTo(scope, out);
 		}
 		if (hasBody()) {
-			out.name(BODY);
+			out.name(BODY__PROP);
 			getBody().writeTo(scope, out);
 		}
 	}
@@ -159,7 +159,7 @@ class Car_Impl extends Shape_Impl implements Car {
 	@Override
 	public void writeFieldValue(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonWriter out, String field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1: {
+			case WHEEL_1__PROP: {
 				if (hasWheel1()) {
 					getWheel1().writeTo(scope, out);
 				} else {
@@ -167,7 +167,7 @@ class Car_Impl extends Shape_Impl implements Car {
 				}
 				break;
 			}
-			case WHEEL_2: {
+			case WHEEL_2__PROP: {
 				if (hasWheel2()) {
 					getWheel2().writeTo(scope, out);
 				} else {
@@ -175,7 +175,7 @@ class Car_Impl extends Shape_Impl implements Car {
 				}
 				break;
 			}
-			case BODY: {
+			case BODY__PROP: {
 				if (hasBody()) {
 					getBody().writeTo(scope, out);
 				} else {
@@ -190,9 +190,9 @@ class Car_Impl extends Shape_Impl implements Car {
 	@Override
 	public void readField(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case WHEEL_1: setWheel1(test.graph.data.Circle.readCircle(scope, in)); break;
-			case WHEEL_2: setWheel2(test.graph.data.Circle.readCircle(scope, in)); break;
-			case BODY: setBody(test.graph.data.Rectangle.readRectangle(scope, in)); break;
+			case WHEEL_1__PROP: setWheel1(test.graph.data.Circle.readCircle(scope, in)); break;
+			case WHEEL_2__PROP: setWheel2(test.graph.data.Circle.readCircle(scope, in)); break;
+			case BODY__PROP: setBody(test.graph.data.Rectangle.readRectangle(scope, in)); break;
 			default: super.readField(scope, in, field);
 		}
 	}

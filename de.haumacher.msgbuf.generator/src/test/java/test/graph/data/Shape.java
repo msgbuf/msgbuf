@@ -35,10 +35,10 @@ public interface Shape extends de.haumacher.msgbuf.graph.SharedGraphNode {
 	}
 
 	/** @see #getXCoordinate() */
-	static final String X_COORDINATE = "x";
+	static final String X_COORDINATE__PROP = "x";
 
 	/** @see #getYCoordinate() */
-	static final String Y_COORDINATE = "y";
+	static final String Y_COORDINATE__PROP = "y";
 
 	/** The type code of this instance. */
 	TypeKind kind();

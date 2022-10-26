@@ -16,25 +16,25 @@ public interface Car extends Shape {
 	static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
-	static final String WHEEL_1 = "wheel1";
+	static final String WHEEL_1__PROP = "wheel1";
 
 	/** @see #getWheel2() */
-	static final String WHEEL_2 = "wheel2";
+	static final String WHEEL_2__PROP = "wheel2";
 
 	/** @see #getBody() */
-	static final String BODY = "body";
+	static final String BODY__PROP = "body";
 
 	/** Identifier for the {@link Car} type in binary format. */
 	static final int CAR__TYPE_ID = 5;
 
 	/** Identifier for the property {@link #getWheel1()} in binary format. */
-	static final int WHEEL_1__ID = 3;
+	static final int WHEEL_1__ID = 4;
 
 	/** Identifier for the property {@link #getWheel2()} in binary format. */
-	static final int WHEEL_2__ID = 4;
+	static final int WHEEL_2__ID = 5;
 
 	/** Identifier for the property {@link #getBody()} in binary format. */
-	static final int BODY__ID = 5;
+	static final int BODY__ID = 6;
 
 	/**
 	 * The front wheel.
@@ -86,6 +86,9 @@ public interface Car extends Shape {
 
 	@Override
 	Car setYCoordinate(int value);
+
+	@Override
+	Car setColor(Color value);
 
 
 	/** Reads a new instance from the given reader. */

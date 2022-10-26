@@ -16,7 +16,7 @@ public class Group extends Shape {
 	public static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
-	public static final String SHAPES = "shapes";
+	public static final String SHAPES__PROP = "shapes";
 
 	/** Identifier for the {@link Group} type in binary format. */
 	static final int GROUP__TYPE_ID = 3;
@@ -27,12 +27,12 @@ public class Group extends Shape {
 	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
 		@Override
 		protected void beforeAdd(int index, Shape element) {
-			_listener.beforeAdd(Group.this, SHAPES, index, element);
+			_listener.beforeAdd(Group.this, SHAPES__PROP, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, Shape element) {
-			_listener.afterRemove(Group.this, SHAPES, index, element);
+			_listener.afterRemove(Group.this, SHAPES__PROP, index, element);
 		}
 	};
 
@@ -115,7 +115,7 @@ public class Group extends Shape {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			SHAPES));
+			SHAPES__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -125,7 +125,7 @@ public class Group extends Shape {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case SHAPES: return getShapes();
+			case SHAPES__PROP: return getShapes();
 			default: return super.get(field);
 		}
 	}
@@ -133,7 +133,7 @@ public class Group extends Shape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case SHAPES: internalSetShapes(de.haumacher.msgbuf.util.Conversions.asList(Shape.class, value)); break;
+			case SHAPES__PROP: internalSetShapes(de.haumacher.msgbuf.util.Conversions.asList(Shape.class, value)); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -148,7 +148,7 @@ public class Group extends Shape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(SHAPES);
+		out.name(SHAPES__PROP);
 		out.beginArray();
 		for (Shape x : getShapes()) {
 			x.writeTo(out);
@@ -159,7 +159,7 @@ public class Group extends Shape {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case SHAPES: {
+			case SHAPES__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addShape(test.nointerfaces.Shape.readShape(in));

@@ -16,19 +16,19 @@ public interface Rectangle extends AtomicShape {
 	static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
-	static final String WIDTH = "w";
+	static final String WIDTH__PROP = "w";
 
 	/** @see #getHeight() */
-	static final String HEIGHT = "h";
+	static final String HEIGHT__PROP = "h";
 
 	/** Identifier for the {@link Rectangle} type in binary format. */
 	static final int RECTANGLE__TYPE_ID = 2;
 
 	/** Identifier for the property {@link #getWidth()} in binary format. */
-	static final int WIDTH__ID = 3;
+	static final int WIDTH__ID = 4;
 
 	/** Identifier for the property {@link #getHeight()} in binary format. */
-	static final int HEIGHT__ID = 4;
+	static final int HEIGHT__ID = 5;
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -63,6 +63,9 @@ public interface Rectangle extends AtomicShape {
 
 	@Override
 	Rectangle setYCoordinate(int value);
+
+	@Override
+	Rectangle setColor(Color value);
 
 
 	/** Reads a new instance from the given reader. */

@@ -16,13 +16,13 @@ public interface Circle extends AtomicShape {
 	static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
-	static final String RADIUS = "r";
+	static final String RADIUS__PROP = "r";
 
 	/** Identifier for the {@link Circle} type in binary format. */
 	static final int CIRCLE__TYPE_ID = 1;
 
 	/** Identifier for the property {@link #getRadius()} in binary format. */
-	static final int RADIUS__ID = 3;
+	static final int RADIUS__ID = 4;
 
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
@@ -39,6 +39,9 @@ public interface Circle extends AtomicShape {
 
 	@Override
 	Circle setYCoordinate(int value);
+
+	@Override
+	Circle setColor(Color value);
 
 
 	/** Reads a new instance from the given reader. */

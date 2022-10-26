@@ -6,7 +6,7 @@ package test.noreflection;
 class Circle_Impl extends AtomicShape_Impl implements Circle {
 
 	/** @see #getRadius() */
-	private static final String RADIUS = "r";
+	private static final String RADIUS__PROP = "r";
 
 	private int _radius = 0;
 
@@ -60,14 +60,14 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(RADIUS);
+		out.name(RADIUS__PROP);
 		out.value(getRadius());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case RADIUS: setRadius(in.nextInt()); break;
+			case RADIUS__PROP: setRadius(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

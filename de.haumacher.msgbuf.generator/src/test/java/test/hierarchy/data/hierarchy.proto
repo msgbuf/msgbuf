@@ -2,6 +2,17 @@ syntax = "msgbuf";
 
 package test.hierarchy.data;
 
+/**
+ * {@link Shape} colors.
+ */
+enum Color {
+	`red`;
+	`green`;
+	`blue`;
+	`yellow`;
+	`magenta`;
+}
+
 /** 
  * An abstract base class for all shapes 
  */
@@ -17,6 +28,11 @@ abstract message Shape {
 	 */
 	@Name("y")
 	int32 yCoordinate;
+	
+	/**
+     * The shape's color.
+     */
+	Color color;
 }
 
 /** A {@link Shape} that has no sub-shapes. */

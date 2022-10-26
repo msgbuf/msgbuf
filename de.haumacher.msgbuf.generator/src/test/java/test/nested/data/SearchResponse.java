@@ -14,13 +14,13 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		static final String RESULT__TYPE = "Result";
 
 		/** @see #getUrl() */
-		static final String URL = "url";
+		static final String URL__PROP = "url";
 
 		/** @see #getTitle() */
-		static final String TITLE = "title";
+		static final String TITLE__PROP = "title";
 
 		/** @see #getSnippets() */
-		static final String SNIPPETS = "snippets";
+		static final String SNIPPETS__PROP = "snippets";
 
 		/** Identifier for the property {@link #getUrl()} in binary format. */
 		static final int URL__ID = 1;
@@ -103,7 +103,7 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 	static final String SEARCH_RESPONSE__TYPE = "SearchResponse";
 
 	/** @see #getResults() */
-	static final String RESULTS = "results";
+	static final String RESULTS__PROP = "results";
 
 	/** Identifier for the property {@link #getResults()} in binary format. */
 	static final int RESULTS__ID = 1;

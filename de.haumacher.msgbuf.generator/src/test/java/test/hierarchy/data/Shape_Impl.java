@@ -9,6 +9,8 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	private int _yCoordinate = 0;
 
+	private Color _color = test.hierarchy.data.Color.RED;
+
 	/**
 	 * Creates a {@link Shape_Impl} instance.
 	 */
@@ -32,7 +34,7 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
 	protected final void internalSetXCoordinate(int value) {
-		_listener.beforeSet(this, X_COORDINATE, value);
+		_listener.beforeSet(this, X_COORDINATE__PROP, value);
 		_xCoordinate = value;
 	}
 
@@ -49,8 +51,26 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
 	protected final void internalSetYCoordinate(int value) {
-		_listener.beforeSet(this, Y_COORDINATE, value);
+		_listener.beforeSet(this, Y_COORDINATE__PROP, value);
 		_yCoordinate = value;
+	}
+
+	@Override
+	public final Color getColor() {
+		return _color;
+	}
+
+	@Override
+	public Shape setColor(Color value) {
+		internalSetColor(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getColor()} without chain call utility. */
+	protected final void internalSetColor(Color value) {
+		if (value == null) throw new IllegalArgumentException("Property 'color' cannot be null.");
+		_listener.beforeSet(this, COLOR__PROP, value);
+		_color = value;
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
@@ -77,8 +97,9 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			X_COORDINATE, 
-			Y_COORDINATE));
+			X_COORDINATE__PROP, 
+			Y_COORDINATE__PROP, 
+			COLOR__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -88,8 +109,9 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case X_COORDINATE: return getXCoordinate();
-			case Y_COORDINATE: return getYCoordinate();
+			case X_COORDINATE__PROP: return getXCoordinate();
+			case Y_COORDINATE__PROP: return getYCoordinate();
+			case COLOR__PROP: return getColor();
 			default: return Shape.super.get(field);
 		}
 	}
@@ -97,8 +119,9 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case X_COORDINATE: internalSetXCoordinate((int) value); break;
-			case Y_COORDINATE: internalSetYCoordinate((int) value); break;
+			case X_COORDINATE__PROP: internalSetXCoordinate((int) value); break;
+			case Y_COORDINATE__PROP: internalSetYCoordinate((int) value); break;
+			case COLOR__PROP: internalSetColor((Color) value); break;
 		}
 	}
 
@@ -113,17 +136,20 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(X_COORDINATE);
+		out.name(X_COORDINATE__PROP);
 		out.value(getXCoordinate());
-		out.name(Y_COORDINATE);
+		out.name(Y_COORDINATE__PROP);
 		out.value(getYCoordinate());
+		out.name(COLOR__PROP);
+		getColor().writeTo(out);
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
-			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
+			case X_COORDINATE__PROP: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__PROP: setYCoordinate(in.nextInt()); break;
+			case COLOR__PROP: setColor(test.hierarchy.data.Color.readColor(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -149,6 +175,8 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 		out.value(getXCoordinate());
 		out.name(Y_COORDINATE__ID);
 		out.value(getYCoordinate());
+		out.name(COLOR__ID);
+		getColor().writeTo(out);
 	}
 
 	/** Helper for reading all fields of this instance. */
@@ -164,6 +192,7 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 		switch (field) {
 			case X_COORDINATE__ID: setXCoordinate(in.nextInt()); break;
 			case Y_COORDINATE__ID: setYCoordinate(in.nextInt()); break;
+			case COLOR__ID: setColor(test.hierarchy.data.Color.readColor(in)); break;
 			default: in.skipValue(); 
 		}
 	}
@@ -176,6 +205,9 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	/** XML attribute or element name of a {@link #getYCoordinate} property. */
 	private static final String Y_COORDINATE__XML_ATTR = "y";
+
+	/** XML attribute or element name of a {@link #getColor} property. */
+	private static final String COLOR__XML_ATTR = "color";
 
 	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Shape_Impl readShape_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
@@ -238,6 +270,10 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 				setYCoordinate(Integer.parseInt(value));
 				break;
 			}
+			case COLOR__XML_ATTR: {
+				setColor(test.hierarchy.data.Color.valueOfProtocol(value));
+				break;
+			}
 			default: {
 				// Skip unknown attribute.
 			}
@@ -253,6 +289,10 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			}
 			case Y_COORDINATE__XML_ATTR: {
 				setYCoordinate(Integer.parseInt(in.getElementText()));
+				break;
+			}
+			case COLOR__XML_ATTR: {
+				setColor(test.hierarchy.data.Color.valueOfProtocol(in.getElementText()));
 				break;
 			}
 			default: {

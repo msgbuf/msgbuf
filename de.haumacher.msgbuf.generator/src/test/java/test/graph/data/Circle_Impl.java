@@ -34,7 +34,7 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 
 	/** Internal setter for {@link #getRadius()} without chain call utility. */
 	protected final void internalSetRadius(int value) {
-		_listener.beforeSet(this, RADIUS, value);
+		_listener.beforeSet(this, RADIUS__PROP, value);
 		_radius = value;
 	}
 
@@ -57,7 +57,7 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			RADIUS));
+			RADIUS__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -67,7 +67,7 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case RADIUS: return getRadius();
+			case RADIUS__PROP: return getRadius();
 			default: return super.get(field);
 		}
 	}
@@ -75,7 +75,7 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case RADIUS: internalSetRadius((int) value); break;
+			case RADIUS__PROP: internalSetRadius((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -83,14 +83,14 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(scope, out);
-		out.name(RADIUS);
+		out.name(RADIUS__PROP);
 		out.value(getRadius());
 	}
 
 	@Override
 	public void writeFieldValue(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonWriter out, String field) throws java.io.IOException {
 		switch (field) {
-			case RADIUS: {
+			case RADIUS__PROP: {
 				out.value(getRadius());
 				break;
 			}
@@ -101,7 +101,7 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 	@Override
 	public void readField(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case RADIUS: setRadius(in.nextInt()); break;
+			case RADIUS__PROP: setRadius(in.nextInt()); break;
 			default: super.readField(scope, in, field);
 		}
 	}

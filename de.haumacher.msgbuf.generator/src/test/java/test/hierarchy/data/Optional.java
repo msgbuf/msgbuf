@@ -16,19 +16,19 @@ public interface Optional extends Shape {
 	static final String OPTIONAL__TYPE = "Optional";
 
 	/** @see #isHidden() */
-	static final String HIDDEN = "hidden";
+	static final String HIDDEN__PROP = "hidden";
 
 	/** @see #getShape() */
-	static final String SHAPE = "shape";
+	static final String SHAPE__PROP = "shape";
 
 	/** Identifier for the {@link Optional} type in binary format. */
 	static final int OPTIONAL__TYPE_ID = 4;
 
 	/** Identifier for the property {@link #isHidden()} in binary format. */
-	static final int HIDDEN__ID = 3;
+	static final int HIDDEN__ID = 4;
 
 	/** Identifier for the property {@link #getShape()} in binary format. */
-	static final int SHAPE__ID = 4;
+	static final int SHAPE__ID = 5;
 
 	/**
 	 * Whether {@link #getShape()} is hidden.
@@ -60,6 +60,9 @@ public interface Optional extends Shape {
 
 	@Override
 	Optional setYCoordinate(int value);
+
+	@Override
+	Optional setColor(Color value);
 
 
 	/** Reads a new instance from the given reader. */

@@ -16,7 +16,7 @@ public interface Circle extends AtomicShape {
 	static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
-	static final String RADIUS = "r";
+	static final String RADIUS__PROP = "r";
 
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).

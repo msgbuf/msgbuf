@@ -77,8 +77,8 @@ public class TestReverseReferences extends TestCase {
 	public void testSetListener() {
 		Map<String, Object> properties = new HashMap<>();
 		A a1 = A.create().registerListener((self, prop, value) -> properties.put(prop, value)).setB(B.create()).setName("a1");
-		assertEquals(a1.getB(), properties.get(A.B));
-		assertEquals("a1", properties.get(A.NAME));
+		assertEquals(a1.getB(), properties.get(A.B__PROP));
+		assertEquals("a1", properties.get(A.NAME__PROP));
 	}
 	
 	public void testAddListener() {
@@ -102,11 +102,11 @@ public class TestReverseReferences extends TestCase {
 			}
 		};
 		A a1 = A.create().registerListener(l).setName("a1").addBs(B.create().setName("b1")).setChildren(Arrays.asList(A.create().setName("a2")));
-		assertEquals("a1", properties.get(A.NAME));
-		assertEquals(a1.getBs().get(0), properties.get(A.BS));
-		assertEquals(a1.getChildren().get(0), properties.get(A.CHILDREN));
+		assertEquals("a1", properties.get(A.NAME__PROP));
+		assertEquals(a1.getBs().get(0), properties.get(A.BS__PROP));
+		assertEquals(a1.getChildren().get(0), properties.get(A.CHILDREN__PROP));
 		
 		a1.getBs().get(0).setName("b2");
-		assertEquals("b2", properties.get(B.NAME));
+		assertEquals("b2", properties.get(B.NAME__PROP));
 	}
 }

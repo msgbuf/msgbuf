@@ -36,7 +36,7 @@ class Optional_Impl extends Shape_Impl implements Optional {
 
 	/** Internal setter for {@link #isHidden()} without chain call utility. */
 	protected final void internalSetHidden(boolean value) {
-		_listener.beforeSet(this, HIDDEN, value);
+		_listener.beforeSet(this, HIDDEN__PROP, value);
 		_hidden = value;
 	}
 
@@ -53,7 +53,7 @@ class Optional_Impl extends Shape_Impl implements Optional {
 
 	/** Internal setter for {@link #getShape()} without chain call utility. */
 	protected final void internalSetShape(Shape value) {
-		_listener.beforeSet(this, SHAPE, value);
+		_listener.beforeSet(this, SHAPE__PROP, value);
 		_shape = value;
 	}
 
@@ -75,14 +75,20 @@ class Optional_Impl extends Shape_Impl implements Optional {
 	}
 
 	@Override
+	public Optional setColor(Color value) {
+		internalSetColor(value);
+		return this;
+	}
+
+	@Override
 	public String jsonType() {
 		return OPTIONAL__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			HIDDEN, 
-			SHAPE));
+			HIDDEN__PROP, 
+			SHAPE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -92,8 +98,8 @@ class Optional_Impl extends Shape_Impl implements Optional {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case HIDDEN: return isHidden();
-			case SHAPE: return getShape();
+			case HIDDEN__PROP: return isHidden();
+			case SHAPE__PROP: return getShape();
 			default: return super.get(field);
 		}
 	}
@@ -101,8 +107,8 @@ class Optional_Impl extends Shape_Impl implements Optional {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case HIDDEN: internalSetHidden((boolean) value); break;
-			case SHAPE: internalSetShape((Shape) value); break;
+			case HIDDEN__PROP: internalSetHidden((boolean) value); break;
+			case SHAPE__PROP: internalSetShape((Shape) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -110,10 +116,10 @@ class Optional_Impl extends Shape_Impl implements Optional {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(HIDDEN);
+		out.name(HIDDEN__PROP);
 		out.value(isHidden());
 		if (hasShape()) {
-			out.name(SHAPE);
+			out.name(SHAPE__PROP);
 			getShape().writeTo(out);
 		}
 	}
@@ -121,8 +127,8 @@ class Optional_Impl extends Shape_Impl implements Optional {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case HIDDEN: setHidden(in.nextBoolean()); break;
-			case SHAPE: setShape(test.hierarchy.data.Shape.readShape(in)); break;
+			case HIDDEN__PROP: setHidden(in.nextBoolean()); break;
+			case SHAPE__PROP: setShape(test.hierarchy.data.Shape.readShape(in)); break;
 			default: super.readField(in, field);
 		}
 	}

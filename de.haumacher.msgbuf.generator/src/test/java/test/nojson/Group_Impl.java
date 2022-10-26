@@ -8,12 +8,12 @@ class Group_Impl extends Shape_Impl implements Group {
 	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
 		@Override
 		protected void beforeAdd(int index, Shape element) {
-			_listener.beforeAdd(Group_Impl.this, SHAPES, index, element);
+			_listener.beforeAdd(Group_Impl.this, SHAPES__PROP, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, Shape element) {
-			_listener.afterRemove(Group_Impl.this, SHAPES, index, element);
+			_listener.afterRemove(Group_Impl.this, SHAPES__PROP, index, element);
 		}
 	};
 
@@ -84,7 +84,7 @@ class Group_Impl extends Shape_Impl implements Group {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			SHAPES));
+			SHAPES__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -94,7 +94,7 @@ class Group_Impl extends Shape_Impl implements Group {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case SHAPES: return getShapes();
+			case SHAPES__PROP: return getShapes();
 			default: return super.get(field);
 		}
 	}
@@ -102,7 +102,7 @@ class Group_Impl extends Shape_Impl implements Group {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case SHAPES: internalSetShapes(de.haumacher.msgbuf.util.Conversions.asList(Shape.class, value)); break;
+			case SHAPES__PROP: internalSetShapes(de.haumacher.msgbuf.util.Conversions.asList(Shape.class, value)); break;
 			default: super.set(field, value); break;
 		}
 	}

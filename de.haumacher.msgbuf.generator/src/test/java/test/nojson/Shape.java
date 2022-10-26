@@ -35,10 +35,10 @@ public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.h
 	}
 
 	/** @see #getXCoordinate() */
-	static final String X_COORDINATE = "x";
+	static final String X_COORDINATE__PROP = "x";
 
 	/** @see #getYCoordinate() */
-	static final String Y_COORDINATE = "y";
+	static final String Y_COORDINATE__PROP = "y";
 
 	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
 	static final int X_COORDINATE__ID = 1;

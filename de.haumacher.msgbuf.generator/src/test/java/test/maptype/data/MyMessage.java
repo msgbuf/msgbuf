@@ -13,10 +13,10 @@ public interface MyMessage extends de.haumacher.msgbuf.data.DataObject, de.hauma
 	static final String MY_MESSAGE__TYPE = "MyMessage";
 
 	/** @see #getProjects() */
-	static final String PROJECTS = "projects";
+	static final String PROJECTS__PROP = "projects";
 
 	/** @see #getRating() */
-	static final String RATING = "rating";
+	static final String RATING__PROP = "rating";
 
 	/** Identifier for the property {@link #getProjects()} in binary format. */
 	static final int PROJECTS__ID = 3;

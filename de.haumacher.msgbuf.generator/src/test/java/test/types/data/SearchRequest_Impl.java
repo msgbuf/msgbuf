@@ -30,7 +30,7 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 
 	/** Internal setter for {@link #getQuery()} without chain call utility. */
 	protected final void internalSetQuery(String value) {
-		_listener.beforeSet(this, QUERY, value);
+		_listener.beforeSet(this, QUERY__PROP, value);
 		_query = value;
 	}
 
@@ -47,7 +47,7 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 
 	/** Internal setter for {@link #getPageNumber()} without chain call utility. */
 	protected final void internalSetPageNumber(int value) {
-		_listener.beforeSet(this, PAGE_NUMBER, value);
+		_listener.beforeSet(this, PAGE_NUMBER__PROP, value);
 		_pageNumber = value;
 	}
 
@@ -64,7 +64,7 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 
 	/** Internal setter for {@link #getResultPerPage()} without chain call utility. */
 	protected final void internalSetResultPerPage(int value) {
-		_listener.beforeSet(this, RESULT_PER_PAGE, value);
+		_listener.beforeSet(this, RESULT_PER_PAGE__PROP, value);
 		_resultPerPage = value;
 	}
 
@@ -97,9 +97,9 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			QUERY, 
-			PAGE_NUMBER, 
-			RESULT_PER_PAGE));
+			QUERY__PROP, 
+			PAGE_NUMBER__PROP, 
+			RESULT_PER_PAGE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -109,9 +109,9 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case QUERY: return getQuery();
-			case PAGE_NUMBER: return getPageNumber();
-			case RESULT_PER_PAGE: return getResultPerPage();
+			case QUERY__PROP: return getQuery();
+			case PAGE_NUMBER__PROP: return getPageNumber();
+			case RESULT_PER_PAGE__PROP: return getResultPerPage();
 			default: return SearchRequest.super.get(field);
 		}
 	}
@@ -119,9 +119,9 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case QUERY: internalSetQuery((String) value); break;
-			case PAGE_NUMBER: internalSetPageNumber((int) value); break;
-			case RESULT_PER_PAGE: internalSetResultPerPage((int) value); break;
+			case QUERY__PROP: internalSetQuery((String) value); break;
+			case PAGE_NUMBER__PROP: internalSetPageNumber((int) value); break;
+			case RESULT_PER_PAGE__PROP: internalSetResultPerPage((int) value); break;
 		}
 	}
 
@@ -133,20 +133,20 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(QUERY);
+		out.name(QUERY__PROP);
 		out.value(getQuery());
-		out.name(PAGE_NUMBER);
+		out.name(PAGE_NUMBER__PROP);
 		out.value(getPageNumber());
-		out.name(RESULT_PER_PAGE);
+		out.name(RESULT_PER_PAGE__PROP);
 		out.value(getResultPerPage());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case QUERY: setQuery(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case PAGE_NUMBER: setPageNumber(in.nextInt()); break;
-			case RESULT_PER_PAGE: setResultPerPage(in.nextInt()); break;
+			case QUERY__PROP: setQuery(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case PAGE_NUMBER__PROP: setPageNumber(in.nextInt()); break;
+			case RESULT_PER_PAGE__PROP: setResultPerPage(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

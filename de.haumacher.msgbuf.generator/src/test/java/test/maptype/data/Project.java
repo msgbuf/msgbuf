@@ -13,10 +13,10 @@ public interface Project extends de.haumacher.msgbuf.data.DataObject, de.haumach
 	static final String PROJECT__TYPE = "Project";
 
 	/** @see #getName() */
-	static final String NAME = "name";
+	static final String NAME__PROP = "name";
 
 	/** @see #getCost() */
-	static final String COST = "cost";
+	static final String COST__PROP = "cost";
 
 	/** Identifier for the property {@link #getName()} in binary format. */
 	static final int NAME__ID = 1;

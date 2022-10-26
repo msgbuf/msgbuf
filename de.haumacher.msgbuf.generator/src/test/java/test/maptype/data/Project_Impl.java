@@ -28,7 +28,7 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 
 	/** Internal setter for {@link #getName()} without chain call utility. */
 	protected final void internalSetName(String value) {
-		_listener.beforeSet(this, NAME, value);
+		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
 	}
 
@@ -45,7 +45,7 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 
 	/** Internal setter for {@link #getCost()} without chain call utility. */
 	protected final void internalSetCost(double value) {
-		_listener.beforeSet(this, COST, value);
+		_listener.beforeSet(this, COST__PROP, value);
 		_cost = value;
 	}
 
@@ -78,8 +78,8 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			NAME, 
-			COST));
+			NAME__PROP, 
+			COST__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -89,8 +89,8 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case NAME: return getName();
-			case COST: return getCost();
+			case NAME__PROP: return getName();
+			case COST__PROP: return getCost();
 			default: return Project.super.get(field);
 		}
 	}
@@ -98,8 +98,8 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: internalSetName((String) value); break;
-			case COST: internalSetCost((double) value); break;
+			case NAME__PROP: internalSetName((String) value); break;
+			case COST__PROP: internalSetCost((double) value); break;
 		}
 	}
 
@@ -111,17 +111,17 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(NAME);
+		out.name(NAME__PROP);
 		out.value(getName());
-		out.name(COST);
+		out.name(COST__PROP);
 		out.value(getCost());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case COST: setCost(in.nextDouble()); break;
+			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case COST__PROP: setCost(in.nextDouble()); break;
 			default: super.readField(in, field);
 		}
 	}

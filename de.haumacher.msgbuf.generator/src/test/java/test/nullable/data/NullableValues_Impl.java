@@ -265,14 +265,14 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			INT, 
-			LONG, 
-			BOOLEAN, 
-			STRING, 
-			INT_LIST, 
-			STRING_LIST, 
-			STRING_INT_MAP, 
-			OPTIONAL_DECISION));
+			INT__PROP, 
+			LONG__PROP, 
+			BOOLEAN__PROP, 
+			STRING__PROP, 
+			INT_LIST__PROP, 
+			STRING_LIST__PROP, 
+			STRING_INT_MAP__PROP, 
+			OPTIONAL_DECISION__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -282,14 +282,14 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case INT: return getInt();
-			case LONG: return getLong();
-			case BOOLEAN: return getBoolean();
-			case STRING: return getString();
-			case INT_LIST: return getIntList();
-			case STRING_LIST: return getStringList();
-			case STRING_INT_MAP: return getStringIntMap();
-			case OPTIONAL_DECISION: return getOptionalDecision();
+			case INT__PROP: return getInt();
+			case LONG__PROP: return getLong();
+			case BOOLEAN__PROP: return getBoolean();
+			case STRING__PROP: return getString();
+			case INT_LIST__PROP: return getIntList();
+			case STRING_LIST__PROP: return getStringList();
+			case STRING_INT_MAP__PROP: return getStringIntMap();
+			case OPTIONAL_DECISION__PROP: return getOptionalDecision();
 			default: return NullableValues.super.get(field);
 		}
 	}
@@ -297,14 +297,14 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case INT: internalSetInt((Integer) value); break;
-			case LONG: internalSetLong((Long) value); break;
-			case BOOLEAN: internalSetBoolean((Boolean) value); break;
-			case STRING: internalSetString((String) value); break;
-			case INT_LIST: internalSetIntList(de.haumacher.msgbuf.util.Conversions.asList(Integer.class, value)); break;
-			case STRING_LIST: internalSetStringList(de.haumacher.msgbuf.util.Conversions.asList(String.class, value)); break;
-			case STRING_INT_MAP: internalSetStringIntMap((java.util.Map<String, Integer>) value); break;
-			case OPTIONAL_DECISION: internalSetOptionalDecision((Decision) value); break;
+			case INT__PROP: internalSetInt((Integer) value); break;
+			case LONG__PROP: internalSetLong((Long) value); break;
+			case BOOLEAN__PROP: internalSetBoolean((Boolean) value); break;
+			case STRING__PROP: internalSetString((String) value); break;
+			case INT_LIST__PROP: internalSetIntList(de.haumacher.msgbuf.util.Conversions.asList(Integer.class, value)); break;
+			case STRING_LIST__PROP: internalSetStringList(de.haumacher.msgbuf.util.Conversions.asList(String.class, value)); break;
+			case STRING_INT_MAP__PROP: internalSetStringIntMap((java.util.Map<String, Integer>) value); break;
+			case OPTIONAL_DECISION__PROP: internalSetOptionalDecision((Decision) value); break;
 		}
 	}
 
@@ -317,23 +317,23 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasInt()) {
-			out.name(INT);
+			out.name(INT__PROP);
 			out.value(getInt());
 		}
 		if (hasLong()) {
-			out.name(LONG);
+			out.name(LONG__PROP);
 			out.value(getLong());
 		}
 		if (hasBoolean()) {
-			out.name(BOOLEAN);
+			out.name(BOOLEAN__PROP);
 			out.value(getBoolean());
 		}
 		if (hasString()) {
-			out.name(STRING);
+			out.name(STRING__PROP);
 			out.value(getString());
 		}
 		if (hasIntList()) {
-			out.name(INT_LIST);
+			out.name(INT_LIST__PROP);
 			out.beginArray();
 			for (int x : getIntList()) {
 				out.value(x);
@@ -341,7 +341,7 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			out.endArray();
 		}
 		if (hasStringList()) {
-			out.name(STRING_LIST);
+			out.name(STRING_LIST__PROP);
 			out.beginArray();
 			for (String x : getStringList()) {
 				out.value(x);
@@ -349,7 +349,7 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			out.endArray();
 		}
 		if (hasStringIntMap()) {
-			out.name(STRING_INT_MAP);
+			out.name(STRING_INT_MAP__PROP);
 			out.beginObject();
 			for (java.util.Map.Entry<String,Integer> entry : getStringIntMap().entrySet()) {
 				out.name(entry.getKey());
@@ -358,7 +358,7 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			out.endObject();
 		}
 		if (hasOptionalDecision()) {
-			out.name(OPTIONAL_DECISION);
+			out.name(OPTIONAL_DECISION__PROP);
 			getOptionalDecision().writeTo(out);
 		}
 	}
@@ -366,11 +366,11 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case INT: setInt(in.nextInt()); break;
-			case LONG: setLong(in.nextLong()); break;
-			case BOOLEAN: setBoolean(in.nextBoolean()); break;
-			case STRING: setString(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case INT_LIST: {
+			case INT__PROP: setInt(in.nextInt()); break;
+			case LONG__PROP: setLong(in.nextLong()); break;
+			case BOOLEAN__PROP: setBoolean(in.nextBoolean()); break;
+			case STRING__PROP: setString(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case INT_LIST__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addIntList(in.nextInt());
@@ -378,7 +378,7 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 				in.endArray();
 			}
 			break;
-			case STRING_LIST: {
+			case STRING_LIST__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addStringList(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
@@ -386,7 +386,7 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 				in.endArray();
 			}
 			break;
-			case STRING_INT_MAP: {
+			case STRING_INT_MAP__PROP: {
 				in.beginObject();
 				while (in.hasNext()) {
 					putStringIntMap(in.nextName(), in.nextInt());
@@ -394,7 +394,7 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 				in.endObject();
 				break;
 			}
-			case OPTIONAL_DECISION: setOptionalDecision(test.nullable.data.Decision.readDecision(in)); break;
+			case OPTIONAL_DECISION__PROP: setOptionalDecision(test.nullable.data.Decision.readDecision(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -604,6 +604,10 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 				setStringList(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 				break;
 			}
+			case OPTIONAL_DECISION__XML_ATTR: {
+				setOptionalDecision(test.nullable.data.Decision.valueOfProtocol(value));
+				break;
+			}
 			default: {
 				// Skip unknown attribute.
 			}
@@ -635,6 +639,10 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 			}
 			case STRING_LIST__XML_ATTR: {
 				setStringList(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+				break;
+			}
+			case OPTIONAL_DECISION__XML_ATTR: {
+				setOptionalDecision(test.nullable.data.Decision.valueOfProtocol(in.getElementText()));
 				break;
 			}
 			default: {

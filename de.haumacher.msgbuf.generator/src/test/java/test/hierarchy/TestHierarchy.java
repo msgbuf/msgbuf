@@ -22,6 +22,7 @@ import de.haumacher.msgbuf.json.JsonReader;
 import junit.framework.TestCase;
 import test.hierarchy.data.Car;
 import test.hierarchy.data.Circle;
+import test.hierarchy.data.Color;
 import test.hierarchy.data.Group;
 import test.hierarchy.data.Optional;
 import test.hierarchy.data.Rectangle;
@@ -86,8 +87,8 @@ public class TestHierarchy extends TestCase {
 	}
 	
 	public void testXmlRead() throws XMLStreamException, FactoryConfigurationError {
-		checkShape("<group x='10' y='20'><shapes><circle radius='50'/><optional hidden='true'><shape><circle radius='100'/></shape></optional><car><wheel-1 radius='75'/></car></shapes></group>");
-		checkShape("<group> <x>10</x> <y>20</y> <circle><radius>50</radius></circle> <optional><hidden>true</hidden> <circle radius='100'/></optional> <car><wheel-1><radius>75</radius></wheel-1></car> </group>");
+		checkShape("<group x='10' y='20'><shapes><circle radius='50' color='blue'/><optional hidden='true'><shape><circle radius='100'/></shape></optional><car><wheel-1 radius='75'/></car></shapes></group>");
+		checkShape("<group> <x>10</x> <y>20</y> <circle><radius>50</radius><color>blue</color></circle> <optional><hidden>true</hidden> <circle radius='100'/></optional> <car><wheel-1><radius>75</radius></wheel-1></car> </group>");
 	}
 
 	private void checkShape(String xml) throws XMLStreamException, FactoryConfigurationError {
@@ -104,6 +105,7 @@ public class TestHierarchy extends TestCase {
 		assertNotNull(first);
 		assertTrue(first.toString(), first instanceof Circle);
 		assertEquals(50, ((Circle) first).getRadius());
+		assertEquals(Color.BLUE, first.getColor());
 		
 		Shape second = group.getShapes().get(1);
 		assertNotNull(second);

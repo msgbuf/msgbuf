@@ -1,0 +1,14 @@
+package test.lowercasemessage;
+
+@TagName("x")
+message a {
+
+	@TagName("y")
+	message b {
+		a a1;
+		a.b b1;
+	}
+	
+	a a1;
+	a.b b1;
+}

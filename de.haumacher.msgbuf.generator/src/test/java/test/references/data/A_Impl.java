@@ -9,26 +9,26 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	private final java.util.List<A> _children = new de.haumacher.msgbuf.util.ReferenceList<A>() {
 		@Override
 		protected void beforeAdd(int index, A element) {
-			_listener.beforeAdd(A_Impl.this, CHILDREN, index, element);
+			_listener.beforeAdd(A_Impl.this, CHILDREN__PROP, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, A element) {
-			_listener.afterRemove(A_Impl.this, CHILDREN, index, element);
+			_listener.afterRemove(A_Impl.this, CHILDREN__PROP, index, element);
 		}
 	};
 
 	private final java.util.List<B> _bs = new de.haumacher.msgbuf.util.ReferenceList<B>() {
 		@Override
 		protected void beforeAdd(int index, B element) {
-			_listener.beforeAdd(A_Impl.this, BS, index, element);
+			_listener.beforeAdd(A_Impl.this, BS__PROP, index, element);
 			((B_Impl) element).addInBs(A_Impl.this);
 		}
 
 		@Override
 		protected void afterRemove(int index, B element) {
 			((B_Impl) element).removeInBs(A_Impl.this);
-			_listener.afterRemove(A_Impl.this, BS, index, element);
+			_listener.afterRemove(A_Impl.this, BS__PROP, index, element);
 		}
 	};
 
@@ -39,38 +39,38 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	private final java.util.List<A> _others = new de.haumacher.msgbuf.util.ReferenceList<A>() {
 		@Override
 		protected void beforeAdd(int index, A element) {
-			_listener.beforeAdd(A_Impl.this, OTHERS, index, element);
+			_listener.beforeAdd(A_Impl.this, OTHERS__PROP, index, element);
 			((A_Impl) element).addInOthers(A_Impl.this);
 		}
 
 		@Override
 		protected void afterRemove(int index, A element) {
 			((A_Impl) element).removeInOthers(A_Impl.this);
-			_listener.afterRemove(A_Impl.this, OTHERS, index, element);
+			_listener.afterRemove(A_Impl.this, OTHERS__PROP, index, element);
 		}
 	};
 
 	private final java.util.List<A> _inOther = new de.haumacher.msgbuf.util.ReferenceList<A>() {
 		@Override
 		protected void beforeAdd(int index, A element) {
-			_listener.beforeAdd(A_Impl.this, IN_OTHER, index, element);
+			_listener.beforeAdd(A_Impl.this, IN_OTHER__PROP, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, A element) {
-			_listener.afterRemove(A_Impl.this, IN_OTHER, index, element);
+			_listener.afterRemove(A_Impl.this, IN_OTHER__PROP, index, element);
 		}
 	};
 
 	private final java.util.List<A> _inOthers = new de.haumacher.msgbuf.util.ReferenceList<A>() {
 		@Override
 		protected void beforeAdd(int index, A element) {
-			_listener.beforeAdd(A_Impl.this, IN_OTHERS, index, element);
+			_listener.beforeAdd(A_Impl.this, IN_OTHERS__PROP, index, element);
 		}
 
 		@Override
 		protected void afterRemove(int index, A element) {
-			_listener.afterRemove(A_Impl.this, IN_OTHERS, index, element);
+			_listener.afterRemove(A_Impl.this, IN_OTHERS__PROP, index, element);
 		}
 	};
 
@@ -96,7 +96,7 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 
 	/** Internal setter for {@link #getName()} without chain call utility. */
 	protected final void internalSetName(String value) {
-		_listener.beforeSet(this, NAME, value);
+		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
 	}
 
@@ -113,7 +113,7 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 
 	/** Internal setter for {@link #getContents()} without chain call utility. */
 	protected final void internalSetContents(A value) {
-		_listener.beforeSet(this, CONTENTS, value);
+		_listener.beforeSet(this, CONTENTS__PROP, value);
 		_contents = value;
 	}
 
@@ -203,7 +203,7 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 
 	/** Internal setter for {@link #getB()} without chain call utility. */
 	protected final void internalSetB(B value) {
-		_listener.beforeSet(this, B, value);
+		_listener.beforeSet(this, B__PROP, value);
 		if (_b != null) {
 			((B_Impl) _b).removeInB(this);
 		}
@@ -231,7 +231,7 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 
 	/** Internal setter for {@link #getOther()} without chain call utility. */
 	protected final void internalSetOther(A value) {
-		_listener.beforeSet(this, OTHER, value);
+		_listener.beforeSet(this, OTHER__PROP, value);
 		if (_other != null) {
 			((A_Impl) _other).removeInOther(this);
 		}
@@ -371,15 +371,15 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			NAME, 
-			CONTENTS, 
-			CHILDREN, 
-			BS, 
-			B, 
-			OTHER, 
-			OTHERS, 
-			IN_OTHER, 
-			IN_OTHERS));
+			NAME__PROP, 
+			CONTENTS__PROP, 
+			CHILDREN__PROP, 
+			BS__PROP, 
+			B__PROP, 
+			OTHER__PROP, 
+			OTHERS__PROP, 
+			IN_OTHER__PROP, 
+			IN_OTHERS__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -389,15 +389,15 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case NAME: return getName();
-			case CONTENTS: return getContents();
-			case CHILDREN: return getChildren();
-			case BS: return getBs();
-			case B: return getB();
-			case OTHER: return getOther();
-			case OTHERS: return getOthers();
-			case IN_OTHER: return getInOther();
-			case IN_OTHERS: return getInOthers();
+			case NAME__PROP: return getName();
+			case CONTENTS__PROP: return getContents();
+			case CHILDREN__PROP: return getChildren();
+			case BS__PROP: return getBs();
+			case B__PROP: return getB();
+			case OTHER__PROP: return getOther();
+			case OTHERS__PROP: return getOthers();
+			case IN_OTHER__PROP: return getInOther();
+			case IN_OTHERS__PROP: return getInOthers();
 			default: return A.super.get(field);
 		}
 	}
@@ -405,13 +405,13 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: internalSetName((String) value); break;
-			case CONTENTS: internalSetContents((A) value); break;
-			case CHILDREN: internalSetChildren(de.haumacher.msgbuf.util.Conversions.asList(A.class, value)); break;
-			case BS: internalSetBs(de.haumacher.msgbuf.util.Conversions.asList(B.class, value)); break;
-			case B: internalSetB((B) value); break;
-			case OTHER: internalSetOther((A) value); break;
-			case OTHERS: internalSetOthers(de.haumacher.msgbuf.util.Conversions.asList(A.class, value)); break;
+			case NAME__PROP: internalSetName((String) value); break;
+			case CONTENTS__PROP: internalSetContents((A) value); break;
+			case CHILDREN__PROP: internalSetChildren(de.haumacher.msgbuf.util.Conversions.asList(A.class, value)); break;
+			case BS__PROP: internalSetBs(de.haumacher.msgbuf.util.Conversions.asList(B.class, value)); break;
+			case B__PROP: internalSetB((B) value); break;
+			case OTHER__PROP: internalSetOther((A) value); break;
+			case OTHERS__PROP: internalSetOthers(de.haumacher.msgbuf.util.Conversions.asList(A.class, value)); break;
 		}
 	}
 
@@ -423,33 +423,33 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(NAME);
+		out.name(NAME__PROP);
 		out.value(getName());
 		if (hasContents()) {
-			out.name(CONTENTS);
+			out.name(CONTENTS__PROP);
 			getContents().writeTo(out);
 		}
-		out.name(CHILDREN);
+		out.name(CHILDREN__PROP);
 		out.beginArray();
 		for (A x : getChildren()) {
 			x.writeTo(out);
 		}
 		out.endArray();
-		out.name(BS);
+		out.name(BS__PROP);
 		out.beginArray();
 		for (B x : getBs()) {
 			x.writeTo(out);
 		}
 		out.endArray();
 		if (hasB()) {
-			out.name(B);
+			out.name(B__PROP);
 			getB().writeTo(out);
 		}
 		if (hasOther()) {
-			out.name(OTHER);
+			out.name(OTHER__PROP);
 			getOther().writeTo(out);
 		}
-		out.name(OTHERS);
+		out.name(OTHERS__PROP);
 		out.beginArray();
 		for (A x : getOthers()) {
 			x.writeTo(out);
@@ -460,9 +460,9 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case CONTENTS: setContents(test.references.data.A.readA(in)); break;
-			case CHILDREN: {
+			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case CONTENTS__PROP: setContents(test.references.data.A.readA(in)); break;
+			case CHILDREN__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addChildren(test.references.data.A.readA(in));
@@ -470,7 +470,7 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 				in.endArray();
 			}
 			break;
-			case BS: {
+			case BS__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addBs(test.references.data.B.readB(in));
@@ -478,9 +478,9 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 				in.endArray();
 			}
 			break;
-			case B: setB(test.references.data.B.readB(in)); break;
-			case OTHER: setOther(test.references.data.A.readA(in)); break;
-			case OTHERS: {
+			case B__PROP: setB(test.references.data.B.readB(in)); break;
+			case OTHER__PROP: setOther(test.references.data.A.readA(in)); break;
+			case OTHERS__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addOthers(test.references.data.A.readA(in));

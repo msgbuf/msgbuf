@@ -35,10 +35,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** @see #getXCoordinate() */
-	public static final String X_COORDINATE = "x";
+	public static final String X_COORDINATE__PROP = "x";
 
 	/** @see #getYCoordinate() */
-	public static final String Y_COORDINATE = "y";
+	public static final String Y_COORDINATE__PROP = "y";
 
 	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
 	static final int X_COORDINATE__ID = 1;
@@ -77,7 +77,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
 	protected final void internalSetXCoordinate(int value) {
-		_listener.beforeSet(this, X_COORDINATE, value);
+		_listener.beforeSet(this, X_COORDINATE__PROP, value);
 		_xCoordinate = value;
 	}
 
@@ -98,7 +98,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
 	protected final void internalSetYCoordinate(int value) {
-		_listener.beforeSet(this, Y_COORDINATE, value);
+		_listener.beforeSet(this, Y_COORDINATE__PROP, value);
 		_yCoordinate = value;
 	}
 
@@ -126,8 +126,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			X_COORDINATE, 
-			Y_COORDINATE));
+			X_COORDINATE__PROP, 
+			Y_COORDINATE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -137,8 +137,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case X_COORDINATE: return getXCoordinate();
-			case Y_COORDINATE: return getYCoordinate();
+			case X_COORDINATE__PROP: return getXCoordinate();
+			case Y_COORDINATE__PROP: return getYCoordinate();
 			default: return null;
 		}
 	}
@@ -146,8 +146,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case X_COORDINATE: internalSetXCoordinate((int) value); break;
-			case Y_COORDINATE: internalSetYCoordinate((int) value); break;
+			case X_COORDINATE__PROP: internalSetXCoordinate((int) value); break;
+			case Y_COORDINATE__PROP: internalSetYCoordinate((int) value); break;
 		}
 	}
 
@@ -178,17 +178,17 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(X_COORDINATE);
+		out.name(X_COORDINATE__PROP);
 		out.value(getXCoordinate());
-		out.name(Y_COORDINATE);
+		out.name(Y_COORDINATE__PROP);
 		out.value(getYCoordinate());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
-			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
+			case X_COORDINATE__PROP: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__PROP: setYCoordinate(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

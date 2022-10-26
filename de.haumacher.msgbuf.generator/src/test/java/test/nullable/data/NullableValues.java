@@ -13,28 +13,28 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	static final String NULLABLE_VALUES__TYPE = "NullableValues";
 
 	/** @see #getInt() */
-	static final String INT = "int";
+	static final String INT__PROP = "int";
 
 	/** @see #getLong() */
-	static final String LONG = "long";
+	static final String LONG__PROP = "long";
 
 	/** @see #getBoolean() */
-	static final String BOOLEAN = "boolean";
+	static final String BOOLEAN__PROP = "boolean";
 
 	/** @see #getString() */
-	static final String STRING = "string";
+	static final String STRING__PROP = "string";
 
 	/** @see #getIntList() */
-	static final String INT_LIST = "intList";
+	static final String INT_LIST__PROP = "intList";
 
 	/** @see #getStringList() */
-	static final String STRING_LIST = "stringList";
+	static final String STRING_LIST__PROP = "stringList";
 
 	/** @see #getStringIntMap() */
-	static final String STRING_INT_MAP = "stringIntMap";
+	static final String STRING_INT_MAP__PROP = "stringIntMap";
 
 	/** @see #getOptionalDecision() */
-	static final String OPTIONAL_DECISION = "optionalDecision";
+	static final String OPTIONAL_DECISION__PROP = "optionalDecision";
 
 	/** Identifier for the property {@link #getInt()} in binary format. */
 	static final int INT__ID = 1;

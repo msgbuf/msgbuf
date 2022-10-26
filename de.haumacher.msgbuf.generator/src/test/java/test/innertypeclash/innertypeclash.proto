@@ -1,0 +1,19 @@
+package test.innertypeclash;
+
+message A {
+	message C {
+	}
+	
+	A.C ac;
+	B.C bc;
+	C c;
+}
+
+message B {
+	message C {
+	}
+	
+	A.C ac;
+	B.C bc;
+	C c;
+}

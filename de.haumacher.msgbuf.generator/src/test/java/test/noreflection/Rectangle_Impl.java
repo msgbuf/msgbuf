@@ -6,10 +6,10 @@ package test.noreflection;
 class Rectangle_Impl extends AtomicShape_Impl implements Rectangle {
 
 	/** @see #getWidth() */
-	private static final String WIDTH = "w";
+	private static final String WIDTH__PROP = "w";
 
 	/** @see #getHeight() */
-	private static final String HEIGHT = "h";
+	private static final String HEIGHT__PROP = "h";
 
 	private int _width = 0;
 
@@ -81,17 +81,17 @@ class Rectangle_Impl extends AtomicShape_Impl implements Rectangle {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(WIDTH);
+		out.name(WIDTH__PROP);
 		out.value(getWidth());
-		out.name(HEIGHT);
+		out.name(HEIGHT__PROP);
 		out.value(getHeight());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case WIDTH: setWidth(in.nextInt()); break;
-			case HEIGHT: setHeight(in.nextInt()); break;
+			case WIDTH__PROP: setWidth(in.nextInt()); break;
+			case HEIGHT__PROP: setHeight(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

@@ -101,16 +101,16 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	static final String SEARCH_REQUEST__TYPE = "SearchRequest";
 
 	/** @see #getQuery() */
-	static final String QUERY = "query";
+	static final String QUERY__PROP = "query";
 
 	/** @see #getPageNumber() */
-	static final String PAGE_NUMBER = "page_number";
+	static final String PAGE_NUMBER__PROP = "page_number";
 
 	/** @see #getResultPerPage() */
-	static final String RESULT_PER_PAGE = "result_per_page";
+	static final String RESULT_PER_PAGE__PROP = "result_per_page";
 
 	/** @see #getCorpus() */
-	static final String CORPUS = "corpus";
+	static final String CORPUS__PROP = "corpus";
 
 	/** Identifier for the property {@link #getQuery()} in binary format. */
 	static final int QUERY__ID = 1;

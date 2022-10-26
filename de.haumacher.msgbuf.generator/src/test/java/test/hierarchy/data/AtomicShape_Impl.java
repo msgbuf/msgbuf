@@ -24,6 +24,12 @@ abstract class AtomicShape_Impl extends Shape_Impl implements AtomicShape {
 		return this;
 	}
 
+	@Override
+	public AtomicShape setColor(Color value) {
+		internalSetColor(value);
+		return this;
+	}
+
 	/** XML element name representing a {@link AtomicShape} type. */
 	public static final String ATOMIC_SHAPE__XML_ELEMENT = "atomic-shape";
 

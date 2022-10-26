@@ -6,7 +6,7 @@ package test.noreflection;
 class Group_Impl extends Shape_Impl implements Group {
 
 	/** @see #getShapes() */
-	private static final String SHAPES = "shapes";
+	private static final String SHAPES__PROP = "shapes";
 
 	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
 
@@ -78,7 +78,7 @@ class Group_Impl extends Shape_Impl implements Group {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(SHAPES);
+		out.name(SHAPES__PROP);
 		out.beginArray();
 		for (Shape x : getShapes()) {
 			x.writeTo(out);
@@ -89,7 +89,7 @@ class Group_Impl extends Shape_Impl implements Group {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case SHAPES: {
+			case SHAPES__PROP: {
 				in.beginArray();
 				while (in.hasNext()) {
 					addShape(test.noreflection.Shape.readShape(in));

@@ -13,13 +13,13 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	static final String B__TYPE = "B";
 
 	/** @see #getName() */
-	static final String NAME = "name";
+	static final String NAME__PROP = "name";
 
 	/** @see #getInBs() */
-	static final String IN_BS = "inBs";
+	static final String IN_BS__PROP = "inBs";
 
 	/** @see #getInB() */
-	static final String IN_B = "inB";
+	static final String IN_B__PROP = "inB";
 
 	/** Identifier for the property {@link #getName()} in binary format. */
 	static final int NAME__ID = 1;

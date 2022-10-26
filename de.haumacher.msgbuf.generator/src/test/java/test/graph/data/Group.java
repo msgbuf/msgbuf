@@ -16,7 +16,7 @@ public interface Group extends Shape {
 	static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
-	static final String SHAPES = "shapes";
+	static final String SHAPES__PROP = "shapes";
 
 	/**
 	 * All {@link Shape}s in this {@link Group}.

@@ -22,6 +22,9 @@ public interface AtomicShape extends Shape {
 	@Override
 	AtomicShape setYCoordinate(int value);
 
+	@Override
+	AtomicShape setColor(Color value);
+
 	/** Reads a new instance from the given reader. */
 	static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		AtomicShape result;

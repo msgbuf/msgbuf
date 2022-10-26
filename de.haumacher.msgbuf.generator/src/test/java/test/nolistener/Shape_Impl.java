@@ -53,8 +53,8 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			X_COORDINATE, 
-			Y_COORDINATE));
+			X_COORDINATE__PROP, 
+			Y_COORDINATE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -64,8 +64,8 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case X_COORDINATE: return getXCoordinate();
-			case Y_COORDINATE: return getYCoordinate();
+			case X_COORDINATE__PROP: return getXCoordinate();
+			case Y_COORDINATE__PROP: return getYCoordinate();
 			default: return Shape.super.get(field);
 		}
 	}
@@ -73,8 +73,8 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case X_COORDINATE: internalSetXCoordinate((int) value); break;
-			case Y_COORDINATE: internalSetYCoordinate((int) value); break;
+			case X_COORDINATE__PROP: internalSetXCoordinate((int) value); break;
+			case Y_COORDINATE__PROP: internalSetYCoordinate((int) value); break;
 		}
 	}
 
@@ -89,17 +89,17 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(X_COORDINATE);
+		out.name(X_COORDINATE__PROP);
 		out.value(getXCoordinate());
-		out.name(Y_COORDINATE);
+		out.name(Y_COORDINATE__PROP);
 		out.value(getYCoordinate());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
-			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
+			case X_COORDINATE__PROP: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__PROP: setYCoordinate(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

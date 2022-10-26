@@ -16,7 +16,7 @@ public class Circle extends AtomicShape {
 	public static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
-	public static final String RADIUS = "r";
+	public static final String RADIUS__PROP = "r";
 
 	/** Identifier for the {@link Circle} type in binary format. */
 	static final int CIRCLE__TYPE_ID = 1;
@@ -57,7 +57,7 @@ public class Circle extends AtomicShape {
 
 	/** Internal setter for {@link #getRadius()} without chain call utility. */
 	protected final void internalSetRadius(int value) {
-		_listener.beforeSet(this, RADIUS, value);
+		_listener.beforeSet(this, RADIUS__PROP, value);
 		_radius = value;
 	}
 
@@ -80,7 +80,7 @@ public class Circle extends AtomicShape {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			RADIUS));
+			RADIUS__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -90,7 +90,7 @@ public class Circle extends AtomicShape {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case RADIUS: return getRadius();
+			case RADIUS__PROP: return getRadius();
 			default: return super.get(field);
 		}
 	}
@@ -98,7 +98,7 @@ public class Circle extends AtomicShape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case RADIUS: internalSetRadius((int) value); break;
+			case RADIUS__PROP: internalSetRadius((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -113,14 +113,14 @@ public class Circle extends AtomicShape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(RADIUS);
+		out.name(RADIUS__PROP);
 		out.value(getRadius());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case RADIUS: setRadius(in.nextInt()); break;
+			case RADIUS__PROP: setRadius(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

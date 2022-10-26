@@ -13,7 +13,7 @@ public interface AnnotatedMessage extends BaseMsg {
 	static final String ANNOTATED_MESSAGE__TYPE = "m1";
 
 	/** @see #getAnnotatedField() */
-	static final String ANNOTATED_FIELD = "f1";
+	static final String ANNOTATED_FIELD__PROP = "f1";
 
 	/** Identifier for the {@link AnnotatedMessage} type in binary format. */
 	static final int ANNOTATED_MESSAGE__TYPE_ID = 2;

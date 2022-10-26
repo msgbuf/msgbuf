@@ -16,13 +16,13 @@ public interface Car extends Shape {
 	static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
-	static final String WHEEL_1 = "wheel1";
+	static final String WHEEL_1__PROP = "wheel1";
 
 	/** @see #getWheel2() */
-	static final String WHEEL_2 = "wheel2";
+	static final String WHEEL_2__PROP = "wheel2";
 
 	/** @see #getBody() */
-	static final String BODY = "body";
+	static final String BODY__PROP = "body";
 
 	/** Identifier for the {@link Car} type in binary format. */
 	static final int CAR__TYPE_ID = 4;

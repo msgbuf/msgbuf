@@ -41,16 +41,22 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 	}
 
 	/** @see #getXCoordinate() */
-	static final String X_COORDINATE = "x";
+	static final String X_COORDINATE__PROP = "x";
 
 	/** @see #getYCoordinate() */
-	static final String Y_COORDINATE = "y";
+	static final String Y_COORDINATE__PROP = "y";
+
+	/** @see #getColor() */
+	static final String COLOR__PROP = "color";
 
 	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
 	static final int X_COORDINATE__ID = 1;
 
 	/** Identifier for the property {@link #getYCoordinate()} in binary format. */
 	static final int Y_COORDINATE__ID = 2;
+
+	/** Identifier for the property {@link #getColor()} in binary format. */
+	static final int COLOR__ID = 3;
 
 	/** The type code of this instance. */
 	TypeKind kind();
@@ -74,6 +80,16 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 	 * @see #getYCoordinate()
 	 */
 	Shape setYCoordinate(int value);
+
+	/**
+	 * The shape's color.
+	 */
+	Color getColor();
+
+	/**
+	 * @see #getColor()
+	 */
+	Shape setColor(Color value);
 
 	@Override
 	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l);

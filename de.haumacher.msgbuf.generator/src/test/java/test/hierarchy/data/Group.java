@@ -16,13 +16,13 @@ public interface Group extends Shape {
 	static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
-	static final String SHAPES = "shapes";
+	static final String SHAPES__PROP = "shapes";
 
 	/** Identifier for the {@link Group} type in binary format. */
 	static final int GROUP__TYPE_ID = 3;
 
 	/** Identifier for the property {@link #getShapes()} in binary format. */
-	static final int SHAPES__ID = 3;
+	static final int SHAPES__ID = 4;
 
 	/**
 	 * All {@link Shape}s in this {@link Group}.
@@ -53,6 +53,9 @@ public interface Group extends Shape {
 
 	@Override
 	Group setYCoordinate(int value);
+
+	@Override
+	Group setColor(Color value);
 
 
 	/** Reads a new instance from the given reader. */

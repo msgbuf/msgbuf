@@ -6,10 +6,10 @@ package test.noreflection;
 abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements Shape {
 
 	/** @see #getXCoordinate() */
-	private static final String X_COORDINATE = "x";
+	private static final String X_COORDINATE__PROP = "x";
 
 	/** @see #getYCoordinate() */
-	private static final String Y_COORDINATE = "y";
+	private static final String Y_COORDINATE__PROP = "y";
 
 	private int _xCoordinate = 0;
 
@@ -69,17 +69,17 @@ abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(X_COORDINATE);
+		out.name(X_COORDINATE__PROP);
 		out.value(getXCoordinate());
-		out.name(Y_COORDINATE);
+		out.name(Y_COORDINATE__PROP);
 		out.value(getYCoordinate());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case X_COORDINATE: setXCoordinate(in.nextInt()); break;
-			case Y_COORDINATE: setYCoordinate(in.nextInt()); break;
+			case X_COORDINATE__PROP: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__PROP: setYCoordinate(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}

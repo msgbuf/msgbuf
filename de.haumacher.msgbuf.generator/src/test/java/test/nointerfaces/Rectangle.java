@@ -16,10 +16,10 @@ public class Rectangle extends AtomicShape {
 	public static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
-	public static final String WIDTH = "w";
+	public static final String WIDTH__PROP = "w";
 
 	/** @see #getHeight() */
-	public static final String HEIGHT = "h";
+	public static final String HEIGHT__PROP = "h";
 
 	/** Identifier for the {@link Rectangle} type in binary format. */
 	static final int RECTANGLE__TYPE_ID = 2;
@@ -71,7 +71,7 @@ public class Rectangle extends AtomicShape {
 
 	/** Internal setter for {@link #getWidth()} without chain call utility. */
 	protected final void internalSetWidth(int value) {
-		_listener.beforeSet(this, WIDTH, value);
+		_listener.beforeSet(this, WIDTH__PROP, value);
 		_width = value;
 	}
 
@@ -94,7 +94,7 @@ public class Rectangle extends AtomicShape {
 
 	/** Internal setter for {@link #getHeight()} without chain call utility. */
 	protected final void internalSetHeight(int value) {
-		_listener.beforeSet(this, HEIGHT, value);
+		_listener.beforeSet(this, HEIGHT__PROP, value);
 		_height = value;
 	}
 
@@ -117,8 +117,8 @@ public class Rectangle extends AtomicShape {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			WIDTH, 
-			HEIGHT));
+			WIDTH__PROP, 
+			HEIGHT__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -128,8 +128,8 @@ public class Rectangle extends AtomicShape {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case WIDTH: return getWidth();
-			case HEIGHT: return getHeight();
+			case WIDTH__PROP: return getWidth();
+			case HEIGHT__PROP: return getHeight();
 			default: return super.get(field);
 		}
 	}
@@ -137,8 +137,8 @@ public class Rectangle extends AtomicShape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case WIDTH: internalSetWidth((int) value); break;
-			case HEIGHT: internalSetHeight((int) value); break;
+			case WIDTH__PROP: internalSetWidth((int) value); break;
+			case HEIGHT__PROP: internalSetHeight((int) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -153,17 +153,17 @@ public class Rectangle extends AtomicShape {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(WIDTH);
+		out.name(WIDTH__PROP);
 		out.value(getWidth());
-		out.name(HEIGHT);
+		out.name(HEIGHT__PROP);
 		out.value(getHeight());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case WIDTH: setWidth(in.nextInt()); break;
-			case HEIGHT: setHeight(in.nextInt()); break;
+			case WIDTH__PROP: setWidth(in.nextInt()); break;
+			case HEIGHT__PROP: setHeight(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
