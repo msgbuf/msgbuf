@@ -76,11 +76,7 @@ public class CodeConvention {
 				result.append('.');
 			}
 			String part = names.get(n);
-			if (n < cnt - 1) {
-				result.append(part);
-			} else {
-				result.append(localNameConvention.apply(part));
-			}
+			result.append(localNameConvention.apply(part));
 		}
 		return result.toString();
 	}
@@ -110,7 +106,7 @@ public class CodeConvention {
 	}
 
 	public static String constant(Field field) {
-		return allUpperCase(field.getName());
+		return allUpperCase(field.getName()) + "__PROP";
 	}
 
 	/**
@@ -251,5 +247,10 @@ public class CodeConvention {
 	public static String classifierName(Constant constant) {
 		return CodeUtil.allUpperCase(constant.getName());
 	}
+
+	/**
+	 * Enum method that resolves an enum value from a protocol string.
+	 */
+	public static final String ENUM_VALUE_OF_PROTOCOL = "valueOfProtocol";
 
 }
