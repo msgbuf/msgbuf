@@ -97,6 +97,8 @@ public class Generator {
 		}
 		
 		for (DefinitionFile file : _files) {
+			plugin.init(file.getOptions());
+			
 			File dir = mkdir(file.getPackage());
 			
 			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions(), plugin);
@@ -249,7 +251,6 @@ public class Generator {
 				return;
 			} else if (arg.equals("-p")) {
 				plugin = plugin.andThen((GeneratorPlugin) Class.forName(args[n++]).newInstance());
-				return;
 			} else {
 				File file = new File(arg);
 				DefinitionFile content = generator.load(file);

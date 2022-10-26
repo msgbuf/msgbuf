@@ -63,7 +63,7 @@ public class EnumGenerator extends AbstractJavaGenerator {
 		line("/**");
 		line(" * The protocol name of a {@link " + typeName(_def) + "} constant.");
 		line(" *");
-		line(" * @see #valueOfProtocol(String)");
+		line(" * @see #" + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(String)");
 		line(" */");
 		line("@Override");
 		line("public String protocolName() {");
@@ -74,7 +74,7 @@ public class EnumGenerator extends AbstractJavaGenerator {
 		
 		nl();
 		line("/** Looks up a {@link " + typeName(_def) + "} constant by it's protocol name. */");
-		line("public static " + typeName(_def) + " valueOfProtocol(String protocolName) {");
+		line("public static " + typeName(_def) + " " + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(String protocolName) {");
 		List<Constant> constants = _def.getConstants();
 		{
 			line("if (protocolName == null) { return null; }");
@@ -99,7 +99,7 @@ public class EnumGenerator extends AbstractJavaGenerator {
 		line("/** Reads a new instance from the given reader. */");
 		line("public static " + typeName(_def) + " " + CodeConvention.readerName(_def) + "(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {");
 		{
-			line("return valueOfProtocol(in.nextString());");
+			line("return " + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(in.nextString());");
 		}
 		line("}");
 		

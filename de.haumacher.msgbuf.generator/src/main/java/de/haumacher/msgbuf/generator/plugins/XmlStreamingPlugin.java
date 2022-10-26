@@ -13,9 +13,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import de.haumacher.msgbuf.generator.AbstractMessageGenerator;
+import de.haumacher.msgbuf.generator.CodeConvention;
 import de.haumacher.msgbuf.generator.GeneratorPlugin;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
+import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
@@ -30,6 +32,13 @@ import de.haumacher.msgbuf.generator.util.FileGenerator;
  * {@link GeneratorPlugin} generating XML reading code for the {@link javax.xml.stream.XMLStreamReader} interface.
  */
 public class XmlStreamingPlugin implements GeneratorPlugin {
+	
+	private boolean _noXmlNames;
+
+	@Override
+	public void init(Map<String, Option> options) {
+		_noXmlNames = noXmlNames(options);
+	}
 	
 	@Override
 	public FileGenerator messageInterfaceContents(Map<String, Option> options, MessageDef def) {
@@ -147,7 +156,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					line("switch (name) {");
 					{
 						for (Field field : def.getFields()) {
-							if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE) {
+							if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
 								line("case " + xmlFieldNameConstant(field) + ": {");
 								{
 									line(setterName(field) + "(" + fromString(field, "value") + ");");
@@ -194,17 +203,17 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 							
 							switch (type.kind()) {
 								case PRIMITIVE_TYPE: {
-									line("case " + xmlFieldNameConstant(field) + ": {");
-									{
-										line(setterName(field) + "(" + fromString(field, "in.getElementText()") + ");");
-										line("break;");
-									}
-									line("}");
+									readPrimitiveXmlElement(field);
 									break;
 								}
 								
 								case CUSTOM_TYPE: {
 									Definition typeDefinition = ((CustomType) type).getDefinition();
+									if (typeDefinition instanceof EnumDef) {
+										readPrimitiveXmlElement(field);
+										break;
+									}
+									
 									if (field.getOptions().get("Embedded") != null) {
 										if (!(typeDefinition instanceof MessageDef)) {
 											System.err.println("ERROR: Only other messages can be embedded from '" + field.getName() + "'.");
@@ -311,6 +320,15 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 				}
 			}
 
+			private void readPrimitiveXmlElement(Field field) {
+				line("case " + xmlFieldNameConstant(field) + ": {");
+				{
+					line(setterName(field) + "(" + fromString(field, "in.getElementText()") + ");");
+					line("break;");
+				}
+				line("}");
+			}
+
 			String xmlTypeNameRef(MessageDef def) {
 				return implName(def) + "." + xmlTypeNameConstant(def);
 			}
@@ -321,6 +339,10 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		return options.get("NoXml") != null;
 	}
 
+	private boolean noXmlNames(Map<String, Option> options) {
+		return options.get("NoXmlNames") != null;
+	}
+	
 	String readerMethod(MessageDef def) {
 		return "read" + CodeUtil.firstUpperCase(def.getName());
 	}
@@ -334,7 +356,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		if (fieldName.isPresent()) {
 			return ((StringOption) fieldName.get()).getValue();
 		}
-		return CodeUtil.xmlName(def.getName());
+		return xmlName(def.getName());
 	}
 
 	String xmlFieldName(Field def) {
@@ -346,11 +368,15 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		if (fieldName.isPresent()) {
 			return ((StringOption) fieldName.get()).getValue();
 		}
-		return CodeUtil.xmlName(def.getName());
+		return xmlName(def.getName());
+	}
+
+	private String xmlName(String name) {
+		return _noXmlNames ? name : CodeUtil.xmlName(name);
 	}
 
 	String fromString(Field field, String value) {
-		PrimitiveType type = (PrimitiveType) field.getType();
+		Type type = field.getType();
 		if (field.isRepeated()) {
 			return fromStringList(type, value);
 		} else {
@@ -358,13 +384,18 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		}
 	}
 
-	String fromStringList(de.haumacher.msgbuf.generator.ast.PrimitiveType type, String value) {
+	String fromStringList(de.haumacher.msgbuf.generator.ast.Type type, String value) {
 		return "java.util.Arrays.stream(" + value + ".split(\"\\\\s*,\\\\s*\")).map(x -> " + fromStringSingle(type, "x")
 				+ ").collect(java.util.stream.Collectors.toList())";
 	}
 
-	String fromStringSingle(de.haumacher.msgbuf.generator.ast.PrimitiveType type, String value) {
-		switch (type.getKind()) {
+	String fromStringSingle(de.haumacher.msgbuf.generator.ast.Type type, String value) {
+		if (isEnum(type)) {
+			return CodeConvention.qTypeName(((CustomType) type).getDefinition()) + "." + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(" + value + ")";
+		}
+		
+		PrimitiveType primitiveType = (PrimitiveType) type;
+		switch (primitiveType.getKind()) {
 		case BOOL: 
 			return "Boolean.parseBoolean(" + value + ")";
 		
@@ -397,7 +428,11 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			return "java.util.Base64.getDecoder().decode(" + value + ");";
 		}
 		
-		throw new UnsupportedOperationException("Cannot read values of type: " + type);
+		throw new UnsupportedOperationException("Cannot read values of type: " + primitiveType);
+	}
+
+	boolean isEnum(Type type) {
+		return type instanceof CustomType && ((CustomType) type).getDefinition() instanceof EnumDef;
 	}
 
 	String xmlFieldNameConstant(Field field) {

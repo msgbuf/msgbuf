@@ -14,6 +14,15 @@ import de.haumacher.msgbuf.generator.util.FileGenerator;
  */
 public interface GeneratorPlugin {
 
+	/**
+	 * Initializes the plug-in with file options.
+	 * 
+	 * @param options The options of the current file to translate.
+	 */
+	default void init(Map<String, Option> options) {
+		// Ignore.
+	}
+	
 	/** 
 	 * Creates a {@link FileGenerator} that is expanded within the interface class.
 	 * 
@@ -53,6 +62,12 @@ public interface GeneratorPlugin {
 		GeneratorPlugin self = this;
 		
 		return new GeneratorPlugin() {
+			@Override
+			public void init(Map<String, Option> options) {
+				self.init(options);
+				next.init(options);
+			}
+			
 			@Override
 			public FileGenerator messageImplContents(Map<String, Option> options, MessageDef def) {
 				return (out, indent) -> {
