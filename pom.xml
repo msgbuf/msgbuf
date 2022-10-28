@@ -10,6 +10,7 @@
 	<modules>
 		<module>de.haumacher.msgbuf</module>
 		<module>de.haumacher.msgbuf.generator</module>
+		<module>msgbuf-generator-maven-plugin</module>
 	</modules>
 
 	<name>MsgBuf Parent</name>
@@ -52,25 +53,11 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<maven.version>3.3.9</maven.version>
 	</properties>
 
 	<build>
 		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
-			</plugin>
-
-			<!-- Setting resources encoding for a platform-independent build. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
 			<!-- Source attachement required for Maven Central deployment -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
