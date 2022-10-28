@@ -40,6 +40,16 @@ import de.haumacher.msgbuf.generator.util.FileGenerator;
  */
 public class Generator {
 	
+	/**
+	 * Argument giving the output directory.
+	 */
+	public static final String OUTPUT_DIR_ARG = "-out";
+	
+	/**
+	 * Argument giving the fully qualified class name of a generator plugin.
+	 */
+	public static final String PLUGIN_ARG = "-p";
+	
 	private NameTable _table = new NameTable();
 	private File _out = new File(".");
 	private List<DefinitionFile> _files = new ArrayList<>();
@@ -234,7 +244,10 @@ public class Generator {
 		}
 	}
 	
-	public static void main(String[] args) throws ParseException, IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	/**
+	 * Main entry point invoked from the command line.
+	 */
+	public static void main(String... args) throws ParseException, IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (args.length == 0) {
 			printHelp();
 			return;
@@ -244,12 +257,12 @@ public class Generator {
 		Generator generator = new Generator();
 		for (int n = 0, cnt = args.length; n < cnt; ) {
 			String arg = args[n++];
-			if (arg.equals("-out")) {
+			if (arg.equals(OUTPUT_DIR_ARG)) {
 				out = new File(args[n++]);
 			} else if (arg.equals("-h")) {
 				printHelp();
 				return;
-			} else if (arg.equals("-p")) {
+			} else if (arg.equals(PLUGIN_ARG)) {
 				plugin = plugin.andThen((GeneratorPlugin) Class.forName(args[n++]).newInstance());
 			} else {
 				File file = new File(arg);
