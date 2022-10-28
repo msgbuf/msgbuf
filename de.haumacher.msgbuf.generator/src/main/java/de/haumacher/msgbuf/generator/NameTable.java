@@ -119,6 +119,10 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		String baseName = name.getNames().get(0);
 		
 		Definition base = lookupBase(context, baseName);
+		if (base == null) {
+			System.out.println("ERROR: Name cannot be resolved" + (context == null ? "" : " in '" + context.getName() + "'") + ": " + baseName);
+			return null;
+		}
 		for (int n = 1; n < name.getNames().size(); n++) {
 			String nextName = name.getNames().get(n);
 			Definition inner = lookupInner(base, nextName);
