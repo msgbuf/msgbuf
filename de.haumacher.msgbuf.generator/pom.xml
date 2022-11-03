@@ -46,6 +46,14 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>${project.build.sourceDirectory}</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

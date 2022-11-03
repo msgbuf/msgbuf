@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -44,11 +45,6 @@ public class Generator {
 	 * Argument giving the output directory.
 	 */
 	public static final String OUTPUT_DIR_ARG = "-out";
-	
-	/**
-	 * Argument giving the fully qualified class name of a generator plugin.
-	 */
-	public static final String PLUGIN_ARG = "-p";
 	
 	private NameTable _table = new NameTable();
 	private File _out = new File(".");
@@ -253,7 +249,6 @@ public class Generator {
 			return;
 		}
 		File out = null;
-		GeneratorPlugin plugin = GeneratorPlugin.none();
 		Generator generator = new Generator();
 		for (int n = 0, cnt = args.length; n < cnt; ) {
 			String arg = args[n++];
@@ -262,8 +257,6 @@ public class Generator {
 			} else if (arg.equals("-h")) {
 				printHelp();
 				return;
-			} else if (arg.equals(PLUGIN_ARG)) {
-				plugin = plugin.andThen((GeneratorPlugin) Class.forName(args[n++]).newInstance());
 			} else {
 				File file = new File(arg);
 				DefinitionFile content = generator.load(file);
@@ -275,6 +268,14 @@ public class Generator {
 		if (out != null) {
 			generator.setOut(out);
 		}
+		
+		ServiceLoader<GeneratorPlugin> pluginLoader = ServiceLoader.load(GeneratorPlugin.class);
+		
+		GeneratorPlugin plugin = GeneratorPlugin.none();
+		for (GeneratorPlugin p : pluginLoader) {
+			plugin = plugin.andThen(p);
+		}
+		
 		generator.generate(plugin);
 	}
 
