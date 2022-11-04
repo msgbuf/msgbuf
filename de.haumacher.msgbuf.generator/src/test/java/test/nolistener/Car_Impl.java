@@ -214,6 +214,38 @@ class Car_Impl extends Shape_Impl implements Car {
 	/** XML attribute or element name of a {@link #getBody} property. */
 	private static final String BODY__XML_ATTR = "body";
 
+	@Override
+	public String getXmlTagName() {
+		return CAR__XML_ELEMENT;
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	@Override
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeAttributes(out);
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	@Override
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeElements(out);
+		if (hasWheel1()) {
+			out.writeStartElement(WHEEL_1__XML_ATTR);
+			getWheel1().writeContent(out);
+			out.writeEndElement();
+		}
+		if (hasWheel2()) {
+			out.writeStartElement(WHEEL_2__XML_ATTR);
+			getWheel2().writeContent(out);
+			out.writeEndElement();
+		}
+		if (hasBody()) {
+			out.writeStartElement(BODY__XML_ATTR);
+			getBody().writeContent(out);
+			out.writeEndElement();
+		}
+	}
+
 	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Car_Impl readCar_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Car_Impl result = new Car_Impl();

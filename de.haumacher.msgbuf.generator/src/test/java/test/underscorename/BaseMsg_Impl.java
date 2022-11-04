@@ -80,6 +80,20 @@ abstract class BaseMsg_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/** XML element name representing a {@link BaseMsg} type. */
 	public static final String BASE_MSG__XML_ELEMENT = "base-msg";
 
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link BaseMsg} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static BaseMsg_Impl readBase_msg_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		switch (in.getLocalName()) {

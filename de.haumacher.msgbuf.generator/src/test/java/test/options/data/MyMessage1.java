@@ -1,6 +1,6 @@
 package test.options.data;
 
-public interface MyMessage1 extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public interface MyMessage1 extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	public enum EnumAllowingAlias implements de.haumacher.msgbuf.data.ProtocolEnum {
 

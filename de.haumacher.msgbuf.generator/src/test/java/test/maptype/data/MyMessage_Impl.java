@@ -293,6 +293,25 @@ class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject impleme
 	/** XML attribute or element name of a {@link #getRating} property. */
 	private static final String RATING__XML_ATTR = "rating";
 
+	@Override
+	public String getXmlTagName() {
+		return MY_MESSAGE__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link MyMessage} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static MyMessage_Impl readMyMessage_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		MyMessage_Impl result = new MyMessage_Impl();

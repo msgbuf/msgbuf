@@ -4,12 +4,15 @@
 package test.onlyxml;
 
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import de.haumacher.msgbuf.xml.XmlSerializable;
 import junit.framework.TestCase;
 import test.onlyxml.data.Car;
 import test.onlyxml.data.Circle;
@@ -30,7 +33,21 @@ public class TestOnlyXml extends TestCase {
 
 	private void checkShape(String xml) throws XMLStreamException, FactoryConfigurationError {
 		Shape shape = Shape.readShape(reader(xml));
+		checkShape(shape);
 		
+		String serialized = toXml(shape);
+		Shape reRead = Shape.readShape(reader(serialized));
+		checkShape(reRead);
+	}
+
+	private String toXml(XmlSerializable shape) throws XMLStreamException {
+		StringWriter buffer = new StringWriter();
+		shape.writeTo(XMLOutputFactory.newDefaultFactory().createXMLStreamWriter(buffer));
+		String serialized = buffer.toString();
+		return serialized;
+	}
+
+	private void checkShape(Shape shape) {
 		assertNotNull(shape);
 		assertTrue(shape instanceof Group);
 		Group group = (Group) shape;

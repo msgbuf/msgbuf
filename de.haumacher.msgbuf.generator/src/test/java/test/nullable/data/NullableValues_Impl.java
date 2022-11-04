@@ -550,6 +550,32 @@ class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	/** XML attribute or element name of a {@link #getOptionalDecision} property. */
 	private static final String OPTIONAL_DECISION__XML_ATTR = "optional-decision";
 
+	@Override
+	public String getXmlTagName() {
+		return NULLABLE_VALUES__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeAttribute(INT__XML_ATTR, Integer.toString(getInt()));
+		out.writeAttribute(LONG__XML_ATTR, Long.toString(getLong()));
+		out.writeAttribute(BOOLEAN__XML_ATTR, Boolean.toString(getBoolean()));
+		out.writeAttribute(STRING__XML_ATTR, getString());
+		out.writeAttribute(INT_LIST__XML_ATTR, getIntList().stream().map(x -> Integer.toString(x)).collect(java.util.stream.Collectors.joining(", ")));
+		out.writeAttribute(STRING_LIST__XML_ATTR, getStringList().stream().map(x -> x).collect(java.util.stream.Collectors.joining(", ")));
+		out.writeAttribute(OPTIONAL_DECISION__XML_ATTR, getOptionalDecision().protocolName());
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link NullableValues} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static NullableValues_Impl readNullableValues_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		NullableValues_Impl result = new NullableValues_Impl();

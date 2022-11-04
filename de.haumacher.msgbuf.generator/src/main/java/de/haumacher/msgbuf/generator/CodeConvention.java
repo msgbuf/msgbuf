@@ -252,5 +252,10 @@ public class CodeConvention {
 	 * Enum method that resolves an enum value from a protocol string.
 	 */
 	public static final String ENUM_VALUE_OF_PROTOCOL = "valueOfProtocol";
+	
+	/**
+	 * Enum method that returns the protocol string for the classifier.
+	 */
+	public static final String ENUM_PROTOCOL_NAME_FUN = "protocolName";
 
 }

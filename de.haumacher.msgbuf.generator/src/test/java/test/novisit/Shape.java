@@ -3,7 +3,7 @@ package test.novisit;
 /**
  * An abstract base class for all shapes
  */
-public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {

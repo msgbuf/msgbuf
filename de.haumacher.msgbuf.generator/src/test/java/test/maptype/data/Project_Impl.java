@@ -180,6 +180,27 @@ class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	/** XML attribute or element name of a {@link #getCost} property. */
 	private static final String COST__XML_ATTR = "cost";
 
+	@Override
+	public String getXmlTagName() {
+		return PROJECT__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeAttribute(NAME__XML_ATTR, getName());
+		out.writeAttribute(COST__XML_ATTR, Double.toString(getCost()));
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link Project} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Project_Impl readProject_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Project_Impl result = new Project_Impl();

@@ -164,7 +164,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			}
 			addMixins(generalizations);
 		}
-		
+
 		return generalizationList("extends", generalizations);
 	}
 	
@@ -200,6 +200,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private void addMixins(List<String> generalizations) {
+		_plugin.addInterfaces(_options, _def, generalizations);
+
 		Option operations = _def.getOptions().get("Operations");
 		if (operations != null) {
 			if (operations instanceof StringOption) {

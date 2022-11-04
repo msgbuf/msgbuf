@@ -245,6 +245,36 @@ class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements B {
 	/** XML attribute or element name of a {@link #getInB} property. */
 	private static final String IN_B__XML_ATTR = "in-b";
 
+	@Override
+	public String getXmlTagName() {
+		return B__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeAttribute(NAME__XML_ATTR, getName());
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeStartElement(IN_BS__XML_ATTR);
+		for (test.references.data.A element : getInBs()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+		out.writeStartElement(IN_B__XML_ATTR);
+		for (test.references.data.A element : getInB()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+	}
+
 	/** Creates a new {@link B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static B_Impl readB_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		B_Impl result = new B_Impl();

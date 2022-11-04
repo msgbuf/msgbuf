@@ -113,6 +113,24 @@ class SomeName_Impl extends BaseMsg_Impl implements SomeName {
 	/** XML attribute or element name of a {@link #getMyField} property. */
 	private static final String MY_FIELD__XML_ATTR = "my-field";
 
+	@Override
+	public String getXmlTagName() {
+		return SOME_NAME__XML_ELEMENT;
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	@Override
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeAttributes(out);
+		out.writeAttribute(MY_FIELD__XML_ATTR, getMyField());
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	@Override
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeElements(out);
+	}
+
 	/** Creates a new {@link SomeName} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SomeName_Impl readSome_name_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		SomeName_Impl result = new SomeName_Impl();

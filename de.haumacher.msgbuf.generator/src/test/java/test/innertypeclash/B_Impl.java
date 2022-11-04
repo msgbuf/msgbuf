@@ -87,6 +87,25 @@ class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements B {
 		/** XML element name representing a {@link C} type. */
 		public static final String C__XML_ELEMENT = "c";
 
+		@Override
+		public String getXmlTagName() {
+			return C__XML_ELEMENT;
+		}
+
+		@Override
+		public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+			writeAttributes(out);
+			writeElements(out);
+		}
+
+		/** Serializes all fields that are written as XML attributes. */
+		protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		}
+
+		/** Serializes all fields that are written as XML elements. */
+		protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		}
+
 		/** Creates a new {@link C} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 		public static C_Impl readC_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 			C_Impl result = new C_Impl();
@@ -379,6 +398,40 @@ class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements B {
 
 	/** XML attribute or element name of a {@link #getC} property. */
 	private static final String C__XML_ATTR = "c";
+
+	@Override
+	public String getXmlTagName() {
+		return B__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		if (hasAc()) {
+			out.writeStartElement(AC__XML_ATTR);
+			getAc().writeContent(out);
+			out.writeEndElement();
+		}
+		if (hasBc()) {
+			out.writeStartElement(BC__XML_ATTR);
+			getBc().writeContent(out);
+			out.writeEndElement();
+		}
+		if (hasC()) {
+			out.writeStartElement(C__XML_ATTR);
+			getC().writeContent(out);
+			out.writeEndElement();
+		}
+	}
 
 	/** Creates a new {@link B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static B_Impl readB_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {

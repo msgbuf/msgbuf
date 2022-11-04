@@ -76,6 +76,29 @@ class Optional_Impl extends Shape_Impl implements Optional {
 	/** XML attribute or element name of a {@link #getShape} property. */
 	private static final String SHAPE__XML_ATTR = "shape";
 
+	@Override
+	public String getXmlTagName() {
+		return OPTIONAL__XML_ELEMENT;
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	@Override
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeAttributes(out);
+		out.writeAttribute(HIDDEN__XML_ATTR, Boolean.toString(isHidden()));
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	@Override
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeElements(out);
+		if (hasShape()) {
+			out.writeStartElement(SHAPE__XML_ATTR);
+			getShape().writeTo(out);
+			out.writeEndElement();
+		}
+	}
+
 	/** Creates a new {@link Optional} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Optional_Impl readOptional_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Optional_Impl result = new Optional_Impl();

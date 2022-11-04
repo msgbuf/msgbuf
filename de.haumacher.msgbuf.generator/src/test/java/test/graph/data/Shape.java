@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * An abstract base class for all shapes
  */
-public interface Shape extends de.haumacher.msgbuf.graph.SharedGraphNode {
+public interface Shape extends de.haumacher.msgbuf.graph.SharedGraphNode, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/** Type codes for the {@link Shape} hierarchy. */
 	public enum TypeKind {

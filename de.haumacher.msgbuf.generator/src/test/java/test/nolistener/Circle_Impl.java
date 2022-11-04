@@ -127,6 +127,24 @@ class Circle_Impl extends AtomicShape_Impl implements Circle {
 	/** XML attribute or element name of a {@link #getRadius} property. */
 	private static final String RADIUS__XML_ATTR = "r";
 
+	@Override
+	public String getXmlTagName() {
+		return CIRCLE__XML_ELEMENT;
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	@Override
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeAttributes(out);
+		out.writeAttribute(RADIUS__XML_ATTR, Integer.toString(getRadius()));
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	@Override
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeElements(out);
+	}
+
 	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Circle_Impl readCircle_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Circle_Impl result = new Circle_Impl();

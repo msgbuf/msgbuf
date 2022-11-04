@@ -157,6 +157,25 @@ class Rectangle_Impl extends AtomicShape_Impl implements Rectangle {
 	/** XML attribute or element name of a {@link #getHeight} property. */
 	private static final String HEIGHT__XML_ATTR = "h";
 
+	@Override
+	public String getXmlTagName() {
+		return RECTANGLE__XML_ELEMENT;
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	@Override
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeAttributes(out);
+		out.writeAttribute(WIDTH__XML_ATTR, Integer.toString(getWidth()));
+		out.writeAttribute(HEIGHT__XML_ATTR, Integer.toString(getHeight()));
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	@Override
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeElements(out);
+	}
+
 	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Rectangle_Impl readRectangle_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Rectangle_Impl result = new Rectangle_Impl();

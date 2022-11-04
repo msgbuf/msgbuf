@@ -263,6 +263,28 @@ class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 		/** XML attribute or element name of a {@link #getSnippets} property. */
 		private static final String SNIPPETS__XML_ATTR = "snippets";
 
+		@Override
+		public String getXmlTagName() {
+			return RESULT__XML_ELEMENT;
+		}
+
+		@Override
+		public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+			writeAttributes(out);
+			writeElements(out);
+		}
+
+		/** Serializes all fields that are written as XML attributes. */
+		protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+			out.writeAttribute(URL__XML_ATTR, getUrl());
+			out.writeAttribute(TITLE__XML_ATTR, getTitle());
+			out.writeAttribute(SNIPPETS__XML_ATTR, getSnippets().stream().map(x -> x).collect(java.util.stream.Collectors.joining(", ")));
+		}
+
+		/** Serializes all fields that are written as XML elements. */
+		protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		}
+
 		/** Creates a new {@link Result} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 		public static Result_Impl readResult_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 			Result_Impl result = new Result_Impl();
@@ -542,6 +564,30 @@ class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 
 	/** XML attribute or element name of a {@link #getResults} property. */
 	private static final String RESULTS__XML_ATTR = "results";
+
+	@Override
+	public String getXmlTagName() {
+		return SEARCH_RESPONSE__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeStartElement(RESULTS__XML_ATTR);
+		for (test.nested.data.SearchResponse.Result element : getResults()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+	}
 
 	/** Creates a new {@link SearchResponse} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SearchResponse_Impl readSearchResponse_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {

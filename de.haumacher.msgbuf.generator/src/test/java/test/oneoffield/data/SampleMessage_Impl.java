@@ -86,6 +86,25 @@ class SampleMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 	/** XML element name representing a {@link SampleMessage} type. */
 	public static final String SAMPLE_MESSAGE__XML_ELEMENT = "sample-message";
 
+	@Override
+	public String getXmlTagName() {
+		return SAMPLE_MESSAGE__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link SampleMessage} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SampleMessage_Impl readSampleMessage_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		SampleMessage_Impl result = new SampleMessage_Impl();

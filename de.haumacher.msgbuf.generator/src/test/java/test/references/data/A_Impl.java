@@ -630,6 +630,66 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 	/** XML attribute or element name of a {@link #getInOthers} property. */
 	private static final String IN_OTHERS__XML_ATTR = "in-others";
 
+	@Override
+	public String getXmlTagName() {
+		return A__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeAttribute(NAME__XML_ATTR, getName());
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		if (hasContents()) {
+			out.writeStartElement(CONTENTS__XML_ATTR);
+			getContents().writeContent(out);
+			out.writeEndElement();
+		}
+		out.writeStartElement(CHILDREN__XML_ATTR);
+		for (test.references.data.A element : getChildren()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+		out.writeStartElement(BS__XML_ATTR);
+		for (test.references.data.B element : getBs()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+		if (hasB()) {
+			out.writeStartElement(B__XML_ATTR);
+			getB().writeContent(out);
+			out.writeEndElement();
+		}
+		if (hasOther()) {
+			out.writeStartElement(OTHER__XML_ATTR);
+			getOther().writeContent(out);
+			out.writeEndElement();
+		}
+		out.writeStartElement(OTHERS__XML_ATTR);
+		for (test.references.data.A element : getOthers()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+		out.writeStartElement(IN_OTHER__XML_ATTR);
+		for (test.references.data.A element : getInOther()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+		out.writeStartElement(IN_OTHERS__XML_ATTR);
+		for (test.references.data.A element : getInOthers()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+	}
+
 	/** Creates a new {@link A} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static A_Impl readA_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		A_Impl result = new A_Impl();

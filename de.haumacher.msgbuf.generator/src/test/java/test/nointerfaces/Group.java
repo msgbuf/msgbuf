@@ -226,6 +226,28 @@ public class Group extends Shape {
 	/** XML attribute or element name of a {@link #getShapes} property. */
 	private static final String SHAPES__XML_ATTR = "shapes";
 
+	@Override
+	public String getXmlTagName() {
+		return GROUP__XML_ELEMENT;
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	@Override
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeAttributes(out);
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	@Override
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		super.writeElements(out);
+		out.writeStartElement(SHAPES__XML_ATTR);
+		for (test.nointerfaces.Shape element : getShapes()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+	}
+
 	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Group readGroup_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Group result = new Group();

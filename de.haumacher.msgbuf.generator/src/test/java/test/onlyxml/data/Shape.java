@@ -3,7 +3,7 @@ package test.onlyxml.data;
 /**
  * An abstract base class for all shapes
  */
-public interface Shape {
+public interface Shape extends de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
 	 * X coordinate of the origin of the coordinate system of this {@link Shape}.

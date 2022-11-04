@@ -66,7 +66,7 @@ public class EnumGenerator extends AbstractJavaGenerator {
 		line(" * @see #" + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(String)");
 		line(" */");
 		line("@Override");
-		line("public String protocolName() {");
+		line("public String " + CodeConvention.ENUM_PROTOCOL_NAME_FUN + "() {");
 		{
 			line("return _protocolName;");
 		}
@@ -91,7 +91,7 @@ public class EnumGenerator extends AbstractJavaGenerator {
 		line("/** Writes this instance to the given output. */");
 		line("public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
 		{
-			line("out.value(protocolName());");
+			line("out.value(" + CodeConvention.ENUM_PROTOCOL_NAME_FUN + "());");
 		}
 		line("}");
 		

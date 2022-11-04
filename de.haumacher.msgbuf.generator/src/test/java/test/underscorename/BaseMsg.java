@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public interface BaseMsg extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable {
+public interface BaseMsg extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/** Type codes for the {@link BaseMsg} hierarchy. */
 	public enum TypeKind {

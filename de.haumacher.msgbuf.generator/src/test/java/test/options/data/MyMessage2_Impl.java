@@ -86,6 +86,25 @@ class MyMessage2_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implem
 	/** XML element name representing a {@link MyMessage2} type. */
 	public static final String MY_MESSAGE_2__XML_ELEMENT = "my-message-2";
 
+	@Override
+	public String getXmlTagName() {
+		return MY_MESSAGE_2__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link MyMessage2} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static MyMessage2_Impl readMyMessage2_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		MyMessage2_Impl result = new MyMessage2_Impl();

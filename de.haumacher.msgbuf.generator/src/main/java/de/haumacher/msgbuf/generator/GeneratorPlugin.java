@@ -3,6 +3,7 @@
  */
 package de.haumacher.msgbuf.generator;
 
+import java.util.List;
 import java.util.Map;
 
 import de.haumacher.msgbuf.generator.ast.MessageDef;
@@ -23,6 +24,20 @@ public interface GeneratorPlugin {
 		// Ignore.
 	}
 	
+	/**
+	 * Adds interfaces to the generated type.
+	 *
+	 * @param options
+	 *        The options from the top-level definition file.
+	 * @param def
+	 *        The {@link MessageDef} that is being translated.
+	 * @param generalizations
+	 *        The generalization list to extend.
+	 */
+	default void addInterfaces(Map<String, Option> options, MessageDef def, List<String> generalizations) {
+		// No additional interfaces by default.
+	}
+
 	/** 
 	 * Creates a {@link FileGenerator} that is expanded within the interface class.
 	 * 
@@ -66,6 +81,12 @@ public interface GeneratorPlugin {
 			public void init(Map<String, Option> options) {
 				self.init(options);
 				next.init(options);
+			}
+			
+			@Override
+			public void addInterfaces(Map<String, Option> options, MessageDef def, List<String> generalizations) {
+				self.addInterfaces(options, def, generalizations);
+				next.addInterfaces(options, def, generalizations);
 			}
 			
 			@Override

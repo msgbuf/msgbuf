@@ -41,6 +41,17 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 	}
 	
 	@Override
+	public void addInterfaces(Map<String, Option> options, MessageDef def, List<String> generalizations) {
+		if (noXml(options)) {
+			return;
+		}
+
+		if (!def.hasExtends()) {
+			generalizations.add("de.haumacher.msgbuf.xml.XmlSerializable");
+		}
+	}
+	
+	@Override
 	public FileGenerator messageInterfaceContents(Map<String, Option> options, MessageDef def) {
 		if (noXml(options)) {
 			return GeneratorPlugin.super.messageInterfaceContents(options, def);
@@ -80,6 +91,101 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					line("private static final String " + xmlFieldNameConstant(field) + " = \"" + xmlFieldName(field) + "\";");
 				}
 
+				if (!def.isAbstract()) {
+					nl();
+					line("@Override");
+					line("public String getXmlTagName() {");
+					{
+						line("return " + xmlTypeNameConstant(def) + ";");
+					}
+					line("}");
+				}
+				
+				if (!def.hasExtends()) {
+					nl();
+					line("@Override");
+					line("public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {");
+					{
+						line("writeAttributes(out);");
+						line("writeElements(out);");
+					}
+					line("}");
+				}
+				
+				nl();
+				line("/** Serializes all fields that are written as XML attributes. */");
+				if (def.hasExtends()) {
+					line("@Override");
+				}
+				line("protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {");
+				{
+					if (def.hasExtends()) {
+						line("super.writeAttributes(out);");
+					}
+					for (Field field : def.getFields()) {
+						if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
+							line("out.writeAttribute(" + xmlFieldNameConstant(field) + ", " + asString(field, CodeConvention.getterName(field) + "()") + ");");
+						}
+					}
+				}
+				line("}");
+
+				nl();
+				line("/** Serializes all fields that are written as XML elements. */");
+				if (def.hasExtends()) {
+					line("@Override");
+				}
+				line("protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {");
+				{
+					if (def.hasExtends()) {
+						line("super.writeElements(out);");
+					}
+					
+					for (Field field : def.getFields()) {
+						Type type = field.getType();
+						switch (type.kind()) {
+							case PRIMITIVE_TYPE: {
+								continue;
+							}
+							
+							case CUSTOM_TYPE: {
+								Definition typeDefinition = ((CustomType) type).getDefinition();
+								if (typeDefinition instanceof EnumDef) {
+									continue;
+								}
+
+								boolean nullable = Util.isNullable(field);
+								if (nullable) {
+									line("if (" + CodeConvention.hasName(field) + "()" + ") {");
+								}
+								{
+									line("out.writeStartElement(" + xmlFieldNameConstant(field) + ");");
+									if (field.isRepeated()) {
+										line("for (" + qTypeName(typeDefinition) + " element : " + getterName(field) + "()) {");
+										{
+											line("element.writeTo(out);");
+										}
+										line("}");
+									} else {
+										if (((MessageDef) typeDefinition).isAbstract()) {
+											// Create element encoding the type.
+											line(CodeConvention.getterName(field) + "()" + ".writeTo(out);");
+										} else {
+											// Embed into field element.
+											line(CodeConvention.getterName(field) + "()" + ".writeContent(out);");
+										}
+									}
+									line("out.writeEndElement();");
+								}
+								if (nullable) {
+									line("}");
+								}
+							}
+						}
+					}
+				}
+				line("}");
+				
 				nl();
 				line("/** Creates a new {@link " + typeName(def) + "} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */");
 				line("public static " + implName(def) + " " + readXmlContent(def) + "(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {");
@@ -384,11 +490,24 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		}
 	}
 
+	String asString(Field field, String value) {
+		Type type = field.getType();
+		if (field.isRepeated()) {
+			return toStringList(type, value);
+		} else {
+			return toStringSingle(type, value);
+		}
+	}
+	
 	String fromStringList(de.haumacher.msgbuf.generator.ast.Type type, String value) {
 		return "java.util.Arrays.stream(" + value + ".split(\"\\\\s*,\\\\s*\")).map(x -> " + fromStringSingle(type, "x")
 				+ ").collect(java.util.stream.Collectors.toList())";
 	}
 
+	String toStringList(de.haumacher.msgbuf.generator.ast.Type type, String value) {
+		return value + ".stream().map(x -> " + toStringSingle(type, "x") + ").collect(java.util.stream.Collectors.joining(\", \"))";
+	}
+	
 	String fromStringSingle(de.haumacher.msgbuf.generator.ast.Type type, String value) {
 		if (isEnum(type)) {
 			return CodeConvention.qTypeName(((CustomType) type).getDefinition()) + "." + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(" + value + ")";
@@ -431,6 +550,48 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		throw new UnsupportedOperationException("Cannot read values of type: " + primitiveType);
 	}
 
+	String toStringSingle(de.haumacher.msgbuf.generator.ast.Type type, String value) {
+		if (isEnum(type)) {
+			return value + "." + CodeConvention.ENUM_PROTOCOL_NAME_FUN + "()";
+		}
+		
+		PrimitiveType primitiveType = (PrimitiveType) type;
+		switch (primitiveType.getKind()) {
+		case BOOL: 
+			return "Boolean.toString(" + value + ")";
+			
+		case SFIXED_32: 
+		case SINT_32:
+		case INT_32: 
+			return "Integer.toString(" + value + ")";
+			
+		case FIXED_32:
+		case UINT_32: 
+			return "(int) Long.toString(" + value + ")";
+			
+		case FIXED_64:
+		case INT_64: 
+		case UINT_64:
+		case SFIXED_64:
+		case SINT_64:
+			return "Long.toString(" + value + ")";
+			
+		case DOUBLE:
+			return "Double.toString(" + value + ")";
+			
+		case FLOAT:
+			return "Float.toString(" + value + ")";
+			
+		case STRING:
+			return value;
+			
+		case BYTES:
+			return "java.util.Base64.getEncoder().encodeToString(" + value + ");";
+		}
+		
+		throw new UnsupportedOperationException("Cannot read values of type: " + primitiveType);
+	}
+	
 	boolean isEnum(Type type) {
 		return type instanceof CustomType && ((CustomType) type).getDefinition() instanceof EnumDef;
 	}

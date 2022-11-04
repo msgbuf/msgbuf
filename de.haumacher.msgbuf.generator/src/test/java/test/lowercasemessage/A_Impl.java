@@ -199,6 +199,35 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 		/** XML attribute or element name of a {@link #getB1} property. */
 		private static final String B_1__XML_ATTR = "b-1";
 
+		@Override
+		public String getXmlTagName() {
+			return B__XML_ELEMENT;
+		}
+
+		@Override
+		public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+			writeAttributes(out);
+			writeElements(out);
+		}
+
+		/** Serializes all fields that are written as XML attributes. */
+		protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		}
+
+		/** Serializes all fields that are written as XML elements. */
+		protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+			if (hasA1()) {
+				out.writeStartElement(A_1__XML_ATTR);
+				getA1().writeContent(out);
+				out.writeEndElement();
+			}
+			if (hasB1()) {
+				out.writeStartElement(B_1__XML_ATTR);
+				getB1().writeContent(out);
+				out.writeEndElement();
+			}
+		}
+
 		/** Creates a new {@link B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 		public static B_Impl readB_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 			B_Impl result = new B_Impl();
@@ -459,6 +488,35 @@ class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements A {
 
 	/** XML attribute or element name of a {@link #getB1} property. */
 	private static final String B_1__XML_ATTR = "b-1";
+
+	@Override
+	public String getXmlTagName() {
+		return A__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		if (hasA1()) {
+			out.writeStartElement(A_1__XML_ATTR);
+			getA1().writeContent(out);
+			out.writeEndElement();
+		}
+		if (hasB1()) {
+			out.writeStartElement(B_1__XML_ATTR);
+			getB1().writeContent(out);
+			out.writeEndElement();
+		}
+	}
 
 	/** Creates a new {@link A} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static A_Impl readA_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {

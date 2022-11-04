@@ -211,6 +211,28 @@ class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 	/** XML attribute or element name of a {@link #getResultPerPage} property. */
 	private static final String RESULT_PER_PAGE__XML_ATTR = "result-per-page";
 
+	@Override
+	public String getXmlTagName() {
+		return SEARCH_REQUEST__XML_ELEMENT;
+	}
+
+	@Override
+	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		writeAttributes(out);
+		writeElements(out);
+	}
+
+	/** Serializes all fields that are written as XML attributes. */
+	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		out.writeAttribute(QUERY__XML_ATTR, getQuery());
+		out.writeAttribute(PAGE_NUMBER__XML_ATTR, Integer.toString(getPageNumber()));
+		out.writeAttribute(RESULT_PER_PAGE__XML_ATTR, Integer.toString(getResultPerPage()));
+	}
+
+	/** Serializes all fields that are written as XML elements. */
+	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+	}
+
 	/** Creates a new {@link SearchRequest} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SearchRequest_Impl readSearchRequest_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		SearchRequest_Impl result = new SearchRequest_Impl();

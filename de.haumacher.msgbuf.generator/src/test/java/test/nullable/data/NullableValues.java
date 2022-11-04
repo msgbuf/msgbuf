@@ -1,6 +1,6 @@
 package test.nullable.data;
 
-public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject {
+public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
 	 * Creates a {@link NullableValues} instance.
