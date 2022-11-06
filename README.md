@@ -12,6 +12,41 @@ In contrast to `protobuf`, `msgbuf` supports:
  
 `msgbuf` currently serializes messages in JSON format. For GWT-compatibility it uses a modified `JsonReader`/`JsonWriter` from the [gson library](https://github.com/google/gson) that was abstracted from the unsupported `Reader`/`Writer` Java API.
 
+## Setup with Maven
+
+### Add the MsgBuf runtime libary dependency to your project
+
+```
+<dependency>
+    <groupId>de.haumacher.msgbuf</groupId>
+    <artifactId>msgbuf-api</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
+### Add the MsgBuf generator to your pom.xml
+
+To the `build/plugins` section add:
+
+```
+<plugin>
+	<groupId>de.haumacher.msgbuf</groupId>
+	<artifactId>msgbuf-generator-maven-plugin</artifactId>
+	<version>1.1.0</version>
+	
+	<executions>
+		<execution>
+			<id>generate-protocols</id>
+			<goals>
+				<goal>generate</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
+```
+
+Now you are ready to create `*.proto` files in your source folder and build them with `mvn compile`.
+
 ## Usage
  
 The `msgbuf` definition language is an extension of the [proto format](https://developers.google.com/protocol-buffers/docs/proto3) from `protobuf`. A defined message can `extend` another message type, or it can be marked `abstract`. 
@@ -64,16 +99,6 @@ There is an Eclipse plugin providing a project builder that automatically genera
 
  * Select your project in the `Package Explorer`.
  * In the context menu, select `Configure > Enable MsgBuf Builder`.
-
-### Add project dependency to the MsgBuf runtime libary
-
-```
-<dependency>
-    <groupId>de.haumacher.msgbuf</groupId>
-    <artifactId>msgbuf-api</artifactId>
-    <version>1.0.3</version>
-</dependency>
-```
 
 ### Test the installtion
 
