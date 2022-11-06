@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.haumacher.msgbuf</groupId>
 		<artifactId>msgbuf-parent</artifactId>
-		<version>1.1.0</version>
+		<version>1.1.1-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>msgbuf-generator</artifactId>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>de.haumacher.msgbuf</groupId>
 			<artifactId>msgbuf-api</artifactId>
-			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
