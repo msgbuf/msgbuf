@@ -52,7 +52,11 @@ Now you are ready to create `*.proto` files in your source folder and build them
 The `msgbuf` definition language is an extension of the [proto format](https://developers.google.com/protocol-buffers/docs/proto3) from `protobuf`. A defined message can `extend` another message type, or it can be marked `abstract`. 
 
 Assume, you want to describe shapes in a graphics application, you could define the data types as follows. You may start with an `abstract` shape class, defining coordinates of the origin of its coordinate system:
+
+`shape.proto`:
 ```protobuf
+package my.app.model;
+
 syntax = "msgbuf";
 
 abstract message Shape {
