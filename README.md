@@ -53,7 +53,7 @@ The `msgbuf` definition language is an extension of the [proto format](https://d
 
 Assume, you want to describe shapes in a graphics application, you could define the data types as follows. You may start with an `abstract` shape class, defining coordinates of the origin of its coordinate system:
 
-`shape.proto`:
+Add `src/main/java/my/app/model/shape.proto` with the following contents:
 ```protobuf
 package my.app.model;
 
