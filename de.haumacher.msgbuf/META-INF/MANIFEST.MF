@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MsgBuf API
 Bundle-SymbolicName: de.haumacher.msgbuf
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.1.0.qualifier
 Export-Package: de.haumacher.msgbuf,
  de.haumacher.msgbuf.binary,
  de.haumacher.msgbuf.coder,
@@ -14,5 +14,5 @@ Export-Package: de.haumacher.msgbuf,
  de.haumacher.msgbuf.observer,
  de.haumacher.msgbuf.server.io,
  de.haumacher.msgbuf.util
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: haumacher.de
