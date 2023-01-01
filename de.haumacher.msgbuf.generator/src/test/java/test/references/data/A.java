@@ -10,34 +10,34 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	}
 
 	/** Identifier for the {@link test.references.data.A} type in JSON format. */
-	static final String A__TYPE = "A";
+	String A__TYPE = "A";
 
 	/** @see #getName() */
-	static final String NAME__PROP = "name";
+	String NAME__PROP = "name";
 
 	/** @see #getContents() */
-	static final String CONTENTS__PROP = "contents";
+	String CONTENTS__PROP = "contents";
 
 	/** @see #getChildren() */
-	static final String CHILDREN__PROP = "children";
+	String CHILDREN__PROP = "children";
 
 	/** @see #getBs() */
-	static final String BS__PROP = "bs";
+	String BS__PROP = "bs";
 
 	/** @see #getB() */
-	static final String B__PROP = "b";
+	String B__PROP = "b";
 
 	/** @see #getOther() */
-	static final String OTHER__PROP = "other";
+	String OTHER__PROP = "other";
 
 	/** @see #getOthers() */
-	static final String OTHERS__PROP = "others";
+	String OTHERS__PROP = "others";
 
 	/** @see #getInOther() */
-	static final String IN_OTHER__PROP = "inOther";
+	String IN_OTHER__PROP = "inOther";
 
 	/** @see #getInOthers() */
-	static final String IN_OTHERS__PROP = "inOthers";
+	String IN_OTHERS__PROP = "inOthers";
 
 	/** Identifier for the property {@link #getName()} in binary format. */
 	static final int NAME__ID = 1;

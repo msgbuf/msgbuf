@@ -13,10 +13,10 @@ public interface Circle extends AtomicShape {
 	}
 
 	/** Identifier for the {@link test.graph.data.Circle} type in JSON format. */
-	static final String CIRCLE__TYPE = "Circle";
+	String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
-	static final String RADIUS__PROP = "r";
+	String RADIUS__PROP = "r";
 
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).

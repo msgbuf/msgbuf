@@ -11,13 +11,13 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		}
 
 		/** Identifier for the {@link test.lowercasemessage.A.B} type in JSON format. */
-		static final String B__TYPE = "b";
+		String B__TYPE = "b";
 
 		/** @see #getA1() */
-		static final String A_1__PROP = "a1";
+		String A_1__PROP = "a1";
 
 		/** @see #getB1() */
-		static final String B_1__PROP = "b1";
+		String B_1__PROP = "b1";
 
 		/** Identifier for the property {@link #getA1()} in binary format. */
 		static final int A_1__ID = 1;
@@ -86,13 +86,13 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	}
 
 	/** Identifier for the {@link test.lowercasemessage.A} type in JSON format. */
-	static final String A__TYPE = "a";
+	String A__TYPE = "a";
 
 	/** @see #getA1() */
-	static final String A_1__PROP = "a1";
+	String A_1__PROP = "a1";
 
 	/** @see #getB1() */
-	static final String B_1__PROP = "b1";
+	String B_1__PROP = "b1";
 
 	/** Identifier for the property {@link #getA1()} in binary format. */
 	static final int A_1__ID = 1;

@@ -13,13 +13,13 @@ public interface Optional extends Shape {
 	}
 
 	/** Identifier for the {@link test.hierarchy.data.Optional} type in JSON format. */
-	static final String OPTIONAL__TYPE = "Optional";
+	String OPTIONAL__TYPE = "Optional";
 
 	/** @see #isHidden() */
-	static final String HIDDEN__PROP = "hidden";
+	String HIDDEN__PROP = "hidden";
 
 	/** @see #getShape() */
-	static final String SHAPE__PROP = "shape";
+	String SHAPE__PROP = "shape";
 
 	/** Identifier for the {@link test.hierarchy.data.Optional} type in binary format. */
 	static final int OPTIONAL__TYPE_ID = 4;

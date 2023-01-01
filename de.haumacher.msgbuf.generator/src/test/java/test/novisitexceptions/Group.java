@@ -13,10 +13,10 @@ public interface Group extends Shape {
 	}
 
 	/** Identifier for the {@link test.novisitexceptions.Group} type in JSON format. */
-	static final String GROUP__TYPE = "Group";
+	String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
-	static final String SHAPES__PROP = "shapes";
+	String SHAPES__PROP = "shapes";
 
 	/** Identifier for the {@link test.novisitexceptions.Group} type in binary format. */
 	static final int GROUP__TYPE_ID = 3;

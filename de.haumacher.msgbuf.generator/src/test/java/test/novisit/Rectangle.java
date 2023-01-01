@@ -13,13 +13,13 @@ public interface Rectangle extends AtomicShape {
 	}
 
 	/** Identifier for the {@link test.novisit.Rectangle} type in JSON format. */
-	static final String RECTANGLE__TYPE = "Rectangle";
+	String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
-	static final String WIDTH__PROP = "w";
+	String WIDTH__PROP = "w";
 
 	/** @see #getHeight() */
-	static final String HEIGHT__PROP = "h";
+	String HEIGHT__PROP = "h";
 
 	/** Identifier for the {@link test.novisit.Rectangle} type in binary format. */
 	static final int RECTANGLE__TYPE_ID = 2;

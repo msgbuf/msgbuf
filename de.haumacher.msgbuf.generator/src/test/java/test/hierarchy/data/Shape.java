@@ -41,13 +41,13 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 	}
 
 	/** @see #getXCoordinate() */
-	static final String X_COORDINATE__PROP = "x";
+	String X_COORDINATE__PROP = "x";
 
 	/** @see #getYCoordinate() */
-	static final String Y_COORDINATE__PROP = "y";
+	String Y_COORDINATE__PROP = "y";
 
 	/** @see #getColor() */
-	static final String COLOR__PROP = "color";
+	String COLOR__PROP = "color";
 
 	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
 	static final int X_COORDINATE__ID = 1;

@@ -10,10 +10,10 @@ public interface AnnotatedMessage extends BaseMsg {
 	}
 
 	/** Identifier for the {@link test.underscorename.AnnotatedMessage} type in JSON format. */
-	static final String ANNOTATED_MESSAGE__TYPE = "m1";
+	String ANNOTATED_MESSAGE__TYPE = "m1";
 
 	/** @see #getAnnotatedField() */
-	static final String ANNOTATED_FIELD__PROP = "f1";
+	String ANNOTATED_FIELD__PROP = "f1";
 
 	/** Identifier for the {@link test.underscorename.AnnotatedMessage} type in binary format. */
 	static final int ANNOTATED_MESSAGE__TYPE_ID = 2;

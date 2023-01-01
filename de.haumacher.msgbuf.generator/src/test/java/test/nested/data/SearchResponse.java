@@ -11,16 +11,16 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		}
 
 		/** Identifier for the {@link test.nested.data.SearchResponse.Result} type in JSON format. */
-		static final String RESULT__TYPE = "Result";
+		String RESULT__TYPE = "Result";
 
 		/** @see #getUrl() */
-		static final String URL__PROP = "url";
+		String URL__PROP = "url";
 
 		/** @see #getTitle() */
-		static final String TITLE__PROP = "title";
+		String TITLE__PROP = "title";
 
 		/** @see #getSnippets() */
-		static final String SNIPPETS__PROP = "snippets";
+		String SNIPPETS__PROP = "snippets";
 
 		/** Identifier for the property {@link #getUrl()} in binary format. */
 		static final int URL__ID = 1;
@@ -99,10 +99,10 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 	}
 
 	/** Identifier for the {@link test.nested.data.SearchResponse} type in JSON format. */
-	static final String SEARCH_RESPONSE__TYPE = "SearchResponse";
+	String SEARCH_RESPONSE__TYPE = "SearchResponse";
 
 	/** @see #getResults() */
-	static final String RESULTS__PROP = "results";
+	String RESULTS__PROP = "results";
 
 	/** Identifier for the property {@link #getResults()} in binary format. */
 	static final int RESULTS__ID = 1;

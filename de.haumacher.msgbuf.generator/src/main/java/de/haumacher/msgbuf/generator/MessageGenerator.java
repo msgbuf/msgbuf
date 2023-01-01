@@ -405,13 +405,13 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			if ((_json || _reflection) && !_def.isAbstract()) {
 				nl();
 				line("/** Identifier for the {@link " + qTypeName(_def) + "} type in JSON format. */");
-				line((_noInterfaces ? "public " : "") + "static final String " + jsonTypeConstant(_def) + " = " + jsonTypeID(_def) + ";");
+				line((_noInterfaces ? "public static final " : "") + "String " + jsonTypeConstant(_def) + " = " + jsonTypeID(_def) + ";");
 			}
 		}
 		
 		if (_json || _reflection) {
 			if (_interface || _noInterfaces) {
-				String modifier = _reflection ? (_noInterfaces ? "public " : "") : "private ";
+				String modifier = _reflection ? (_noInterfaces ? "public " : "") : (_noInterfaces ? "private " : "");
 				
 				for (Field field : getFields()) {
 					if (!_reflection && field.isTransient()) {
@@ -419,7 +419,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					}
 					nl();
 					line("/** @see #" + getterCall(field) + " */");
-					line(modifier + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
+					line(modifier + (_noInterfaces ? "static final " : "") + "String " + constant(field) + " = " + getFieldNameString(field) + ";");
 				}
 			}
 		}

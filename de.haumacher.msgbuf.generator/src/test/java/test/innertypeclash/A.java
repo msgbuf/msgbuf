@@ -11,7 +11,7 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		}
 
 		/** Identifier for the {@link test.innertypeclash.A.C} type in JSON format. */
-		static final String C__TYPE = "C";
+		String C__TYPE = "C";
 
 		@Override
 		public test.innertypeclash.A.C registerListener(de.haumacher.msgbuf.observer.Listener l);
@@ -50,16 +50,16 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	}
 
 	/** Identifier for the {@link test.innertypeclash.A} type in JSON format. */
-	static final String A__TYPE = "A";
+	String A__TYPE = "A";
 
 	/** @see #getAc() */
-	static final String AC__PROP = "ac";
+	String AC__PROP = "ac";
 
 	/** @see #getBc() */
-	static final String BC__PROP = "bc";
+	String BC__PROP = "bc";
 
 	/** @see #getC() */
-	static final String C__PROP = "c";
+	String C__PROP = "c";
 
 	/** Identifier for the property {@link #getAc()} in binary format. */
 	static final int AC__ID = 1;

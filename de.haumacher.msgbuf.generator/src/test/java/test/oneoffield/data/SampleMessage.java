@@ -10,7 +10,7 @@ public interface SampleMessage extends de.haumacher.msgbuf.data.DataObject, de.h
 	}
 
 	/** Identifier for the {@link test.oneoffield.data.SampleMessage} type in JSON format. */
-	static final String SAMPLE_MESSAGE__TYPE = "SampleMessage";
+	String SAMPLE_MESSAGE__TYPE = "SampleMessage";
 
 	@Override
 	public test.oneoffield.data.SampleMessage registerListener(de.haumacher.msgbuf.observer.Listener l);

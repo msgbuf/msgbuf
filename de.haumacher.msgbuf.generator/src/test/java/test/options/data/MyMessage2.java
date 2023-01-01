@@ -73,7 +73,7 @@ public interface MyMessage2 extends de.haumacher.msgbuf.data.DataObject, de.haum
 	}
 
 	/** Identifier for the {@link test.options.data.MyMessage2} type in JSON format. */
-	static final String MY_MESSAGE_2__TYPE = "MyMessage2";
+	String MY_MESSAGE_2__TYPE = "MyMessage2";
 
 	@Override
 	public test.options.data.MyMessage2 registerListener(de.haumacher.msgbuf.observer.Listener l);

@@ -13,13 +13,13 @@ public interface SimpleType extends de.haumacher.msgbuf.graph.SharedGraphNode, d
 	}
 
 	/** Identifier for the {@link test.graph.data.SimpleType} type in JSON format. */
-	static final String SIMPLE_TYPE__TYPE = "SimpleType";
+	String SIMPLE_TYPE__TYPE = "SimpleType";
 
 	/** @see #getStr() */
-	static final String STR__PROP = "str";
+	String STR__PROP = "str";
 
 	/** @see #getX() */
-	static final String X__PROP = "x";
+	String X__PROP = "x";
 
 	/**
 	 * A string property
