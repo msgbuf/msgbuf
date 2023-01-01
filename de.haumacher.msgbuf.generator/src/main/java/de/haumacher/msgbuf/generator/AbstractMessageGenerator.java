@@ -23,12 +23,22 @@ public abstract class AbstractMessageGenerator extends AbstractJavaGenerator {
 	
 	protected final boolean _noInterfaces;
 
+	protected final String _packageSuffix;
+	
 	/** 
 	 * Creates a {@link AbstractMessageGenerator}.
 	 */
-	public AbstractMessageGenerator(Map<String, Option> options) {
+	public AbstractMessageGenerator(Map<String, Option> options, String packageSuffix) {
 		_options = options;
 		_noInterfaces = isTrue(options.get("NoInterfaces"), false);
+		_packageSuffix = packageSuffix;
+	}
+	
+	/**
+	 * Creates a {@link AbstractMessageGenerator} that does not create top-level file contents.
+	 */
+	protected AbstractMessageGenerator(Map<String, Option> options) {
+		this(options, null);
 	}
 	
 	public Map<String, Option> getOptions() {
@@ -51,7 +61,7 @@ public abstract class AbstractMessageGenerator extends AbstractJavaGenerator {
 		if (_noInterfaces) {
 			return qTypeName(def);
 		} else {
-			return CodeConvention.qImplName(def);
+			return CodeConvention.qImplName(CodeConvention.IMPL_PACKAGE_SUFFIX, def);
 		}
 	}
 

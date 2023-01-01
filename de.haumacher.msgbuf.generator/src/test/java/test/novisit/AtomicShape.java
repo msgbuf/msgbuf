@@ -6,14 +6,14 @@ package test.novisit;
 public interface AtomicShape extends Shape {
 
 	@Override
-	AtomicShape setXCoordinate(int value);
+	test.novisit.AtomicShape setXCoordinate(int value);
 
 	@Override
-	AtomicShape setYCoordinate(int value);
+	test.novisit.AtomicShape setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		AtomicShape result;
+	static test.novisit.AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.novisit.AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -26,15 +26,15 @@ public interface AtomicShape extends Shape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.novisit.AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
-		AtomicShape result;
+		test.novisit.AtomicShape result;
 		switch (type) {
-			case Circle.CIRCLE__TYPE_ID: result = test.novisit.Circle_Impl.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.novisit.Rectangle_Impl.readRectangle_Content(in); break;
+			case test.novisit.Circle.CIRCLE__TYPE_ID: result = test.novisit.impl.Circle_Impl.readCircle_Content(in); break;
+			case test.novisit.Rectangle.RECTANGLE__TYPE_ID: result = test.novisit.impl.Rectangle_Impl.readRectangle_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
@@ -44,7 +44,7 @@ public interface AtomicShape extends Shape {
 	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static AtomicShape readAtomicShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.novisit.AtomicShape_Impl.readAtomicShape_XmlContent(in);
+		return test.novisit.impl.AtomicShape_Impl.readAtomicShape_XmlContent(in);
 	}
 
 }

@@ -6,13 +6,13 @@ package test.nointerfaces;
 public class Car extends Shape {
 
 	/**
-	 * Creates a {@link Car} instance.
+	 * Creates a {@link test.nointerfaces.Car} instance.
 	 */
-	public static Car create() {
+	public static test.nointerfaces.Car create() {
 		return new test.nointerfaces.Car();
 	}
 
-	/** Identifier for the {@link Car} type in JSON format. */
+	/** Identifier for the {@link test.nointerfaces.Car} type in JSON format. */
 	public static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
@@ -24,7 +24,7 @@ public class Car extends Shape {
 	/** @see #getBody() */
 	public static final String BODY__PROP = "body";
 
-	/** Identifier for the {@link Car} type in binary format. */
+	/** Identifier for the {@link test.nointerfaces.Car} type in binary format. */
 	static final int CAR__TYPE_ID = 4;
 
 	/** Identifier for the property {@link #getWheel1()} in binary format. */
@@ -36,16 +36,16 @@ public class Car extends Shape {
 	/** Identifier for the property {@link #getBody()} in binary format. */
 	static final int BODY__ID = 5;
 
-	private Circle _wheel1 = null;
+	private test.nointerfaces.Circle _wheel1 = null;
 
-	private Circle _wheel2 = null;
+	private test.nointerfaces.Circle _wheel2 = null;
 
-	private Rectangle _body = null;
+	private test.nointerfaces.Rectangle _body = null;
 
 	/**
 	 * Creates a {@link Car} instance.
 	 *
-	 * @see Car#create()
+	 * @see test.nointerfaces.Car#create()
 	 */
 	protected Car() {
 		super();
@@ -59,20 +59,20 @@ public class Car extends Shape {
 	/**
 	 * The front wheel.
 	 */
-	public final Circle getWheel1() {
+	public final test.nointerfaces.Circle getWheel1() {
 		return _wheel1;
 	}
 
 	/**
 	 * @see #getWheel1()
 	 */
-	public Car setWheel1(Circle value) {
+	public test.nointerfaces.Car setWheel1(test.nointerfaces.Circle value) {
 		internalSetWheel1(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getWheel1()} without chain call utility. */
-	protected final void internalSetWheel1(Circle value) {
+	protected final void internalSetWheel1(test.nointerfaces.Circle value) {
 		_listener.beforeSet(this, WHEEL_1__PROP, value);
 		_wheel1 = value;
 	}
@@ -87,20 +87,20 @@ public class Car extends Shape {
 	/**
 	 * The back wheel.
 	 */
-	public final Circle getWheel2() {
+	public final test.nointerfaces.Circle getWheel2() {
 		return _wheel2;
 	}
 
 	/**
 	 * @see #getWheel2()
 	 */
-	public Car setWheel2(Circle value) {
+	public test.nointerfaces.Car setWheel2(test.nointerfaces.Circle value) {
 		internalSetWheel2(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getWheel2()} without chain call utility. */
-	protected final void internalSetWheel2(Circle value) {
+	protected final void internalSetWheel2(test.nointerfaces.Circle value) {
 		_listener.beforeSet(this, WHEEL_2__PROP, value);
 		_wheel2 = value;
 	}
@@ -115,20 +115,20 @@ public class Car extends Shape {
 	/**
 	 * The car body.
 	 */
-	public final Rectangle getBody() {
+	public final test.nointerfaces.Rectangle getBody() {
 		return _body;
 	}
 
 	/**
 	 * @see #getBody()
 	 */
-	public Car setBody(Rectangle value) {
+	public test.nointerfaces.Car setBody(test.nointerfaces.Rectangle value) {
 		internalSetBody(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getBody()} without chain call utility. */
-	protected final void internalSetBody(Rectangle value) {
+	protected final void internalSetBody(test.nointerfaces.Rectangle value) {
 		_listener.beforeSet(this, BODY__PROP, value);
 		_body = value;
 	}
@@ -141,13 +141,13 @@ public class Car extends Shape {
 	}
 
 	@Override
-	public Car setXCoordinate(int value) {
+	public test.nointerfaces.Car setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public Car setYCoordinate(int value) {
+	public test.nointerfaces.Car setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -181,15 +181,15 @@ public class Car extends Shape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case WHEEL_1__PROP: internalSetWheel1((Circle) value); break;
-			case WHEEL_2__PROP: internalSetWheel2((Circle) value); break;
-			case BODY__PROP: internalSetBody((Rectangle) value); break;
+			case WHEEL_1__PROP: internalSetWheel1((test.nointerfaces.Circle) value); break;
+			case WHEEL_2__PROP: internalSetWheel2((test.nointerfaces.Circle) value); break;
+			case BODY__PROP: internalSetBody((test.nointerfaces.Rectangle) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.nointerfaces.Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nointerfaces.Car result = new test.nointerfaces.Car();
 		result.readContent(in);
 		return result;
@@ -222,7 +222,7 @@ public class Car extends Shape {
 		}
 	}
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Car} hierarchy. */
+	/** The binary identifier for this concrete type in the polymorphic {@link test.nointerfaces.Car} hierarchy. */
 	public int typeId() {
 		return CAR__TYPE_ID;
 	}
@@ -245,15 +245,15 @@ public class Car extends Shape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Car result = test.nointerfaces.Car.readCar_Content(in);
+		test.nointerfaces.Car result = test.nointerfaces.Car.readCar_Content(in);
 		in.endObject();
 		return result;
 	}
 
-	/** Helper for creating an object of type {@link Car} from a polymorphic composition. */
-	public static Car readCar_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	/** Helper for creating an object of type {@link test.nointerfaces.Car} from a polymorphic composition. */
+	public static test.nointerfaces.Car readCar_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		test.nointerfaces.Car result = new Car();
 		result.readContent(in);
 		return result;
@@ -269,7 +269,7 @@ public class Car extends Shape {
 		}
 	}
 
-	/** XML element name representing a {@link Car} type. */
+	/** XML element name representing a {@link test.nointerfaces.Car} type. */
 	public static final String CAR__XML_ELEMENT = "car";
 
 	/** XML attribute or element name of a {@link #getWheel1} property. */
@@ -313,7 +313,7 @@ public class Car extends Shape {
 		}
 	}
 
-	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Car readCar_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Car result = new Car();
 		result.readContentXml(in);
@@ -357,7 +357,7 @@ public class Car extends Shape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(test.nointerfaces.Shape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

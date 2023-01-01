@@ -6,13 +6,13 @@ package test.hierarchy.data;
 public interface Optional extends Shape {
 
 	/**
-	 * Creates a {@link Optional} instance.
+	 * Creates a {@link test.hierarchy.data.Optional} instance.
 	 */
-	static Optional create() {
-		return new test.hierarchy.data.Optional_Impl();
+	static test.hierarchy.data.Optional create() {
+		return new test.hierarchy.data.impl.Optional_Impl();
 	}
 
-	/** Identifier for the {@link Optional} type in JSON format. */
+	/** Identifier for the {@link test.hierarchy.data.Optional} type in JSON format. */
 	static final String OPTIONAL__TYPE = "Optional";
 
 	/** @see #isHidden() */
@@ -21,7 +21,7 @@ public interface Optional extends Shape {
 	/** @see #getShape() */
 	static final String SHAPE__PROP = "shape";
 
-	/** Identifier for the {@link Optional} type in binary format. */
+	/** Identifier for the {@link test.hierarchy.data.Optional} type in binary format. */
 	static final int OPTIONAL__TYPE_ID = 4;
 
 	/** Identifier for the property {@link #isHidden()} in binary format. */
@@ -38,17 +38,17 @@ public interface Optional extends Shape {
 	/**
 	 * @see #isHidden()
 	 */
-	Optional setHidden(boolean value);
+	test.hierarchy.data.Optional setHidden(boolean value);
 
 	/**
 	 * A {@link Shape} that can be dynamically hidden..
 	 */
-	Shape getShape();
+	test.hierarchy.data.Shape getShape();
 
 	/**
 	 * @see #getShape()
 	 */
-	Optional setShape(Shape value);
+	test.hierarchy.data.Optional setShape(test.hierarchy.data.Shape value);
 
 	/**
 	 * Checks, whether {@link #getShape()} has a value.
@@ -56,25 +56,25 @@ public interface Optional extends Shape {
 	boolean hasShape();
 
 	@Override
-	Optional setXCoordinate(int value);
+	test.hierarchy.data.Optional setXCoordinate(int value);
 
 	@Override
-	Optional setYCoordinate(int value);
+	test.hierarchy.data.Optional setYCoordinate(int value);
 
 	@Override
-	Optional setColor(Color value);
+	test.hierarchy.data.Optional setColor(test.hierarchy.data.Color value);
 
 	/** Reads a new instance from the given reader. */
-	static Optional readOptional(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.hierarchy.data.Optional_Impl result = new test.hierarchy.data.Optional_Impl();
+	static test.hierarchy.data.Optional readOptional(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.hierarchy.data.impl.Optional_Impl result = new test.hierarchy.data.impl.Optional_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Optional readOptional(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.hierarchy.data.Optional readOptional(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Optional result = test.hierarchy.data.Optional_Impl.readOptional_Content(in);
+		test.hierarchy.data.Optional result = test.hierarchy.data.impl.Optional_Impl.readOptional_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -82,7 +82,7 @@ public interface Optional extends Shape {
 	/** Creates a new {@link Optional} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Optional readOptional(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.hierarchy.data.Optional_Impl.readOptional_XmlContent(in);
+		return test.hierarchy.data.impl.Optional_Impl.readOptional_XmlContent(in);
 	}
 
 }

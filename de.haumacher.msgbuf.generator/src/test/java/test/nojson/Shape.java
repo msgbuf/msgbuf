@@ -5,32 +5,32 @@ package test.nojson;
  */
 public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
-	/** Type codes for the {@link Shape} hierarchy. */
+	/** Type codes for the {@link test.nojson.Shape} hierarchy. */
 	public enum TypeKind {
 
-		/** Type literal for {@link Circle}. */
+		/** Type literal for {@link test.nojson.Circle}. */
 		CIRCLE,
 
-		/** Type literal for {@link Rectangle}. */
+		/** Type literal for {@link test.nojson.Rectangle}. */
 		RECTANGLE,
 
-		/** Type literal for {@link Group}. */
+		/** Type literal for {@link test.nojson.Group}. */
 		GROUP,
 
-		/** Type literal for {@link Car}. */
+		/** Type literal for {@link test.nojson.Car}. */
 		CAR,
 		;
 
 	}
 
-	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A,E extends Throwable> extends AtomicShape.Visitor<R,A,E> {
+	/** Visitor interface for the {@link test.nojson.Shape} hierarchy.*/
+	public interface Visitor<R,A,E extends Throwable> extends test.nojson.AtomicShape.Visitor<R,A,E> {
 
-		/** Visit case for {@link Group}.*/
-		R visit(Group self, A arg) throws E;
+		/** Visit case for {@link test.nojson.Group}.*/
+		R visit(test.nojson.Group self, A arg) throws E;
 
-		/** Visit case for {@link Car}.*/
-		R visit(Car self, A arg) throws E;
+		/** Visit case for {@link test.nojson.Car}.*/
+		R visit(test.nojson.Car self, A arg) throws E;
 
 	}
 
@@ -57,7 +57,7 @@ public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.h
 	/**
 	 * @see #getXCoordinate()
 	 */
-	Shape setXCoordinate(int value);
+	test.nojson.Shape setXCoordinate(int value);
 
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
@@ -67,29 +67,29 @@ public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.h
 	/**
 	 * @see #getYCoordinate()
 	 */
-	Shape setYCoordinate(int value);
+	test.nojson.Shape setYCoordinate(int value);
 
 	@Override
-	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.nojson.Shape registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.nojson.Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
+	/** The binary identifier for this concrete type in the polymorphic {@link test.nojson.Shape} hierarchy. */
 	abstract int typeId();
 
 	/** Reads a new instance from the given reader. */
-	static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.nojson.Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
-		Shape result;
+		test.nojson.Shape result;
 		switch (type) {
-			case Group.GROUP__TYPE_ID: result = test.nojson.Group_Impl.readGroup_Content(in); break;
-			case Car.CAR__TYPE_ID: result = test.nojson.Car_Impl.readCar_Content(in); break;
-			case Circle.CIRCLE__TYPE_ID: result = test.nojson.Circle_Impl.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.nojson.Rectangle_Impl.readRectangle_Content(in); break;
+			case test.nojson.Group.GROUP__TYPE_ID: result = test.nojson.impl.Group_Impl.readGroup_Content(in); break;
+			case test.nojson.Car.CAR__TYPE_ID: result = test.nojson.impl.Car_Impl.readCar_Content(in); break;
+			case test.nojson.Circle.CIRCLE__TYPE_ID: result = test.nojson.impl.Circle_Impl.readCircle_Content(in); break;
+			case test.nojson.Rectangle.RECTANGLE__TYPE_ID: result = test.nojson.impl.Rectangle_Impl.readRectangle_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
@@ -99,7 +99,7 @@ public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.h
 	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Shape readShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.nojson.Shape_Impl.readShape_XmlContent(in);
+		return test.nojson.impl.Shape_Impl.readShape_XmlContent(in);
 	}
 
 	/** Accepts the given visitor. */

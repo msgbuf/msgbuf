@@ -6,10 +6,10 @@ package test.nothing;
 public interface Group extends Shape {
 
 	/**
-	 * Creates a {@link Group} instance.
+	 * Creates a {@link test.nothing.Group} instance.
 	 */
-	static Group create() {
-		return new test.nothing.Group_Impl();
+	static test.nothing.Group create() {
+		return new test.nothing.impl.Group_Impl();
 	}
 
 	/**
@@ -19,27 +19,27 @@ public interface Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	java.util.List<Shape> getShapes();
+	java.util.List<test.nothing.Shape> getShapes();
 
 	/**
 	 * @see #getShapes()
 	 */
-	Group setShapes(java.util.List<? extends Shape> value);
+	test.nothing.Group setShapes(java.util.List<? extends test.nothing.Shape> value);
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	Group addShape(Shape value);
+	test.nothing.Group addShape(test.nothing.Shape value);
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	void removeShape(Shape value);
+	void removeShape(test.nothing.Shape value);
 
 	@Override
-	Group setXCoordinate(int value);
+	test.nothing.Group setXCoordinate(int value);
 
 	@Override
-	Group setYCoordinate(int value);
+	test.nothing.Group setYCoordinate(int value);
 
 }

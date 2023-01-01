@@ -191,20 +191,30 @@ public class Generator {
 
 		@Override
 		public Void visit(EnumDef def, Void arg) {
-			return generateJava(CodeConvention.typeName(def), new EnumGenerator(def));
+			return generateJava(CodeConvention.typeName(def), null, new EnumGenerator(def));
 		}
 		
 		@Override
 		public Void visit(MessageDef def, Void arg) {
 			boolean noInterfaces = MessageGenerator.isTrue(_options.get("NoInterfaces"), false);
 			if (!noInterfaces) {
-				generateJava(CodeConvention.typeName(def), new MessageGenerator(_table, _options, true, def, _plugin));
+				generateJava(CodeConvention.typeName(def), null, new MessageGenerator(_table, _options, true, null, def, _plugin));
 			}
-			return generateJava(noInterfaces ? CodeConvention.typeName(def) : CodeConvention.implName(def), new MessageGenerator(_table, _options, false, def, _plugin));
+			String packageSuffix = noInterfaces ? null : CodeConvention.IMPL_PACKAGE_SUFFIX;
+			return generateJava(noInterfaces ? CodeConvention.typeName(def) : CodeConvention.implName(def), packageSuffix, new MessageGenerator(_table, _options, false, packageSuffix, def, _plugin));
 		}
 		
-		private <D extends Definition> Void generateJava(String name, FileGenerator generator) {
-			File out = new File(_dir, name + ".java");
+		private <D extends Definition> Void generateJava(String name, String packageSuffix, FileGenerator generator) {
+			File dir = _dir;
+			if (packageSuffix != null) {
+				// Delete legacy file.
+				File old = new File(_dir, name + ".java");
+				old.delete();
+				
+				dir = new File(dir, packageSuffix);
+			}
+			dir.mkdirs();
+			File out = new File(dir, name + ".java");
 			try (FileOutputStream os = new FileOutputStream(out)) {
 				try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
 					System.out.println("Generating '" + out + "'.");

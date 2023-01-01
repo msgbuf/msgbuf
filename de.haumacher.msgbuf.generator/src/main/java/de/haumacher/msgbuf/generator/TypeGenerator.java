@@ -24,16 +24,19 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	/**
 	 * Singleton {@link TypeGenerator} instance.
 	 */
-	public static final TypeGenerator INSTANCE = new TypeGenerator(CodeConvention::typeName);
+	public static final TypeGenerator INSTANCE = new TypeGenerator(null, CodeConvention::typeName);
 	
 	/**
 	 * Singleton {@link TypeGenerator} instance.
 	 */
-	public static final TypeGenerator IMPL_INSTANCE = new TypeGenerator(CodeConvention::implName);
+	public static final TypeGenerator IMPL_INSTANCE = new TypeGenerator(CodeConvention.IMPL_PACKAGE_SUFFIX, CodeConvention::implName);
 	
 	private Function<String, String> _typeNameConvention;
 
-	private TypeGenerator(Function<String, String> typeNameConvention) {
+	private String _packageSuffix;
+
+	private TypeGenerator(String packageSuffix, Function<String, String> typeNameConvention) {
+		_packageSuffix = packageSuffix;
 		_typeNameConvention = typeNameConvention;
 	}
 
@@ -72,7 +75,7 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		return qName(type.getName(), _typeNameConvention);
+		return qName(_packageSuffix, type.getDefinition(), _typeNameConvention);
 	}
 	
 	@Override

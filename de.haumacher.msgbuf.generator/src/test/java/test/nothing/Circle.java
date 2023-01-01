@@ -6,10 +6,10 @@ package test.nothing;
 public interface Circle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link test.nothing.Circle} instance.
 	 */
-	static Circle create() {
-		return new test.nothing.Circle_Impl();
+	static test.nothing.Circle create() {
+		return new test.nothing.impl.Circle_Impl();
 	}
 
 	/**
@@ -20,12 +20,12 @@ public interface Circle extends AtomicShape {
 	/**
 	 * @see #getRadius()
 	 */
-	Circle setRadius(int value);
+	test.nothing.Circle setRadius(int value);
 
 	@Override
-	Circle setXCoordinate(int value);
+	test.nothing.Circle setXCoordinate(int value);
 
 	@Override
-	Circle setYCoordinate(int value);
+	test.nothing.Circle setYCoordinate(int value);
 
 }

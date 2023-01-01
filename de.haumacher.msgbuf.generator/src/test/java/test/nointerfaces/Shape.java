@@ -5,32 +5,32 @@ package test.nointerfaces;
  */
 public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
-	/** Type codes for the {@link Shape} hierarchy. */
+	/** Type codes for the {@link test.nointerfaces.Shape} hierarchy. */
 	public enum TypeKind {
 
-		/** Type literal for {@link Circle}. */
+		/** Type literal for {@link test.nointerfaces.Circle}. */
 		CIRCLE,
 
-		/** Type literal for {@link Rectangle}. */
+		/** Type literal for {@link test.nointerfaces.Rectangle}. */
 		RECTANGLE,
 
-		/** Type literal for {@link Group}. */
+		/** Type literal for {@link test.nointerfaces.Group}. */
 		GROUP,
 
-		/** Type literal for {@link Car}. */
+		/** Type literal for {@link test.nointerfaces.Car}. */
 		CAR,
 		;
 
 	}
 
-	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A,E extends Throwable> extends AtomicShape.Visitor<R,A,E> {
+	/** Visitor interface for the {@link test.nointerfaces.Shape} hierarchy.*/
+	public interface Visitor<R,A,E extends Throwable> extends test.nointerfaces.AtomicShape.Visitor<R,A,E> {
 
-		/** Visit case for {@link Group}.*/
-		R visit(Group self, A arg) throws E;
+		/** Visit case for {@link test.nointerfaces.Group}.*/
+		R visit(test.nointerfaces.Group self, A arg) throws E;
 
-		/** Visit case for {@link Car}.*/
-		R visit(Car self, A arg) throws E;
+		/** Visit case for {@link test.nointerfaces.Car}.*/
+		R visit(test.nointerfaces.Car self, A arg) throws E;
 
 	}
 
@@ -70,7 +70,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public Shape setXCoordinate(int value) {
+	public test.nointerfaces.Shape setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
@@ -91,7 +91,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public Shape setYCoordinate(int value) {
+	public test.nointerfaces.Shape setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -105,7 +105,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public Shape registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.nointerfaces.Shape registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -115,7 +115,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	@Override
-	public Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.nointerfaces.Shape unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -152,8 +152,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape result;
+	public static test.nointerfaces.Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.nointerfaces.Shape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -193,7 +193,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 	}
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
+	/** The binary identifier for this concrete type in the polymorphic {@link test.nointerfaces.Shape} hierarchy. */
 	abstract int typeId();
 
 	@Override
@@ -220,17 +220,17 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
-		Shape result;
+		test.nointerfaces.Shape result;
 		switch (type) {
-			case Group.GROUP__TYPE_ID: result = test.nointerfaces.Group.readGroup_Content(in); break;
-			case Car.CAR__TYPE_ID: result = test.nointerfaces.Car.readCar_Content(in); break;
-			case Circle.CIRCLE__TYPE_ID: result = test.nointerfaces.Circle.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.nointerfaces.Rectangle.readRectangle_Content(in); break;
+			case test.nointerfaces.Group.GROUP__TYPE_ID: result = test.nointerfaces.Group.readGroup_Content(in); break;
+			case test.nointerfaces.Car.CAR__TYPE_ID: result = test.nointerfaces.Car.readCar_Content(in); break;
+			case test.nointerfaces.Circle.CIRCLE__TYPE_ID: result = test.nointerfaces.Circle.readCircle_Content(in); break;
+			case test.nointerfaces.Rectangle.RECTANGLE__TYPE_ID: result = test.nointerfaces.Rectangle.readRectangle_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
@@ -254,7 +254,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 	}
 
-	/** XML element name representing a {@link Shape} type. */
+	/** XML element name representing a {@link test.nointerfaces.Shape} type. */
 	public static final String SHAPE__XML_ELEMENT = "shape";
 
 	/** XML attribute or element name of a {@link #getXCoordinate} property. */
@@ -277,9 +277,10 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	/** Serializes all fields that are written as XML elements. */
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		// No element fields.
 	}
 
-	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Shape readShape_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		switch (in.getLocalName()) {
 			case Circle.CIRCLE__XML_ELEMENT: {

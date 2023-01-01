@@ -66,32 +66,32 @@ public interface MyMessage2 extends de.haumacher.msgbuf.data.DataObject, de.haum
 	}
 
 	/**
-	 * Creates a {@link MyMessage2} instance.
+	 * Creates a {@link test.options.data.MyMessage2} instance.
 	 */
-	static MyMessage2 create() {
-		return new test.options.data.MyMessage2_Impl();
+	static test.options.data.MyMessage2 create() {
+		return new test.options.data.impl.MyMessage2_Impl();
 	}
 
-	/** Identifier for the {@link MyMessage2} type in JSON format. */
+	/** Identifier for the {@link test.options.data.MyMessage2} type in JSON format. */
 	static final String MY_MESSAGE_2__TYPE = "MyMessage2";
 
 	@Override
-	public MyMessage2 registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.options.data.MyMessage2 registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public MyMessage2 unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.options.data.MyMessage2 unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static MyMessage2 readMyMessage2(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.options.data.MyMessage2_Impl result = new test.options.data.MyMessage2_Impl();
+	static test.options.data.MyMessage2 readMyMessage2(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.options.data.impl.MyMessage2_Impl result = new test.options.data.impl.MyMessage2_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static MyMessage2 readMyMessage2(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.options.data.MyMessage2 readMyMessage2(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		MyMessage2 result = test.options.data.MyMessage2_Impl.readMyMessage2_Content(in);
+		test.options.data.MyMessage2 result = test.options.data.impl.MyMessage2_Impl.readMyMessage2_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -99,7 +99,7 @@ public interface MyMessage2 extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/** Creates a new {@link MyMessage2} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static MyMessage2 readMyMessage2(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.options.data.MyMessage2_Impl.readMyMessage2_XmlContent(in);
+		return test.options.data.impl.MyMessage2_Impl.readMyMessage2_XmlContent(in);
 	}
 
 }

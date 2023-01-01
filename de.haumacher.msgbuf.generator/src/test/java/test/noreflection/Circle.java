@@ -6,13 +6,13 @@ package test.noreflection;
 public class Circle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link test.noreflection.Circle} instance.
 	 */
-	public static Circle create() {
+	public static test.noreflection.Circle create() {
 		return new test.noreflection.Circle();
 	}
 
-	/** Identifier for the {@link Circle} type in JSON format. */
+	/** Identifier for the {@link test.noreflection.Circle} type in JSON format. */
 	public static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
@@ -23,7 +23,7 @@ public class Circle extends AtomicShape {
 	/**
 	 * Creates a {@link Circle} instance.
 	 *
-	 * @see Circle#create()
+	 * @see test.noreflection.Circle#create()
 	 */
 	protected Circle() {
 		super();
@@ -39,7 +39,7 @@ public class Circle extends AtomicShape {
 	/**
 	 * @see #getRadius()
 	 */
-	public Circle setRadius(int value) {
+	public test.noreflection.Circle setRadius(int value) {
 		internalSetRadius(value);
 		return this;
 	}
@@ -50,13 +50,13 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	public Circle setXCoordinate(int value) {
+	public test.noreflection.Circle setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public Circle setYCoordinate(int value) {
+	public test.noreflection.Circle setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -67,7 +67,7 @@ public class Circle extends AtomicShape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.noreflection.Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.noreflection.Circle result = new test.noreflection.Circle();
 		result.readContent(in);
 		return result;
@@ -89,7 +89,7 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(test.noreflection.AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

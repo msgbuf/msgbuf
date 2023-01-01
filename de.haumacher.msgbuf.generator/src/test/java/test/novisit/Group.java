@@ -6,19 +6,19 @@ package test.novisit;
 public interface Group extends Shape {
 
 	/**
-	 * Creates a {@link Group} instance.
+	 * Creates a {@link test.novisit.Group} instance.
 	 */
-	static Group create() {
-		return new test.novisit.Group_Impl();
+	static test.novisit.Group create() {
+		return new test.novisit.impl.Group_Impl();
 	}
 
-	/** Identifier for the {@link Group} type in JSON format. */
+	/** Identifier for the {@link test.novisit.Group} type in JSON format. */
 	static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
 	static final String SHAPES__PROP = "shapes";
 
-	/** Identifier for the {@link Group} type in binary format. */
+	/** Identifier for the {@link test.novisit.Group} type in binary format. */
 	static final int GROUP__TYPE_ID = 3;
 
 	/** Identifier for the property {@link #getShapes()} in binary format. */
@@ -31,40 +31,40 @@ public interface Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	java.util.List<Shape> getShapes();
+	java.util.List<test.novisit.Shape> getShapes();
 
 	/**
 	 * @see #getShapes()
 	 */
-	Group setShapes(java.util.List<? extends Shape> value);
+	test.novisit.Group setShapes(java.util.List<? extends test.novisit.Shape> value);
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	Group addShape(Shape value);
+	test.novisit.Group addShape(test.novisit.Shape value);
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	void removeShape(Shape value);
+	void removeShape(test.novisit.Shape value);
 
 	@Override
-	Group setXCoordinate(int value);
+	test.novisit.Group setXCoordinate(int value);
 
 	@Override
-	Group setYCoordinate(int value);
+	test.novisit.Group setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.novisit.Group_Impl result = new test.novisit.Group_Impl();
+	static test.novisit.Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.novisit.impl.Group_Impl result = new test.novisit.impl.Group_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.novisit.Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Group result = test.novisit.Group_Impl.readGroup_Content(in);
+		test.novisit.Group result = test.novisit.impl.Group_Impl.readGroup_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -72,7 +72,7 @@ public interface Group extends Shape {
 	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Group readGroup(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.novisit.Group_Impl.readGroup_XmlContent(in);
+		return test.novisit.impl.Group_Impl.readGroup_XmlContent(in);
 	}
 
 }

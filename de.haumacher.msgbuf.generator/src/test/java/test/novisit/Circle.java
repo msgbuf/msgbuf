@@ -6,19 +6,19 @@ package test.novisit;
 public interface Circle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link test.novisit.Circle} instance.
 	 */
-	static Circle create() {
-		return new test.novisit.Circle_Impl();
+	static test.novisit.Circle create() {
+		return new test.novisit.impl.Circle_Impl();
 	}
 
-	/** Identifier for the {@link Circle} type in JSON format. */
+	/** Identifier for the {@link test.novisit.Circle} type in JSON format. */
 	static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
 	static final String RADIUS__PROP = "r";
 
-	/** Identifier for the {@link Circle} type in binary format. */
+	/** Identifier for the {@link test.novisit.Circle} type in binary format. */
 	static final int CIRCLE__TYPE_ID = 1;
 
 	/** Identifier for the property {@link #getRadius()} in binary format. */
@@ -32,25 +32,25 @@ public interface Circle extends AtomicShape {
 	/**
 	 * @see #getRadius()
 	 */
-	Circle setRadius(int value);
+	test.novisit.Circle setRadius(int value);
 
 	@Override
-	Circle setXCoordinate(int value);
+	test.novisit.Circle setXCoordinate(int value);
 
 	@Override
-	Circle setYCoordinate(int value);
+	test.novisit.Circle setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.novisit.Circle_Impl result = new test.novisit.Circle_Impl();
+	static test.novisit.Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.novisit.impl.Circle_Impl result = new test.novisit.impl.Circle_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.novisit.Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Circle result = test.novisit.Circle_Impl.readCircle_Content(in);
+		test.novisit.Circle result = test.novisit.impl.Circle_Impl.readCircle_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -58,7 +58,7 @@ public interface Circle extends AtomicShape {
 	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Circle readCircle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.novisit.Circle_Impl.readCircle_XmlContent(in);
+		return test.novisit.impl.Circle_Impl.readCircle_XmlContent(in);
 	}
 
 }

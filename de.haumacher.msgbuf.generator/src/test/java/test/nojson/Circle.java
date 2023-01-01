@@ -6,19 +6,19 @@ package test.nojson;
 public interface Circle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link test.nojson.Circle} instance.
 	 */
-	static Circle create() {
-		return new test.nojson.Circle_Impl();
+	static test.nojson.Circle create() {
+		return new test.nojson.impl.Circle_Impl();
 	}
 
-	/** Identifier for the {@link Circle} type in JSON format. */
+	/** Identifier for the {@link test.nojson.Circle} type in JSON format. */
 	static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
 	static final String RADIUS__PROP = "r";
 
-	/** Identifier for the {@link Circle} type in binary format. */
+	/** Identifier for the {@link test.nojson.Circle} type in binary format. */
 	static final int CIRCLE__TYPE_ID = 1;
 
 	/** Identifier for the property {@link #getRadius()} in binary format. */
@@ -32,18 +32,18 @@ public interface Circle extends AtomicShape {
 	/**
 	 * @see #getRadius()
 	 */
-	Circle setRadius(int value);
+	test.nojson.Circle setRadius(int value);
 
 	@Override
-	Circle setXCoordinate(int value);
+	test.nojson.Circle setXCoordinate(int value);
 
 	@Override
-	Circle setYCoordinate(int value);
+	test.nojson.Circle setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.nojson.Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Circle result = test.nojson.Circle_Impl.readCircle_Content(in);
+		test.nojson.Circle result = test.nojson.impl.Circle_Impl.readCircle_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -51,7 +51,7 @@ public interface Circle extends AtomicShape {
 	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Circle readCircle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.nojson.Circle_Impl.readCircle_XmlContent(in);
+		return test.nojson.impl.Circle_Impl.readCircle_XmlContent(in);
 	}
 
 }

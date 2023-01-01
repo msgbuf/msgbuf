@@ -6,13 +6,13 @@ package test.nointerfaces;
 public class Rectangle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Rectangle} instance.
+	 * Creates a {@link test.nointerfaces.Rectangle} instance.
 	 */
-	public static Rectangle create() {
+	public static test.nointerfaces.Rectangle create() {
 		return new test.nointerfaces.Rectangle();
 	}
 
-	/** Identifier for the {@link Rectangle} type in JSON format. */
+	/** Identifier for the {@link test.nointerfaces.Rectangle} type in JSON format. */
 	public static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
@@ -21,7 +21,7 @@ public class Rectangle extends AtomicShape {
 	/** @see #getHeight() */
 	public static final String HEIGHT__PROP = "h";
 
-	/** Identifier for the {@link Rectangle} type in binary format. */
+	/** Identifier for the {@link test.nointerfaces.Rectangle} type in binary format. */
 	static final int RECTANGLE__TYPE_ID = 2;
 
 	/** Identifier for the property {@link #getWidth()} in binary format. */
@@ -37,7 +37,7 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * Creates a {@link Rectangle} instance.
 	 *
-	 * @see Rectangle#create()
+	 * @see test.nointerfaces.Rectangle#create()
 	 */
 	protected Rectangle() {
 		super();
@@ -64,7 +64,7 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * @see #getWidth()
 	 */
-	public Rectangle setWidth(int value) {
+	public test.nointerfaces.Rectangle setWidth(int value) {
 		internalSetWidth(value);
 		return this;
 	}
@@ -87,7 +87,7 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * @see #getHeight()
 	 */
-	public Rectangle setHeight(int value) {
+	public test.nointerfaces.Rectangle setHeight(int value) {
 		internalSetHeight(value);
 		return this;
 	}
@@ -99,13 +99,13 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	public Rectangle setXCoordinate(int value) {
+	public test.nointerfaces.Rectangle setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public Rectangle setYCoordinate(int value) {
+	public test.nointerfaces.Rectangle setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -144,7 +144,7 @@ public class Rectangle extends AtomicShape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.nointerfaces.Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nointerfaces.Rectangle result = new test.nointerfaces.Rectangle();
 		result.readContent(in);
 		return result;
@@ -168,7 +168,7 @@ public class Rectangle extends AtomicShape {
 		}
 	}
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Rectangle} hierarchy. */
+	/** The binary identifier for this concrete type in the polymorphic {@link test.nointerfaces.Rectangle} hierarchy. */
 	public int typeId() {
 		return RECTANGLE__TYPE_ID;
 	}
@@ -183,15 +183,15 @@ public class Rectangle extends AtomicShape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Rectangle result = test.nointerfaces.Rectangle.readRectangle_Content(in);
+		test.nointerfaces.Rectangle result = test.nointerfaces.Rectangle.readRectangle_Content(in);
 		in.endObject();
 		return result;
 	}
 
-	/** Helper for creating an object of type {@link Rectangle} from a polymorphic composition. */
-	public static Rectangle readRectangle_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	/** Helper for creating an object of type {@link test.nointerfaces.Rectangle} from a polymorphic composition. */
+	public static test.nointerfaces.Rectangle readRectangle_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		test.nointerfaces.Rectangle result = new Rectangle();
 		result.readContent(in);
 		return result;
@@ -206,7 +206,7 @@ public class Rectangle extends AtomicShape {
 		}
 	}
 
-	/** XML element name representing a {@link Rectangle} type. */
+	/** XML element name representing a {@link test.nointerfaces.Rectangle} type. */
 	public static final String RECTANGLE__XML_ELEMENT = "rectangle";
 
 	/** XML attribute or element name of a {@link #getWidth} property. */
@@ -232,9 +232,10 @@ public class Rectangle extends AtomicShape {
 	@Override
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
 		super.writeElements(out);
+		// No element fields.
 	}
 
-	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Rectangle readRectangle_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Rectangle result = new Rectangle();
 		result.readContentXml(in);
@@ -282,7 +283,7 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(test.nointerfaces.AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

@@ -6,10 +6,10 @@ package test.nothing;
 public interface Rectangle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Rectangle} instance.
+	 * Creates a {@link test.nothing.Rectangle} instance.
 	 */
-	static Rectangle create() {
-		return new test.nothing.Rectangle_Impl();
+	static test.nothing.Rectangle create() {
+		return new test.nothing.impl.Rectangle_Impl();
 	}
 
 	/**
@@ -26,7 +26,7 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getWidth()
 	 */
-	Rectangle setWidth(int value);
+	test.nothing.Rectangle setWidth(int value);
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -38,12 +38,12 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getHeight()
 	 */
-	Rectangle setHeight(int value);
+	test.nothing.Rectangle setHeight(int value);
 
 	@Override
-	Rectangle setXCoordinate(int value);
+	test.nothing.Rectangle setXCoordinate(int value);
 
 	@Override
-	Rectangle setYCoordinate(int value);
+	test.nothing.Rectangle setYCoordinate(int value);
 
 }

@@ -56,9 +56,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	/** 
 	 * Creates a {@link MessageGenerator}.
+	 * @param packageSuffix 
 	 */
-	public MessageGenerator(NameTable table, Map<String, Option> options, boolean isInterface, MessageDef def, GeneratorPlugin plugin) {
-		super(options);
+	public MessageGenerator(NameTable table, Map<String, Option> options, boolean isInterface, String packageSuffix, MessageDef def, GeneratorPlugin plugin) {
+		super(options, packageSuffix);
 		_table = table;
 		_options = options;
 		_interface = isInterface;
@@ -122,7 +123,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (_def.getFile() != null) {
 			QName packageName = _def.getFile().getPackage();
 			if (packageName != null) {
-				line("package " + packageName(packageName) + ";");
+				line("package " + packageName(packageName) + (_packageSuffix == null ? "" : "." + _packageSuffix) + ";");
 				nl();
 			}
 			modifier = "";
@@ -130,7 +131,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			modifier = _interface ? "" : "static";
 		}
 		docComment(_def.getComment());
-		line((_interface || _noInterfaces ? "public" : ""), modifier, mkAbstract(), (_interface ? "interface" : "class"), (_interface || _noInterfaces ? typeName(_def) : implName(_def)), getExtends(), getImplements(), "{");
+		line("public", modifier, mkAbstract(), (_interface ? "interface" : "class"), (_interface || _noInterfaces ? typeName(_def) : implName(_def)), getExtends(), getImplements(), "{");
 		generateClassContents();
 		nl();
 		line("}");
@@ -155,7 +156,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				}
 			}
 		} else {
-			generalizations.add(_interface || _noInterfaces ? qTypeName(_def.getExtends()) : implName(_def.getExtendedDef()));
+			generalizations.add(_interface || _noInterfaces ? qTypeName(_def.getExtends()) : qImplName(_def.getExtendedDef()));
 		}
 		
 		if (_interface) {
@@ -180,7 +181,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			}
 			addMixins(generalizations);
 		} else {
-			generalizations.add(typeName(_def));
+			generalizations.add(qTypeName(_def));
 		}
 		
 		return generalizationList("implements", generalizations);
@@ -308,11 +309,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private void generateTypeCodeEnum() {
 		if (!_def.getSpecializations().isEmpty() && _def == getRoot(_def)) {
 			nl();
-			line("/** Type codes for the {@link " + typeName(_def) + "} hierarchy. */");
+			line("/** Type codes for the {@link " + qTypeName(_def) + "} hierarchy. */");
 			line("public enum " + TYPE_KIND_NAME + " {");
 			for (MessageDef caseDef : concreteSpecializations(_def)) {
 				nl();
-				line("/** Type literal for {@link " + typeName(caseDef) + "}. */");
+				line("/** Type literal for {@link " + qTypeName(caseDef) + "}. */");
 				line(typeKindConstant(caseDef) + ",");
 			}
 			line(";");
@@ -324,7 +325,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private void generateVisitorInterface() {
 		if (_def.isAbstract()) {
 			nl();
-			line("/** Visitor interface for the {@link " + typeName(_def) + "} hierarchy.*/");
+			line("/** Visitor interface for the {@link " + qTypeName(_def) + "} hierarchy.*/");
 			lineStart("public interface Visitor<R,A" + onVisitEx(",E extends Throwable") + ">");
 			boolean first = true;
 			for (MessageDef specialization : _def.getSpecializations()) {
@@ -337,7 +338,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				} else {
 					append(", ");
 				}
-				append(typeName(specialization) + ".Visitor<R,A" + onVisitEx(",E") + ">");
+				append(qTypeName(specialization) + ".Visitor<R,A" + onVisitEx(",E") + ">");
 			}
 			append(" {");
 			nl();
@@ -349,8 +350,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					}
 	
 					nl();
-					line("/** Visit case for {@link " + typeName(specialization) + "}.*/");
-					line("R visit(" + typeName(specialization) + " self, A arg)" + onVisitEx(" throws E") + ";");
+					line("/** Visit case for {@link " + qTypeName(specialization) + "}.*/");
+					line("R visit(" + qTypeName(specialization) + " self, A arg)" + onVisitEx(" throws E") + ";");
 					
 					hasCase = true;
 				}
@@ -381,7 +382,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	@Override
 	public Void visit(MessageDef def, Void arg) {
-		include(new MessageGenerator(_table, _options, _interface, def, _plugin));
+		include(new MessageGenerator(_table, _options, _interface, _packageSuffix, def, _plugin));
 		return null;
 	}
 
@@ -389,9 +390,9 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (!_def.isAbstract()) {
 			nl();
 			line("/**");
-			line(" * Creates a {@link " + typeName(_def) + "} instance.");
+			line(" * Creates a {@link " + qTypeName(_def) + "} instance.");
 			line(" */");
-			line((_noInterfaces ? "public " : "") + "static " + typeName(_def) + " " + factoryName(_def) + "() {");
+			line((_noInterfaces ? "public " : "") + "static " + qTypeName(_def) + " " + factoryName(_def) + "() {");
 			{
 				line("return new " + qImplName(_def) + "();");
 			}
@@ -403,7 +404,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (_interface || _noInterfaces) {
 			if ((_json || _reflection) && !_def.isAbstract()) {
 				nl();
-				line("/** Identifier for the {@link " + typeName(_def) + "} type in JSON format. */");
+				line("/** Identifier for the {@link " + qTypeName(_def) + "} type in JSON format. */");
 				line((_noInterfaces ? "public " : "") + "static final String " + jsonTypeConstant(_def) + " = " + jsonTypeID(_def) + ";");
 			}
 		}
@@ -426,7 +427,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (_binary && (_interface || _noInterfaces)) {
 			if (!_def.isAbstract() && getRoot(_def).isAbstract()) {
 				nl();
-				line("/** Identifier for the {@link " + typeName(_def) + "} type in binary format. */");
+				line("/** Identifier for the {@link " + qTypeName(_def) + "} type in binary format. */");
 				line("static final int " + mkBinaryTypeConstant(_def) + " = " + _def.getId() + ";");
 			}
 			
@@ -452,10 +453,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		line(" * Creates a {@link " + implName(_def) + "} instance.");
 		if (!_def.isAbstract()) {
 			line(" *");
-			line(" * @see " + typeName(_def) + "#" + factoryName(_def) + "()");
+			line(" * @see " + qTypeName(_def) + "#" + factoryName(_def) + "()");
 		}
 		line(" */");
-		line("protected " + implName(_def) + "() {");
+		line((_noInterfaces ? "protected " : "public ") + implName(_def) + "() {");
 		{
 			line("super();");
 		}
@@ -1042,7 +1043,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					// To complicated to select the correct super type.
 					line("default: return null;");
 				} else {
-					line("default: return " + typeName(_def) + ".super.get(field);");
+					line("default: return " + qTypeName(_def) + ".super.get(field);");
 				}
 			} else {
 				line("default: return super.get(field);");
@@ -1098,7 +1099,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					line("switch (type) {");
 					for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
 						if (_graph) {
-							line("case " + jsonTypeConstantRef(specialization) + ": result = " + typeName(specialization) + ".create(); break;");
+							line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + ".create(); break;");
 						} else {
 							line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(in); break;");
 						}
@@ -1515,7 +1516,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private void typeIdDoc() {
-		line("/** The binary identifier for this concrete type in the polymorphic {@link " + typeName(_def) + "} hierarchy. */");
+		line("/** The binary identifier for this concrete type in the polymorphic {@link " + qTypeName(_def) + "} hierarchy. */");
 	}
 
 	private void binaryWrite() {
@@ -1684,11 +1685,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private String thisType() {
-		return typeName(_def);
+		return qTypeName(_def);
 	}
 
 	private String myType() {
-		return typeName(_def);
+		return qTypeName(_def);
 	}
 
 	private void generateChain() {
@@ -1765,7 +1766,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private String mkBinaryTypeConstantRef(MessageDef def) {
-		return typeName(def) + "." + mkBinaryTypeConstant(def);
+		return qTypeName(def) + "." + mkBinaryTypeConstant(def);
 	}
 
 	private String mkBinaryReadValue(Kind kind) {
@@ -1873,10 +1874,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			if (!_interface) {
 				nl();
 				line("@Override");
-				line("public" + (_def.isAbstract() ? " final" : "") + " <R,A" + onVisitEx(",E extends Throwable") + "> R visit(" + typeName(gen) + ".Visitor<R,A" + onVisitEx(",E") + "> v, A arg) " + onVisitEx("throws E ") + "{");
+				line("public" + (_def.isAbstract() ? " final" : "") + " <R,A" + onVisitEx(",E extends Throwable") + "> R visit(" + qTypeName(gen) + ".Visitor<R,A" + onVisitEx(",E") + "> v, A arg) " + onVisitEx("throws E ") + "{");
 				{
 					if (_def.isAbstract()) {
-						line("return visit((" + typeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
+						line("return visit((" + qTypeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
 					} else {
 						line("return v.visit(this, arg);");
 					}

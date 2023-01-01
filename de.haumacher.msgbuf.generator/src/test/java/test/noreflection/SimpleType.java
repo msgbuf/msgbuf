@@ -6,13 +6,13 @@ package test.noreflection;
 public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/**
-	 * Creates a {@link SimpleType} instance.
+	 * Creates a {@link test.noreflection.SimpleType} instance.
 	 */
-	public static SimpleType create() {
+	public static test.noreflection.SimpleType create() {
 		return new test.noreflection.SimpleType();
 	}
 
-	/** Identifier for the {@link SimpleType} type in JSON format. */
+	/** Identifier for the {@link test.noreflection.SimpleType} type in JSON format. */
 	public static final String SIMPLE_TYPE__TYPE = "SimpleType";
 
 	/** @see #getStr() */
@@ -28,7 +28,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/**
 	 * Creates a {@link SimpleType} instance.
 	 *
-	 * @see SimpleType#create()
+	 * @see test.noreflection.SimpleType#create()
 	 */
 	protected SimpleType() {
 		super();
@@ -44,7 +44,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/**
 	 * @see #getStr()
 	 */
-	public SimpleType setStr(String value) {
+	public test.noreflection.SimpleType setStr(String value) {
 		internalSetStr(value);
 		return this;
 	}
@@ -64,7 +64,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject {
 	/**
 	 * @see #getX()
 	 */
-	public SimpleType setX(int value) {
+	public test.noreflection.SimpleType setX(int value) {
 		internalSetX(value);
 		return this;
 	}
@@ -75,7 +75,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.noreflection.SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.noreflection.SimpleType result = new test.noreflection.SimpleType();
 		result.readContent(in);
 		return result;

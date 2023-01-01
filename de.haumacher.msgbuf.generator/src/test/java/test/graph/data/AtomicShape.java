@@ -5,35 +5,35 @@ package test.graph.data;
  */
 public interface AtomicShape extends Shape {
 
-	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
+	/** Visitor interface for the {@link test.graph.data.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
 
-		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg) throws E;
+		/** Visit case for {@link test.graph.data.Circle}.*/
+		R visit(test.graph.data.Circle self, A arg) throws E;
 
-		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg) throws E;
+		/** Visit case for {@link test.graph.data.Rectangle}.*/
+		R visit(test.graph.data.Rectangle self, A arg) throws E;
 
 	}
 
 	@Override
-	AtomicShape setXCoordinate(int value);
+	test.graph.data.AtomicShape setXCoordinate(int value);
 
 	@Override
-	AtomicShape setYCoordinate(int value);
+	test.graph.data.AtomicShape setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	static test.graph.data.AtomicShape readAtomicShape(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
-			return (AtomicShape) scope.resolveOrFail(in.nextInt());
+			return (test.graph.data.AtomicShape) scope.resolveOrFail(in.nextInt());
 		}
-		AtomicShape result;
+		test.graph.data.AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
 		int id = in.nextInt();
 		switch (type) {
-			case Circle.CIRCLE__TYPE: result = Circle.create(); break;
-			case Rectangle.RECTANGLE__TYPE: result = Rectangle.create(); break;
+			case Circle.CIRCLE__TYPE: result = test.graph.data.Circle.create(); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.graph.data.Rectangle.create(); break;
 			default: in.skipValue(); result = null; break;
 		}
 		if (result != null) {
@@ -46,7 +46,7 @@ public interface AtomicShape extends Shape {
 	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static AtomicShape readAtomicShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.graph.data.AtomicShape_Impl.readAtomicShape_XmlContent(in);
+		return test.graph.data.impl.AtomicShape_Impl.readAtomicShape_XmlContent(in);
 	}
 
 	/** Accepts the given visitor. */

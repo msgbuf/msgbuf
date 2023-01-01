@@ -5,14 +5,14 @@ package test.noreflection;
  */
 public abstract class AtomicShape extends Shape {
 
-	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
+	/** Visitor interface for the {@link test.noreflection.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
 
-		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg) throws E;
+		/** Visit case for {@link test.noreflection.Circle}.*/
+		R visit(test.noreflection.Circle self, A arg) throws E;
 
-		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg) throws E;
+		/** Visit case for {@link test.noreflection.Rectangle}.*/
+		R visit(test.noreflection.Rectangle self, A arg) throws E;
 
 	}
 
@@ -24,20 +24,20 @@ public abstract class AtomicShape extends Shape {
 	}
 
 	@Override
-	public AtomicShape setXCoordinate(int value) {
+	public test.noreflection.AtomicShape setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public AtomicShape setYCoordinate(int value) {
+	public test.noreflection.AtomicShape setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		AtomicShape result;
+	public static test.noreflection.AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.noreflection.AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -53,8 +53,8 @@ public abstract class AtomicShape extends Shape {
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 
 	@Override
-	public final <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
-		return visit((AtomicShape.Visitor<R,A,E>) v, arg);
+	public final <R,A,E extends Throwable> R visit(test.noreflection.Shape.Visitor<R,A,E> v, A arg) throws E {
+		return visit((test.noreflection.AtomicShape.Visitor<R,A,E>) v, arg);
 	}
 
 }

@@ -6,13 +6,13 @@ package test.notypekind;
 public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link SimpleType} instance.
+	 * Creates a {@link test.notypekind.SimpleType} instance.
 	 */
-	static SimpleType create() {
-		return new test.notypekind.SimpleType_Impl();
+	static test.notypekind.SimpleType create() {
+		return new test.notypekind.impl.SimpleType_Impl();
 	}
 
-	/** Identifier for the {@link SimpleType} type in JSON format. */
+	/** Identifier for the {@link test.notypekind.SimpleType} type in JSON format. */
 	static final String SIMPLE_TYPE__TYPE = "SimpleType";
 
 	/** @see #getStr() */
@@ -35,7 +35,7 @@ public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/**
 	 * @see #getStr()
 	 */
-	SimpleType setStr(String value);
+	test.notypekind.SimpleType setStr(String value);
 
 	/**
 	 * An int property
@@ -45,25 +45,25 @@ public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/**
 	 * @see #getX()
 	 */
-	SimpleType setX(int value);
+	test.notypekind.SimpleType setX(int value);
 
 	@Override
-	public SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.notypekind.SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.notypekind.SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.notypekind.SimpleType_Impl result = new test.notypekind.SimpleType_Impl();
+	static test.notypekind.SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.notypekind.impl.SimpleType_Impl result = new test.notypekind.impl.SimpleType_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static SimpleType readSimpleType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.notypekind.SimpleType readSimpleType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SimpleType result = test.notypekind.SimpleType_Impl.readSimpleType_Content(in);
+		test.notypekind.SimpleType result = test.notypekind.impl.SimpleType_Impl.readSimpleType_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -71,7 +71,7 @@ public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/** Creates a new {@link SimpleType} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SimpleType readSimpleType(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.notypekind.SimpleType_Impl.readSimpleType_XmlContent(in);
+		return test.notypekind.impl.SimpleType_Impl.readSimpleType_XmlContent(in);
 	}
 
 }

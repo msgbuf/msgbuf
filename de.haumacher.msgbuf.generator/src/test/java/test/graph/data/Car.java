@@ -6,13 +6,13 @@ package test.graph.data;
 public interface Car extends Shape {
 
 	/**
-	 * Creates a {@link Car} instance.
+	 * Creates a {@link test.graph.data.Car} instance.
 	 */
-	static Car create() {
-		return new test.graph.data.Car_Impl();
+	static test.graph.data.Car create() {
+		return new test.graph.data.impl.Car_Impl();
 	}
 
-	/** Identifier for the {@link Car} type in JSON format. */
+	/** Identifier for the {@link test.graph.data.Car} type in JSON format. */
 	static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
@@ -27,12 +27,12 @@ public interface Car extends Shape {
 	/**
 	 * The front wheel.
 	 */
-	Circle getWheel1();
+	test.graph.data.Circle getWheel1();
 
 	/**
 	 * @see #getWheel1()
 	 */
-	Car setWheel1(Circle value);
+	test.graph.data.Car setWheel1(test.graph.data.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel1()} has a value.
@@ -42,12 +42,12 @@ public interface Car extends Shape {
 	/**
 	 * The back wheel.
 	 */
-	Circle getWheel2();
+	test.graph.data.Circle getWheel2();
 
 	/**
 	 * @see #getWheel2()
 	 */
-	Car setWheel2(Circle value);
+	test.graph.data.Car setWheel2(test.graph.data.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel2()} has a value.
@@ -57,12 +57,12 @@ public interface Car extends Shape {
 	/**
 	 * The car body.
 	 */
-	Rectangle getBody();
+	test.graph.data.Rectangle getBody();
 
 	/**
 	 * @see #getBody()
 	 */
-	Car setBody(Rectangle value);
+	test.graph.data.Car setBody(test.graph.data.Rectangle value);
 
 	/**
 	 * Checks, whether {@link #getBody()} has a value.
@@ -70,21 +70,21 @@ public interface Car extends Shape {
 	boolean hasBody();
 
 	@Override
-	Car setXCoordinate(int value);
+	test.graph.data.Car setXCoordinate(int value);
 
 	@Override
-	Car setYCoordinate(int value);
+	test.graph.data.Car setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Car readCar(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	static test.graph.data.Car readCar(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
-			return (Car) scope.resolveOrFail(in.nextInt());
+			return (test.graph.data.Car) scope.resolveOrFail(in.nextInt());
 		}
 		in.beginArray();
 		String type = in.nextString();
 		assert CAR__TYPE.equals(type);
 		int id = in.nextInt();
-		test.graph.data.Car_Impl result = new test.graph.data.Car_Impl();
+		test.graph.data.impl.Car_Impl result = new test.graph.data.impl.Car_Impl();
 		scope.readData(result, id, in);
 		in.endArray();
 		return result;
@@ -93,7 +93,7 @@ public interface Car extends Shape {
 	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Car readCar(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.graph.data.Car_Impl.readCar_XmlContent(in);
+		return test.graph.data.impl.Car_Impl.readCar_XmlContent(in);
 	}
 
 }

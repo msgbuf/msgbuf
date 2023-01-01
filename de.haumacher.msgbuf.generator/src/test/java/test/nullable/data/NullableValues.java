@@ -3,13 +3,13 @@ package test.nullable.data;
 public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.data.ReflectiveDataObject, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link NullableValues} instance.
+	 * Creates a {@link test.nullable.data.NullableValues} instance.
 	 */
-	static NullableValues create() {
-		return new test.nullable.data.NullableValues_Impl();
+	static test.nullable.data.NullableValues create() {
+		return new test.nullable.data.impl.NullableValues_Impl();
 	}
 
-	/** Identifier for the {@link NullableValues} type in JSON format. */
+	/** Identifier for the {@link test.nullable.data.NullableValues} type in JSON format. */
 	static final String NULLABLE_VALUES__TYPE = "NullableValues";
 
 	/** @see #getInt() */
@@ -65,7 +65,7 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getInt()
 	 */
-	NullableValues setInt(Integer value);
+	test.nullable.data.NullableValues setInt(Integer value);
 
 	/**
 	 * Checks, whether {@link #getInt()} has a value.
@@ -77,7 +77,7 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getLong()
 	 */
-	NullableValues setLong(Long value);
+	test.nullable.data.NullableValues setLong(Long value);
 
 	/**
 	 * Checks, whether {@link #getLong()} has a value.
@@ -89,7 +89,7 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getBoolean()
 	 */
-	NullableValues setBoolean(Boolean value);
+	test.nullable.data.NullableValues setBoolean(Boolean value);
 
 	/**
 	 * Checks, whether {@link #getBoolean()} has a value.
@@ -101,7 +101,7 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getString()
 	 */
-	NullableValues setString(String value);
+	test.nullable.data.NullableValues setString(String value);
 
 	/**
 	 * Checks, whether {@link #getString()} has a value.
@@ -113,12 +113,12 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getIntList()
 	 */
-	NullableValues setIntList(java.util.List<? extends Integer> value);
+	test.nullable.data.NullableValues setIntList(java.util.List<? extends Integer> value);
 
 	/**
 	 * Adds a value to the {@link #getIntList()} list.
 	 */
-	NullableValues addIntList(int value);
+	test.nullable.data.NullableValues addIntList(int value);
 
 	/**
 	 * Removes a value from the {@link #getIntList()} list.
@@ -135,12 +135,12 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getStringList()
 	 */
-	NullableValues setStringList(java.util.List<? extends String> value);
+	test.nullable.data.NullableValues setStringList(java.util.List<? extends String> value);
 
 	/**
 	 * Adds a value to the {@link #getStringList()} list.
 	 */
-	NullableValues addStringList(String value);
+	test.nullable.data.NullableValues addStringList(String value);
 
 	/**
 	 * Removes a value from the {@link #getStringList()} list.
@@ -157,12 +157,12 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/**
 	 * @see #getStringIntMap()
 	 */
-	NullableValues setStringIntMap(java.util.Map<String, Integer> value);
+	test.nullable.data.NullableValues setStringIntMap(java.util.Map<String, Integer> value);
 
 	/**
 	 * Adds a key value pair to the {@link #getStringIntMap()} map.
 	 */
-	NullableValues putStringIntMap(String key, int value);
+	test.nullable.data.NullableValues putStringIntMap(String key, int value);
 
 	/**
 	 * Removes a key from the {@link #getStringIntMap()} map.
@@ -174,12 +174,12 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	 */
 	boolean hasStringIntMap();
 
-	Decision getOptionalDecision();
+	test.nullable.data.Decision getOptionalDecision();
 
 	/**
 	 * @see #getOptionalDecision()
 	 */
-	NullableValues setOptionalDecision(Decision value);
+	test.nullable.data.NullableValues setOptionalDecision(test.nullable.data.Decision value);
 
 	/**
 	 * Checks, whether {@link #getOptionalDecision()} has a value.
@@ -187,16 +187,16 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	boolean hasOptionalDecision();
 
 	/** Reads a new instance from the given reader. */
-	static NullableValues readNullableValues(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.nullable.data.NullableValues_Impl result = new test.nullable.data.NullableValues_Impl();
+	static test.nullable.data.NullableValues readNullableValues(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.nullable.data.impl.NullableValues_Impl result = new test.nullable.data.impl.NullableValues_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static NullableValues readNullableValues(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.nullable.data.NullableValues readNullableValues(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		NullableValues result = test.nullable.data.NullableValues_Impl.readNullableValues_Content(in);
+		test.nullable.data.NullableValues result = test.nullable.data.impl.NullableValues_Impl.readNullableValues_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -204,7 +204,7 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	/** Creates a new {@link NullableValues} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static NullableValues readNullableValues(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.nullable.data.NullableValues_Impl.readNullableValues_XmlContent(in);
+		return test.nullable.data.impl.NullableValues_Impl.readNullableValues_XmlContent(in);
 	}
 
 }

@@ -6,13 +6,13 @@ package test.nolistener;
 public interface Car extends Shape {
 
 	/**
-	 * Creates a {@link Car} instance.
+	 * Creates a {@link test.nolistener.Car} instance.
 	 */
-	static Car create() {
-		return new test.nolistener.Car_Impl();
+	static test.nolistener.Car create() {
+		return new test.nolistener.impl.Car_Impl();
 	}
 
-	/** Identifier for the {@link Car} type in JSON format. */
+	/** Identifier for the {@link test.nolistener.Car} type in JSON format. */
 	static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
@@ -24,7 +24,7 @@ public interface Car extends Shape {
 	/** @see #getBody() */
 	static final String BODY__PROP = "body";
 
-	/** Identifier for the {@link Car} type in binary format. */
+	/** Identifier for the {@link test.nolistener.Car} type in binary format. */
 	static final int CAR__TYPE_ID = 4;
 
 	/** Identifier for the property {@link #getWheel1()} in binary format. */
@@ -39,12 +39,12 @@ public interface Car extends Shape {
 	/**
 	 * The front wheel.
 	 */
-	Circle getWheel1();
+	test.nolistener.Circle getWheel1();
 
 	/**
 	 * @see #getWheel1()
 	 */
-	Car setWheel1(Circle value);
+	test.nolistener.Car setWheel1(test.nolistener.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel1()} has a value.
@@ -54,12 +54,12 @@ public interface Car extends Shape {
 	/**
 	 * The back wheel.
 	 */
-	Circle getWheel2();
+	test.nolistener.Circle getWheel2();
 
 	/**
 	 * @see #getWheel2()
 	 */
-	Car setWheel2(Circle value);
+	test.nolistener.Car setWheel2(test.nolistener.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel2()} has a value.
@@ -69,12 +69,12 @@ public interface Car extends Shape {
 	/**
 	 * The car body.
 	 */
-	Rectangle getBody();
+	test.nolistener.Rectangle getBody();
 
 	/**
 	 * @see #getBody()
 	 */
-	Car setBody(Rectangle value);
+	test.nolistener.Car setBody(test.nolistener.Rectangle value);
 
 	/**
 	 * Checks, whether {@link #getBody()} has a value.
@@ -82,22 +82,22 @@ public interface Car extends Shape {
 	boolean hasBody();
 
 	@Override
-	Car setXCoordinate(int value);
+	test.nolistener.Car setXCoordinate(int value);
 
 	@Override
-	Car setYCoordinate(int value);
+	test.nolistener.Car setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.nolistener.Car_Impl result = new test.nolistener.Car_Impl();
+	static test.nolistener.Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.nolistener.impl.Car_Impl result = new test.nolistener.impl.Car_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.nolistener.Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Car result = test.nolistener.Car_Impl.readCar_Content(in);
+		test.nolistener.Car result = test.nolistener.impl.Car_Impl.readCar_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -105,7 +105,7 @@ public interface Car extends Shape {
 	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Car readCar(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.nolistener.Car_Impl.readCar_XmlContent(in);
+		return test.nolistener.impl.Car_Impl.readCar_XmlContent(in);
 	}
 
 }

@@ -6,13 +6,13 @@ package test.hierarchy.data;
 public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link SimpleType} instance.
+	 * Creates a {@link test.hierarchy.data.SimpleType} instance.
 	 */
-	static SimpleType create() {
-		return new test.hierarchy.data.SimpleType_Impl();
+	static test.hierarchy.data.SimpleType create() {
+		return new test.hierarchy.data.impl.SimpleType_Impl();
 	}
 
-	/** Identifier for the {@link SimpleType} type in JSON format. */
+	/** Identifier for the {@link test.hierarchy.data.SimpleType} type in JSON format. */
 	static final String SIMPLE_TYPE__TYPE = "SimpleType";
 
 	/** @see #getStr() */
@@ -35,7 +35,7 @@ public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/**
 	 * @see #getStr()
 	 */
-	SimpleType setStr(String value);
+	test.hierarchy.data.SimpleType setStr(String value);
 
 	/**
 	 * An int property
@@ -45,25 +45,25 @@ public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/**
 	 * @see #getX()
 	 */
-	SimpleType setX(int value);
+	test.hierarchy.data.SimpleType setX(int value);
 
 	@Override
-	public SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.hierarchy.data.SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.hierarchy.data.SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.hierarchy.data.SimpleType_Impl result = new test.hierarchy.data.SimpleType_Impl();
+	static test.hierarchy.data.SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.hierarchy.data.impl.SimpleType_Impl result = new test.hierarchy.data.impl.SimpleType_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static SimpleType readSimpleType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.hierarchy.data.SimpleType readSimpleType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SimpleType result = test.hierarchy.data.SimpleType_Impl.readSimpleType_Content(in);
+		test.hierarchy.data.SimpleType result = test.hierarchy.data.impl.SimpleType_Impl.readSimpleType_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -71,7 +71,7 @@ public interface SimpleType extends de.haumacher.msgbuf.data.DataObject, de.haum
 	/** Creates a new {@link SimpleType} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SimpleType readSimpleType(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.hierarchy.data.SimpleType_Impl.readSimpleType_XmlContent(in);
+		return test.hierarchy.data.impl.SimpleType_Impl.readSimpleType_XmlContent(in);
 	}
 
 }

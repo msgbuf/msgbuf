@@ -6,13 +6,13 @@ package test.graph.data;
 public interface Group extends Shape {
 
 	/**
-	 * Creates a {@link Group} instance.
+	 * Creates a {@link test.graph.data.Group} instance.
 	 */
-	static Group create() {
-		return new test.graph.data.Group_Impl();
+	static test.graph.data.Group create() {
+		return new test.graph.data.impl.Group_Impl();
 	}
 
-	/** Identifier for the {@link Group} type in JSON format. */
+	/** Identifier for the {@link test.graph.data.Group} type in JSON format. */
 	static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
@@ -25,39 +25,39 @@ public interface Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	java.util.List<Shape> getShapes();
+	java.util.List<test.graph.data.Shape> getShapes();
 
 	/**
 	 * @see #getShapes()
 	 */
-	Group setShapes(java.util.List<? extends Shape> value);
+	test.graph.data.Group setShapes(java.util.List<? extends test.graph.data.Shape> value);
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	Group addShape(Shape value);
+	test.graph.data.Group addShape(test.graph.data.Shape value);
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	void removeShape(Shape value);
+	void removeShape(test.graph.data.Shape value);
 
 	@Override
-	Group setXCoordinate(int value);
+	test.graph.data.Group setXCoordinate(int value);
 
 	@Override
-	Group setYCoordinate(int value);
+	test.graph.data.Group setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	static test.graph.data.Group readGroup(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
-			return (Group) scope.resolveOrFail(in.nextInt());
+			return (test.graph.data.Group) scope.resolveOrFail(in.nextInt());
 		}
 		in.beginArray();
 		String type = in.nextString();
 		assert GROUP__TYPE.equals(type);
 		int id = in.nextInt();
-		test.graph.data.Group_Impl result = new test.graph.data.Group_Impl();
+		test.graph.data.impl.Group_Impl result = new test.graph.data.impl.Group_Impl();
 		scope.readData(result, id, in);
 		in.endArray();
 		return result;
@@ -66,7 +66,7 @@ public interface Group extends Shape {
 	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Group readGroup(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.graph.data.Group_Impl.readGroup_XmlContent(in);
+		return test.graph.data.impl.Group_Impl.readGroup_XmlContent(in);
 	}
 
 }

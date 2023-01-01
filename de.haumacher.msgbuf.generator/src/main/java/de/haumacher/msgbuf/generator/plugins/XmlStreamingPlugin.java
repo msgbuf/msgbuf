@@ -82,7 +82,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			@Override
 			protected void generate() {
 				nl();
-				line("/** XML element name representing a {@link " + typeName(def) + "} type. */");
+				line("/** XML element name representing a {@link " + qTypeName(def) + "} type. */");
 				line("public static final String " + xmlTypeNameConstant(def) + " = \"" + xmlTypeName(def) + "\";");
 				
 				for (Field field : def.getFields()) {
@@ -140,7 +140,8 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					if (def.hasExtends()) {
 						line("super.writeElements(out);");
 					}
-					
+
+					boolean hasElementFields = false;
 					for (Field field : def.getFields()) {
 						Type type = field.getType();
 						switch (type.kind()) {
@@ -154,6 +155,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 									continue;
 								}
 
+								hasElementFields = true;
 								boolean nullable = Util.isNullable(field);
 								if (nullable) {
 									line("if (" + CodeConvention.hasName(field) + "()" + ") {");
@@ -183,11 +185,15 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 							}
 						}
 					}
+					
+					if (!hasElementFields) {
+						line("// No element fields.");
+					}
 				}
 				line("}");
 				
 				nl();
-				line("/** Creates a new {@link " + typeName(def) + "} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */");
+				line("/** Creates a new {@link " + qTypeName(def) + "} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */");
 				line("public static " + implName(def) + " " + readXmlContent(def) + "(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {");
 				{
 					if (def.isAbstract()) {

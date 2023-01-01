@@ -5,14 +5,14 @@ package test.noreflection;
  */
 public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject {
 
-	/** Visitor interface for the {@link Shape} hierarchy.*/
-	public interface Visitor<R,A,E extends Throwable> extends AtomicShape.Visitor<R,A,E> {
+	/** Visitor interface for the {@link test.noreflection.Shape} hierarchy.*/
+	public interface Visitor<R,A,E extends Throwable> extends test.noreflection.AtomicShape.Visitor<R,A,E> {
 
-		/** Visit case for {@link Group}.*/
-		R visit(Group self, A arg) throws E;
+		/** Visit case for {@link test.noreflection.Group}.*/
+		R visit(test.noreflection.Group self, A arg) throws E;
 
-		/** Visit case for {@link Car}.*/
-		R visit(Car self, A arg) throws E;
+		/** Visit case for {@link test.noreflection.Car}.*/
+		R visit(test.noreflection.Car self, A arg) throws E;
 
 	}
 
@@ -43,7 +43,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getXCoordinate()
 	 */
-	public Shape setXCoordinate(int value) {
+	public test.noreflection.Shape setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
@@ -63,7 +63,7 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/**
 	 * @see #getYCoordinate()
 	 */
-	public Shape setYCoordinate(int value) {
+	public test.noreflection.Shape setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -77,8 +77,8 @@ public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject 
 	public abstract String jsonType();
 
 	/** Reads a new instance from the given reader. */
-	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Shape result;
+	public static test.noreflection.Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.noreflection.Shape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

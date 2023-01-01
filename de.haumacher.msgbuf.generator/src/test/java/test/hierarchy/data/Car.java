@@ -6,13 +6,13 @@ package test.hierarchy.data;
 public interface Car extends Shape {
 
 	/**
-	 * Creates a {@link Car} instance.
+	 * Creates a {@link test.hierarchy.data.Car} instance.
 	 */
-	static Car create() {
-		return new test.hierarchy.data.Car_Impl();
+	static test.hierarchy.data.Car create() {
+		return new test.hierarchy.data.impl.Car_Impl();
 	}
 
-	/** Identifier for the {@link Car} type in JSON format. */
+	/** Identifier for the {@link test.hierarchy.data.Car} type in JSON format. */
 	static final String CAR__TYPE = "Car";
 
 	/** @see #getWheel1() */
@@ -24,7 +24,7 @@ public interface Car extends Shape {
 	/** @see #getBody() */
 	static final String BODY__PROP = "body";
 
-	/** Identifier for the {@link Car} type in binary format. */
+	/** Identifier for the {@link test.hierarchy.data.Car} type in binary format. */
 	static final int CAR__TYPE_ID = 5;
 
 	/** Identifier for the property {@link #getWheel1()} in binary format. */
@@ -39,12 +39,12 @@ public interface Car extends Shape {
 	/**
 	 * The front wheel.
 	 */
-	Circle getWheel1();
+	test.hierarchy.data.Circle getWheel1();
 
 	/**
 	 * @see #getWheel1()
 	 */
-	Car setWheel1(Circle value);
+	test.hierarchy.data.Car setWheel1(test.hierarchy.data.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel1()} has a value.
@@ -54,12 +54,12 @@ public interface Car extends Shape {
 	/**
 	 * The back wheel.
 	 */
-	Circle getWheel2();
+	test.hierarchy.data.Circle getWheel2();
 
 	/**
 	 * @see #getWheel2()
 	 */
-	Car setWheel2(Circle value);
+	test.hierarchy.data.Car setWheel2(test.hierarchy.data.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel2()} has a value.
@@ -69,12 +69,12 @@ public interface Car extends Shape {
 	/**
 	 * The car body.
 	 */
-	Rectangle getBody();
+	test.hierarchy.data.Rectangle getBody();
 
 	/**
 	 * @see #getBody()
 	 */
-	Car setBody(Rectangle value);
+	test.hierarchy.data.Car setBody(test.hierarchy.data.Rectangle value);
 
 	/**
 	 * Checks, whether {@link #getBody()} has a value.
@@ -82,25 +82,25 @@ public interface Car extends Shape {
 	boolean hasBody();
 
 	@Override
-	Car setXCoordinate(int value);
+	test.hierarchy.data.Car setXCoordinate(int value);
 
 	@Override
-	Car setYCoordinate(int value);
+	test.hierarchy.data.Car setYCoordinate(int value);
 
 	@Override
-	Car setColor(Color value);
+	test.hierarchy.data.Car setColor(test.hierarchy.data.Color value);
 
 	/** Reads a new instance from the given reader. */
-	static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.hierarchy.data.Car_Impl result = new test.hierarchy.data.Car_Impl();
+	static test.hierarchy.data.Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.hierarchy.data.impl.Car_Impl result = new test.hierarchy.data.impl.Car_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.hierarchy.data.Car readCar(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Car result = test.hierarchy.data.Car_Impl.readCar_Content(in);
+		test.hierarchy.data.Car result = test.hierarchy.data.impl.Car_Impl.readCar_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -108,7 +108,7 @@ public interface Car extends Shape {
 	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Car readCar(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.hierarchy.data.Car_Impl.readCar_XmlContent(in);
+		return test.hierarchy.data.impl.Car_Impl.readCar_XmlContent(in);
 	}
 
 }

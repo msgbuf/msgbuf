@@ -6,32 +6,32 @@ package test.nointerfaces;
 public class Group extends Shape {
 
 	/**
-	 * Creates a {@link Group} instance.
+	 * Creates a {@link test.nointerfaces.Group} instance.
 	 */
-	public static Group create() {
+	public static test.nointerfaces.Group create() {
 		return new test.nointerfaces.Group();
 	}
 
-	/** Identifier for the {@link Group} type in JSON format. */
+	/** Identifier for the {@link test.nointerfaces.Group} type in JSON format. */
 	public static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
 	public static final String SHAPES__PROP = "shapes";
 
-	/** Identifier for the {@link Group} type in binary format. */
+	/** Identifier for the {@link test.nointerfaces.Group} type in binary format. */
 	static final int GROUP__TYPE_ID = 3;
 
 	/** Identifier for the property {@link #getShapes()} in binary format. */
 	static final int SHAPES__ID = 3;
 
-	private final java.util.List<Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<Shape>() {
+	private final java.util.List<test.nointerfaces.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.nointerfaces.Shape>() {
 		@Override
-		protected void beforeAdd(int index, Shape element) {
+		protected void beforeAdd(int index, test.nointerfaces.Shape element) {
 			_listener.beforeAdd(Group.this, SHAPES__PROP, index, element);
 		}
 
 		@Override
-		protected void afterRemove(int index, Shape element) {
+		protected void afterRemove(int index, test.nointerfaces.Shape element) {
 			_listener.afterRemove(Group.this, SHAPES__PROP, index, element);
 		}
 	};
@@ -39,7 +39,7 @@ public class Group extends Shape {
 	/**
 	 * Creates a {@link Group} instance.
 	 *
-	 * @see Group#create()
+	 * @see test.nointerfaces.Group#create()
 	 */
 	protected Group() {
 		super();
@@ -57,20 +57,20 @@ public class Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	public final java.util.List<Shape> getShapes() {
+	public final java.util.List<test.nointerfaces.Shape> getShapes() {
 		return _shapes;
 	}
 
 	/**
 	 * @see #getShapes()
 	 */
-	public Group setShapes(java.util.List<? extends Shape> value) {
+	public test.nointerfaces.Group setShapes(java.util.List<? extends test.nointerfaces.Shape> value) {
 		internalSetShapes(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getShapes()} without chain call utility. */
-	protected final void internalSetShapes(java.util.List<? extends Shape> value) {
+	protected final void internalSetShapes(java.util.List<? extends test.nointerfaces.Shape> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'shapes' cannot be null.");
 		_shapes.clear();
 		_shapes.addAll(value);
@@ -79,31 +79,31 @@ public class Group extends Shape {
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	public Group addShape(Shape value) {
+	public test.nointerfaces.Group addShape(test.nointerfaces.Shape value) {
 		internalAddShape(value);
 		return this;
 	}
 
-	/** Implementation of {@link #addShape(Shape)} without chain call utility. */
-	protected final void internalAddShape(Shape value) {
+	/** Implementation of {@link #addShape(test.nointerfaces.Shape)} without chain call utility. */
+	protected final void internalAddShape(test.nointerfaces.Shape value) {
 		_shapes.add(value);
 	}
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	public final void removeShape(Shape value) {
+	public final void removeShape(test.nointerfaces.Shape value) {
 		_shapes.remove(value);
 	}
 
 	@Override
-	public Group setXCoordinate(int value) {
+	public test.nointerfaces.Group setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public Group setYCoordinate(int value) {
+	public test.nointerfaces.Group setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -133,13 +133,13 @@ public class Group extends Shape {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case SHAPES__PROP: internalSetShapes(de.haumacher.msgbuf.util.Conversions.asList(Shape.class, value)); break;
+			case SHAPES__PROP: internalSetShapes(de.haumacher.msgbuf.util.Conversions.asList(test.nointerfaces.Shape.class, value)); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.nointerfaces.Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nointerfaces.Group result = new test.nointerfaces.Group();
 		result.readContent(in);
 		return result;
@@ -150,7 +150,7 @@ public class Group extends Shape {
 		super.writeFields(out);
 		out.name(SHAPES__PROP);
 		out.beginArray();
-		for (Shape x : getShapes()) {
+		for (test.nointerfaces.Shape x : getShapes()) {
 			x.writeTo(out);
 		}
 		out.endArray();
@@ -171,7 +171,7 @@ public class Group extends Shape {
 		}
 	}
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Group} hierarchy. */
+	/** The binary identifier for this concrete type in the polymorphic {@link test.nointerfaces.Group} hierarchy. */
 	public int typeId() {
 		return GROUP__TYPE_ID;
 	}
@@ -181,9 +181,9 @@ public class Group extends Shape {
 		super.writeFields(out);
 		out.name(SHAPES__ID);
 		{
-			java.util.List<Shape> values = getShapes();
+			java.util.List<test.nointerfaces.Shape> values = getShapes();
 			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
-			for (Shape x : values) {
+			for (test.nointerfaces.Shape x : values) {
 				x.writeTo(out);
 			}
 			out.endArray();
@@ -191,15 +191,15 @@ public class Group extends Shape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Group result = test.nointerfaces.Group.readGroup_Content(in);
+		test.nointerfaces.Group result = test.nointerfaces.Group.readGroup_Content(in);
 		in.endObject();
 		return result;
 	}
 
-	/** Helper for creating an object of type {@link Group} from a polymorphic composition. */
-	public static Group readGroup_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	/** Helper for creating an object of type {@link test.nointerfaces.Group} from a polymorphic composition. */
+	public static test.nointerfaces.Group readGroup_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		test.nointerfaces.Group result = new Group();
 		result.readContent(in);
 		return result;
@@ -220,7 +220,7 @@ public class Group extends Shape {
 		}
 	}
 
-	/** XML element name representing a {@link Group} type. */
+	/** XML element name representing a {@link test.nointerfaces.Group} type. */
 	public static final String GROUP__XML_ELEMENT = "group";
 
 	/** XML attribute or element name of a {@link #getShapes} property. */
@@ -248,7 +248,7 @@ public class Group extends Shape {
 		out.writeEndElement();
 	}
 
-	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Group readGroup_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Group result = new Group();
 		result.readContentXml(in);
@@ -295,7 +295,7 @@ public class Group extends Shape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(test.nointerfaces.Shape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

@@ -6,9 +6,9 @@ package test.nothing;
 public interface AtomicShape extends Shape {
 
 	@Override
-	AtomicShape setXCoordinate(int value);
+	test.nothing.AtomicShape setXCoordinate(int value);
 
 	@Override
-	AtomicShape setYCoordinate(int value);
+	test.nothing.AtomicShape setYCoordinate(int value);
 
 }

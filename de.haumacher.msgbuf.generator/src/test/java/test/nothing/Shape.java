@@ -13,7 +13,7 @@ public interface Shape {
 	/**
 	 * @see #getXCoordinate()
 	 */
-	Shape setXCoordinate(int value);
+	test.nothing.Shape setXCoordinate(int value);
 
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
@@ -23,6 +23,6 @@ public interface Shape {
 	/**
 	 * @see #getYCoordinate()
 	 */
-	Shape setYCoordinate(int value);
+	test.nothing.Shape setYCoordinate(int value);
 
 }

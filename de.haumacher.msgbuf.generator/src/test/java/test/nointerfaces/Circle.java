@@ -6,19 +6,19 @@ package test.nointerfaces;
 public class Circle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link test.nointerfaces.Circle} instance.
 	 */
-	public static Circle create() {
+	public static test.nointerfaces.Circle create() {
 		return new test.nointerfaces.Circle();
 	}
 
-	/** Identifier for the {@link Circle} type in JSON format. */
+	/** Identifier for the {@link test.nointerfaces.Circle} type in JSON format. */
 	public static final String CIRCLE__TYPE = "Circle";
 
 	/** @see #getRadius() */
 	public static final String RADIUS__PROP = "r";
 
-	/** Identifier for the {@link Circle} type in binary format. */
+	/** Identifier for the {@link test.nointerfaces.Circle} type in binary format. */
 	static final int CIRCLE__TYPE_ID = 1;
 
 	/** Identifier for the property {@link #getRadius()} in binary format. */
@@ -29,7 +29,7 @@ public class Circle extends AtomicShape {
 	/**
 	 * Creates a {@link Circle} instance.
 	 *
-	 * @see Circle#create()
+	 * @see test.nointerfaces.Circle#create()
 	 */
 	protected Circle() {
 		super();
@@ -50,7 +50,7 @@ public class Circle extends AtomicShape {
 	/**
 	 * @see #getRadius()
 	 */
-	public Circle setRadius(int value) {
+	public test.nointerfaces.Circle setRadius(int value) {
 		internalSetRadius(value);
 		return this;
 	}
@@ -62,13 +62,13 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	public Circle setXCoordinate(int value) {
+	public test.nointerfaces.Circle setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public Circle setYCoordinate(int value) {
+	public test.nointerfaces.Circle setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -104,7 +104,7 @@ public class Circle extends AtomicShape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.nointerfaces.Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nointerfaces.Circle result = new test.nointerfaces.Circle();
 		result.readContent(in);
 		return result;
@@ -125,7 +125,7 @@ public class Circle extends AtomicShape {
 		}
 	}
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Circle} hierarchy. */
+	/** The binary identifier for this concrete type in the polymorphic {@link test.nointerfaces.Circle} hierarchy. */
 	public int typeId() {
 		return CIRCLE__TYPE_ID;
 	}
@@ -138,15 +138,15 @@ public class Circle extends AtomicShape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Circle result = test.nointerfaces.Circle.readCircle_Content(in);
+		test.nointerfaces.Circle result = test.nointerfaces.Circle.readCircle_Content(in);
 		in.endObject();
 		return result;
 	}
 
-	/** Helper for creating an object of type {@link Circle} from a polymorphic composition. */
-	public static Circle readCircle_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	/** Helper for creating an object of type {@link test.nointerfaces.Circle} from a polymorphic composition. */
+	public static test.nointerfaces.Circle readCircle_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		test.nointerfaces.Circle result = new Circle();
 		result.readContent(in);
 		return result;
@@ -160,7 +160,7 @@ public class Circle extends AtomicShape {
 		}
 	}
 
-	/** XML element name representing a {@link Circle} type. */
+	/** XML element name representing a {@link test.nointerfaces.Circle} type. */
 	public static final String CIRCLE__XML_ELEMENT = "circle";
 
 	/** XML attribute or element name of a {@link #getRadius} property. */
@@ -182,9 +182,10 @@ public class Circle extends AtomicShape {
 	@Override
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
 		super.writeElements(out);
+		// No element fields.
 	}
 
-	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Circle readCircle_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		Circle result = new Circle();
 		result.readContentXml(in);
@@ -224,7 +225,7 @@ public class Circle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(test.nointerfaces.AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

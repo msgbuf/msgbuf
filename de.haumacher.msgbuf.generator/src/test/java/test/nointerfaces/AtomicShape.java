@@ -5,14 +5,14 @@ package test.nointerfaces;
  */
 public abstract class AtomicShape extends Shape {
 
-	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
+	/** Visitor interface for the {@link test.nointerfaces.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
 
-		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg) throws E;
+		/** Visit case for {@link test.nointerfaces.Circle}.*/
+		R visit(test.nointerfaces.Circle self, A arg) throws E;
 
-		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg) throws E;
+		/** Visit case for {@link test.nointerfaces.Rectangle}.*/
+		R visit(test.nointerfaces.Rectangle self, A arg) throws E;
 
 	}
 
@@ -24,20 +24,20 @@ public abstract class AtomicShape extends Shape {
 	}
 
 	@Override
-	public AtomicShape setXCoordinate(int value) {
+	public test.nointerfaces.AtomicShape setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public AtomicShape setYCoordinate(int value) {
+	public test.nointerfaces.AtomicShape setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		AtomicShape result;
+	public static test.nointerfaces.AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.nointerfaces.AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -50,22 +50,22 @@ public abstract class AtomicShape extends Shape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
-		AtomicShape result;
+		test.nointerfaces.AtomicShape result;
 		switch (type) {
-			case Circle.CIRCLE__TYPE_ID: result = test.nointerfaces.Circle.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.nointerfaces.Rectangle.readRectangle_Content(in); break;
+			case test.nointerfaces.Circle.CIRCLE__TYPE_ID: result = test.nointerfaces.Circle.readCircle_Content(in); break;
+			case test.nointerfaces.Rectangle.RECTANGLE__TYPE_ID: result = test.nointerfaces.Rectangle.readRectangle_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
 		return result;
 	}
 
-	/** XML element name representing a {@link AtomicShape} type. */
+	/** XML element name representing a {@link test.nointerfaces.AtomicShape} type. */
 	public static final String ATOMIC_SHAPE__XML_ELEMENT = "atomic-shape";
 
 	/** Serializes all fields that are written as XML attributes. */
@@ -78,9 +78,10 @@ public abstract class AtomicShape extends Shape {
 	@Override
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
 		super.writeElements(out);
+		// No element fields.
 	}
 
-	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static AtomicShape readAtomicShape_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		switch (in.getLocalName()) {
 			case Circle.CIRCLE__XML_ELEMENT: {
@@ -126,8 +127,8 @@ public abstract class AtomicShape extends Shape {
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 
 	@Override
-	public final <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
-		return visit((AtomicShape.Visitor<R,A,E>) v, arg);
+	public final <R,A,E extends Throwable> R visit(test.nointerfaces.Shape.Visitor<R,A,E> v, A arg) throws E {
+		return visit((test.nointerfaces.AtomicShape.Visitor<R,A,E>) v, arg);
 	}
 
 }

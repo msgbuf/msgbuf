@@ -6,10 +6,10 @@ package test.onlyxml.data;
 public interface SimpleType extends de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link SimpleType} instance.
+	 * Creates a {@link test.onlyxml.data.SimpleType} instance.
 	 */
-	static SimpleType create() {
-		return new test.onlyxml.data.SimpleType_Impl();
+	static test.onlyxml.data.SimpleType create() {
+		return new test.onlyxml.data.impl.SimpleType_Impl();
 	}
 
 	/**
@@ -20,7 +20,7 @@ public interface SimpleType extends de.haumacher.msgbuf.xml.XmlSerializable {
 	/**
 	 * @see #getStr()
 	 */
-	SimpleType setStr(String value);
+	test.onlyxml.data.SimpleType setStr(String value);
 
 	/**
 	 * An int property
@@ -30,12 +30,12 @@ public interface SimpleType extends de.haumacher.msgbuf.xml.XmlSerializable {
 	/**
 	 * @see #getX()
 	 */
-	SimpleType setX(int value);
+	test.onlyxml.data.SimpleType setX(int value);
 
 	/** Creates a new {@link SimpleType} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SimpleType readSimpleType(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.onlyxml.data.SimpleType_Impl.readSimpleType_XmlContent(in);
+		return test.onlyxml.data.impl.SimpleType_Impl.readSimpleType_XmlContent(in);
 	}
 
 }

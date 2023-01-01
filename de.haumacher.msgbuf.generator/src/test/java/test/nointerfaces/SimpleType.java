@@ -6,13 +6,13 @@ package test.nointerfaces;
 public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link SimpleType} instance.
+	 * Creates a {@link test.nointerfaces.SimpleType} instance.
 	 */
-	public static SimpleType create() {
+	public static test.nointerfaces.SimpleType create() {
 		return new test.nointerfaces.SimpleType();
 	}
 
-	/** Identifier for the {@link SimpleType} type in JSON format. */
+	/** Identifier for the {@link test.nointerfaces.SimpleType} type in JSON format. */
 	public static final String SIMPLE_TYPE__TYPE = "SimpleType";
 
 	/** @see #getStr() */
@@ -34,7 +34,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	/**
 	 * Creates a {@link SimpleType} instance.
 	 *
-	 * @see SimpleType#create()
+	 * @see test.nointerfaces.SimpleType#create()
 	 */
 	protected SimpleType() {
 		super();
@@ -50,7 +50,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	/**
 	 * @see #getStr()
 	 */
-	public SimpleType setStr(String value) {
+	public test.nointerfaces.SimpleType setStr(String value) {
 		internalSetStr(value);
 		return this;
 	}
@@ -71,7 +71,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	/**
 	 * @see #getX()
 	 */
-	public SimpleType setX(int value) {
+	public test.nointerfaces.SimpleType setX(int value) {
 		internalSetX(value);
 		return this;
 	}
@@ -85,7 +85,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.nointerfaces.SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -95,7 +95,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	}
 
 	@Override
-	public SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.nointerfaces.SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -137,7 +137,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.nointerfaces.SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nointerfaces.SimpleType result = new test.nointerfaces.SimpleType();
 		result.readContent(in);
 		return result;
@@ -188,15 +188,15 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static SimpleType readSimpleType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static test.nointerfaces.SimpleType readSimpleType(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SimpleType result = test.nointerfaces.SimpleType.readSimpleType_Content(in);
+		test.nointerfaces.SimpleType result = test.nointerfaces.SimpleType.readSimpleType_Content(in);
 		in.endObject();
 		return result;
 	}
 
-	/** Helper for creating an object of type {@link SimpleType} from a polymorphic composition. */
-	public static SimpleType readSimpleType_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	/** Helper for creating an object of type {@link test.nointerfaces.SimpleType} from a polymorphic composition. */
+	public static test.nointerfaces.SimpleType readSimpleType_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		test.nointerfaces.SimpleType result = new SimpleType();
 		result.readContent(in);
 		return result;
@@ -219,7 +219,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 		}
 	}
 
-	/** XML element name representing a {@link SimpleType} type. */
+	/** XML element name representing a {@link test.nointerfaces.SimpleType} type. */
 	public static final String SIMPLE_TYPE__XML_ELEMENT = "simple-type";
 
 	/** XML attribute or element name of a {@link #getStr} property. */
@@ -247,9 +247,10 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 
 	/** Serializes all fields that are written as XML elements. */
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
+		// No element fields.
 	}
 
-	/** Creates a new {@link SimpleType} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	/** Creates a new {@link test.nointerfaces.SimpleType} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SimpleType readSimpleType_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		SimpleType result = new SimpleType();
 		result.readContentXml(in);

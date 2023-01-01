@@ -4,13 +4,13 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 	public interface Result extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 		/**
-		 * Creates a {@link Result} instance.
+		 * Creates a {@link test.nested.data.SearchResponse.Result} instance.
 		 */
-		static Result create() {
-			return new test.nested.data.SearchResponse_Impl.Result_Impl();
+		static test.nested.data.SearchResponse.Result create() {
+			return new test.nested.data.impl.SearchResponse_Impl.Result_Impl();
 		}
 
-		/** Identifier for the {@link Result} type in JSON format. */
+		/** Identifier for the {@link test.nested.data.SearchResponse.Result} type in JSON format. */
 		static final String RESULT__TYPE = "Result";
 
 		/** @see #getUrl() */
@@ -36,26 +36,26 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		/**
 		 * @see #getUrl()
 		 */
-		Result setUrl(String value);
+		test.nested.data.SearchResponse.Result setUrl(String value);
 
 		String getTitle();
 
 		/**
 		 * @see #getTitle()
 		 */
-		Result setTitle(String value);
+		test.nested.data.SearchResponse.Result setTitle(String value);
 
 		java.util.List<String> getSnippets();
 
 		/**
 		 * @see #getSnippets()
 		 */
-		Result setSnippets(java.util.List<? extends String> value);
+		test.nested.data.SearchResponse.Result setSnippets(java.util.List<? extends String> value);
 
 		/**
 		 * Adds a value to the {@link #getSnippets()} list.
 		 */
-		Result addSnippet(String value);
+		test.nested.data.SearchResponse.Result addSnippet(String value);
 
 		/**
 		 * Removes a value from the {@link #getSnippets()} list.
@@ -63,22 +63,22 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		void removeSnippet(String value);
 
 		@Override
-		public Result registerListener(de.haumacher.msgbuf.observer.Listener l);
+		public test.nested.data.SearchResponse.Result registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 		@Override
-		public Result unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+		public test.nested.data.SearchResponse.Result unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 		/** Reads a new instance from the given reader. */
-		static Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			test.nested.data.SearchResponse_Impl.Result_Impl result = new test.nested.data.SearchResponse_Impl.Result_Impl();
+		static test.nested.data.SearchResponse.Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+			test.nested.data.impl.SearchResponse_Impl.Result_Impl result = new test.nested.data.impl.SearchResponse_Impl.Result_Impl();
 			result.readContent(in);
 			return result;
 		}
 
 		/** Reads a new instance from the given reader. */
-		static Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		static test.nested.data.SearchResponse.Result readResult(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 			in.beginObject();
-			Result result = test.nested.data.SearchResponse_Impl.Result_Impl.readResult_Content(in);
+			test.nested.data.SearchResponse.Result result = test.nested.data.impl.SearchResponse_Impl.Result_Impl.readResult_Content(in);
 			in.endObject();
 			return result;
 		}
@@ -86,19 +86,19 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		/** Creates a new {@link Result} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 		public static Result readResult(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 			in.nextTag();
-			return test.nested.data.SearchResponse_Impl.Result_Impl.readResult_XmlContent(in);
+			return test.nested.data.impl.SearchResponse_Impl.Result_Impl.readResult_XmlContent(in);
 		}
 
 	}
 
 	/**
-	 * Creates a {@link SearchResponse} instance.
+	 * Creates a {@link test.nested.data.SearchResponse} instance.
 	 */
-	static SearchResponse create() {
-		return new test.nested.data.SearchResponse_Impl();
+	static test.nested.data.SearchResponse create() {
+		return new test.nested.data.impl.SearchResponse_Impl();
 	}
 
-	/** Identifier for the {@link SearchResponse} type in JSON format. */
+	/** Identifier for the {@link test.nested.data.SearchResponse} type in JSON format. */
 	static final String SEARCH_RESPONSE__TYPE = "SearchResponse";
 
 	/** @see #getResults() */
@@ -107,40 +107,40 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 	/** Identifier for the property {@link #getResults()} in binary format. */
 	static final int RESULTS__ID = 1;
 
-	java.util.List<Result> getResults();
+	java.util.List<test.nested.data.SearchResponse.Result> getResults();
 
 	/**
 	 * @see #getResults()
 	 */
-	SearchResponse setResults(java.util.List<? extends Result> value);
+	test.nested.data.SearchResponse setResults(java.util.List<? extends test.nested.data.SearchResponse.Result> value);
 
 	/**
 	 * Adds a value to the {@link #getResults()} list.
 	 */
-	SearchResponse addResult(Result value);
+	test.nested.data.SearchResponse addResult(test.nested.data.SearchResponse.Result value);
 
 	/**
 	 * Removes a value from the {@link #getResults()} list.
 	 */
-	void removeResult(Result value);
+	void removeResult(test.nested.data.SearchResponse.Result value);
 
 	@Override
-	public SearchResponse registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.nested.data.SearchResponse registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public SearchResponse unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.nested.data.SearchResponse unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.nested.data.SearchResponse_Impl result = new test.nested.data.SearchResponse_Impl();
+	static test.nested.data.SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.nested.data.impl.SearchResponse_Impl result = new test.nested.data.impl.SearchResponse_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.nested.data.SearchResponse readSearchResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SearchResponse result = test.nested.data.SearchResponse_Impl.readSearchResponse_Content(in);
+		test.nested.data.SearchResponse result = test.nested.data.impl.SearchResponse_Impl.readSearchResponse_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -148,7 +148,7 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 	/** Creates a new {@link SearchResponse} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SearchResponse readSearchResponse(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.nested.data.SearchResponse_Impl.readSearchResponse_XmlContent(in);
+		return test.nested.data.impl.SearchResponse_Impl.readSearchResponse_XmlContent(in);
 	}
 
 }

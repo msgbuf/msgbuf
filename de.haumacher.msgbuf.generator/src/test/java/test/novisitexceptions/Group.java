@@ -6,19 +6,19 @@ package test.novisitexceptions;
 public interface Group extends Shape {
 
 	/**
-	 * Creates a {@link Group} instance.
+	 * Creates a {@link test.novisitexceptions.Group} instance.
 	 */
-	static Group create() {
-		return new test.novisitexceptions.Group_Impl();
+	static test.novisitexceptions.Group create() {
+		return new test.novisitexceptions.impl.Group_Impl();
 	}
 
-	/** Identifier for the {@link Group} type in JSON format. */
+	/** Identifier for the {@link test.novisitexceptions.Group} type in JSON format. */
 	static final String GROUP__TYPE = "Group";
 
 	/** @see #getShapes() */
 	static final String SHAPES__PROP = "shapes";
 
-	/** Identifier for the {@link Group} type in binary format. */
+	/** Identifier for the {@link test.novisitexceptions.Group} type in binary format. */
 	static final int GROUP__TYPE_ID = 3;
 
 	/** Identifier for the property {@link #getShapes()} in binary format. */
@@ -31,40 +31,40 @@ public interface Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	java.util.List<Shape> getShapes();
+	java.util.List<test.novisitexceptions.Shape> getShapes();
 
 	/**
 	 * @see #getShapes()
 	 */
-	Group setShapes(java.util.List<? extends Shape> value);
+	test.novisitexceptions.Group setShapes(java.util.List<? extends test.novisitexceptions.Shape> value);
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	Group addShape(Shape value);
+	test.novisitexceptions.Group addShape(test.novisitexceptions.Shape value);
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	void removeShape(Shape value);
+	void removeShape(test.novisitexceptions.Shape value);
 
 	@Override
-	Group setXCoordinate(int value);
+	test.novisitexceptions.Group setXCoordinate(int value);
 
 	@Override
-	Group setYCoordinate(int value);
+	test.novisitexceptions.Group setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.novisitexceptions.Group_Impl result = new test.novisitexceptions.Group_Impl();
+	static test.novisitexceptions.Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.novisitexceptions.impl.Group_Impl result = new test.novisitexceptions.impl.Group_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.novisitexceptions.Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Group result = test.novisitexceptions.Group_Impl.readGroup_Content(in);
+		test.novisitexceptions.Group result = test.novisitexceptions.impl.Group_Impl.readGroup_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -72,7 +72,7 @@ public interface Group extends Shape {
 	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Group readGroup(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.novisitexceptions.Group_Impl.readGroup_XmlContent(in);
+		return test.novisitexceptions.impl.Group_Impl.readGroup_XmlContent(in);
 	}
 
 }

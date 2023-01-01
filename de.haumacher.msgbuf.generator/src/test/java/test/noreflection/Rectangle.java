@@ -6,13 +6,13 @@ package test.noreflection;
 public class Rectangle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Rectangle} instance.
+	 * Creates a {@link test.noreflection.Rectangle} instance.
 	 */
-	public static Rectangle create() {
+	public static test.noreflection.Rectangle create() {
 		return new test.noreflection.Rectangle();
 	}
 
-	/** Identifier for the {@link Rectangle} type in JSON format. */
+	/** Identifier for the {@link test.noreflection.Rectangle} type in JSON format. */
 	public static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
@@ -28,7 +28,7 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * Creates a {@link Rectangle} instance.
 	 *
-	 * @see Rectangle#create()
+	 * @see test.noreflection.Rectangle#create()
 	 */
 	protected Rectangle() {
 		super();
@@ -50,7 +50,7 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * @see #getWidth()
 	 */
-	public Rectangle setWidth(int value) {
+	public test.noreflection.Rectangle setWidth(int value) {
 		internalSetWidth(value);
 		return this;
 	}
@@ -72,7 +72,7 @@ public class Rectangle extends AtomicShape {
 	/**
 	 * @see #getHeight()
 	 */
-	public Rectangle setHeight(int value) {
+	public test.noreflection.Rectangle setHeight(int value) {
 		internalSetHeight(value);
 		return this;
 	}
@@ -83,13 +83,13 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	public Rectangle setXCoordinate(int value) {
+	public test.noreflection.Rectangle setXCoordinate(int value) {
 		internalSetXCoordinate(value);
 		return this;
 	}
 
 	@Override
-	public Rectangle setYCoordinate(int value) {
+	public test.noreflection.Rectangle setYCoordinate(int value) {
 		internalSetYCoordinate(value);
 		return this;
 	}
@@ -100,7 +100,7 @@ public class Rectangle extends AtomicShape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static test.noreflection.Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.noreflection.Rectangle result = new test.noreflection.Rectangle();
 		result.readContent(in);
 		return result;
@@ -125,7 +125,7 @@ public class Rectangle extends AtomicShape {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(test.noreflection.AtomicShape.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

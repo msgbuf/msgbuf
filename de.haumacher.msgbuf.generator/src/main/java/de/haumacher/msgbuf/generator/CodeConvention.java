@@ -39,22 +39,22 @@ public class CodeConvention {
 	}
 	
 	public static String qTypeName(Definition def) {
-		return qName(def, CodeConvention::typeName);
+		return qName(null, def, CodeConvention::typeName);
 	}
 	
-	public static String qImplName(Definition def) {
-		return qName(def, CodeConvention::implName);
+	public static String qImplName(String packageSuffix, Definition def) {
+		return qName(packageSuffix, def, CodeConvention::implName);
 	}
 	
-	public static String qName(Definition def, Function<String, String> localNameConvention) {
+	public static String qName(String packageSuffix, Definition def, Function<String, String> localNameConvention) {
 		String scope;
 		
 		DefinitionFile file = def.getFile();
 		if (file == null) {
-			scope = qName(def.getOuter(), localNameConvention) + ".";
+			scope = qName(packageSuffix, def.getOuter(), localNameConvention) + ".";
 		} else {
 			QName pkg = file.getPackage();
-			scope = pkg.getNames().size() == 0 ? "" : qName(pkg) + ".";
+			scope = pkg.getNames().size() == 0 ? (packageSuffix == null ? "" : packageSuffix + ".") : qName(pkg) + "." + (packageSuffix == null ? "" : packageSuffix + ".");
 		}
 		
 		return scope + localNameConvention.apply(def.getName());
@@ -257,5 +257,10 @@ public class CodeConvention {
 	 * Enum method that returns the protocol string for the classifier.
 	 */
 	public static final String ENUM_PROTOCOL_NAME_FUN = "protocolName";
+
+	/**
+	 * The sub-package where to place implementations.
+	 */
+	public static final String IMPL_PACKAGE_SUFFIX = "impl";
 
 }

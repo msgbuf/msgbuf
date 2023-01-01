@@ -7,13 +7,13 @@ package test.comments.data;
 public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link SearchRequest} instance.
+	 * Creates a {@link test.comments.data.SearchRequest} instance.
 	 */
-	static SearchRequest create() {
-		return new test.comments.data.SearchRequest_Impl();
+	static test.comments.data.SearchRequest create() {
+		return new test.comments.data.impl.SearchRequest_Impl();
 	}
 
-	/** Identifier for the {@link SearchRequest} type in JSON format. */
+	/** Identifier for the {@link test.comments.data.SearchRequest} type in JSON format. */
 	static final String SEARCH_REQUEST__TYPE = "SearchRequest";
 
 	/** @see #getQuery() */
@@ -42,7 +42,7 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	/**
 	 * @see #getQuery()
 	 */
-	SearchRequest setQuery(String value);
+	test.comments.data.SearchRequest setQuery(String value);
 
 	/**
 	 * The page of results to return. 
@@ -58,7 +58,7 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	/**
 	 * @see #getPageNumber()
 	 */
-	SearchRequest setPageNumber(int value);
+	test.comments.data.SearchRequest setPageNumber(int value);
 
 	/**
 	 * The number of results to return at once.
@@ -70,25 +70,25 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	/**
 	 * @see #getResultPerPage()
 	 */
-	SearchRequest setResultPerPage(int value);
+	test.comments.data.SearchRequest setResultPerPage(int value);
 
 	@Override
-	public SearchRequest registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.comments.data.SearchRequest registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.comments.data.SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.comments.data.SearchRequest_Impl result = new test.comments.data.SearchRequest_Impl();
+	static test.comments.data.SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.comments.data.impl.SearchRequest_Impl result = new test.comments.data.impl.SearchRequest_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.comments.data.SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SearchRequest result = test.comments.data.SearchRequest_Impl.readSearchRequest_Content(in);
+		test.comments.data.SearchRequest result = test.comments.data.impl.SearchRequest_Impl.readSearchRequest_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -96,7 +96,7 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	/** Creates a new {@link SearchRequest} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SearchRequest readSearchRequest(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.comments.data.SearchRequest_Impl.readSearchRequest_XmlContent(in);
+		return test.comments.data.impl.SearchRequest_Impl.readSearchRequest_XmlContent(in);
 	}
 
 }

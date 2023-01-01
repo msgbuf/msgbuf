@@ -6,10 +6,10 @@ package test.onlyxml.data;
 public interface Circle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Circle} instance.
+	 * Creates a {@link test.onlyxml.data.Circle} instance.
 	 */
-	static Circle create() {
-		return new test.onlyxml.data.Circle_Impl();
+	static test.onlyxml.data.Circle create() {
+		return new test.onlyxml.data.impl.Circle_Impl();
 	}
 
 	/**
@@ -20,18 +20,18 @@ public interface Circle extends AtomicShape {
 	/**
 	 * @see #getRadius()
 	 */
-	Circle setRadius(int value);
+	test.onlyxml.data.Circle setRadius(int value);
 
 	@Override
-	Circle setXCoordinate(int value);
+	test.onlyxml.data.Circle setXCoordinate(int value);
 
 	@Override
-	Circle setYCoordinate(int value);
+	test.onlyxml.data.Circle setYCoordinate(int value);
 
 	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Circle readCircle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.onlyxml.data.Circle_Impl.readCircle_XmlContent(in);
+		return test.onlyxml.data.impl.Circle_Impl.readCircle_XmlContent(in);
 	}
 
 }

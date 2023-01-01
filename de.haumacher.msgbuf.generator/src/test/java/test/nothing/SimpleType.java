@@ -6,10 +6,10 @@ package test.nothing;
 public interface SimpleType {
 
 	/**
-	 * Creates a {@link SimpleType} instance.
+	 * Creates a {@link test.nothing.SimpleType} instance.
 	 */
-	static SimpleType create() {
-		return new test.nothing.SimpleType_Impl();
+	static test.nothing.SimpleType create() {
+		return new test.nothing.impl.SimpleType_Impl();
 	}
 
 	/**
@@ -20,7 +20,7 @@ public interface SimpleType {
 	/**
 	 * @see #getStr()
 	 */
-	SimpleType setStr(String value);
+	test.nothing.SimpleType setStr(String value);
 
 	/**
 	 * An int property
@@ -30,6 +30,6 @@ public interface SimpleType {
 	/**
 	 * @see #getX()
 	 */
-	SimpleType setX(int value);
+	test.nothing.SimpleType setX(int value);
 
 }

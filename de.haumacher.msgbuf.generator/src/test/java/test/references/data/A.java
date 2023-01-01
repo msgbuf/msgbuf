@@ -3,13 +3,13 @@ package test.references.data;
 public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 	/**
-	 * Creates a {@link A} instance.
+	 * Creates a {@link test.references.data.A} instance.
 	 */
-	static A create() {
-		return new test.references.data.A_Impl();
+	static test.references.data.A create() {
+		return new test.references.data.impl.A_Impl();
 	}
 
-	/** Identifier for the {@link A} type in JSON format. */
+	/** Identifier for the {@link test.references.data.A} type in JSON format. */
 	static final String A__TYPE = "A";
 
 	/** @see #getName() */
@@ -65,116 +65,116 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	/**
 	 * @see #getName()
 	 */
-	A setName(String value);
+	test.references.data.A setName(String value);
 
-	A getContents();
+	test.references.data.A getContents();
 
 	/**
 	 * @see #getContents()
 	 */
-	A setContents(A value);
+	test.references.data.A setContents(test.references.data.A value);
 
 	/**
 	 * Checks, whether {@link #getContents()} has a value.
 	 */
 	boolean hasContents();
 
-	java.util.List<A> getChildren();
+	java.util.List<test.references.data.A> getChildren();
 
 	/**
 	 * @see #getChildren()
 	 */
-	A setChildren(java.util.List<? extends A> value);
+	test.references.data.A setChildren(java.util.List<? extends test.references.data.A> value);
 
 	/**
 	 * Adds a value to the {@link #getChildren()} list.
 	 */
-	A addChildren(A value);
+	test.references.data.A addChildren(test.references.data.A value);
 
 	/**
 	 * Removes a value from the {@link #getChildren()} list.
 	 */
-	void removeChildren(A value);
+	void removeChildren(test.references.data.A value);
 
-	java.util.List<B> getBs();
+	java.util.List<test.references.data.B> getBs();
 
 	/**
 	 * @see #getBs()
 	 */
-	A setBs(java.util.List<? extends B> value);
+	test.references.data.A setBs(java.util.List<? extends test.references.data.B> value);
 
 	/**
 	 * Adds a value to the {@link #getBs()} list.
 	 */
-	A addBs(B value);
+	test.references.data.A addBs(test.references.data.B value);
 
 	/**
 	 * Removes a value from the {@link #getBs()} list.
 	 */
-	void removeBs(B value);
+	void removeBs(test.references.data.B value);
 
-	B getB();
+	test.references.data.B getB();
 
 	/**
 	 * @see #getB()
 	 */
-	A setB(B value);
+	test.references.data.A setB(test.references.data.B value);
 
 	/**
 	 * Checks, whether {@link #getB()} has a value.
 	 */
 	boolean hasB();
 
-	A getOther();
+	test.references.data.A getOther();
 
 	/**
 	 * @see #getOther()
 	 */
-	A setOther(A value);
+	test.references.data.A setOther(test.references.data.A value);
 
 	/**
 	 * Checks, whether {@link #getOther()} has a value.
 	 */
 	boolean hasOther();
 
-	java.util.List<A> getOthers();
+	java.util.List<test.references.data.A> getOthers();
 
 	/**
 	 * @see #getOthers()
 	 */
-	A setOthers(java.util.List<? extends A> value);
+	test.references.data.A setOthers(java.util.List<? extends test.references.data.A> value);
 
 	/**
 	 * Adds a value to the {@link #getOthers()} list.
 	 */
-	A addOthers(A value);
+	test.references.data.A addOthers(test.references.data.A value);
 
 	/**
 	 * Removes a value from the {@link #getOthers()} list.
 	 */
-	void removeOthers(A value);
+	void removeOthers(test.references.data.A value);
 
-	java.util.List<A> getInOther();
+	java.util.List<test.references.data.A> getInOther();
 
-	java.util.List<A> getInOthers();
-
-	@Override
-	public A registerListener(de.haumacher.msgbuf.observer.Listener l);
+	java.util.List<test.references.data.A> getInOthers();
 
 	@Override
-	public A unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.references.data.A registerListener(de.haumacher.msgbuf.observer.Listener l);
+
+	@Override
+	public test.references.data.A unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static A readA(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.references.data.A_Impl result = new test.references.data.A_Impl();
+	static test.references.data.A readA(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.references.data.impl.A_Impl result = new test.references.data.impl.A_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static A readA(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.references.data.A readA(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		A result = test.references.data.A_Impl.readA_Content(in);
+		test.references.data.A result = test.references.data.impl.A_Impl.readA_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -182,7 +182,7 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	/** Creates a new {@link A} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static A readA(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.references.data.A_Impl.readA_XmlContent(in);
+		return test.references.data.impl.A_Impl.readA_XmlContent(in);
 	}
 
 }

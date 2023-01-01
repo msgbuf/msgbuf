@@ -6,10 +6,10 @@ package test.onlyxml.data;
 public interface Rectangle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Rectangle} instance.
+	 * Creates a {@link test.onlyxml.data.Rectangle} instance.
 	 */
-	static Rectangle create() {
-		return new test.onlyxml.data.Rectangle_Impl();
+	static test.onlyxml.data.Rectangle create() {
+		return new test.onlyxml.data.impl.Rectangle_Impl();
 	}
 
 	/**
@@ -26,7 +26,7 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getWidth()
 	 */
-	Rectangle setWidth(int value);
+	test.onlyxml.data.Rectangle setWidth(int value);
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -38,18 +38,18 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getHeight()
 	 */
-	Rectangle setHeight(int value);
+	test.onlyxml.data.Rectangle setHeight(int value);
 
 	@Override
-	Rectangle setXCoordinate(int value);
+	test.onlyxml.data.Rectangle setXCoordinate(int value);
 
 	@Override
-	Rectangle setYCoordinate(int value);
+	test.onlyxml.data.Rectangle setYCoordinate(int value);
 
 	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Rectangle readRectangle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.onlyxml.data.Rectangle_Impl.readRectangle_XmlContent(in);
+		return test.onlyxml.data.impl.Rectangle_Impl.readRectangle_XmlContent(in);
 	}
 
 }

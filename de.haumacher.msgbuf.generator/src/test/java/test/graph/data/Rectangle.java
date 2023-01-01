@@ -6,13 +6,13 @@ package test.graph.data;
 public interface Rectangle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Rectangle} instance.
+	 * Creates a {@link test.graph.data.Rectangle} instance.
 	 */
-	static Rectangle create() {
-		return new test.graph.data.Rectangle_Impl();
+	static test.graph.data.Rectangle create() {
+		return new test.graph.data.impl.Rectangle_Impl();
 	}
 
-	/** Identifier for the {@link Rectangle} type in JSON format. */
+	/** Identifier for the {@link test.graph.data.Rectangle} type in JSON format. */
 	static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
@@ -35,7 +35,7 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getWidth()
 	 */
-	Rectangle setWidth(int value);
+	test.graph.data.Rectangle setWidth(int value);
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -47,24 +47,24 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getHeight()
 	 */
-	Rectangle setHeight(int value);
+	test.graph.data.Rectangle setHeight(int value);
 
 	@Override
-	Rectangle setXCoordinate(int value);
+	test.graph.data.Rectangle setXCoordinate(int value);
 
 	@Override
-	Rectangle setYCoordinate(int value);
+	test.graph.data.Rectangle setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Rectangle readRectangle(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	static test.graph.data.Rectangle readRectangle(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {
-			return (Rectangle) scope.resolveOrFail(in.nextInt());
+			return (test.graph.data.Rectangle) scope.resolveOrFail(in.nextInt());
 		}
 		in.beginArray();
 		String type = in.nextString();
 		assert RECTANGLE__TYPE.equals(type);
 		int id = in.nextInt();
-		test.graph.data.Rectangle_Impl result = new test.graph.data.Rectangle_Impl();
+		test.graph.data.impl.Rectangle_Impl result = new test.graph.data.impl.Rectangle_Impl();
 		scope.readData(result, id, in);
 		in.endArray();
 		return result;
@@ -73,7 +73,7 @@ public interface Rectangle extends AtomicShape {
 	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Rectangle readRectangle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.graph.data.Rectangle_Impl.readRectangle_XmlContent(in);
+		return test.graph.data.impl.Rectangle_Impl.readRectangle_XmlContent(in);
 	}
 
 }

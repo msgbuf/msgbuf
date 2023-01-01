@@ -4,32 +4,32 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	public interface C extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.observer.Observable, de.haumacher.msgbuf.xml.XmlSerializable {
 
 		/**
-		 * Creates a {@link C} instance.
+		 * Creates a {@link test.innertypeclash.B.C} instance.
 		 */
-		static C create() {
-			return new test.innertypeclash.B_Impl.C_Impl();
+		static test.innertypeclash.B.C create() {
+			return new test.innertypeclash.impl.B_Impl.C_Impl();
 		}
 
-		/** Identifier for the {@link C} type in JSON format. */
+		/** Identifier for the {@link test.innertypeclash.B.C} type in JSON format. */
 		static final String C__TYPE = "C";
 
 		@Override
-		public C registerListener(de.haumacher.msgbuf.observer.Listener l);
+		public test.innertypeclash.B.C registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 		@Override
-		public C unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+		public test.innertypeclash.B.C unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 		/** Reads a new instance from the given reader. */
-		static C readC(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-			test.innertypeclash.B_Impl.C_Impl result = new test.innertypeclash.B_Impl.C_Impl();
+		static test.innertypeclash.B.C readC(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+			test.innertypeclash.impl.B_Impl.C_Impl result = new test.innertypeclash.impl.B_Impl.C_Impl();
 			result.readContent(in);
 			return result;
 		}
 
 		/** Reads a new instance from the given reader. */
-		static C readC(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		static test.innertypeclash.B.C readC(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 			in.beginObject();
-			C result = test.innertypeclash.B_Impl.C_Impl.readC_Content(in);
+			test.innertypeclash.B.C result = test.innertypeclash.impl.B_Impl.C_Impl.readC_Content(in);
 			in.endObject();
 			return result;
 		}
@@ -37,19 +37,19 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		/** Creates a new {@link C} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 		public static C readC(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 			in.nextTag();
-			return test.innertypeclash.B_Impl.C_Impl.readC_XmlContent(in);
+			return test.innertypeclash.impl.B_Impl.C_Impl.readC_XmlContent(in);
 		}
 
 	}
 
 	/**
-	 * Creates a {@link B} instance.
+	 * Creates a {@link test.innertypeclash.B} instance.
 	 */
-	static B create() {
-		return new test.innertypeclash.B_Impl();
+	static test.innertypeclash.B create() {
+		return new test.innertypeclash.impl.B_Impl();
 	}
 
-	/** Identifier for the {@link B} type in JSON format. */
+	/** Identifier for the {@link test.innertypeclash.B} type in JSON format. */
 	static final String B__TYPE = "B";
 
 	/** @see #getAc() */
@@ -70,36 +70,36 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	/** Identifier for the property {@link #getC()} in binary format. */
 	static final int C__ID = 3;
 
-	A.C getAc();
+	test.innertypeclash.A.C getAc();
 
 	/**
 	 * @see #getAc()
 	 */
-	B setAc(A.C value);
+	test.innertypeclash.B setAc(test.innertypeclash.A.C value);
 
 	/**
 	 * Checks, whether {@link #getAc()} has a value.
 	 */
 	boolean hasAc();
 
-	B.C getBc();
+	test.innertypeclash.B.C getBc();
 
 	/**
 	 * @see #getBc()
 	 */
-	B setBc(B.C value);
+	test.innertypeclash.B setBc(test.innertypeclash.B.C value);
 
 	/**
 	 * Checks, whether {@link #getBc()} has a value.
 	 */
 	boolean hasBc();
 
-	C getC();
+	test.innertypeclash.B.C getC();
 
 	/**
 	 * @see #getC()
 	 */
-	B setC(C value);
+	test.innertypeclash.B setC(test.innertypeclash.B.C value);
 
 	/**
 	 * Checks, whether {@link #getC()} has a value.
@@ -107,22 +107,22 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	boolean hasC();
 
 	@Override
-	public B registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.innertypeclash.B registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public B unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.innertypeclash.B unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static B readB(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.innertypeclash.B_Impl result = new test.innertypeclash.B_Impl();
+	static test.innertypeclash.B readB(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.innertypeclash.impl.B_Impl result = new test.innertypeclash.impl.B_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static B readB(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.innertypeclash.B readB(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		B result = test.innertypeclash.B_Impl.readB_Content(in);
+		test.innertypeclash.B result = test.innertypeclash.impl.B_Impl.readB_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -130,7 +130,7 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	/** Creates a new {@link B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static B readB(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.innertypeclash.B_Impl.readB_XmlContent(in);
+		return test.innertypeclash.impl.B_Impl.readB_XmlContent(in);
 	}
 
 }

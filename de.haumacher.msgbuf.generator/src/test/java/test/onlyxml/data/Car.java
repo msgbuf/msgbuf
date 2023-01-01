@@ -6,21 +6,21 @@ package test.onlyxml.data;
 public interface Car extends Shape {
 
 	/**
-	 * Creates a {@link Car} instance.
+	 * Creates a {@link test.onlyxml.data.Car} instance.
 	 */
-	static Car create() {
-		return new test.onlyxml.data.Car_Impl();
+	static test.onlyxml.data.Car create() {
+		return new test.onlyxml.data.impl.Car_Impl();
 	}
 
 	/**
 	 * The front wheel.
 	 */
-	Circle getWheel1();
+	test.onlyxml.data.Circle getWheel1();
 
 	/**
 	 * @see #getWheel1()
 	 */
-	Car setWheel1(Circle value);
+	test.onlyxml.data.Car setWheel1(test.onlyxml.data.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel1()} has a value.
@@ -30,12 +30,12 @@ public interface Car extends Shape {
 	/**
 	 * The back wheel.
 	 */
-	Circle getWheel2();
+	test.onlyxml.data.Circle getWheel2();
 
 	/**
 	 * @see #getWheel2()
 	 */
-	Car setWheel2(Circle value);
+	test.onlyxml.data.Car setWheel2(test.onlyxml.data.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel2()} has a value.
@@ -45,12 +45,12 @@ public interface Car extends Shape {
 	/**
 	 * The car body.
 	 */
-	Rectangle getBody();
+	test.onlyxml.data.Rectangle getBody();
 
 	/**
 	 * @see #getBody()
 	 */
-	Car setBody(Rectangle value);
+	test.onlyxml.data.Car setBody(test.onlyxml.data.Rectangle value);
 
 	/**
 	 * Checks, whether {@link #getBody()} has a value.
@@ -58,15 +58,15 @@ public interface Car extends Shape {
 	boolean hasBody();
 
 	@Override
-	Car setXCoordinate(int value);
+	test.onlyxml.data.Car setXCoordinate(int value);
 
 	@Override
-	Car setYCoordinate(int value);
+	test.onlyxml.data.Car setYCoordinate(int value);
 
 	/** Creates a new {@link Car} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Car readCar(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.onlyxml.data.Car_Impl.readCar_XmlContent(in);
+		return test.onlyxml.data.impl.Car_Impl.readCar_XmlContent(in);
 	}
 
 }

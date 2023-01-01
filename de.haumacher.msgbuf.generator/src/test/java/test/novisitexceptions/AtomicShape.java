@@ -5,26 +5,26 @@ package test.novisitexceptions;
  */
 public interface AtomicShape extends Shape {
 
-	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
+	/** Visitor interface for the {@link test.novisitexceptions.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A> {
 
-		/** Visit case for {@link Circle}.*/
-		R visit(Circle self, A arg);
+		/** Visit case for {@link test.novisitexceptions.Circle}.*/
+		R visit(test.novisitexceptions.Circle self, A arg);
 
-		/** Visit case for {@link Rectangle}.*/
-		R visit(Rectangle self, A arg);
+		/** Visit case for {@link test.novisitexceptions.Rectangle}.*/
+		R visit(test.novisitexceptions.Rectangle self, A arg);
 
 	}
 
 	@Override
-	AtomicShape setXCoordinate(int value);
+	test.novisitexceptions.AtomicShape setXCoordinate(int value);
 
 	@Override
-	AtomicShape setYCoordinate(int value);
+	test.novisitexceptions.AtomicShape setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		AtomicShape result;
+	static test.novisitexceptions.AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.novisitexceptions.AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -37,15 +37,15 @@ public interface AtomicShape extends Shape {
 	}
 
 	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.novisitexceptions.AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
-		AtomicShape result;
+		test.novisitexceptions.AtomicShape result;
 		switch (type) {
-			case Circle.CIRCLE__TYPE_ID: result = test.novisitexceptions.Circle_Impl.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.novisitexceptions.Rectangle_Impl.readRectangle_Content(in); break;
+			case test.novisitexceptions.Circle.CIRCLE__TYPE_ID: result = test.novisitexceptions.impl.Circle_Impl.readCircle_Content(in); break;
+			case test.novisitexceptions.Rectangle.RECTANGLE__TYPE_ID: result = test.novisitexceptions.impl.Rectangle_Impl.readRectangle_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
@@ -55,7 +55,7 @@ public interface AtomicShape extends Shape {
 	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static AtomicShape readAtomicShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.novisitexceptions.AtomicShape_Impl.readAtomicShape_XmlContent(in);
+		return test.novisitexceptions.impl.AtomicShape_Impl.readAtomicShape_XmlContent(in);
 	}
 
 	/** Accepts the given visitor. */

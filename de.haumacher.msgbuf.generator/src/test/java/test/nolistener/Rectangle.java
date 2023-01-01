@@ -6,13 +6,13 @@ package test.nolistener;
 public interface Rectangle extends AtomicShape {
 
 	/**
-	 * Creates a {@link Rectangle} instance.
+	 * Creates a {@link test.nolistener.Rectangle} instance.
 	 */
-	static Rectangle create() {
-		return new test.nolistener.Rectangle_Impl();
+	static test.nolistener.Rectangle create() {
+		return new test.nolistener.impl.Rectangle_Impl();
 	}
 
-	/** Identifier for the {@link Rectangle} type in JSON format. */
+	/** Identifier for the {@link test.nolistener.Rectangle} type in JSON format. */
 	static final String RECTANGLE__TYPE = "Rectangle";
 
 	/** @see #getWidth() */
@@ -21,7 +21,7 @@ public interface Rectangle extends AtomicShape {
 	/** @see #getHeight() */
 	static final String HEIGHT__PROP = "h";
 
-	/** Identifier for the {@link Rectangle} type in binary format. */
+	/** Identifier for the {@link test.nolistener.Rectangle} type in binary format. */
 	static final int RECTANGLE__TYPE_ID = 2;
 
 	/** Identifier for the property {@link #getWidth()} in binary format. */
@@ -44,7 +44,7 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getWidth()
 	 */
-	Rectangle setWidth(int value);
+	test.nolistener.Rectangle setWidth(int value);
 
 	/**
 	 * The width of this {@link Rectangle}.
@@ -56,25 +56,25 @@ public interface Rectangle extends AtomicShape {
 	/**
 	 * @see #getHeight()
 	 */
-	Rectangle setHeight(int value);
+	test.nolistener.Rectangle setHeight(int value);
 
 	@Override
-	Rectangle setXCoordinate(int value);
+	test.nolistener.Rectangle setXCoordinate(int value);
 
 	@Override
-	Rectangle setYCoordinate(int value);
+	test.nolistener.Rectangle setYCoordinate(int value);
 
 	/** Reads a new instance from the given reader. */
-	static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.nolistener.Rectangle_Impl result = new test.nolistener.Rectangle_Impl();
+	static test.nolistener.Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.nolistener.impl.Rectangle_Impl result = new test.nolistener.impl.Rectangle_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.nolistener.Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		Rectangle result = test.nolistener.Rectangle_Impl.readRectangle_Content(in);
+		test.nolistener.Rectangle result = test.nolistener.impl.Rectangle_Impl.readRectangle_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -82,7 +82,7 @@ public interface Rectangle extends AtomicShape {
 	/** Creates a new {@link Rectangle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static Rectangle readRectangle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.nolistener.Rectangle_Impl.readRectangle_XmlContent(in);
+		return test.nolistener.impl.Rectangle_Impl.readRectangle_XmlContent(in);
 	}
 
 }

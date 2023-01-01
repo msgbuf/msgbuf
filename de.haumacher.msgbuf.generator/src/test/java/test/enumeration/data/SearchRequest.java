@@ -91,13 +91,13 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	}
 
 	/**
-	 * Creates a {@link SearchRequest} instance.
+	 * Creates a {@link test.enumeration.data.SearchRequest} instance.
 	 */
-	static SearchRequest create() {
-		return new test.enumeration.data.SearchRequest_Impl();
+	static test.enumeration.data.SearchRequest create() {
+		return new test.enumeration.data.impl.SearchRequest_Impl();
 	}
 
-	/** Identifier for the {@link SearchRequest} type in JSON format. */
+	/** Identifier for the {@link test.enumeration.data.SearchRequest} type in JSON format. */
 	static final String SEARCH_REQUEST__TYPE = "SearchRequest";
 
 	/** @see #getQuery() */
@@ -129,46 +129,46 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	/**
 	 * @see #getQuery()
 	 */
-	SearchRequest setQuery(String value);
+	test.enumeration.data.SearchRequest setQuery(String value);
 
 	int getPageNumber();
 
 	/**
 	 * @see #getPageNumber()
 	 */
-	SearchRequest setPageNumber(int value);
+	test.enumeration.data.SearchRequest setPageNumber(int value);
 
 	int getResultPerPage();
 
 	/**
 	 * @see #getResultPerPage()
 	 */
-	SearchRequest setResultPerPage(int value);
+	test.enumeration.data.SearchRequest setResultPerPage(int value);
 
-	Corpus getCorpus();
+	test.enumeration.data.SearchRequest.Corpus getCorpus();
 
 	/**
 	 * @see #getCorpus()
 	 */
-	SearchRequest setCorpus(Corpus value);
+	test.enumeration.data.SearchRequest setCorpus(test.enumeration.data.SearchRequest.Corpus value);
 
 	@Override
-	public SearchRequest registerListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.enumeration.data.SearchRequest registerListener(de.haumacher.msgbuf.observer.Listener l);
 
 	@Override
-	public SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l);
+	public test.enumeration.data.SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
 	/** Reads a new instance from the given reader. */
-	static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.enumeration.data.SearchRequest_Impl result = new test.enumeration.data.SearchRequest_Impl();
+	static test.enumeration.data.SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.enumeration.data.impl.SearchRequest_Impl result = new test.enumeration.data.impl.SearchRequest_Impl();
 		result.readContent(in);
 		return result;
 	}
 
 	/** Reads a new instance from the given reader. */
-	static SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	static test.enumeration.data.SearchRequest readSearchRequest(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SearchRequest result = test.enumeration.data.SearchRequest_Impl.readSearchRequest_Content(in);
+		test.enumeration.data.SearchRequest result = test.enumeration.data.impl.SearchRequest_Impl.readSearchRequest_Content(in);
 		in.endObject();
 		return result;
 	}
@@ -176,7 +176,7 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	/** Creates a new {@link SearchRequest} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
 	public static SearchRequest readSearchRequest(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		in.nextTag();
-		return test.enumeration.data.SearchRequest_Impl.readSearchRequest_XmlContent(in);
+		return test.enumeration.data.impl.SearchRequest_Impl.readSearchRequest_XmlContent(in);
 	}
 
 }

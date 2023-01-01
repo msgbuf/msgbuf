@@ -6,21 +6,21 @@ package test.nothing;
 public interface Car extends Shape {
 
 	/**
-	 * Creates a {@link Car} instance.
+	 * Creates a {@link test.nothing.Car} instance.
 	 */
-	static Car create() {
-		return new test.nothing.Car_Impl();
+	static test.nothing.Car create() {
+		return new test.nothing.impl.Car_Impl();
 	}
 
 	/**
 	 * The front wheel.
 	 */
-	Circle getWheel1();
+	test.nothing.Circle getWheel1();
 
 	/**
 	 * @see #getWheel1()
 	 */
-	Car setWheel1(Circle value);
+	test.nothing.Car setWheel1(test.nothing.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel1()} has a value.
@@ -30,12 +30,12 @@ public interface Car extends Shape {
 	/**
 	 * The back wheel.
 	 */
-	Circle getWheel2();
+	test.nothing.Circle getWheel2();
 
 	/**
 	 * @see #getWheel2()
 	 */
-	Car setWheel2(Circle value);
+	test.nothing.Car setWheel2(test.nothing.Circle value);
 
 	/**
 	 * Checks, whether {@link #getWheel2()} has a value.
@@ -45,12 +45,12 @@ public interface Car extends Shape {
 	/**
 	 * The car body.
 	 */
-	Rectangle getBody();
+	test.nothing.Rectangle getBody();
 
 	/**
 	 * @see #getBody()
 	 */
-	Car setBody(Rectangle value);
+	test.nothing.Car setBody(test.nothing.Rectangle value);
 
 	/**
 	 * Checks, whether {@link #getBody()} has a value.
@@ -58,9 +58,9 @@ public interface Car extends Shape {
 	boolean hasBody();
 
 	@Override
-	Car setXCoordinate(int value);
+	test.nothing.Car setXCoordinate(int value);
 
 	@Override
-	Car setYCoordinate(int value);
+	test.nothing.Car setYCoordinate(int value);
 
 }
