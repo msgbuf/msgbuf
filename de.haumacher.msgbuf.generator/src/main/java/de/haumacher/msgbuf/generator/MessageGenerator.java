@@ -974,16 +974,20 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				}
 			}
 		} else {
-			if (!_interface) {
-				nl();
-				if (_reflection || _def.getExtendedDef() != null) {
-					line("@Override");
+			if (_reflection || _def.hasExtendedDef() || !_def.getSpecializations().isEmpty()) {
+				if (!_interface) {
+					nl();
+					if (_reflection || _def.hasExtendedDef()) {
+						line("@Override");
+					} else {
+						jsonTypeDoc();
+					}
+					line("public String jsonType() {");
+					{
+						line("return " + jsonTypeConstant(_def) + ";");
+					}
+					line("}");
 				}
-				line("public String jsonType() {");
-				{
-					line("return " + jsonTypeConstant(_def) + ";");
-				}
-				line("}");
 			}
 		}
 	}

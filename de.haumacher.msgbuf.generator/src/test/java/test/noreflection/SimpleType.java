@@ -74,10 +74,6 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject {
 		_x = value;
 	}
 
-	public String jsonType() {
-		return SIMPLE_TYPE__TYPE;
-	}
-
 	/** Reads a new instance from the given reader. */
 	public static SimpleType readSimpleType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.noreflection.SimpleType result = new test.noreflection.SimpleType();
