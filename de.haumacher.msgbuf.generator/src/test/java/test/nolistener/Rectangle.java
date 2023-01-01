@@ -64,7 +64,6 @@ public interface Rectangle extends AtomicShape {
 	@Override
 	Rectangle setYCoordinate(int value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nolistener.Rectangle_Impl result = new test.nolistener.Rectangle_Impl();

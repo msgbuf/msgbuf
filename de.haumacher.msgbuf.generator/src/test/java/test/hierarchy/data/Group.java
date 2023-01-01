@@ -57,7 +57,6 @@ public interface Group extends Shape {
 	@Override
 	Group setColor(Color value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.hierarchy.data.Group_Impl result = new test.hierarchy.data.Group_Impl();

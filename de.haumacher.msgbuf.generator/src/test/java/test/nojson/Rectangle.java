@@ -64,7 +64,6 @@ public interface Rectangle extends AtomicShape {
 	@Override
 	Rectangle setYCoordinate(int value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Rectangle readRectangle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();

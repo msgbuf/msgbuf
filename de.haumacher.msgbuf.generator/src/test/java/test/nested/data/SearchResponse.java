@@ -68,7 +68,6 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 		@Override
 		public Result unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 		/** Reads a new instance from the given reader. */
 		static Result readResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			test.nested.data.SearchResponse_Impl.Result_Impl result = new test.nested.data.SearchResponse_Impl.Result_Impl();
@@ -130,7 +129,6 @@ public interface SearchResponse extends de.haumacher.msgbuf.data.DataObject, de.
 
 	@Override
 	public SearchResponse unregisterListener(de.haumacher.msgbuf.observer.Listener l);
-
 
 	/** Reads a new instance from the given reader. */
 	static SearchResponse readSearchResponse(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

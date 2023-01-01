@@ -18,7 +18,6 @@ public interface SampleMessage extends de.haumacher.msgbuf.data.DataObject, de.h
 	@Override
 	public SampleMessage unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 	/** Reads a new instance from the given reader. */
 	static SampleMessage readSampleMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.oneoffield.data.SampleMessage_Impl result = new test.oneoffield.data.SampleMessage_Impl();

@@ -34,7 +34,6 @@ public interface Circle extends AtomicShape {
 	@Override
 	Circle setYCoordinate(int value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Circle readCircle(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		if (in.peek() == de.haumacher.msgbuf.json.JsonToken.NUMBER) {

@@ -41,7 +41,6 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 	@Override
 	public B unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 	/** Reads a new instance from the given reader. */
 	static B readB(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.references.data.B_Impl result = new test.references.data.B_Impl();

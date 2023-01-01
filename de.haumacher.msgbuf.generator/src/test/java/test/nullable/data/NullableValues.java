@@ -186,7 +186,6 @@ public interface NullableValues extends de.haumacher.msgbuf.data.DataObject, de.
 	 */
 	boolean hasOptionalDecision();
 
-
 	/** Reads a new instance from the given reader. */
 	static NullableValues readNullableValues(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.nullable.data.NullableValues_Impl result = new test.nullable.data.NullableValues_Impl();

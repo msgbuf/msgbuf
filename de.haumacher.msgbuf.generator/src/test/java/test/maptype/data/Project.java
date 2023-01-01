@@ -44,7 +44,6 @@ public interface Project extends de.haumacher.msgbuf.data.DataObject, de.haumach
 	@Override
 	public Project unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 	/** Reads a new instance from the given reader. */
 	static Project readProject(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.maptype.data.Project_Impl result = new test.maptype.data.Project_Impl();

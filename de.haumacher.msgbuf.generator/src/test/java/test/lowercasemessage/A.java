@@ -55,7 +55,6 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		@Override
 		public B unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 		/** Reads a new instance from the given reader. */
 		static B readb(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			test.lowercasemessage.A_Impl.B_Impl result = new test.lowercasemessage.A_Impl.B_Impl();
@@ -130,7 +129,6 @@ public interface A extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 
 	@Override
 	public A unregisterListener(de.haumacher.msgbuf.observer.Listener l);
-
 
 	/** Reads a new instance from the given reader. */
 	static A reada(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

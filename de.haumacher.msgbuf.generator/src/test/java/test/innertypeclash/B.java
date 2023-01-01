@@ -19,7 +19,6 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 		@Override
 		public C unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 		/** Reads a new instance from the given reader. */
 		static C readC(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			test.innertypeclash.B_Impl.C_Impl result = new test.innertypeclash.B_Impl.C_Impl();
@@ -112,7 +111,6 @@ public interface B extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msg
 
 	@Override
 	public B unregisterListener(de.haumacher.msgbuf.observer.Listener l);
-
 
 	/** Reads a new instance from the given reader. */
 	static B readB(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {

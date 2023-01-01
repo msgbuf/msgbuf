@@ -28,7 +28,6 @@ public interface AnnotatedMessage extends BaseMsg {
 	 */
 	AnnotatedMessage setAnnotatedField(String value);
 
-
 	/** Reads a new instance from the given reader. */
 	static AnnotatedMessage readannotated_message(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.underscorename.AnnotatedMessage_Impl result = new test.underscorename.AnnotatedMessage_Impl();

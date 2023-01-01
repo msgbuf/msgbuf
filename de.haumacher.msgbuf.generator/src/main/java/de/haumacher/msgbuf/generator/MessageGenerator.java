@@ -964,22 +964,26 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private void reflectionType() {
-		if (!(_reflection && _def.isAbstract())) {
-			nl();
-			if (_def.isAbstract()) {
+		if (_def.isAbstract()) {
+			if (!_reflection) {
+				// Otherwise, the interface is inherited from ReflectiveDataObject.
 				if (_interface || _noInterfaces) {
+					nl();
 					jsonTypeDoc();
 					line((_noInterfaces ? "public abstract " : "") + "String jsonType();");
 				}
-			} else {
-				if (!_interface) {
+			}
+		} else {
+			if (!_interface) {
+				nl();
+				if (_reflection || _def.getExtendedDef() != null) {
 					line("@Override");
-					line("public String jsonType() {");
-					{
-						line("return " + jsonTypeConstant(_def) + ";");
-					}
-					line("}");
 				}
+				line("public String jsonType() {");
+				{
+					line("return " + jsonTypeConstant(_def) + ";");
+				}
+				line("}");
 			}
 		}
 	}

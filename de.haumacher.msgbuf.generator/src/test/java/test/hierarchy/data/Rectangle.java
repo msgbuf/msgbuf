@@ -67,7 +67,6 @@ public interface Rectangle extends AtomicShape {
 	@Override
 	Rectangle setColor(Color value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Rectangle readRectangle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.hierarchy.data.Rectangle_Impl result = new test.hierarchy.data.Rectangle_Impl();

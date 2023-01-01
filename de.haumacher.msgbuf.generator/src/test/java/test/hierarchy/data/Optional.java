@@ -64,7 +64,6 @@ public interface Optional extends Shape {
 	@Override
 	Optional setColor(Color value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Optional readOptional(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.hierarchy.data.Optional_Impl result = new test.hierarchy.data.Optional_Impl();

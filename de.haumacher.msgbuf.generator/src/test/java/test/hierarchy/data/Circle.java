@@ -43,7 +43,6 @@ public interface Circle extends AtomicShape {
 	@Override
 	Circle setColor(Color value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.hierarchy.data.Circle_Impl result = new test.hierarchy.data.Circle_Impl();

@@ -90,7 +90,6 @@ public interface Car extends Shape {
 	@Override
 	Car setColor(Color value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.hierarchy.data.Car_Impl result = new test.hierarchy.data.Car_Impl();

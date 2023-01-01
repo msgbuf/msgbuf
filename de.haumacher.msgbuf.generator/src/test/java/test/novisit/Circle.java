@@ -40,7 +40,6 @@ public interface Circle extends AtomicShape {
 	@Override
 	Circle setYCoordinate(int value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.novisit.Circle_Impl result = new test.novisit.Circle_Impl();

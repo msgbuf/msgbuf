@@ -54,7 +54,6 @@ public interface Group extends Shape {
 	@Override
 	Group setYCoordinate(int value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();

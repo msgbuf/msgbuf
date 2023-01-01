@@ -64,7 +64,6 @@ public interface MyMessage extends de.haumacher.msgbuf.data.DataObject, de.hauma
 	@Override
 	public MyMessage unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 	/** Reads a new instance from the given reader. */
 	static MyMessage readMyMessage(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.maptype.data.MyMessage_Impl result = new test.maptype.data.MyMessage_Impl();

@@ -87,7 +87,6 @@ public interface Car extends Shape {
 	@Override
 	Car setYCoordinate(int value);
 
-
 	/** Reads a new instance from the given reader. */
 	static Car readCar(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.notypekind.Car_Impl result = new test.notypekind.Car_Impl();

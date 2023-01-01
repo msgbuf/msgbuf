@@ -158,7 +158,6 @@ public interface SearchRequest extends de.haumacher.msgbuf.data.DataObject, de.h
 	@Override
 	public SearchRequest unregisterListener(de.haumacher.msgbuf.observer.Listener l);
 
-
 	/** Reads a new instance from the given reader. */
 	static SearchRequest readSearchRequest(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.enumeration.data.SearchRequest_Impl result = new test.enumeration.data.SearchRequest_Impl();

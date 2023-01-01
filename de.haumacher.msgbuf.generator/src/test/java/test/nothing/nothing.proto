@@ -10,6 +10,17 @@ option NoVisitor;
 option NoTypeKind;
 option NoXml;
 
+/**
+ * A concrete type without abstract super type.
+ */
+message SimpleType {
+	/** A string property */
+	string str;
+	
+	/** An int property */
+	int x;
+}
+
 /** 
  * An abstract base class for all shapes 
  */

@@ -28,7 +28,6 @@ public interface SomeName extends BaseMsg {
 	 */
 	SomeName setMyField(String value);
 
-
 	/** Reads a new instance from the given reader. */
 	static SomeName readsome_name(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.underscorename.SomeName_Impl result = new test.underscorename.SomeName_Impl();
