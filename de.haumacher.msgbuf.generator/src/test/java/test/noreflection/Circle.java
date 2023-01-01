@@ -3,60 +3,94 @@ package test.noreflection;
 /**
  * A circle {@link Shape}.
  */
-public interface Circle extends AtomicShape {
+public class Circle extends AtomicShape {
 
 	/**
 	 * Creates a {@link Circle} instance.
 	 */
-	static Circle create() {
-		return new test.noreflection.Circle_Impl();
+	public static Circle create() {
+		return new test.noreflection.Circle();
 	}
 
 	/** Identifier for the {@link Circle} type in JSON format. */
-	static final String CIRCLE__TYPE = "Circle";
+	public static final String CIRCLE__TYPE = "Circle";
 
-	/** Identifier for the {@link Circle} type in binary format. */
-	static final int CIRCLE__TYPE_ID = 1;
+	/** @see #getRadius() */
+	private static final String RADIUS__PROP = "r";
 
-	/** Identifier for the property {@link #getRadius()} in binary format. */
-	static final int RADIUS__ID = 3;
+	private int _radius = 0;
+
+	/**
+	 * Creates a {@link Circle} instance.
+	 *
+	 * @see Circle#create()
+	 */
+	protected Circle() {
+		super();
+	}
 
 	/**
 	 * The radius of this {@link Circle} around its coordinate origin at ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 */
-	int getRadius();
+	public final int getRadius() {
+		return _radius;
+	}
 
 	/**
 	 * @see #getRadius()
 	 */
-	Circle setRadius(int value);
+	public Circle setRadius(int value) {
+		internalSetRadius(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getRadius()} without chain call utility. */
+	protected final void internalSetRadius(int value) {
+		_radius = value;
+	}
 
 	@Override
-	Circle setXCoordinate(int value);
+	public Circle setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
 
 	@Override
-	Circle setYCoordinate(int value);
+	public Circle setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
 
+	@Override
+	public String jsonType() {
+		return CIRCLE__TYPE;
+	}
 
 	/** Reads a new instance from the given reader. */
-	static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.noreflection.Circle_Impl result = new test.noreflection.Circle_Impl();
+	public static Circle readCircle(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.noreflection.Circle result = new test.noreflection.Circle();
 		result.readContent(in);
 		return result;
 	}
 
-	/** Reads a new instance from the given reader. */
-	static Circle readCircle(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Circle result = test.noreflection.Circle_Impl.readCircle_Content(in);
-		in.endObject();
-		return result;
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(RADIUS__PROP);
+		out.value(getRadius());
 	}
 
-	/** Creates a new {@link Circle} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static Circle readCircle(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		in.nextTag();
-		return test.noreflection.Circle_Impl.readCircle_XmlContent(in);
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case RADIUS__PROP: setRadius(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public <R,A,E extends Throwable> R visit(AtomicShape.Visitor<R,A,E> v, A arg) throws E {
+		return v.visit(this, arg);
 	}
 
 }

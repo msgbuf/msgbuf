@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public interface AtomicShape extends Shape {
+public abstract class AtomicShape extends Shape {
 
 	/** Visitor interface for the {@link AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
@@ -16,17 +16,30 @@ public interface AtomicShape extends Shape {
 
 	}
 
-	@Override
-	AtomicShape setXCoordinate(int value);
+	/**
+	 * Creates a {@link AtomicShape} instance.
+	 */
+	protected AtomicShape() {
+		super();
+	}
 
 	@Override
-	AtomicShape setYCoordinate(int value);
+	public AtomicShape setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	@Override
+	public AtomicShape setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
 
 	/** The type identifier for this concrete subtype. */
-	String jsonType();
+	public abstract String jsonType();
 
 	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		AtomicShape result;
 		in.beginArray();
 		String type = in.nextString();
@@ -39,29 +52,12 @@ public interface AtomicShape extends Shape {
 		return result;
 	}
 
-	/** Reads a new instance from the given reader. */
-	static AtomicShape readAtomicShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		int typeField = in.nextName();
-		assert typeField == 0;
-		int type = in.nextInt();
-		AtomicShape result;
-		switch (type) {
-			case Circle.CIRCLE__TYPE_ID: result = test.noreflection.Circle_Impl.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.noreflection.Rectangle_Impl.readRectangle_Content(in); break;
-			default: result = null; while (in.hasNext()) {in.skipValue(); }
-		}
-		in.endObject();
-		return result;
-	}
-
-	/** Creates a new {@link AtomicShape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static AtomicShape readAtomicShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		in.nextTag();
-		return test.noreflection.AtomicShape_Impl.readAtomicShape_XmlContent(in);
-	}
-
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
+
+	@Override
+	public final <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+		return visit((AtomicShape.Visitor<R,A,E>) v, arg);
+	}
 
 }

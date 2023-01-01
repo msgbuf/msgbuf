@@ -3,25 +3,7 @@ package test.noreflection;
 /**
  * An abstract base class for all shapes
  */
-public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher.msgbuf.binary.BinaryDataObject, de.haumacher.msgbuf.xml.XmlSerializable {
-
-	/** Type codes for the {@link Shape} hierarchy. */
-	public enum TypeKind {
-
-		/** Type literal for {@link Circle}. */
-		CIRCLE,
-
-		/** Type literal for {@link Rectangle}. */
-		RECTANGLE,
-
-		/** Type literal for {@link Group}. */
-		GROUP,
-
-		/** Type literal for {@link Car}. */
-		CAR,
-		;
-
-	}
+public abstract class Shape extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/** Visitor interface for the {@link Shape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> extends AtomicShape.Visitor<R,A,E> {
@@ -34,40 +16,68 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 
 	}
 
-	/** Identifier for the property {@link #getXCoordinate()} in binary format. */
-	static final int X_COORDINATE__ID = 1;
+	/** @see #getXCoordinate() */
+	private static final String X_COORDINATE__PROP = "x";
 
-	/** Identifier for the property {@link #getYCoordinate()} in binary format. */
-	static final int Y_COORDINATE__ID = 2;
+	/** @see #getYCoordinate() */
+	private static final String Y_COORDINATE__PROP = "y";
 
-	/** The type code of this instance. */
-	TypeKind kind();
+	private int _xCoordinate = 0;
+
+	private int _yCoordinate = 0;
+
+	/**
+	 * Creates a {@link Shape} instance.
+	 */
+	protected Shape() {
+		super();
+	}
 
 	/**
 	 * X coordinate of the origin of the coordinate system of this {@link Shape}.
 	 */
-	int getXCoordinate();
+	public final int getXCoordinate() {
+		return _xCoordinate;
+	}
 
 	/**
 	 * @see #getXCoordinate()
 	 */
-	Shape setXCoordinate(int value);
+	public Shape setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getXCoordinate()} without chain call utility. */
+	protected final void internalSetXCoordinate(int value) {
+		_xCoordinate = value;
+	}
 
 	/**
 	 * Y coordinate of the origin of the coordinate system of this {@link Shape}.
 	 */
-	int getYCoordinate();
+	public final int getYCoordinate() {
+		return _yCoordinate;
+	}
 
 	/**
 	 * @see #getYCoordinate()
 	 */
-	Shape setYCoordinate(int value);
+	public Shape setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getYCoordinate()} without chain call utility. */
+	protected final void internalSetYCoordinate(int value) {
+		_yCoordinate = value;
+	}
 
 	/** The type identifier for this concrete subtype. */
-	String jsonType();
+	public abstract String jsonType();
 
 	/** Reads a new instance from the given reader. */
-	static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static Shape readShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		Shape result;
 		in.beginArray();
 		String type = in.nextString();
@@ -82,31 +92,30 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		return result;
 	}
 
-	/** The binary identifier for this concrete type in the polymorphic {@link Shape} hierarchy. */
-	abstract int typeId();
-
-	/** Reads a new instance from the given reader. */
-	static Shape readShape(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		int typeField = in.nextName();
-		assert typeField == 0;
-		int type = in.nextInt();
-		Shape result;
-		switch (type) {
-			case Group.GROUP__TYPE_ID: result = test.noreflection.Group_Impl.readGroup_Content(in); break;
-			case Car.CAR__TYPE_ID: result = test.noreflection.Car_Impl.readCar_Content(in); break;
-			case Circle.CIRCLE__TYPE_ID: result = test.noreflection.Circle_Impl.readCircle_Content(in); break;
-			case Rectangle.RECTANGLE__TYPE_ID: result = test.noreflection.Rectangle_Impl.readRectangle_Content(in); break;
-			default: result = null; while (in.hasNext()) {in.skipValue(); }
-		}
-		in.endObject();
-		return result;
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		out.beginArray();
+		out.value(jsonType());
+		writeContent(out);
+		out.endArray();
 	}
 
-	/** Creates a new {@link Shape} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static Shape readShape(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		in.nextTag();
-		return test.noreflection.Shape_Impl.readShape_XmlContent(in);
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(X_COORDINATE__PROP);
+		out.value(getXCoordinate());
+		out.name(Y_COORDINATE__PROP);
+		out.value(getYCoordinate());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case X_COORDINATE__PROP: setXCoordinate(in.nextInt()); break;
+			case Y_COORDINATE__PROP: setYCoordinate(in.nextInt()); break;
+			default: super.readField(in, field);
+		}
 	}
 
 	/** Accepts the given visitor. */

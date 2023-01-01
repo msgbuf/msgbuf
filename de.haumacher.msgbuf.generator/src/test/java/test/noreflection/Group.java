@@ -3,23 +3,31 @@ package test.noreflection;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public class Group extends Shape {
 
 	/**
 	 * Creates a {@link Group} instance.
 	 */
-	static Group create() {
-		return new test.noreflection.Group_Impl();
+	public static Group create() {
+		return new test.noreflection.Group();
 	}
 
 	/** Identifier for the {@link Group} type in JSON format. */
-	static final String GROUP__TYPE = "Group";
+	public static final String GROUP__TYPE = "Group";
 
-	/** Identifier for the {@link Group} type in binary format. */
-	static final int GROUP__TYPE_ID = 3;
+	/** @see #getShapes() */
+	private static final String SHAPES__PROP = "shapes";
 
-	/** Identifier for the property {@link #getShapes()} in binary format. */
-	static final int SHAPES__ID = 3;
+	private final java.util.List<Shape> _shapes = new java.util.ArrayList<>();
+
+	/**
+	 * Creates a {@link Group} instance.
+	 *
+	 * @see Group#create()
+	 */
+	protected Group() {
+		super();
+	}
 
 	/**
 	 * All {@link Shape}s in this {@link Group}.
@@ -28,49 +36,98 @@ public interface Group extends Shape {
 	 * The origins of these {@link Shape}s get a coordinate offset of ({@link #getXCoordinate()}, {@link #getYCoordinate()}).
 	 * </p>
 	 */
-	java.util.List<Shape> getShapes();
+	public final java.util.List<Shape> getShapes() {
+		return _shapes;
+	}
 
 	/**
 	 * @see #getShapes()
 	 */
-	Group setShapes(java.util.List<? extends Shape> value);
+	public Group setShapes(java.util.List<? extends Shape> value) {
+		internalSetShapes(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getShapes()} without chain call utility. */
+	protected final void internalSetShapes(java.util.List<? extends Shape> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'shapes' cannot be null.");
+		_shapes.clear();
+		_shapes.addAll(value);
+	}
 
 	/**
 	 * Adds a value to the {@link #getShapes()} list.
 	 */
-	Group addShape(Shape value);
+	public Group addShape(Shape value) {
+		internalAddShape(value);
+		return this;
+	}
+
+	/** Implementation of {@link #addShape(Shape)} without chain call utility. */
+	protected final void internalAddShape(Shape value) {
+		_shapes.add(value);
+	}
 
 	/**
 	 * Removes a value from the {@link #getShapes()} list.
 	 */
-	void removeShape(Shape value);
+	public final void removeShape(Shape value) {
+		_shapes.remove(value);
+	}
 
 	@Override
-	Group setXCoordinate(int value);
+	public Group setXCoordinate(int value) {
+		internalSetXCoordinate(value);
+		return this;
+	}
 
 	@Override
-	Group setYCoordinate(int value);
+	public Group setYCoordinate(int value) {
+		internalSetYCoordinate(value);
+		return this;
+	}
 
+	@Override
+	public String jsonType() {
+		return GROUP__TYPE;
+	}
 
 	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		test.noreflection.Group_Impl result = new test.noreflection.Group_Impl();
+	public static Group readGroup(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		test.noreflection.Group result = new test.noreflection.Group();
 		result.readContent(in);
 		return result;
 	}
 
-	/** Reads a new instance from the given reader. */
-	static Group readGroup(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		in.beginObject();
-		Group result = test.noreflection.Group_Impl.readGroup_Content(in);
-		in.endObject();
-		return result;
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(SHAPES__PROP);
+		out.beginArray();
+		for (Shape x : getShapes()) {
+			x.writeTo(out);
+		}
+		out.endArray();
 	}
 
-	/** Creates a new {@link Group} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static Group readGroup(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		in.nextTag();
-		return test.noreflection.Group_Impl.readGroup_XmlContent(in);
+	@Override
+	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
+		switch (field) {
+			case SHAPES__PROP: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addShape(test.noreflection.Shape.readShape(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: super.readField(in, field);
+		}
+	}
+
+	@Override
+	public <R,A,E extends Throwable> R visit(Shape.Visitor<R,A,E> v, A arg) throws E {
+		return v.visit(this, arg);
 	}
 
 }

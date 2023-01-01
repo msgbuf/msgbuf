@@ -409,14 +409,16 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		}
 		
 		if (_json || _reflection) {
-			if (_reflection == (_interface || _noInterfaces)) {
+			if (_interface || _noInterfaces) {
+				String modifier = _reflection ? (_noInterfaces ? "public " : "") : "private ";
+				
 				for (Field field : getFields()) {
 					if (!_reflection && field.isTransient()) {
 						continue;
 					}
 					nl();
 					line("/** @see #" + getterCall(field) + " */");
-					line((_reflection ? (_noInterfaces ? "public " : "") : "private ") + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
+					line(modifier + "static final String " + constant(field) + " = " + getFieldNameString(field) + ";");
 				}
 			}
 		}

@@ -4,6 +4,10 @@ package test.noreflection;
 
 option NoReflection;
 option NoListener;
+option NoBinary;
+option NoTypeKind;
+option NoXml;
+option NoInterfaces;
 
 /** 
  * An abstract base class for all shapes 
