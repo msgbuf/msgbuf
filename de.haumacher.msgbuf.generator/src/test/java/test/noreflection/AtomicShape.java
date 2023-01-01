@@ -35,9 +35,6 @@ public abstract class AtomicShape extends Shape {
 		return this;
 	}
 
-	/** The type identifier for this concrete subtype. */
-	public abstract String jsonType();
-
 	/** Reads a new instance from the given reader. */
 	public static AtomicShape readAtomicShape(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		AtomicShape result;

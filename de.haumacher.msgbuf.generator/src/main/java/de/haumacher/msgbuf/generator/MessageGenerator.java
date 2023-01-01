@@ -965,7 +965,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	private void reflectionType() {
 		if (_def.isAbstract()) {
-			if (!_reflection) {
+			if (!_def.hasExtendedDef() && !_reflection) {
 				// Otherwise, the interface is inherited from ReflectiveDataObject.
 				if (_interface || _noInterfaces) {
 					nl();
