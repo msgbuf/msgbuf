@@ -31,7 +31,7 @@ public class TestGenerateMessageClasses {
 		assertNotNull(generate);
 		generate.execute();
 
-		File outputDirectory = (File) generate.getOutputDirectory();
+		File outputDirectory = generate.getOutputDirectory();
 		assertNotNull(outputDirectory);
 		assertTrue(outputDirectory.exists());
 
