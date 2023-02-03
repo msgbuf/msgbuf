@@ -22,7 +22,7 @@ public class DartCoding {
 	 * Name of an enum literal.
 	 */
 	public static String literalName(Constant constant) {
-		return firstLowerCase(camelCase(constant.getName()));
+		return firstLowerCase(camelCase(underscored(constant.getName())));
 	}
 
 	/** 

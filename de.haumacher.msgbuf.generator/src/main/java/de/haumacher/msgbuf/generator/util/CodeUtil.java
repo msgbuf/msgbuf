@@ -18,7 +18,6 @@ public class CodeUtil {
 		"(?<=\\p{javaDigit})(?=\\p{javaLetter})" + "|" + 
 		"_+");
 
-
 	/**
 	 * Converts the given '_' separated string to <code>CamelCase</code>.
 	 */
@@ -30,6 +29,20 @@ public class CodeUtil {
 		return result.toString();
 	}
 
+	/**
+	 * Converts a camel-case name to a name where parts are separated by '_'.
+	 */
+	public static String underscored(String name) {
+		StringBuilder result = new StringBuilder();
+		for (String part : name.split("(?<=\\p{javaLowerCase})(?=\\p{javaUpperCase})")) {
+			if (result.length() > 0) {
+				result.append('_');
+			}
+			result.append(part.toLowerCase());
+		}
+		return result.toString();
+	}
+	
 	/**
 	 * Makes the first character upper-case in the given string.
 	 */
