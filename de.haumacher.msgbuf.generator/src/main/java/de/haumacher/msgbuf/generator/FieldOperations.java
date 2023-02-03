@@ -3,9 +3,13 @@
  */
 package de.haumacher.msgbuf.generator;
 
+import de.haumacher.msgbuf.generator.ast.CustomType;
+import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.StringOption;
+import de.haumacher.msgbuf.generator.ast.Type;
 
 /**
  * Mix-in interface for {@link Field} providing operations.
@@ -14,11 +18,10 @@ import de.haumacher.msgbuf.generator.ast.StringOption;
  */
 public interface FieldOperations {
 
-	/**
-	 * Annotations to this definition.
+	/** 
+	 * The implementation.
 	 */
-	java.util.Map<String, Option> getOptions();
-	
+	Field self();
 
 	/** Whether this field cannot be set by the application */
 	default boolean isDerived() {
@@ -29,7 +32,7 @@ public interface FieldOperations {
 	 * Whether this is a derived reference pointing to the owner of the object this referenec belongs to.
 	 */
 	default boolean isContainer() {
-		return getOptions().get("Container") != null;
+		return self().getOptions().get("Container") != null;
 	}
 
 
@@ -66,8 +69,27 @@ public interface FieldOperations {
 	 * The annotation marking this reference as "reverse".
 	 */
 	default Option getReverseAnnotation() {
-		return getOptions().get("Reverse");
+		return self().getOptions().get("Reverse");
 	}
+
+	/**
+	 * The {@link Field} in this field's type that is marked as {@link #isContainer() container}, or
+	 * <code>null</code> if no such field exists.
+	 */
+	default Field container() {
+		if (!isDerived()) {
+			Type contentType = self().getType();
+			if (contentType instanceof CustomType) {
+				Definition contentDef = ((CustomType) contentType).getDefinition();
+				if (contentDef instanceof MessageDef) {
+					// Field is a composition reference.
+					return ((MessageDef) contentDef).container();
+				}
+			}
+		}
+		return null;
+	}
+
 
 
 }

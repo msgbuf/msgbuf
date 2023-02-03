@@ -1,0 +1,17 @@
+package test.container.model;
+
+message MyContainer {
+	string name;
+	
+	MyContent content1;
+	MyContent content2;
+}
+
+message MyContent {
+
+	@Container
+	MyContainer container;
+
+	string name;
+
+}

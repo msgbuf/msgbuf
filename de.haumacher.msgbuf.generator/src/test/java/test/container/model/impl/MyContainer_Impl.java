@@ -1,39 +1,19 @@
-package test.references.data.impl;
+package test.container.model.impl;
 
-public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.references.data.B {
+public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.container.model.MyContainer {
 
 	private String _name = "";
 
-	private final java.util.List<test.references.data.A> _inBs = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
-		@Override
-		protected void beforeAdd(int index, test.references.data.A element) {
-			_listener.beforeAdd(B_Impl.this, IN_BS__PROP, index, element);
-		}
+	private test.container.model.MyContent _content1 = null;
 
-		@Override
-		protected void afterRemove(int index, test.references.data.A element) {
-			_listener.afterRemove(B_Impl.this, IN_BS__PROP, index, element);
-		}
-	};
-
-	private final java.util.List<test.references.data.A> _inB = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
-		@Override
-		protected void beforeAdd(int index, test.references.data.A element) {
-			_listener.beforeAdd(B_Impl.this, IN_B__PROP, index, element);
-		}
-
-		@Override
-		protected void afterRemove(int index, test.references.data.A element) {
-			_listener.afterRemove(B_Impl.this, IN_B__PROP, index, element);
-		}
-	};
+	private test.container.model.MyContent _content2 = null;
 
 	/**
-	 * Creates a {@link B_Impl} instance.
+	 * Creates a {@link MyContainer_Impl} instance.
 	 *
-	 * @see test.references.data.B#create()
+	 * @see test.container.model.MyContainer#create()
 	 */
-	public B_Impl() {
+	public MyContainer_Impl() {
 		super();
 	}
 
@@ -43,7 +23,7 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	}
 
 	@Override
-	public test.references.data.B setName(String value) {
+	public test.container.model.MyContainer setName(String value) {
 		internalSetName(value);
 		return this;
 	}
@@ -55,77 +35,81 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	}
 
 	@Override
-	public final java.util.List<test.references.data.A> getInBs() {
-		return _inBs;
-	}
-
-	/**
-	 * Internal setter for updating derived field.
-	 */
-	test.references.data.B setInBs(java.util.List<? extends test.references.data.A> value) {
-		internalSetInBs(value);
-		return this;
-	}
-
-	/** Internal setter for {@link #getInBs()} without chain call utility. */
-	protected final void internalSetInBs(java.util.List<? extends test.references.data.A> value) {
-		if (value == null) throw new IllegalArgumentException("Property 'inBs' cannot be null.");
-		_inBs.clear();
-		_inBs.addAll(value);
-	}
-
-	test.references.data.B addInBs(test.references.data.A value) {
-		internalAddInBs(value);
-		return this;
-	}
-
-	/** Implementation of {@link #addInBs(test.references.data.A)} without chain call utility. */
-	protected final void internalAddInBs(test.references.data.A value) {
-		_inBs.add(value);
-	}
-
-	final void removeInBs(test.references.data.A value) {
-		_inBs.remove(value);
+	public final test.container.model.MyContent getContent1() {
+		return _content1;
 	}
 
 	@Override
-	public final java.util.List<test.references.data.A> getInB() {
-		return _inB;
-	}
-
-	/**
-	 * Internal setter for updating derived field.
-	 */
-	test.references.data.B setInB(java.util.List<? extends test.references.data.A> value) {
-		internalSetInB(value);
+	public test.container.model.MyContainer setContent1(test.container.model.MyContent value) {
+		internalSetContent1(value);
 		return this;
 	}
 
-	/** Internal setter for {@link #getInB()} without chain call utility. */
-	protected final void internalSetInB(java.util.List<? extends test.references.data.A> value) {
-		if (value == null) throw new IllegalArgumentException("Property 'inB' cannot be null.");
-		_inB.clear();
-		_inB.addAll(value);
+	/** Internal setter for {@link #getContent1()} without chain call utility. */
+	protected final void internalSetContent1(test.container.model.MyContent value) {
+		test.container.model.impl.MyContent_Impl before = (test.container.model.impl.MyContent_Impl) _content1;
+		test.container.model.impl.MyContent_Impl after = (test.container.model.impl.MyContent_Impl) value;
+		if (after != null) {
+			test.container.model.MyContainer oldContainer = after.getContainer();
+			if (oldContainer != null && oldContainer != this) {
+				throw new IllegalStateException("Object may not be part of two different containers.");
+			}
+		}
+		_listener.beforeSet(this, CONTENT_1__PROP, value);
+		if (before != null) {
+			before.internalSetContainer(null);
+		}
+		_content1 = value;
+		if (after != null) {
+			after.internalSetContainer(this);
+		}
 	}
 
-	test.references.data.B addInB(test.references.data.A value) {
-		internalAddInB(value);
+	@Override
+	public final boolean hasContent1() {
+		return _content1 != null;
+	}
+
+	@Override
+	public final test.container.model.MyContent getContent2() {
+		return _content2;
+	}
+
+	@Override
+	public test.container.model.MyContainer setContent2(test.container.model.MyContent value) {
+		internalSetContent2(value);
 		return this;
 	}
 
-	/** Implementation of {@link #addInB(test.references.data.A)} without chain call utility. */
-	protected final void internalAddInB(test.references.data.A value) {
-		_inB.add(value);
+	/** Internal setter for {@link #getContent2()} without chain call utility. */
+	protected final void internalSetContent2(test.container.model.MyContent value) {
+		test.container.model.impl.MyContent_Impl before = (test.container.model.impl.MyContent_Impl) _content2;
+		test.container.model.impl.MyContent_Impl after = (test.container.model.impl.MyContent_Impl) value;
+		if (after != null) {
+			test.container.model.MyContainer oldContainer = after.getContainer();
+			if (oldContainer != null && oldContainer != this) {
+				throw new IllegalStateException("Object may not be part of two different containers.");
+			}
+		}
+		_listener.beforeSet(this, CONTENT_2__PROP, value);
+		if (before != null) {
+			before.internalSetContainer(null);
+		}
+		_content2 = value;
+		if (after != null) {
+			after.internalSetContainer(this);
+		}
 	}
 
-	final void removeInB(test.references.data.A value) {
-		_inB.remove(value);
+	@Override
+	public final boolean hasContent2() {
+		return _content2 != null;
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public test.references.data.B registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.container.model.MyContainer registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -135,7 +119,7 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	}
 
 	@Override
-	public test.references.data.B unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.container.model.MyContainer unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -146,14 +130,14 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	@Override
 	public String jsonType() {
-		return B__TYPE;
+		return MY_CONTAINER__TYPE;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
 			NAME__PROP, 
-			IN_BS__PROP, 
-			IN_B__PROP));
+			CONTENT_1__PROP, 
+			CONTENT_2__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -164,9 +148,9 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	public Object get(String field) {
 		switch (field) {
 			case NAME__PROP: return getName();
-			case IN_BS__PROP: return getInBs();
-			case IN_B__PROP: return getInB();
-			default: return test.references.data.B.super.get(field);
+			case CONTENT_1__PROP: return getContent1();
+			case CONTENT_2__PROP: return getContent2();
+			default: return test.container.model.MyContainer.super.get(field);
 		}
 	}
 
@@ -174,6 +158,8 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	public void set(String field, Object value) {
 		switch (field) {
 			case NAME__PROP: internalSetName((String) value); break;
+			case CONTENT_1__PROP: internalSetContent1((test.container.model.MyContent) value); break;
+			case CONTENT_2__PROP: internalSetContent2((test.container.model.MyContent) value); break;
 		}
 	}
 
@@ -187,12 +173,22 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		super.writeFields(out);
 		out.name(NAME__PROP);
 		out.value(getName());
+		if (hasContent1()) {
+			out.name(CONTENT_1__PROP);
+			getContent1().writeTo(out);
+		}
+		if (hasContent2()) {
+			out.name(CONTENT_2__PROP);
+			getContent2().writeTo(out);
+		}
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case CONTENT_1__PROP: setContent1(test.container.model.MyContent.readMyContent(in)); break;
+			case CONTENT_2__PROP: setContent2(test.container.model.MyContent.readMyContent(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -214,11 +210,19 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		out.name(NAME__ID);
 		out.value(getName());
+		if (hasContent1()) {
+			out.name(CONTENT_1__ID);
+			getContent1().writeTo(out);
+		}
+		if (hasContent2()) {
+			out.name(CONTENT_2__ID);
+			getContent2().writeTo(out);
+		}
 	}
 
-	/** Helper for creating an object of type {@link test.references.data.B} from a polymorphic composition. */
-	public static test.references.data.B readB_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		test.references.data.impl.B_Impl result = new B_Impl();
+	/** Helper for creating an object of type {@link test.container.model.MyContainer} from a polymorphic composition. */
+	public static test.container.model.MyContainer readMyContainer_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		test.container.model.impl.MyContainer_Impl result = new MyContainer_Impl();
 		result.readContent(in);
 		return result;
 	}
@@ -235,25 +239,27 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
 			case NAME__ID: setName(in.nextString()); break;
+			case CONTENT_1__ID: setContent1(test.container.model.MyContent.readMyContent(in)); break;
+			case CONTENT_2__ID: setContent2(test.container.model.MyContent.readMyContent(in)); break;
 			default: in.skipValue(); 
 		}
 	}
 
-	/** XML element name representing a {@link test.references.data.B} type. */
-	public static final String B__XML_ELEMENT = "b";
+	/** XML element name representing a {@link test.container.model.MyContainer} type. */
+	public static final String MY_CONTAINER__XML_ELEMENT = "my-container";
 
 	/** XML attribute or element name of a {@link #getName} property. */
 	private static final String NAME__XML_ATTR = "name";
 
-	/** XML attribute or element name of a {@link #getInBs} property. */
-	private static final String IN_BS__XML_ATTR = "in-bs";
+	/** XML attribute or element name of a {@link #getContent1} property. */
+	private static final String CONTENT_1__XML_ATTR = "content-1";
 
-	/** XML attribute or element name of a {@link #getInB} property. */
-	private static final String IN_B__XML_ATTR = "in-b";
+	/** XML attribute or element name of a {@link #getContent2} property. */
+	private static final String CONTENT_2__XML_ATTR = "content-2";
 
 	@Override
 	public String getXmlTagName() {
-		return B__XML_ELEMENT;
+		return MY_CONTAINER__XML_ELEMENT;
 	}
 
 	@Override
@@ -269,21 +275,21 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	/** Serializes all fields that are written as XML elements. */
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
-		out.writeStartElement(IN_BS__XML_ATTR);
-		for (test.references.data.A element : getInBs()) {
-			element.writeTo(out);
+		if (hasContent1()) {
+			out.writeStartElement(CONTENT_1__XML_ATTR);
+			getContent1().writeContent(out);
+			out.writeEndElement();
 		}
-		out.writeEndElement();
-		out.writeStartElement(IN_B__XML_ATTR);
-		for (test.references.data.A element : getInB()) {
-			element.writeTo(out);
+		if (hasContent2()) {
+			out.writeStartElement(CONTENT_2__XML_ATTR);
+			getContent2().writeContent(out);
+			out.writeEndElement();
 		}
-		out.writeEndElement();
 	}
 
-	/** Creates a new {@link test.references.data.B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static B_Impl readB_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		B_Impl result = new B_Impl();
+	/** Creates a new {@link test.container.model.MyContainer} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static MyContainer_Impl readMyContainer_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		MyContainer_Impl result = new MyContainer_Impl();
 		result.readContentXml(in);
 		return result;
 	}
@@ -328,12 +334,12 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 				setName(in.getElementText());
 				break;
 			}
-			case IN_BS__XML_ATTR: {
-				internalReadInBsListXml(in);
+			case CONTENT_1__XML_ATTR: {
+				setContent1(test.container.model.impl.MyContent_Impl.readMyContent_XmlContent(in));
 				break;
 			}
-			case IN_B__XML_ATTR: {
-				internalReadInBListXml(in);
+			case CONTENT_2__XML_ATTR: {
+				setContent2(test.container.model.impl.MyContent_Impl.readMyContent_XmlContent(in));
 				break;
 			}
 			default: {
@@ -349,28 +355,6 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
 				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
 			}
-		}
-	}
-
-	private void internalReadInBsListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		while (true) {
-			int event = in.nextTag();
-			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
-				break;
-			}
-
-			addInBs(test.references.data.impl.A_Impl.readA_XmlContent(in));
-		}
-	}
-
-	private void internalReadInBListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		while (true) {
-			int event = in.nextTag();
-			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
-				break;
-			}
-
-			addInB(test.references.data.impl.A_Impl.readA_XmlContent(in));
 		}
 	}
 

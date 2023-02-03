@@ -606,8 +606,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				if (!override && _noInterfaces) {
 					setterDoc(field);
 				} else {
+					// Only in interface for non-derived fields, therefore no override necessary for derived fields.
 					line("@Override");
 				}
+			} else {
+				docComment("Internal setter for updating derived field.");
 			}
 			line(setterModifier(field) + myType() + " " + setterName(field) + "(" + mkTypeReadOnly(field) + " " + "value" + ")" + " {");
 			{
@@ -645,30 +648,84 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				Field reverseEnd = reverseEnd(field);
 				boolean hasReverseEnd = reverseEnd != null;
 				
+				Field container = field.container();
+
+				if (container != null || hasReverseEnd) {
+					line(mkTypeWrappedImpl(type) + " before = (" + mkTypeWrappedImpl(type) + ") " + fieldMemberName(field) +";");
+					line(mkTypeWrappedImpl(type) + " after = (" + mkTypeWrappedImpl(type) + ") value;");
+				}
+
+				if (container != null) {
+					// Check early to not leave back inconsistent state upon error.
+					line("if (after != null) {");
+					{
+						line(mkType(container) + " oldContainer = after." + getterName(container) + "();");
+						line("if (oldContainer != null && oldContainer != this) {");
+						{
+							line("throw new IllegalStateException(\"Object may not be part of two different containers.\");");
+						}
+						line("}");
+					}
+					line("}");
+				}
+				
 				if (_listener) {
 					line("_listener.beforeSet(this, " + constant(field) + ", value);");
 				}
 				
-				if (hasReverseEnd) {
-					line("if (" + fieldMemberName(field) + " != null) {");
+				if (container != null || hasReverseEnd) {
+					line("if (before != null) {");
 					{
-						line("((" + mkTypeWrappedImpl(type) + ") " + fieldMemberName(field) + ")." + removerName(reverseEnd) + "(this);");
+						if (container != null) {
+							line("before." + internalSetterName(container) + "(null);");
+						}
+						
+						if (hasReverseEnd) {
+							line("before." + removerName(reverseEnd) + "(this);");
+						}
 					}
 					line("}");
 				}
 
+				if (field.isContainer()) {
+					line("if (value != null && " + fieldMemberName(field) + " != null) {");
+					{
+						line("throw new IllegalStateException(\"Object may not be part of two different containers.\");");
+					}
+					line("}");
+				}
 				line(fieldMemberName(field) + " = " + "value" + ";");
 
-				if (hasReverseEnd) {
-					line("if (value != null) {");
+				if (container != null || hasReverseEnd) {
+					line("if (after != null) {");
 					{
-						line("((" + mkTypeWrappedImpl(type) + ") value)." + adderName(reverseEnd) + "(this);");
+						if (hasReverseEnd) {
+							line("after." + adderName(reverseEnd) + "(this);");
+						}
+						
+						if (container != null) {
+							line("after." + internalSetterName(container) + "(this);");
+						}
 					}
 					line("}");
 				}
 			}
 		}
 		line("}");
+	}
+
+	private void setContainer(Field field) {
+		Field container = field.container();
+		if (container != null) {
+			line("if (value == null) {");
+			{
+				line(fieldMemberName(field) + "." + internalSetterName(container) + "(null);");
+			}
+			line("} else {");
+			{
+				line("value." + internalSetterName(container) + "(this);");
+			}
+		}
 	}
 
 	private Field reverseEnd(Field field) {

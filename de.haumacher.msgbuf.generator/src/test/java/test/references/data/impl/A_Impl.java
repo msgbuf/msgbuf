@@ -203,13 +203,15 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	/** Internal setter for {@link #getB()} without chain call utility. */
 	protected final void internalSetB(test.references.data.B value) {
+		test.references.data.impl.B_Impl before = (test.references.data.impl.B_Impl) _b;
+		test.references.data.impl.B_Impl after = (test.references.data.impl.B_Impl) value;
 		_listener.beforeSet(this, B__PROP, value);
-		if (_b != null) {
-			((test.references.data.impl.B_Impl) _b).removeInB(this);
+		if (before != null) {
+			before.removeInB(this);
 		}
 		_b = value;
-		if (value != null) {
-			((test.references.data.impl.B_Impl) value).addInB(this);
+		if (after != null) {
+			after.addInB(this);
 		}
 	}
 
@@ -231,13 +233,15 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	/** Internal setter for {@link #getOther()} without chain call utility. */
 	protected final void internalSetOther(test.references.data.A value) {
+		test.references.data.impl.A_Impl before = (test.references.data.impl.A_Impl) _other;
+		test.references.data.impl.A_Impl after = (test.references.data.impl.A_Impl) value;
 		_listener.beforeSet(this, OTHER__PROP, value);
-		if (_other != null) {
-			((test.references.data.impl.A_Impl) _other).removeInOther(this);
+		if (before != null) {
+			before.removeInOther(this);
 		}
 		_other = value;
-		if (value != null) {
-			((test.references.data.impl.A_Impl) value).addInOther(this);
+		if (after != null) {
+			after.addInOther(this);
 		}
 	}
 
@@ -285,6 +289,9 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		return _inOther;
 	}
 
+	/**
+	 * Internal setter for updating derived field.
+	 */
 	test.references.data.A setInOther(java.util.List<? extends test.references.data.A> value) {
 		internalSetInOther(value);
 		return this;
@@ -316,6 +323,9 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		return _inOthers;
 	}
 
+	/**
+	 * Internal setter for updating derived field.
+	 */
 	test.references.data.A setInOthers(java.util.List<? extends test.references.data.A> value) {
 		internalSetInOthers(value);
 		return this;

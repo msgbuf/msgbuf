@@ -221,4 +221,8 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		return v.visit(this, arg);
 	}
 
+	@Override
+	public Field self() {
+		return this;
+	}
 }

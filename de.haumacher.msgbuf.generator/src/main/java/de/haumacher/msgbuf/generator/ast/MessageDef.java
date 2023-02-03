@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Definition} of a data class.
  */
-public class MessageDef extends Definition {
+public class MessageDef extends Definition implements de.haumacher.msgbuf.generator.MessageDefOperations {
 
 	/**
 	 * Creates a {@link MessageDef} instance.
@@ -466,6 +466,11 @@ public class MessageDef extends Definition {
 	@Override
 	public <R,A> R visit(Definition.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
+	}
+
+	@Override
+	public MessageDef self() {
+		return this;
 	}
 
 }
