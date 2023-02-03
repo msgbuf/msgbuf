@@ -21,13 +21,15 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	private final java.util.List<test.references.data.B> _bs = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.B>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.B element) {
+			test.references.data.impl.B_Impl added = (test.references.data.impl.B_Impl) element;
 			_listener.beforeAdd(A_Impl.this, BS__PROP, index, element);
-			((test.references.data.impl.B_Impl) element).addInBs(A_Impl.this);
+			added.addInBs(A_Impl.this);
 		}
 
 		@Override
 		protected void afterRemove(int index, test.references.data.B element) {
-			((test.references.data.impl.B_Impl) element).removeInBs(A_Impl.this);
+			test.references.data.impl.B_Impl removed = (test.references.data.impl.B_Impl) element;
+			removed.removeInBs(A_Impl.this);
 			_listener.afterRemove(A_Impl.this, BS__PROP, index, element);
 		}
 	};
@@ -39,13 +41,15 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	private final java.util.List<test.references.data.A> _others = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
+			test.references.data.impl.A_Impl added = (test.references.data.impl.A_Impl) element;
 			_listener.beforeAdd(A_Impl.this, OTHERS__PROP, index, element);
-			((test.references.data.impl.A_Impl) element).addInOthers(A_Impl.this);
+			added.addInOthers(A_Impl.this);
 		}
 
 		@Override
 		protected void afterRemove(int index, test.references.data.A element) {
-			((test.references.data.impl.A_Impl) element).removeInOthers(A_Impl.this);
+			test.references.data.impl.A_Impl removed = (test.references.data.impl.A_Impl) element;
+			removed.removeInOthers(A_Impl.this);
 			_listener.afterRemove(A_Impl.this, OTHERS__PROP, index, element);
 		}
 	};

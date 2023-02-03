@@ -470,18 +470,42 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			if (field.isRepeated()) {
 				Field reverseEnd = reverseEnd(field);
 				boolean hasReverseEnd = reverseEnd != null;
-				if (_listener || hasReverseEnd) {
-					String qFieldTypeName = mkTypeWrapped(field.getType());
+				
+				Field container = field.container();
+				boolean hasContainer = container != null;
+				
+				if (_listener || hasReverseEnd || container != null) {
+					Type type = field.getType();
+					String qFieldTypeName = mkTypeWrapped(type);
 					line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + fieldMemberName(field) + " = " + "new de.haumacher.msgbuf.util.ReferenceList<" + qFieldTypeName + ">() {");
 					{
 						line("@Override");
 						line("protected void beforeAdd(int index, " + qFieldTypeName + " element) {");
 						{
+							if (hasContainer || hasReverseEnd) {
+								line(mkTypeWrappedImpl(type) + " added = (" + mkTypeWrappedImpl(type) + ") element;");
+							}
+
+							if (hasContainer) {
+								// Check early to not leave back inconsistent state upon error.
+								line(mkType(container) + " oldContainer = added." + getterName(container) + "();");
+								line("if (oldContainer != null && oldContainer != this) {");
+								{
+									line("throw new IllegalStateException(\"Object may not be part of two different containers.\");");
+								}
+								line("}");
+							}
+
 							if (_listener) {
 								line("_listener.beforeAdd(" + implName(_def) + ".this, " + constant(field) + ", index, element);");
 							}
+
+							if (hasContainer) {
+								line("added." + internalSetterName(container) + "(" + implName(_def) + ".this);");
+							}
+							
 							if (hasReverseEnd) {
-								line("((" + mkTypeWrappedImpl(field.getType()) + ") element)." + adderName(reverseEnd) + "(" + implName(_def) + ".this);");
+								line("added." + adderName(reverseEnd) + "(" + implName(_def) + ".this);");
 							}
 						}
 						line("}");
@@ -490,9 +514,18 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						line("@Override");
 						line("protected void afterRemove(int index, " + qFieldTypeName + " element) {");
 						{
-							if (hasReverseEnd) {
-								line("((" + mkTypeWrappedImpl(field.getType()) + ") element)." + removerName(reverseEnd) + "(" + implName(_def) + ".this);");
+							if (hasContainer || hasReverseEnd) {
+								line(mkTypeWrappedImpl(type) + " removed = (" + mkTypeWrappedImpl(type) + ") element;");
 							}
+
+							if (hasReverseEnd) {
+								line("removed." + removerName(reverseEnd) + "(" + implName(_def) + ".this);");
+							}
+							
+							if (hasContainer) {
+								line("removed." + internalSetterName(container) + "(null);");
+							}
+							
 							if (_listener) {
 								line("_listener.afterRemove(" + implName(_def) + ".this, " + constant(field) + ", index, element);");
 							}
@@ -649,13 +682,14 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				boolean hasReverseEnd = reverseEnd != null;
 				
 				Field container = field.container();
+				boolean hasContainer = container != null;
 
-				if (container != null || hasReverseEnd) {
+				if (hasContainer || hasReverseEnd) {
 					line(mkTypeWrappedImpl(type) + " before = (" + mkTypeWrappedImpl(type) + ") " + fieldMemberName(field) +";");
 					line(mkTypeWrappedImpl(type) + " after = (" + mkTypeWrappedImpl(type) + ") value;");
 				}
 
-				if (container != null) {
+				if (hasContainer) {
 					// Check early to not leave back inconsistent state upon error.
 					line("if (after != null) {");
 					{
@@ -673,10 +707,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					line("_listener.beforeSet(this, " + constant(field) + ", value);");
 				}
 				
-				if (container != null || hasReverseEnd) {
+				if (hasContainer || hasReverseEnd) {
 					line("if (before != null) {");
 					{
-						if (container != null) {
+						if (hasContainer) {
 							line("before." + internalSetterName(container) + "(null);");
 						}
 						
@@ -694,16 +728,17 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					}
 					line("}");
 				}
+				
 				line(fieldMemberName(field) + " = " + "value" + ";");
 
-				if (container != null || hasReverseEnd) {
+				if (hasContainer || hasReverseEnd) {
 					line("if (after != null) {");
 					{
 						if (hasReverseEnd) {
 							line("after." + adderName(reverseEnd) + "(this);");
 						}
 						
-						if (container != null) {
+						if (hasContainer) {
 							line("after." + internalSetterName(container) + "(this);");
 						}
 					}
@@ -712,20 +747,6 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			}
 		}
 		line("}");
-	}
-
-	private void setContainer(Field field) {
-		Field container = field.container();
-		if (container != null) {
-			line("if (value == null) {");
-			{
-				line(fieldMemberName(field) + "." + internalSetterName(container) + "(null);");
-			}
-			line("} else {");
-			{
-				line("value." + internalSetterName(container) + "(this);");
-			}
-		}
 	}
 
 	private Field reverseEnd(Field field) {

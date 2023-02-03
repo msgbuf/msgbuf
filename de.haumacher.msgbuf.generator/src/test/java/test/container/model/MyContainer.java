@@ -21,6 +21,12 @@ public interface MyContainer extends de.haumacher.msgbuf.data.DataObject, de.hau
 	/** @see #getContent2() */
 	String CONTENT_2__PROP = "content2";
 
+	/** @see #getContentList() */
+	String CONTENT_LIST__PROP = "contentList";
+
+	/** @see #getContentMap() */
+	String CONTENT_MAP__PROP = "contentMap";
+
 	/** Identifier for the property {@link #getName()} in binary format. */
 	static final int NAME__ID = 1;
 
@@ -29,6 +35,12 @@ public interface MyContainer extends de.haumacher.msgbuf.data.DataObject, de.hau
 
 	/** Identifier for the property {@link #getContent2()} in binary format. */
 	static final int CONTENT_2__ID = 3;
+
+	/** Identifier for the property {@link #getContentList()} in binary format. */
+	static final int CONTENT_LIST__ID = 4;
+
+	/** Identifier for the property {@link #getContentMap()} in binary format. */
+	static final int CONTENT_MAP__ID = 5;
 
 	String getName();
 
@@ -60,6 +72,40 @@ public interface MyContainer extends de.haumacher.msgbuf.data.DataObject, de.hau
 	 * Checks, whether {@link #getContent2()} has a value.
 	 */
 	boolean hasContent2();
+
+	java.util.List<test.container.model.MyContent> getContentList();
+
+	/**
+	 * @see #getContentList()
+	 */
+	test.container.model.MyContainer setContentList(java.util.List<? extends test.container.model.MyContent> value);
+
+	/**
+	 * Adds a value to the {@link #getContentList()} list.
+	 */
+	test.container.model.MyContainer addContentList(test.container.model.MyContent value);
+
+	/**
+	 * Removes a value from the {@link #getContentList()} list.
+	 */
+	void removeContentList(test.container.model.MyContent value);
+
+	java.util.Map<String, test.container.model.MyContent> getContentMap();
+
+	/**
+	 * @see #getContentMap()
+	 */
+	test.container.model.MyContainer setContentMap(java.util.Map<String, test.container.model.MyContent> value);
+
+	/**
+	 * Adds a key value pair to the {@link #getContentMap()} map.
+	 */
+	test.container.model.MyContainer putContentMap(String key, test.container.model.MyContent value);
+
+	/**
+	 * Removes a key from the {@link #getContentMap()} map.
+	 */
+	void removeContentMap(String key);
 
 	@Override
 	public test.container.model.MyContainer registerListener(de.haumacher.msgbuf.observer.Listener l);

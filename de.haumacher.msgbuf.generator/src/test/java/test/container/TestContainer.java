@@ -3,6 +3,8 @@
  */
 package test.container;
 
+import java.util.Arrays;
+
 import junit.framework.TestCase;
 import test.container.model.MyContainer;
 import test.container.model.MyContent;
@@ -44,6 +46,59 @@ public class TestContainer extends TestCase {
 		assertNull(otherContainer.getContent1());
 		assertEquals(container, c1.getContainer());
 		assertEquals(container, c2.getContainer());
+	}
+	
+	public void testUpdateMulti() {
+		MyContainer container = MyContainer.create().setName("container");
+		MyContainer otherContainer = MyContainer.create().setName("other");
+		
+		MyContent c1 = MyContent.create().setName("content 1");
+		
+		container.addContentList(c1);
+		assertEquals(container, c1.getContainer());
+		
+		MyContent c2 = MyContent.create().setName("content 2");
+		container.addContentList(c2);
+		assertEquals(container, c1.getContainer());
+		assertEquals(container, c2.getContainer());
+		
+		container.setContentList(Arrays.asList(c1));
+		assertEquals(container, c1.getContainer());
+		assertNull(c2.getContainer());
+		
+		container.removeContentList(c1);
+		assertNull(c1.getContainer());
+		
+		container.setContentList(Arrays.asList(c1, c2));
+		assertEquals(container, c1.getContainer());
+		assertEquals(container, c2.getContainer());
+		
+		container.getContentList().clear();
+		assertNull(c1.getContainer());
+		assertNull(c2.getContainer());
+		
+		container.addContentList(c1);
+		try {
+			container.addContentList(c1);
+			fail("Must not make object part of two different containers.");
+		} catch (IllegalStateException ex) {
+			assertEquals("Object may not be part of two different containers.", ex.getMessage());
+		}
+		
+		// Check that nothing has changed.
+		assertEquals(container, c1.getContainer());
+		assertEquals(Arrays.asList(c1), container.getContentList());
+		
+		try {
+			otherContainer.addContentList(c1);
+			fail("Must not make object part of two different containers.");
+		} catch (IllegalStateException ex) {
+			assertEquals("Object may not be part of two different containers.", ex.getMessage());
+		}
+		
+		assertEquals(container, c1.getContainer());
+		assertEquals(Arrays.asList(c1), container.getContentList());
+		assertEquals(0, otherContainer.getContentList().size());
 	}
 	
 	public void testUpdateIdentical() {

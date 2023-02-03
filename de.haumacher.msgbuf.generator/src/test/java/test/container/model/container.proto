@@ -5,6 +5,9 @@ message MyContainer {
 	
 	MyContent content1;
 	MyContent content2;
+	
+	repeated MyContent contentList;
+	map<string, MyContent> contentMap;
 }
 
 message MyContent {
