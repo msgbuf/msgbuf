@@ -1997,15 +1997,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 	
 	static Field getLocalReverseField(MessageDef def, String name) {
-		return def.getFields().stream().filter(f -> hasReverseName(f, name)).findFirst().orElse(null);
-	}
-
-	private static boolean hasReverseName(Field f, String name) {
-		StringOption reverseOption = (StringOption) f.getOptions().get("Reverse");
-		if (reverseOption == null) {
-			return false;
-		}
-		return reverseOption.getValue().equals(name);
+		return def.getFields().stream().filter(f -> f.isReverseOf(name)).findFirst().orElse(null);
 	}
 
 }
