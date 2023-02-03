@@ -5,6 +5,8 @@ package de.haumacher.msgbuf.generator.dart;
 
 import static de.haumacher.msgbuf.generator.dart.DartCoding.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import de.haumacher.msgbuf.generator.ast.Field;
@@ -55,11 +57,21 @@ public class DartClassGenerator extends AbstractDartGenerator {
 				nl();
 			}
 			
+			List<Field> inheritedFields = new ArrayList<>();
+			MessageDef superDef = _def.getExtendedDef();
+			while (superDef != null) {
+				inheritedFields.addAll(superDef.getFields());
+				superDef = superDef.getExtendedDef();
+			}
+			
 			line("/// Creates a " + typeName + ".");
-			if (_def.getFields().isEmpty()) {
+			if (_def.getFields().isEmpty() && inheritedFields.isEmpty()) {
 				line(typeName + "();");
 			} else {
 				line(typeName + "({");
+				for (Field field : inheritedFields) {
+					line("super." + fieldName(field) + ", ");
+				}
 				for (Field field : _def.getFields()) {
 					line("this." + fieldName(field) + initializer(field) + ", ");
 				}
