@@ -123,7 +123,12 @@ public class ReadOperationBuilder extends AbstractDartGenerator implements Type.
 		} else {
 			line("if (!json.tryNull()) {");
 			{
-				line(statementBuilder.apply(value));
+				line("var value = " + value + ";");
+				line("if (value != null) {");
+				{
+					line(statementBuilder.apply("value"));
+				}
+				line("}");
 			}
 			line("}");
 		}
