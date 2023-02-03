@@ -5,7 +5,7 @@ package test.novisitexceptions.impl;
  */
 public class Group_Impl extends test.novisitexceptions.impl.Shape_Impl implements test.novisitexceptions.Group {
 
-	private final java.util.List<test.novisitexceptions.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.novisitexceptions.Shape>() {
+	private final java.util.List<test.novisitexceptions.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.novisitexceptions.Shape element) {
 			_listener.beforeAdd(Group_Impl.this, SHAPES__PROP, index, element);

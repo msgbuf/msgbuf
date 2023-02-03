@@ -6,7 +6,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	private test.references.data.A _contents = null;
 
-	private final java.util.List<test.references.data.A> _children = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
+	private final java.util.List<test.references.data.A> _children = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
 			_listener.beforeAdd(A_Impl.this, CHILDREN__PROP, index, element);
@@ -18,7 +18,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		}
 	};
 
-	private final java.util.List<test.references.data.B> _bs = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.B>() {
+	private final java.util.List<test.references.data.B> _bs = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.B element) {
 			test.references.data.impl.B_Impl added = (test.references.data.impl.B_Impl) element;
@@ -38,7 +38,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	private test.references.data.A _other = null;
 
-	private final java.util.List<test.references.data.A> _others = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
+	private final java.util.List<test.references.data.A> _others = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
 			test.references.data.impl.A_Impl added = (test.references.data.impl.A_Impl) element;
@@ -54,7 +54,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		}
 	};
 
-	private final java.util.List<test.references.data.A> _inOther = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
+	private final java.util.List<test.references.data.A> _inOther = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
 			_listener.beforeAdd(A_Impl.this, IN_OTHER__PROP, index, element);
@@ -66,7 +66,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		}
 	};
 
-	private final java.util.List<test.references.data.A> _inOthers = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
+	private final java.util.List<test.references.data.A> _inOthers = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
 			_listener.beforeAdd(A_Impl.this, IN_OTHERS__PROP, index, element);

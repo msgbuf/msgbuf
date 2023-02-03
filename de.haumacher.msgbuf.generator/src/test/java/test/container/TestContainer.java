@@ -4,6 +4,7 @@
 package test.container;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 import test.container.model.MyContainer;
@@ -99,6 +100,69 @@ public class TestContainer extends TestCase {
 		assertEquals(container, c1.getContainer());
 		assertEquals(Arrays.asList(c1), container.getContentList());
 		assertEquals(0, otherContainer.getContentList().size());
+	}
+	
+	public void testUpdateMap() {
+		MyContainer container = MyContainer.create().setName("container");
+		MyContainer otherContainer = MyContainer.create().setName("other");
+		
+		MyContent c1 = MyContent.create().setName("content 1");
+		
+		container.putContentMap("c1", c1);
+		assertEquals(container, c1.getContainer());
+		
+		MyContent c2 = MyContent.create().setName("content 2");
+		container.putContentMap("c2", c2);
+		assertEquals(container, c1.getContainer());
+		assertEquals(container, c2.getContainer());
+		
+		container.setContentMap(Collections.singletonMap("c1", c1));
+		assertEquals(container, c1.getContainer());
+		assertNull(c2.getContainer());
+		
+		container.removeContentMap("c1");
+		assertNull(c1.getContainer());
+		
+		container.getContentMap().putAll(Collections.singletonMap("c1", c1));
+		container.getContentMap().putAll(Collections.singletonMap("c2", c2));
+		assertEquals(container, c1.getContainer());
+		assertEquals(container, c2.getContainer());
+		
+		container.getContentMap().clear();
+		assertNull(c1.getContainer());
+		assertNull(c2.getContainer());
+		
+		container.getContentMap().put("c1", c2);
+		assertEquals(container, c2.getContainer());
+
+		container.getContentMap().put("c1", c2);
+		assertEquals(container, c2.getContainer());
+		
+		container.getContentMap().put("c1", c1);
+		assertEquals(container, c1.getContainer());
+		assertNull(c2.getContainer());
+		
+		try {
+			container.getContentMap().put("c2", c1);
+			fail("Must not make object part of two different containers.");
+		} catch (IllegalStateException ex) {
+			assertEquals("Object may not be part of two different containers.", ex.getMessage());
+		}
+		
+		// Check that nothing has changed.
+		assertEquals(container, c1.getContainer());
+		assertEquals(Collections.singletonMap("c1", c1), container.getContentMap());
+		
+		try {
+			otherContainer.putContentMap("c1", c1);
+			fail("Must not make object part of two different containers.");
+		} catch (IllegalStateException ex) {
+			assertEquals("Object may not be part of two different containers.", ex.getMessage());
+		}
+		
+		assertEquals(container, c1.getContainer());
+		assertEquals(Collections.singletonMap("c1", c1), container.getContentMap());
+		assertEquals(0, otherContainer.getContentMap().size());
 	}
 	
 	public void testUpdateIdentical() {

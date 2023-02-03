@@ -5,7 +5,7 @@ package test.nojson.impl;
  */
 public class Group_Impl extends test.nojson.impl.Shape_Impl implements test.nojson.Group {
 
-	private final java.util.List<test.nojson.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.nojson.Shape>() {
+	private final java.util.List<test.nojson.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.nojson.Shape element) {
 			_listener.beforeAdd(Group_Impl.this, SHAPES__PROP, index, element);

@@ -467,7 +467,9 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		for (Field field : getFields()) {
 			nl();
 			
-			if (field.isRepeated()) {
+			boolean isList = field.isRepeated();
+			boolean isMap = field.getType() instanceof MapType;
+			if (isList || isMap) {
 				Field reverseEnd = reverseEnd(field);
 				boolean hasReverseEnd = reverseEnd != null;
 				
@@ -476,14 +478,23 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				
 				if (_listener || hasReverseEnd || container != null) {
 					Type type = field.getType();
-					String qFieldTypeName = mkTypeWrapped(type);
-					line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + fieldMemberName(field) + " = " + "new de.haumacher.msgbuf.util.ReferenceList<" + qFieldTypeName + ">() {");
+					Type contentType = isList ? type : ((MapType) type).getValueType();
+					String contentTypeWrapped = mkTypeWrapped(contentType);
+					String contentTypeImpl = mkTypeWrappedImpl(contentType);
+					String keyType = isList ? 
+						"int" : 
+						mkTypeWrapped(((MapType) type).getKeyType());
+					
+					String collectionType = isList ? 
+							"de.haumacher.msgbuf.util.ReferenceList" + "<>" : 
+							"de.haumacher.msgbuf.util.ReferenceMap" + "<>"; 
+					line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + fieldMemberName(field) + " = " + "new " + collectionType + "() {");
 					{
 						line("@Override");
-						line("protected void beforeAdd(int index, " + qFieldTypeName + " element) {");
+						line("protected void beforeAdd(" + keyType + " " + "index" + ", " + contentTypeWrapped + " element) {");
 						{
 							if (hasContainer || hasReverseEnd) {
-								line(mkTypeWrappedImpl(type) + " added = (" + mkTypeWrappedImpl(type) + ") element;");
+								line(contentTypeImpl + " added = (" + contentTypeImpl + ") element;");
 							}
 
 							if (hasContainer) {
@@ -497,7 +508,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 							}
 
 							if (_listener) {
-								line("_listener.beforeAdd(" + implName(_def) + ".this, " + constant(field) + ", index, element);");
+								line("_listener.beforeAdd(" + implName(_def) + ".this, " + constant(field) + ", " + "index" + ", element);");
 							}
 
 							if (hasContainer) {
@@ -512,10 +523,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						nl();
 						
 						line("@Override");
-						line("protected void afterRemove(int index, " + qFieldTypeName + " element) {");
+						line("protected void afterRemove(" + keyType + " " + "index" + ", " + contentTypeWrapped + " element) {");
 						{
 							if (hasContainer || hasReverseEnd) {
-								line(mkTypeWrappedImpl(type) + " removed = (" + mkTypeWrappedImpl(type) + ") element;");
+								line(contentTypeImpl + " removed = (" + contentTypeImpl + ") element;");
 							}
 
 							if (hasReverseEnd) {

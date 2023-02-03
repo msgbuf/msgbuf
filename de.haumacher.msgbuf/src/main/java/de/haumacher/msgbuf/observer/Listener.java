@@ -48,6 +48,22 @@ public interface Listener {
 		// Ignore.
 	}
 	
+	/**
+	 * Informs this {@link Listener} that an element will be added to the map property with the given name.
+	 * 
+	 * @param obj
+	 *        The {@link Observable} object.
+	 * @param property
+	 *        The name of the property to be modified.
+	 * @param index
+	 *        The index where the new element will be added if the property is ordered, <code>-1</code> otherwise.
+	 * @param element
+	 *        The new element that is being added to the given property.
+	 */
+	default void beforeAdd(Observable obj, String property, Object index, Object element) {
+		// Ignore.
+	}
+	
 	/** 
 	 * Informs this {@link Listener} that an element was removed from a repeated property with the given name.
 	 * 
@@ -64,6 +80,22 @@ public interface Listener {
 		// Ignore.
 	}
 
+	/** 
+	 * Informs this {@link Listener} that an element was removed from a map property with the given name.
+	 * 
+	 * @param obj
+	 *        The {@link Observable} object.
+	 * @param property
+	 *        The name of the property to be modified.
+	 * @param index
+	 *        The index where the element was removed if the property is ordered, <code>-1</code> otherwise.
+	 * @param element
+	 *        The element that was removed from the given property.
+	 */
+	default void afterRemove(Observable obj, String property, Object index, Object element) {
+		// Ignore.
+	}
+	
 	/**
 	 * {@link Listener} that multiplexes events to a list of potentially multiple target {@link Listener}s.
 	 */

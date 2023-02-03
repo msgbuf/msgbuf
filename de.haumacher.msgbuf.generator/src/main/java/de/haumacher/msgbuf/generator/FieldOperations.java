@@ -6,6 +6,7 @@ package de.haumacher.msgbuf.generator;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.StringOption;
@@ -79,6 +80,9 @@ public interface FieldOperations {
 	default Field container() {
 		if (!isDerived()) {
 			Type contentType = self().getType();
+			if (contentType instanceof MapType) {
+				contentType = ((MapType) contentType).getValueType();
+			}
 			if (contentType instanceof CustomType) {
 				Definition contentDef = ((CustomType) contentType).getDefinition();
 				if (contentDef instanceof MessageDef) {

@@ -7,7 +7,7 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 
 		private String _title = "";
 
-		private final java.util.List<String> _snippets = new de.haumacher.msgbuf.util.ReferenceList<String>() {
+		private final java.util.List<String> _snippets = new de.haumacher.msgbuf.util.ReferenceList<>() {
 			@Override
 			protected void beforeAdd(int index, String element) {
 				_listener.beforeAdd(Result_Impl.this, SNIPPETS__PROP, index, element);
@@ -367,7 +367,7 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	}
 
-	private final java.util.List<test.nested.data.SearchResponse.Result> _results = new de.haumacher.msgbuf.util.ReferenceList<test.nested.data.SearchResponse.Result>() {
+	private final java.util.List<test.nested.data.SearchResponse.Result> _results = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.nested.data.SearchResponse.Result element) {
 			_listener.beforeAdd(SearchResponse_Impl.this, RESULTS__PROP, index, element);

@@ -5,7 +5,7 @@ package test.novisit.impl;
  */
 public class Group_Impl extends test.novisit.impl.Shape_Impl implements test.novisit.Group {
 
-	private final java.util.List<test.novisit.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.novisit.Shape>() {
+	private final java.util.List<test.novisit.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.novisit.Shape element) {
 			_listener.beforeAdd(Group_Impl.this, SHAPES__PROP, index, element);

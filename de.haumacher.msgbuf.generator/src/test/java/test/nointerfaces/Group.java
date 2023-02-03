@@ -24,7 +24,7 @@ public class Group extends Shape {
 	/** Identifier for the property {@link #getShapes()} in binary format. */
 	static final int SHAPES__ID = 3;
 
-	private final java.util.List<test.nointerfaces.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.nointerfaces.Shape>() {
+	private final java.util.List<test.nointerfaces.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<>() {
 		@Override
 		protected void beforeAdd(int index, test.nointerfaces.Shape element) {
 			_listener.beforeAdd(Group.this, SHAPES__PROP, index, element);
