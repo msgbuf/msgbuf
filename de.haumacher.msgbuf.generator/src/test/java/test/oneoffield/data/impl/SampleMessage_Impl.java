@@ -1,5 +1,8 @@
 package test.oneoffield.data.impl;
 
+/**
+ * Implementation of {@link test.oneoffield.data.SampleMessage}.
+ */
 public class SampleMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.oneoffield.data.SampleMessage {
 
 	/**

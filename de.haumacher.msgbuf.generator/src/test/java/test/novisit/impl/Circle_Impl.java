@@ -1,7 +1,7 @@
 package test.novisit.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.novisit.Circle}.
  */
 public class Circle_Impl extends test.novisit.impl.AtomicShape_Impl implements test.novisit.Circle {
 

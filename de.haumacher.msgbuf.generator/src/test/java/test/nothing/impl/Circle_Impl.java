@@ -1,7 +1,7 @@
 package test.nothing.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.nothing.Circle}.
  */
 public class Circle_Impl extends test.nothing.impl.AtomicShape_Impl implements test.nothing.Circle {
 

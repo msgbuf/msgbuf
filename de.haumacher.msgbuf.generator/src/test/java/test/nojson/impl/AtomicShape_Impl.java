@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.nojson.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.nojson.impl.Shape_Impl implements test.nojson.AtomicShape {
 

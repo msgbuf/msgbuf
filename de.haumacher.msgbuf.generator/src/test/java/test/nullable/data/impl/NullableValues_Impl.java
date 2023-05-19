@@ -1,5 +1,8 @@
 package test.nullable.data.impl;
 
+/**
+ * Implementation of {@link test.nullable.data.NullableValues}.
+ */
 public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.nullable.data.NullableValues {
 
 	private Integer _int = null;

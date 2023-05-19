@@ -1,7 +1,7 @@
 package test.notypekind.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.notypekind.Group}.
  */
 public class Group_Impl extends test.notypekind.impl.Shape_Impl implements test.notypekind.Group {
 

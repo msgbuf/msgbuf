@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.hierarchy.data.Circle}.
  */
 public class Circle_Impl extends test.hierarchy.data.impl.AtomicShape_Impl implements test.hierarchy.data.Circle {
 

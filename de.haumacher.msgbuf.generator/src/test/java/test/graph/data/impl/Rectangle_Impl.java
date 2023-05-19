@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.graph.data.Rectangle}.
  */
 public class Rectangle_Impl extends test.graph.data.impl.AtomicShape_Impl implements test.graph.data.Rectangle {
 

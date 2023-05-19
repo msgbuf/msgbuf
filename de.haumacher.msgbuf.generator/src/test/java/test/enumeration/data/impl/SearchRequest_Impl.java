@@ -1,5 +1,8 @@
 package test.enumeration.data.impl;
 
+/**
+ * Implementation of {@link test.enumeration.data.SearchRequest}.
+ */
 public class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.enumeration.data.SearchRequest {
 
 	private String _query = "";

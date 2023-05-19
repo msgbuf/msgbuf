@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A shape that can be dynamically hidden.
+ * Implementation of {@link test.hierarchy.data.Optional}.
  */
 public class Optional_Impl extends test.hierarchy.data.impl.Shape_Impl implements test.hierarchy.data.Optional {
 

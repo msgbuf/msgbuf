@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ * Implementation of {@link test.onlyxml.data.Car}.
  */
 public class Car_Impl extends test.onlyxml.data.impl.Shape_Impl implements test.onlyxml.data.Car {
 

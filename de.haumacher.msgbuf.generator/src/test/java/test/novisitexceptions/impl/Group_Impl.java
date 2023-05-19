@@ -1,7 +1,7 @@
 package test.novisitexceptions.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.novisitexceptions.Group}.
  */
 public class Group_Impl extends test.novisitexceptions.impl.Shape_Impl implements test.novisitexceptions.Group {
 

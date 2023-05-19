@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.onlyxml.data.Group}.
  */
 public class Group_Impl extends test.onlyxml.data.impl.Shape_Impl implements test.onlyxml.data.Group {
 

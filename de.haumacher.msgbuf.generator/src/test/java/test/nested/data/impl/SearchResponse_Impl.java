@@ -1,6 +1,12 @@
 package test.nested.data.impl;
 
+/**
+ * Implementation of {@link test.nested.data.SearchResponse}.
+ */
 public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.nested.data.SearchResponse {
+	/**
+	 * Implementation of {@link test.nested.data.SearchResponse.Result}.
+	 */
 	public static class Result_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.nested.data.SearchResponse.Result {
 
 		private String _url = "";

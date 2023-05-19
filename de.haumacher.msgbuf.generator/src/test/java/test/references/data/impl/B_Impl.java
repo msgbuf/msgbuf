@@ -1,5 +1,8 @@
 package test.references.data.impl;
 
+/**
+ * Implementation of {@link test.references.data.B}.
+ */
 public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.references.data.B {
 
 	private String _name = "";

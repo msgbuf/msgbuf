@@ -1,7 +1,7 @@
 package test.nothing.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.nothing.Group}.
  */
 public class Group_Impl extends test.nothing.impl.Shape_Impl implements test.nothing.Group {
 

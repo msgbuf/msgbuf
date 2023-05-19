@@ -1,7 +1,7 @@
 package test.notypekind.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.notypekind.Circle}.
  */
 public class Circle_Impl extends test.notypekind.impl.AtomicShape_Impl implements test.notypekind.Circle {
 

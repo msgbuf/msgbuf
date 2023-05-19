@@ -1,7 +1,7 @@
 package test.novisitexceptions.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.novisitexceptions.Circle}.
  */
 public class Circle_Impl extends test.novisitexceptions.impl.AtomicShape_Impl implements test.novisitexceptions.Circle {
 

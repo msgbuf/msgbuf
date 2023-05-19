@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ * Implementation of {@link test.nojson.Car}.
  */
 public class Car_Impl extends test.nojson.impl.Shape_Impl implements test.nojson.Car {
 

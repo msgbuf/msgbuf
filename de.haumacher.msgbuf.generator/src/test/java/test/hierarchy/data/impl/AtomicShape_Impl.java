@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.hierarchy.data.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.hierarchy.data.impl.Shape_Impl implements test.hierarchy.data.AtomicShape {
 

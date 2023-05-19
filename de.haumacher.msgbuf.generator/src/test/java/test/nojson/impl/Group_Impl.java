@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.nojson.Group}.
  */
 public class Group_Impl extends test.nojson.impl.Shape_Impl implements test.nojson.Group {
 

@@ -1,8 +1,7 @@
 package test.comments.data.impl;
 
 /**
- * SearchRequest represents a search query, with {@link #getPageNumber() pagination options} to
- * indicate which results to include in the response.
+ * Implementation of {@link test.comments.data.SearchRequest}.
  */
 public class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.comments.data.SearchRequest {
 

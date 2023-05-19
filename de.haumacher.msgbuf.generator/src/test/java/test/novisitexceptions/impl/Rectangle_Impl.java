@@ -1,7 +1,7 @@
 package test.novisitexceptions.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.novisitexceptions.Rectangle}.
  */
 public class Rectangle_Impl extends test.novisitexceptions.impl.AtomicShape_Impl implements test.novisitexceptions.Rectangle {
 

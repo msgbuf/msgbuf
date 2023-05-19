@@ -1,6 +1,12 @@
 package test.innertypeclash.impl;
 
+/**
+ * Implementation of {@link test.innertypeclash.A}.
+ */
 public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.innertypeclash.A {
+	/**
+	 * Implementation of {@link test.innertypeclash.A.C}.
+	 */
 	public static class C_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.innertypeclash.A.C {
 
 		/**

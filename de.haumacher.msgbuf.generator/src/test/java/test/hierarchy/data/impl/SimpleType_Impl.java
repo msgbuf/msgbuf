@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.hierarchy.data.SimpleType}.
  */
 public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.hierarchy.data.SimpleType {
 

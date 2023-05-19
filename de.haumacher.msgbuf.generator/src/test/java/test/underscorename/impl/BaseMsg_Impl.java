@@ -1,5 +1,8 @@
 package test.underscorename.impl;
 
+/**
+ * Implementation of {@link test.underscorename.BaseMsg}.
+ */
 public abstract class BaseMsg_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.underscorename.BaseMsg {
 
 	/**

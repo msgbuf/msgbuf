@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ * Implementation of {@link test.nolistener.Car}.
  */
 public class Car_Impl extends test.nolistener.impl.Shape_Impl implements test.nolistener.Car {
 

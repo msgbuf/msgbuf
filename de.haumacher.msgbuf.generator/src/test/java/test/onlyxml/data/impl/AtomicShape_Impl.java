@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.onlyxml.data.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.onlyxml.data.impl.Shape_Impl implements test.onlyxml.data.AtomicShape {
 

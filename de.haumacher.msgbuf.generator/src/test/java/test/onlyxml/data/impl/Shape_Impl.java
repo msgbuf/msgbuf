@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.onlyxml.data.Shape}.
  */
 public abstract class Shape_Impl implements test.onlyxml.data.Shape {
 

@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.graph.data.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.graph.data.impl.Shape_Impl implements test.graph.data.AtomicShape {
 

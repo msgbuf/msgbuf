@@ -1,7 +1,7 @@
 package test.novisit.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.novisit.Group}.
  */
 public class Group_Impl extends test.novisit.impl.Shape_Impl implements test.novisit.Group {
 

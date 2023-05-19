@@ -1,5 +1,8 @@
 package test.types.data.impl;
 
+/**
+ * Implementation of {@link test.types.data.SearchRequest}.
+ */
 public class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.types.data.SearchRequest {
 
 	private String _query = "";

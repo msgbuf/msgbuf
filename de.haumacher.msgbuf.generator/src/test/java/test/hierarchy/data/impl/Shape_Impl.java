@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.hierarchy.data.Shape}.
  */
 public abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.hierarchy.data.Shape {
 

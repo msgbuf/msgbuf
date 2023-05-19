@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.graph.data.Shape}.
  */
 public abstract class Shape_Impl extends de.haumacher.msgbuf.graph.AbstractSharedGraphNode implements test.graph.data.Shape {
 

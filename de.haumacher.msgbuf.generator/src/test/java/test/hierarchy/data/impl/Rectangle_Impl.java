@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.hierarchy.data.Rectangle}.
  */
 public class Rectangle_Impl extends test.hierarchy.data.impl.AtomicShape_Impl implements test.hierarchy.data.Rectangle {
 

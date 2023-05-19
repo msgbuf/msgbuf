@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.onlyxml.data.Rectangle}.
  */
 public class Rectangle_Impl extends test.onlyxml.data.impl.AtomicShape_Impl implements test.onlyxml.data.Rectangle {
 

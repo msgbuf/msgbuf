@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A shape that can be dynamically hidden.
+ * Implementation of {@link test.onlyxml.data.Optional}.
  */
 public class Optional_Impl extends test.onlyxml.data.impl.Shape_Impl implements test.onlyxml.data.Optional {
 

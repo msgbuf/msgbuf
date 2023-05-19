@@ -1,7 +1,7 @@
 package test.notypekind.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.notypekind.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.notypekind.impl.Shape_Impl implements test.notypekind.AtomicShape {
 

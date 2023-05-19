@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.nojson.Shape}.
  */
 public abstract class Shape_Impl implements test.nojson.Shape {
 

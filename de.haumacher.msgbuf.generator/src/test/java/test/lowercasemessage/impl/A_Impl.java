@@ -1,6 +1,12 @@
 package test.lowercasemessage.impl;
 
+/**
+ * Implementation of {@link test.lowercasemessage.A}.
+ */
 public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.lowercasemessage.A {
+	/**
+	 * Implementation of {@link test.lowercasemessage.A.B}.
+	 */
 	public static class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.lowercasemessage.A.B {
 
 		private test.lowercasemessage.A _a1 = null;

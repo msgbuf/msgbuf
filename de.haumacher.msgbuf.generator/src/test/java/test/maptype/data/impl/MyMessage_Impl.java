@@ -1,5 +1,8 @@
 package test.maptype.data.impl;
 
+/**
+ * Implementation of {@link test.maptype.data.MyMessage}.
+ */
 public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.maptype.data.MyMessage {
 
 	private final java.util.Map<String, test.maptype.data.Project> _projects = new de.haumacher.msgbuf.util.ReferenceMap<>() {

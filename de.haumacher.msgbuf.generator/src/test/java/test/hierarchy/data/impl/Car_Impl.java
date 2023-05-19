@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ * Implementation of {@link test.hierarchy.data.Car}.
  */
 public class Car_Impl extends test.hierarchy.data.impl.Shape_Impl implements test.hierarchy.data.Car {
 

@@ -1,5 +1,8 @@
 package test.underscorename.impl;
 
+/**
+ * Implementation of {@link test.underscorename.SomeName}.
+ */
 public class SomeName_Impl extends test.underscorename.impl.BaseMsg_Impl implements test.underscorename.SomeName {
 
 	private String _myField = "";

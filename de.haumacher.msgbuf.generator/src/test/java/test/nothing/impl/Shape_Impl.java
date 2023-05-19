@@ -1,7 +1,7 @@
 package test.nothing.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.nothing.Shape}.
  */
 public abstract class Shape_Impl implements test.nothing.Shape {
 

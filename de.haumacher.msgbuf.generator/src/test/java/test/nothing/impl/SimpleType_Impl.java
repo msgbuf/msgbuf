@@ -1,7 +1,7 @@
 package test.nothing.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.nothing.SimpleType}.
  */
 public class SimpleType_Impl implements test.nothing.SimpleType {
 

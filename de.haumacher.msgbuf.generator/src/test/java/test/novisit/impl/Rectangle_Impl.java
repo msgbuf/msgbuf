@@ -1,7 +1,7 @@
 package test.novisit.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.novisit.Rectangle}.
  */
 public class Rectangle_Impl extends test.novisit.impl.AtomicShape_Impl implements test.novisit.Rectangle {
 

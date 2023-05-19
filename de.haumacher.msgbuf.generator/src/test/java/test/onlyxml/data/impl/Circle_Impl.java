@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.onlyxml.data.Circle}.
  */
 public class Circle_Impl extends test.onlyxml.data.impl.AtomicShape_Impl implements test.onlyxml.data.Circle {
 

@@ -1,7 +1,7 @@
 package test.nothing.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.nothing.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.nothing.impl.Shape_Impl implements test.nothing.AtomicShape {
 

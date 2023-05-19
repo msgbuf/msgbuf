@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ * Implementation of {@link test.graph.data.Car}.
  */
 public class Car_Impl extends test.graph.data.impl.Shape_Impl implements test.graph.data.Car {
 

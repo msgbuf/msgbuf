@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.nolistener.SimpleType}.
  */
 public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.nolistener.SimpleType {
 

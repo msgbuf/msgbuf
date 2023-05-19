@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.nolistener.Shape}.
  */
 public abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.nolistener.Shape {
 

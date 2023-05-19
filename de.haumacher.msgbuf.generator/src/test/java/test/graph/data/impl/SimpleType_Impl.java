@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.graph.data.SimpleType}.
  */
 public class SimpleType_Impl extends de.haumacher.msgbuf.graph.AbstractSharedGraphNode implements test.graph.data.SimpleType {
 

@@ -1,7 +1,7 @@
 package test.novisitexceptions.impl;
 
 /**
- * An abstract base class for all shapes
+ * Implementation of {@link test.novisitexceptions.Shape}.
  */
 public abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.novisitexceptions.Shape {
 

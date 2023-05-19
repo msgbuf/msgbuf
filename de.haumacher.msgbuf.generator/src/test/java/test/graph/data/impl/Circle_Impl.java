@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.graph.data.Circle}.
  */
 public class Circle_Impl extends test.graph.data.impl.AtomicShape_Impl implements test.graph.data.Circle {
 

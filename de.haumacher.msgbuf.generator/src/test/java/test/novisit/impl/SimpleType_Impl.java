@@ -1,7 +1,7 @@
 package test.novisit.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.novisit.SimpleType}.
  */
 public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.novisit.SimpleType {
 

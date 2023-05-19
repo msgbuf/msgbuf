@@ -1,5 +1,8 @@
 package test.underscorename.impl;
 
+/**
+ * Implementation of {@link test.underscorename.AnnotatedMessage}.
+ */
 public class AnnotatedMessage_Impl extends test.underscorename.impl.BaseMsg_Impl implements test.underscorename.AnnotatedMessage {
 
 	private String _annotatedField = "";

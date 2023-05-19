@@ -1,5 +1,8 @@
 package test.options.data.impl;
 
+/**
+ * Implementation of {@link test.options.data.MyMessage2}.
+ */
 public class MyMessage2_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.options.data.MyMessage2 {
 
 	/**

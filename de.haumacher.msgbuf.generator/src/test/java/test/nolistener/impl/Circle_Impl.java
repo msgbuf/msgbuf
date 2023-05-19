@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.nolistener.Circle}.
  */
 public class Circle_Impl extends test.nolistener.impl.AtomicShape_Impl implements test.nolistener.Circle {
 

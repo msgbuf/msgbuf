@@ -1,7 +1,7 @@
 package test.novisit.impl;
 
 /**
- * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
+ * Implementation of {@link test.novisit.Car}.
  */
 public class Car_Impl extends test.novisit.impl.Shape_Impl implements test.novisit.Car {
 

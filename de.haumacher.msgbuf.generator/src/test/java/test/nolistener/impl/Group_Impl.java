@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.nolistener.Group}.
  */
 public class Group_Impl extends test.nolistener.impl.Shape_Impl implements test.nolistener.Group {
 

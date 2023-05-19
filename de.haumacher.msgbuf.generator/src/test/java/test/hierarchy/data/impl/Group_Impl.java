@@ -1,7 +1,7 @@
 package test.hierarchy.data.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.hierarchy.data.Group}.
  */
 public class Group_Impl extends test.hierarchy.data.impl.Shape_Impl implements test.hierarchy.data.Group {
 

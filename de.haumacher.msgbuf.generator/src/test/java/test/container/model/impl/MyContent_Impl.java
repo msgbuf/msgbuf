@@ -1,5 +1,8 @@
 package test.container.model.impl;
 
+/**
+ * Implementation of {@link test.container.model.MyContent}.
+ */
 public class MyContent_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.container.model.MyContent {
 
 	private test.container.model.MyContainer _container = null;

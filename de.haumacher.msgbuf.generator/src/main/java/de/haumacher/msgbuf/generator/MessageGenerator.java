@@ -130,7 +130,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		} else {
 			modifier = _interface ? "" : "static";
 		}
-		docComment(_def.getComment());
+		if (_interface || _noInterfaces) {
+			docComment(_def.getComment());
+		} else {
+			docComment("Implementation of {@link " + qTypeName(_def) + "}.");
+		}
 		line("public", modifier, mkAbstract(), (_interface ? "interface" : "class"), (_interface || _noInterfaces ? typeName(_def) : implName(_def)), getExtends(), getImplements(), "{");
 		generateClassContents();
 		nl();

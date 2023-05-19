@@ -1,7 +1,7 @@
 package test.notypekind.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.notypekind.Rectangle}.
  */
 public class Rectangle_Impl extends test.notypekind.impl.AtomicShape_Impl implements test.notypekind.Rectangle {
 

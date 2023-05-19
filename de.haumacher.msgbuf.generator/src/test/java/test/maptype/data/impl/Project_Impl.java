@@ -1,5 +1,8 @@
 package test.maptype.data.impl;
 
+/**
+ * Implementation of {@link test.maptype.data.Project}.
+ */
 public class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.maptype.data.Project {
 
 	private String _name = "";

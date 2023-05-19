@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.nojson.Rectangle}.
  */
 public class Rectangle_Impl extends test.nojson.impl.AtomicShape_Impl implements test.nojson.Rectangle {
 

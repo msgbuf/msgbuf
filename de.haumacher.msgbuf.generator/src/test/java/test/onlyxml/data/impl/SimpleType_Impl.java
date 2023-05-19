@@ -1,7 +1,7 @@
 package test.onlyxml.data.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.onlyxml.data.SimpleType}.
  */
 public class SimpleType_Impl implements test.onlyxml.data.SimpleType {
 

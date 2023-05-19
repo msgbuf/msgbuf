@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * A {@link Shape} that has no sub-shapes.
+ * Implementation of {@link test.nolistener.AtomicShape}.
  */
 public abstract class AtomicShape_Impl extends test.nolistener.impl.Shape_Impl implements test.nolistener.AtomicShape {
 

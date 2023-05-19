@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * A circle {@link Shape}.
+ * Implementation of {@link test.nojson.Circle}.
  */
 public class Circle_Impl extends test.nojson.impl.AtomicShape_Impl implements test.nojson.Circle {
 

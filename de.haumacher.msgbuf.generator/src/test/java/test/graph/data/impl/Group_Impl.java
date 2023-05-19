@@ -1,7 +1,7 @@
 package test.graph.data.impl;
 
 /**
- * A group of shapes.
+ * Implementation of {@link test.graph.data.Group}.
  */
 public class Group_Impl extends test.graph.data.impl.Shape_Impl implements test.graph.data.Group {
 

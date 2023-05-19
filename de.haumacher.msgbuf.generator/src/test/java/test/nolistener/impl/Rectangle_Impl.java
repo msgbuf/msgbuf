@@ -1,7 +1,7 @@
 package test.nolistener.impl;
 
 /**
- * A rectangle.
+ * Implementation of {@link test.nolistener.Rectangle}.
  */
 public class Rectangle_Impl extends test.nolistener.impl.AtomicShape_Impl implements test.nolistener.Rectangle {
 

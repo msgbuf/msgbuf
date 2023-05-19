@@ -1,7 +1,7 @@
 package test.nojson.impl;
 
 /**
- * A concrete type without abstract super type.
+ * Implementation of {@link test.nojson.SimpleType}.
  */
 public class SimpleType_Impl implements test.nojson.SimpleType {
 
