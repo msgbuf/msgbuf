@@ -569,7 +569,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				}
 			} else {
 				if (_def.isAbstract()) {
-					if (isBaseClass()) {
+					if (_noInterfaces && isBaseClass()) {
 						nl();
 						kindLookupComment();
 						line("public abstract " + TYPE_KIND_NAME + " kind();");

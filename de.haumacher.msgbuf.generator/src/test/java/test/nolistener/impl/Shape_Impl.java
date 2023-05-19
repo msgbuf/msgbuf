@@ -16,9 +16,6 @@ public abstract class Shape_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 		super();
 	}
 
-	/** The type code of this instance. */
-	public abstract TypeKind kind();
-
 	@Override
 	public final int getXCoordinate() {
 		return _xCoordinate;

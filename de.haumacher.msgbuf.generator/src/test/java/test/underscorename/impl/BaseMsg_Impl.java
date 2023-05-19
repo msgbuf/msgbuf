@@ -12,9 +12,6 @@ public abstract class BaseMsg_Impl extends de.haumacher.msgbuf.data.AbstractData
 		super();
 	}
 
-	/** The type code of this instance. */
-	public abstract TypeKind kind();
-
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
