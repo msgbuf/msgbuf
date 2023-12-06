@@ -36,6 +36,12 @@ public interface FieldOperations {
 		return self().getOptions().get("Container") != null;
 	}
 
+	/** 
+	 * Whether this is a cross reference (not a composition which is the default).
+	 */
+	default boolean isRef() {
+		return self().getOptions().get("Ref") != null;
+	} 
 
 	/** 
 	 * Whether this is a reverse reference.
@@ -78,7 +84,7 @@ public interface FieldOperations {
 	 * <code>null</code> if no such field exists.
 	 */
 	default Field container() {
-		if (!isDerived()) {
+		if (!isDerived() && !isRef()) {
 			Type contentType = self().getType();
 			if (contentType instanceof MapType) {
 				contentType = ((MapType) contentType).getValueType();
