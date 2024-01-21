@@ -8,6 +8,7 @@ import static de.haumacher.msgbuf.generator.CodeConvention.*;
 import java.util.function.Function;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
+import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
@@ -75,7 +76,11 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 	
 	@Override
 	public String visit(CustomType type, Boolean wrapped) {
-		return qName(_packageSuffix, type.getDefinition(), _typeNameConvention);
+		Definition definition = type.getDefinition();
+		if (definition == null) {
+			return qName(type.getName());
+		}
+		return qName(_packageSuffix, definition, _typeNameConvention);
 	}
 	
 	@Override
