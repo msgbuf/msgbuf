@@ -67,7 +67,7 @@ public class GenerateMessageClasses extends AbstractMojo {
 			String[] args = argList.toArray(new String[0]);
 			Generator.main(args);
 		} catch (Throwable ex) {
-			throw new MojoExecutionException("Failed to invoke the generatore: " + ex.getMessage(), ex);
+			throw new MojoExecutionException("Failed to invoke the generator: " + ex.getMessage(), ex);
 		}
 	}
 
