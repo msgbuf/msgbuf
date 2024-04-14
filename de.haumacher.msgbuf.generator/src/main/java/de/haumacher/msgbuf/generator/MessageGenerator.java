@@ -50,7 +50,6 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private boolean _visitEx;
 	private boolean _typeKind;
 
-	private Map<String, Option> _options;
 	private boolean _listener;
 	private boolean _interface;
 
@@ -61,7 +60,6 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	public MessageGenerator(NameTable table, Map<String, Option> options, boolean isInterface, String packageSuffix, MessageDef def, GeneratorPlugin plugin) {
 		super(options, packageSuffix);
 		_table = table;
-		_options = options;
 		_interface = isInterface;
 		_def = def;
 		_plugin = plugin;
@@ -205,7 +203,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private void addMixins(List<String> generalizations) {
-		_plugin.addInterfaces(_options, _def, generalizations);
+		_plugin.addInterfaces(getOptions(), _def, generalizations);
 
 		Option operations = _def.getOptions().get("Operations");
 		if (operations != null) {
@@ -390,7 +388,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	@Override
 	public Void visit(MessageDef def, Void arg) {
-		include(new MessageGenerator(_table, _options, _interface, _packageSuffix, def, _plugin));
+		include(new MessageGenerator(_table, getOptions(), _interface, _packageSuffix, def, _plugin));
 		return null;
 	}
 
