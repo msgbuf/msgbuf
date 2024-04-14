@@ -302,6 +302,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		}
 
 		if (_interface || _noInterfaces) {
+			if (_def.getOptions().get("Operations") != null) {
+				generateSelfAccess();
+			}
+			
 			include(_plugin.messageInterfaceContents(getOptions(), _def));
 		}
 		
@@ -1953,6 +1957,16 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
+	private void generateSelfAccess() {
+		nl();
+		line("@Override");
+		line((_noInterfaces ? "public" : "default") + " " + typeName(_def) + " self() {");
+		{
+			line("return this;");
+		}
+		line("}");
+	}
+	
 	private void generateVisitMethods() {
 		if (_def.isAbstract()) {
 			if (_interface || _noInterfaces) {
