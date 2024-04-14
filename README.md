@@ -88,6 +88,129 @@ message Group extends Shape {
 
 Passing these definitions to the `msgbuf` compiler gives you a class hierarchy with classes `Shape`, `Circle`, `Rectangle`, and `Group`. You can inspect the generation result in the test package [test.hierarchy](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data) of the compiler. The source of the example data class definitions can be seen in the [hierarchy.proto](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data/hierarchy.proto) file.
 
+## Global protocol options
+
+### `@NoJson`
+Disables generation of read and write methods for the JSON format.
+
+### `@NoBinary`
+Disables generation of read and write methods for binary format.
+
+### `@NoXml`
+Disables generation of read and write methods for XML format.
+
+### `@NoXmlNames`
+Disables generation of constants for the XML format.
+
+### `@NoInterfaces`
+Disables generation interfaces for data classes. Normally, data classes are represented by a Java interface. This 
+enables multiple inheritance for data classes. To reduce the amout of generated code, this can be disabled for simple 
+cases, where no multiple inheritance is required. 
+
+### `@NoListener`
+Disables generation of listener interfaces and corresponding registration methods. Add this options, if observing 
+data classes for changes is not required.
+
+### `@NoReflection`
+Disables generation of reflective access methods that allow access to properties through their property names.
+
+### `@NoVisitor`
+Disables generation of visitor interfaces and visit methods. 
+
+### `@NoVisitorExceptions`
+Produces visitor interfaces that cannot throw declared exceptions.
+
+### `@NoTypeKind`
+Suppresses the type kind enumeration for a data class hierarchy.
+
+### `@SharedGraph`
+Allows to handle multiple synchronized instances of a data class graph. Each graph can be observed for changes. Changes
+generate synchronization messages to keep other instances of the same shared graph up to date. With this option, 
+a shared graph can be instantiated on a server, transfered to a client while keeping the state in sync when changes 
+occur on each side.
+
+## Message options
+
+### Mix-in interfaces (`@Operations(...)`)
+
+The data classes can extends mix-in interfaces with operations.
+
+```
+/** The data class */
+@Operations("test.operations.DataOperations")
+message Data {
+  int x;
+}
+
+/** The mix-in interface with operations on data. */
+public interface DataOperations {
+	/** Access to the data. */
+	Data self();
+	
+	/** Operation added to data class. */
+	default void inc() {
+		self().setX(self().getX() + 1);
+	}
+}
+
+/** Testing the mix-in operation. */
+public void testOperations() {
+	Data data = Data.create();
+	data.inc();
+	data.inc();
+	assertEquals(2, data.getX());
+}
+```
+
+## Property options
+
+### `@Nullable`
+A property of a primitive type that does not allow `null` values (e.g. `int` and `string`) can be explicitly marked to 
+allow `null` values.
+
+### `@Name("myProp")`
+Sets a custom property name. This name is used in JSON serialization.
+
+### `@XmlName("myProp")`
+Sets a custom tag name for XML serialization.
+
+### `@Reverse("otherProp")`
+Marks a reference to be the reverse end of the reference with the given name in the target type.
+
+### `@Container`
+Marks a reference point to the container of the current object.
+
+### `@type_id(4711)`
+Sets a custom ID for binary serialization.
+
+
+### XML reference embedding (`@Embedded`)
+When serializing data classes to XML, all data fields and references are normally represented by XML tags with the same 
+name as the field or reference. By adding the `@Embedded` annotation to a reference, the tag for the reference can be 
+omitted. The contents of the reference is placed directly within the tag for the containing element. Care must be taken 
+that the tag names for referenced elements do not clash with tag names of other attributes and references of the 
+container.
+
+In the following example, a container with contents A and B can be written `<container><a/><b/></container>` instead of 
+wrapping the contents into an extra element as in `<container><contents><a/><b/></contents></container>`. 
+ 
+```
+message Container {
+	@Embedded
+	repeated Base contents;
+}
+
+abstract message Base {}
+message A extends Base {}
+message B extends Base {}
+```
+
+However, even with the `@Embedded` annotation, the verbose serialization with the wrapping reference element is also 
+understood.
+
+## Plugin options
+`@DartLib("../lib/protocol.dart")`
+
 ## Installation in Eclipse
 
 There is an Eclipse plugin providing a project builder that automatically generates corresponding Java files whenever you create or modify a `*.proto` definition file. To install and enable the plugin with the following steps:
