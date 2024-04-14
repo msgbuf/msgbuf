@@ -16,7 +16,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 
 ### Add the MsgBuf runtime libary dependency to your project
 
-```
+```xml
 <dependency>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-api</artifactId>
@@ -28,7 +28,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 
 To the `build/plugins` section add:
 
-```
+```xml
 <plugin>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-generator-maven-plugin</artifactId>
