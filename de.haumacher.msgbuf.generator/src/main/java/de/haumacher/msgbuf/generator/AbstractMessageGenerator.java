@@ -72,11 +72,11 @@ public abstract class AbstractMessageGenerator extends AbstractJavaGenerator {
 	}
 
 	private static void addConcreteSpecializations(ArrayList<MessageDef> result, MessageDef def) {
+		if (!def.isAbstract()) {
+			result.add(def);
+		}
+
 		for (MessageDef specialization : def.getSpecializations()) {
-			if (!specialization.isAbstract()) {
-				result.add(specialization);
-			}
-			
 			addConcreteSpecializations(result, specialization);
 		}
 	}
