@@ -30,18 +30,18 @@ To the `build/plugins` section add:
 
 ```
 <plugin>
-	<groupId>de.haumacher.msgbuf</groupId>
-	<artifactId>msgbuf-generator-maven-plugin</artifactId>
-	<version>1.1.5</version>
-	
-	<executions>
-		<execution>
-			<id>generate-protocols</id>
-			<goals>
-				<goal>generate</goal>
-			</goals>
-		</execution>
-	</executions>
+    <groupId>de.haumacher.msgbuf</groupId>
+    <artifactId>msgbuf-generator-maven-plugin</artifactId>
+    <version>1.1.5</version>
+    
+    <executions>
+        <execution>
+            <id>generate-protocols</id>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
 </plugin>
 ```
 
@@ -144,21 +144,21 @@ message Data {
 
 /** The mix-in interface with operations on data. */
 public interface DataOperations {
-	/** Access to the data. */
-	Data self();
-	
-	/** Operation added to data class. */
-	default void inc() {
-		self().setX(self().getX() + 1);
-	}
+    /** Access to the data. */
+    Data self();
+    
+    /** Operation added to data class. */
+    default void inc() {
+        self().setX(self().getX() + 1);
+    }
 }
 
 /** Testing the mix-in operation. */
 public void testOperations() {
-	Data data = Data.create();
-	data.inc();
-	data.inc();
-	assertEquals(2, data.getX());
+    Data data = Data.create();
+    data.inc();
+    data.inc();
+    assertEquals(2, data.getX());
 }
 ```
 
@@ -196,8 +196,8 @@ wrapping the contents into an extra element as in `<container><contents><a/><b/>
  
 ```
 message Container {
-	@Embedded
-	repeated Base contents;
+    @Embedded
+    repeated Base contents;
 }
 
 abstract message Base {}
