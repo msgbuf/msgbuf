@@ -135,13 +135,14 @@ occur on each side.
 
 The data classes can extends mix-in interfaces with operations.
 
-```
+```protobuf
 /** The data class */
 @Operations("test.operations.DataOperations")
 message Data {
   int x;
 }
-
+```
+```java
 /** The mix-in interface with operations on data. */
 public interface DataOperations {
     /** Access to the data. */
@@ -194,7 +195,7 @@ container.
 In the following example, a container with contents A and B can be written `<container><a/><b/></container>` instead of 
 wrapping the contents into an extra element as in `<container><contents><a/><b/></contents></container>`. 
  
-```
+```protobuf
 message Container {
     @Embedded
     repeated Base contents;
