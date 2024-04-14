@@ -1,0 +1,20 @@
+package test.operations.data;
+
+option NoBinary;
+option NoXml;
+option NoReflection;
+option NoVisitorExceptions;
+option NoListener;
+
+/** Data class for testing operation mix-ins. */
+@Operations("test.operations.DataOperations")
+message Data {
+	/** Some integer data field. */
+	int x;
+}
+
+@Operations("test.operations.ExtendedOperations")
+message ExtendedData extends Data {
+	/** Some other integer data field. */
+	int y;
+}
