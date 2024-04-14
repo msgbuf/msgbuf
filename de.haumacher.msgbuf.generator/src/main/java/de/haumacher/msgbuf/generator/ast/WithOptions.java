@@ -5,45 +5,55 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
-	/** Type codes for the {@link WithOptions} hierarchy. */
+	/** Type codes for the {@link de.haumacher.msgbuf.generator.ast.WithOptions} hierarchy. */
 	public enum TypeKind {
 
-		/** Type literal for {@link OptionContainer}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.OptionContainer}. */
 		OPTION_CONTAINER,
 
-		/** Type literal for {@link Constant}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.Constant}. */
 		CONSTANT,
 
-		/** Type literal for {@link Field}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.Field}. */
 		FIELD,
 
-		/** Type literal for {@link EnumDef}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.EnumDef}. */
 		ENUM_DEF,
 
-		/** Type literal for {@link MessageDef}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.MessageDef}. */
 		MESSAGE_DEF,
 
-		/** Type literal for {@link DefinitionFile}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.DefinitionFile}. */
 		DEFINITION_FILE,
 		;
 
 	}
 
-	/** Visitor interface for the {@link WithOptions} hierarchy.*/
-	public interface Visitor<R,A> extends DefinitionBase.Visitor<R,A> {
+	/** Visitor interface for the {@link de.haumacher.msgbuf.generator.ast.WithOptions} hierarchy.*/
+	public interface Visitor<R,A> extends de.haumacher.msgbuf.generator.ast.DefinitionBase.Visitor<R,A> {
 
-		/** Visit case for {@link OptionContainer}.*/
-		R visit(OptionContainer self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.OptionContainer}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.OptionContainer self, A arg);
 
-		/** Visit case for {@link DefinitionFile}.*/
-		R visit(DefinitionFile self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.DefinitionFile}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.DefinitionFile self, A arg);
 
 	}
 
 	/** @see #getOptions() */
-	public static final String OPTIONS = "options";
+	public static final String OPTIONS__PROP = "options";
 
-	private final java.util.Map<String, Option> _options = new java.util.HashMap<>();
+	private final java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> _options = new de.haumacher.msgbuf.util.ReferenceMap<>() {
+		@Override
+		protected void beforeAdd(String index, de.haumacher.msgbuf.generator.ast.Option element) {
+			_listener.beforeAdd(WithOptions.this, OPTIONS__PROP, index, element);
+		}
+
+		@Override
+		protected void afterRemove(String index, de.haumacher.msgbuf.generator.ast.Option element) {
+			_listener.afterRemove(WithOptions.this, OPTIONS__PROP, index, element);
+		}
+	};
 
 	/**
 	 * Creates a {@link WithOptions} instance.
@@ -58,20 +68,20 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	/**
 	 * Annotations to this definition.
 	 */
-	public final java.util.Map<String, Option> getOptions() {
+	public final java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> getOptions() {
 		return _options;
 	}
 
 	/**
 	 * @see #getOptions()
 	 */
-	public WithOptions setOptions(java.util.Map<String, Option> value) {
+	public de.haumacher.msgbuf.generator.ast.WithOptions setOptions(java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> value) {
 		internalSetOptions(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getOptions()} without chain call utility. */
-	protected final void internalSetOptions(java.util.Map<String, Option> value) {
+	protected final void internalSetOptions(java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> value) {
 		if (value == null) throw new IllegalArgumentException("Property 'options' cannot be null.");
 		_options.clear();
 		_options.putAll(value);
@@ -80,13 +90,13 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	/**
 	 * Adds a key value pair to the {@link #getOptions()} map.
 	 */
-	public WithOptions putOption(String key, Option value) {
+	public de.haumacher.msgbuf.generator.ast.WithOptions putOption(String key, de.haumacher.msgbuf.generator.ast.Option value) {
 		internalPutOption(key, value);
 		return this;
 	}
 
-	/** Implementation of {@link #putOption(String, Option)} without chain call utility. */
-	protected final void  internalPutOption(String key, Option value) {
+	/** Implementation of {@link #putOption(String, de.haumacher.msgbuf.generator.ast.Option)} without chain call utility. */
+	protected final void  internalPutOption(String key, de.haumacher.msgbuf.generator.ast.Option value) {
 		if (_options.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'options' already contains a value for key '" + key + "'.");
 		}
@@ -103,7 +113,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public WithOptions registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public de.haumacher.msgbuf.generator.ast.WithOptions registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -113,7 +123,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	}
 
 	@Override
-	public WithOptions unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public de.haumacher.msgbuf.generator.ast.WithOptions unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -124,7 +134,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			OPTIONS));
+			OPTIONS__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -134,7 +144,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case OPTIONS: return getOptions();
+			case OPTIONS__PROP: return getOptions();
 			default: return null;
 		}
 	}
@@ -142,13 +152,13 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case OPTIONS: internalSetOptions((java.util.Map<String, Option>) value); break;
+			case OPTIONS__PROP: internalSetOptions((java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option>) value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static WithOptions readWithOptions(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		WithOptions result;
+	public static de.haumacher.msgbuf.generator.ast.WithOptions readWithOptions(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.generator.ast.WithOptions result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -175,9 +185,9 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(OPTIONS);
+		out.name(OPTIONS__PROP);
 		out.beginObject();
-		for (java.util.Map.Entry<String,Option> entry : getOptions().entrySet()) {
+		for (java.util.Map.Entry<String,de.haumacher.msgbuf.generator.ast.Option> entry : getOptions().entrySet()) {
 			out.name(entry.getKey());
 			entry.getValue().writeTo(out);
 		}
@@ -187,7 +197,7 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case OPTIONS: {
+			case OPTIONS__PROP: {
 				in.beginObject();
 				while (in.hasNext()) {
 					putOption(in.nextName(), de.haumacher.msgbuf.generator.ast.Option.readOption(in));

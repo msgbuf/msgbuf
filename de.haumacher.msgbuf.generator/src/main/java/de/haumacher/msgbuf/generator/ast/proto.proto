@@ -1,6 +1,7 @@
 package de.haumacher.msgbuf.generator.ast;
 
 option NoBinary;
+option NoXml;
 option NoReflection;
 option NoVisitorExceptions;
 option NoInterfaces;
@@ -88,6 +89,7 @@ message EnumDef extends Definition {
 /**
  * {@link Definition} of a data class.
  */
+@Operations("de.haumacher.msgbuf.generator.MessageDefOperations")
 message MessageDef extends Definition {
 	/** Whether this class only serves as super type for other data classes. */
 	boolean `abstract`;

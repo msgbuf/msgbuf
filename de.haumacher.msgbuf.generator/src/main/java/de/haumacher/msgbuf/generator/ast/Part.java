@@ -5,31 +5,31 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class Part extends DefinitionBase {
 
-	/** Visitor interface for the {@link Part} hierarchy.*/
+	/** Visitor interface for the {@link de.haumacher.msgbuf.generator.ast.Part} hierarchy.*/
 	public interface Visitor<R,A> {
 
-		/** Visit case for {@link Constant}.*/
-		R visit(Constant self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.Constant}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.Constant self, A arg);
 
-		/** Visit case for {@link Field}.*/
-		R visit(Field self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.Field}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.Field self, A arg);
 
 	}
 
 	/** @see #getName() */
-	public static final String NAME = "name";
+	public static final String NAME__PROP = "name";
 
 	/** @see #getIndex() */
-	public static final String INDEX = "index";
+	public static final String INDEX__PROP = "index";
 
 	/** @see #getOwner() */
-	public static final String OWNER = "owner";
+	public static final String OWNER__PROP = "owner";
 
 	private String _name = "";
 
 	private int _index = 0;
 
-	private transient Definition _owner = null;
+	private transient de.haumacher.msgbuf.generator.ast.Definition _owner = null;
 
 	/**
 	 * Creates a {@link Part} instance.
@@ -48,14 +48,14 @@ public abstract class Part extends DefinitionBase {
 	/**
 	 * @see #getName()
 	 */
-	public Part setName(String value) {
+	public de.haumacher.msgbuf.generator.ast.Part setName(String value) {
 		internalSetName(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getName()} without chain call utility. */
 	protected final void internalSetName(String value) {
-		_listener.beforeSet(this, NAME, value);
+		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
 	}
 
@@ -69,35 +69,35 @@ public abstract class Part extends DefinitionBase {
 	/**
 	 * @see #getIndex()
 	 */
-	public Part setIndex(int value) {
+	public de.haumacher.msgbuf.generator.ast.Part setIndex(int value) {
 		internalSetIndex(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getIndex()} without chain call utility. */
 	protected final void internalSetIndex(int value) {
-		_listener.beforeSet(this, INDEX, value);
+		_listener.beforeSet(this, INDEX__PROP, value);
 		_index = value;
 	}
 
 	/**
 	 * The {@link Definition} definint this {@link Part}.
 	 */
-	public final Definition getOwner() {
+	public final de.haumacher.msgbuf.generator.ast.Definition getOwner() {
 		return _owner;
 	}
 
 	/**
 	 * @see #getOwner()
 	 */
-	public Part setOwner(Definition value) {
+	public de.haumacher.msgbuf.generator.ast.Part setOwner(de.haumacher.msgbuf.generator.ast.Definition value) {
 		internalSetOwner(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getOwner()} without chain call utility. */
-	protected final void internalSetOwner(Definition value) {
-		_listener.beforeSet(this, OWNER, value);
+	protected final void internalSetOwner(de.haumacher.msgbuf.generator.ast.Definition value) {
+		_listener.beforeSet(this, OWNER__PROP, value);
 		_owner = value;
 	}
 
@@ -109,28 +109,28 @@ public abstract class Part extends DefinitionBase {
 	}
 
 	@Override
-	public Part setComment(String value) {
+	public de.haumacher.msgbuf.generator.ast.Part setComment(String value) {
 		internalSetComment(value);
 		return this;
 	}
 
 	@Override
-	public Part setOptions(java.util.Map<String, Option> value) {
+	public de.haumacher.msgbuf.generator.ast.Part setOptions(java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> value) {
 		internalSetOptions(value);
 		return this;
 	}
 
 	@Override
-	public Part putOption(String key, Option value) {
+	public de.haumacher.msgbuf.generator.ast.Part putOption(String key, de.haumacher.msgbuf.generator.ast.Option value) {
 		internalPutOption(key, value);
 		return this;
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			NAME, 
-			INDEX, 
-			OWNER));
+			NAME__PROP, 
+			INDEX__PROP, 
+			OWNER__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -140,9 +140,9 @@ public abstract class Part extends DefinitionBase {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case NAME: return getName();
-			case INDEX: return getIndex();
-			case OWNER: return getOwner();
+			case NAME__PROP: return getName();
+			case INDEX__PROP: return getIndex();
+			case OWNER__PROP: return getOwner();
 			default: return super.get(field);
 		}
 	}
@@ -150,16 +150,16 @@ public abstract class Part extends DefinitionBase {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: internalSetName((String) value); break;
-			case INDEX: internalSetIndex((int) value); break;
-			case OWNER: internalSetOwner((Definition) value); break;
+			case NAME__PROP: internalSetName((String) value); break;
+			case INDEX__PROP: internalSetIndex((int) value); break;
+			case OWNER__PROP: internalSetOwner((de.haumacher.msgbuf.generator.ast.Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Part readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Part result;
+	public static de.haumacher.msgbuf.generator.ast.Part readPart(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.generator.ast.Part result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -174,17 +174,17 @@ public abstract class Part extends DefinitionBase {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(NAME);
+		out.name(NAME__PROP);
 		out.value(getName());
-		out.name(INDEX);
+		out.name(INDEX__PROP);
 		out.value(getIndex());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case NAME: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case INDEX: setIndex(in.nextInt()); break;
+			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case INDEX__PROP: setIndex(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -193,8 +193,8 @@ public abstract class Part extends DefinitionBase {
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);
 
 	@Override
-	public final <R,A> R visit(DefinitionBase.Visitor<R,A> v, A arg) {
-		return visit((Part.Visitor<R,A>) v, arg);
+	public final <R,A> R visit(de.haumacher.msgbuf.generator.ast.DefinitionBase.Visitor<R,A> v, A arg) {
+		return visit((de.haumacher.msgbuf.generator.ast.Part.Visitor<R,A>) v, arg);
 	}
 
 }

@@ -8,29 +8,29 @@ package de.haumacher.msgbuf.generator.ast;
 public class CustomType extends Type {
 
 	/**
-	 * Creates a {@link CustomType} instance.
+	 * Creates a {@link de.haumacher.msgbuf.generator.ast.CustomType} instance.
 	 */
-	public static CustomType create() {
+	public static de.haumacher.msgbuf.generator.ast.CustomType create() {
 		return new de.haumacher.msgbuf.generator.ast.CustomType();
 	}
 
-	/** Identifier for the {@link CustomType} type in JSON format. */
+	/** Identifier for the {@link de.haumacher.msgbuf.generator.ast.CustomType} type in JSON format. */
 	public static final String CUSTOM_TYPE__TYPE = "CustomType";
 
 	/** @see #getName() */
-	public static final String NAME = "name";
+	public static final String NAME__PROP = "name";
 
 	/** @see #getDefinition() */
-	public static final String DEFINITION = "definition";
+	public static final String DEFINITION__PROP = "definition";
 
-	private QName _name = null;
+	private de.haumacher.msgbuf.generator.ast.QName _name = null;
 
-	private transient Definition _definition = null;
+	private transient de.haumacher.msgbuf.generator.ast.Definition _definition = null;
 
 	/**
 	 * Creates a {@link CustomType} instance.
 	 *
-	 * @see CustomType#create()
+	 * @see de.haumacher.msgbuf.generator.ast.CustomType#create()
 	 */
 	protected CustomType() {
 		super();
@@ -44,21 +44,21 @@ public class CustomType extends Type {
 	/**
 	 * The name of the reference type.
 	 */
-	public final QName getName() {
+	public final de.haumacher.msgbuf.generator.ast.QName getName() {
 		return _name;
 	}
 
 	/**
 	 * @see #getName()
 	 */
-	public CustomType setName(QName value) {
+	public de.haumacher.msgbuf.generator.ast.CustomType setName(de.haumacher.msgbuf.generator.ast.QName value) {
 		internalSetName(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getName()} without chain call utility. */
-	protected final void internalSetName(QName value) {
-		_listener.beforeSet(this, NAME, value);
+	protected final void internalSetName(de.haumacher.msgbuf.generator.ast.QName value) {
+		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
 	}
 
@@ -72,21 +72,21 @@ public class CustomType extends Type {
 	/**
 	 * Resolved reference of the {@link Definition} defining the {@link #getName() referenced type}.
 	 */
-	public final Definition getDefinition() {
+	public final de.haumacher.msgbuf.generator.ast.Definition getDefinition() {
 		return _definition;
 	}
 
 	/**
 	 * @see #getDefinition()
 	 */
-	public CustomType setDefinition(Definition value) {
+	public de.haumacher.msgbuf.generator.ast.CustomType setDefinition(de.haumacher.msgbuf.generator.ast.Definition value) {
 		internalSetDefinition(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getDefinition()} without chain call utility. */
-	protected final void internalSetDefinition(Definition value) {
-		_listener.beforeSet(this, DEFINITION, value);
+	protected final void internalSetDefinition(de.haumacher.msgbuf.generator.ast.Definition value) {
+		_listener.beforeSet(this, DEFINITION__PROP, value);
 		_definition = value;
 	}
 
@@ -104,8 +104,8 @@ public class CustomType extends Type {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			NAME, 
-			DEFINITION));
+			NAME__PROP, 
+			DEFINITION__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -115,8 +115,8 @@ public class CustomType extends Type {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case NAME: return getName();
-			case DEFINITION: return getDefinition();
+			case NAME__PROP: return getName();
+			case DEFINITION__PROP: return getDefinition();
 			default: return super.get(field);
 		}
 	}
@@ -124,14 +124,14 @@ public class CustomType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case NAME: internalSetName((QName) value); break;
-			case DEFINITION: internalSetDefinition((Definition) value); break;
+			case NAME__PROP: internalSetName((de.haumacher.msgbuf.generator.ast.QName) value); break;
+			case DEFINITION__PROP: internalSetDefinition((de.haumacher.msgbuf.generator.ast.Definition) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.generator.ast.CustomType readCustomType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		de.haumacher.msgbuf.generator.ast.CustomType result = new de.haumacher.msgbuf.generator.ast.CustomType();
 		result.readContent(in);
 		return result;
@@ -141,7 +141,7 @@ public class CustomType extends Type {
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
 		if (hasName()) {
-			out.name(NAME);
+			out.name(NAME__PROP);
 			getName().writeTo(out);
 		}
 	}
@@ -149,13 +149,13 @@ public class CustomType extends Type {
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case NAME: setName(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
+			case NAME__PROP: setName(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	public <R,A> R visit(Type.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(de.haumacher.msgbuf.generator.ast.Type.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

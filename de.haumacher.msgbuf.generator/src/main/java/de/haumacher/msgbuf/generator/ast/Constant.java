@@ -8,19 +8,19 @@ package de.haumacher.msgbuf.generator.ast;
 public class Constant extends Part {
 
 	/**
-	 * Creates a {@link Constant} instance.
+	 * Creates a {@link de.haumacher.msgbuf.generator.ast.Constant} instance.
 	 */
-	public static Constant create() {
+	public static de.haumacher.msgbuf.generator.ast.Constant create() {
 		return new de.haumacher.msgbuf.generator.ast.Constant();
 	}
 
-	/** Identifier for the {@link Constant} type in JSON format. */
+	/** Identifier for the {@link de.haumacher.msgbuf.generator.ast.Constant} type in JSON format. */
 	public static final String CONSTANT__TYPE = "Constant";
 
 	/**
 	 * Creates a {@link Constant} instance.
 	 *
-	 * @see Constant#create()
+	 * @see de.haumacher.msgbuf.generator.ast.Constant#create()
 	 */
 	protected Constant() {
 		super();
@@ -32,37 +32,37 @@ public class Constant extends Part {
 	}
 
 	@Override
-	public Constant setName(String value) {
+	public de.haumacher.msgbuf.generator.ast.Constant setName(String value) {
 		internalSetName(value);
 		return this;
 	}
 
 	@Override
-	public Constant setIndex(int value) {
+	public de.haumacher.msgbuf.generator.ast.Constant setIndex(int value) {
 		internalSetIndex(value);
 		return this;
 	}
 
 	@Override
-	public Constant setOwner(Definition value) {
+	public de.haumacher.msgbuf.generator.ast.Constant setOwner(de.haumacher.msgbuf.generator.ast.Definition value) {
 		internalSetOwner(value);
 		return this;
 	}
 
 	@Override
-	public Constant setComment(String value) {
+	public de.haumacher.msgbuf.generator.ast.Constant setComment(String value) {
 		internalSetComment(value);
 		return this;
 	}
 
 	@Override
-	public Constant setOptions(java.util.Map<String, Option> value) {
+	public de.haumacher.msgbuf.generator.ast.Constant setOptions(java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> value) {
 		internalSetOptions(value);
 		return this;
 	}
 
 	@Override
-	public Constant putOption(String key, Option value) {
+	public de.haumacher.msgbuf.generator.ast.Constant putOption(String key, de.haumacher.msgbuf.generator.ast.Option value) {
 		internalPutOption(key, value);
 		return this;
 	}
@@ -73,14 +73,14 @@ public class Constant extends Part {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.generator.ast.Constant readConstant(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		de.haumacher.msgbuf.generator.ast.Constant result = new de.haumacher.msgbuf.generator.ast.Constant();
 		result.readContent(in);
 		return result;
 	}
 
 	@Override
-	public <R,A> R visit(Part.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(de.haumacher.msgbuf.generator.ast.Part.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

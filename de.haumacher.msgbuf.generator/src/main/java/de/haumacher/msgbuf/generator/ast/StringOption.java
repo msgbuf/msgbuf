@@ -6,24 +6,24 @@ package de.haumacher.msgbuf.generator.ast;
 public class StringOption extends Option {
 
 	/**
-	 * Creates a {@link StringOption} instance.
+	 * Creates a {@link de.haumacher.msgbuf.generator.ast.StringOption} instance.
 	 */
-	public static StringOption create() {
+	public static de.haumacher.msgbuf.generator.ast.StringOption create() {
 		return new de.haumacher.msgbuf.generator.ast.StringOption();
 	}
 
-	/** Identifier for the {@link StringOption} type in JSON format. */
+	/** Identifier for the {@link de.haumacher.msgbuf.generator.ast.StringOption} type in JSON format. */
 	public static final String STRING_OPTION__TYPE = "StringOption";
 
 	/** @see #getValue() */
-	public static final String VALUE = "value";
+	public static final String VALUE__PROP = "value";
 
 	private String _value = "";
 
 	/**
 	 * Creates a {@link StringOption} instance.
 	 *
-	 * @see StringOption#create()
+	 * @see de.haumacher.msgbuf.generator.ast.StringOption#create()
 	 */
 	protected StringOption() {
 		super();
@@ -44,14 +44,14 @@ public class StringOption extends Option {
 	/**
 	 * @see #getValue()
 	 */
-	public StringOption setValue(String value) {
+	public de.haumacher.msgbuf.generator.ast.StringOption setValue(String value) {
 		internalSetValue(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getValue()} without chain call utility. */
 	protected final void internalSetValue(String value) {
-		_listener.beforeSet(this, VALUE, value);
+		_listener.beforeSet(this, VALUE__PROP, value);
 		_value = value;
 	}
 
@@ -62,7 +62,7 @@ public class StringOption extends Option {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			VALUE));
+			VALUE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -72,7 +72,7 @@ public class StringOption extends Option {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case VALUE: return getValue();
+			case VALUE__PROP: return getValue();
 			default: return super.get(field);
 		}
 	}
@@ -80,13 +80,13 @@ public class StringOption extends Option {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case VALUE: internalSetValue((String) value); break;
+			case VALUE__PROP: internalSetValue((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static StringOption readStringOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.generator.ast.StringOption readStringOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		de.haumacher.msgbuf.generator.ast.StringOption result = new de.haumacher.msgbuf.generator.ast.StringOption();
 		result.readContent(in);
 		return result;
@@ -95,20 +95,20 @@ public class StringOption extends Option {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(VALUE);
+		out.name(VALUE__PROP);
 		out.value(getValue());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case VALUE: setValue(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
+			case VALUE__PROP: setValue(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	public <R,A> R visit(Option.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(de.haumacher.msgbuf.generator.ast.Option.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

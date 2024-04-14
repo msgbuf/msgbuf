@@ -182,24 +182,24 @@ public class PrimitiveType extends Type {
 	}
 
 	/**
-	 * Creates a {@link PrimitiveType} instance.
+	 * Creates a {@link de.haumacher.msgbuf.generator.ast.PrimitiveType} instance.
 	 */
-	public static PrimitiveType create() {
+	public static de.haumacher.msgbuf.generator.ast.PrimitiveType create() {
 		return new de.haumacher.msgbuf.generator.ast.PrimitiveType();
 	}
 
-	/** Identifier for the {@link PrimitiveType} type in JSON format. */
+	/** Identifier for the {@link de.haumacher.msgbuf.generator.ast.PrimitiveType} type in JSON format. */
 	public static final String PRIMITIVE_TYPE__TYPE = "PrimitiveType";
 
 	/** @see #getKind() */
-	public static final String KIND = "kind";
+	public static final String KIND__PROP = "kind";
 
-	private Kind _kind = de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind.INT_32;
+	private de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind _kind = de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind.INT_32;
 
 	/**
 	 * Creates a {@link PrimitiveType} instance.
 	 *
-	 * @see PrimitiveType#create()
+	 * @see de.haumacher.msgbuf.generator.ast.PrimitiveType#create()
 	 */
 	protected PrimitiveType() {
 		super();
@@ -213,22 +213,22 @@ public class PrimitiveType extends Type {
 	/**
 	 * The type kind.
 	 */
-	public final Kind getKind() {
+	public final de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind getKind() {
 		return _kind;
 	}
 
 	/**
 	 * @see #getKind()
 	 */
-	public PrimitiveType setKind(Kind value) {
+	public de.haumacher.msgbuf.generator.ast.PrimitiveType setKind(de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind value) {
 		internalSetKind(value);
 		return this;
 	}
 
 	/** Internal setter for {@link #getKind()} without chain call utility. */
-	protected final void internalSetKind(Kind value) {
+	protected final void internalSetKind(de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind value) {
 		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
-		_listener.beforeSet(this, KIND, value);
+		_listener.beforeSet(this, KIND__PROP, value);
 		_kind = value;
 	}
 
@@ -239,7 +239,7 @@ public class PrimitiveType extends Type {
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
 		java.util.Arrays.asList(
-			KIND));
+			KIND__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -249,7 +249,7 @@ public class PrimitiveType extends Type {
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case KIND: return getKind();
+			case KIND__PROP: return getKind();
 			default: return super.get(field);
 		}
 	}
@@ -257,13 +257,13 @@ public class PrimitiveType extends Type {
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case KIND: internalSetKind((Kind) value); break;
+			case KIND__PROP: internalSetKind((de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind) value); break;
 			default: super.set(field, value); break;
 		}
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.generator.ast.PrimitiveType readPrimitiveType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		de.haumacher.msgbuf.generator.ast.PrimitiveType result = new de.haumacher.msgbuf.generator.ast.PrimitiveType();
 		result.readContent(in);
 		return result;
@@ -272,20 +272,20 @@ public class PrimitiveType extends Type {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(KIND);
+		out.name(KIND__PROP);
 		getKind().writeTo(out);
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case KIND: setKind(de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind.readKind(in)); break;
+			case KIND__PROP: setKind(de.haumacher.msgbuf.generator.ast.PrimitiveType.Kind.readKind(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	public <R,A> R visit(Type.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(de.haumacher.msgbuf.generator.ast.Type.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

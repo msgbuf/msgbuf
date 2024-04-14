@@ -9,32 +9,32 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
-	/** Type codes for the {@link Option} hierarchy. */
+	/** Type codes for the {@link de.haumacher.msgbuf.generator.ast.Option} hierarchy. */
 	public enum TypeKind {
 
-		/** Type literal for {@link StringOption}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.StringOption}. */
 		STRING_OPTION,
 
-		/** Type literal for {@link NumberOption}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.NumberOption}. */
 		NUMBER_OPTION,
 
-		/** Type literal for {@link Flag}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.Flag}. */
 		FLAG,
 		;
 
 	}
 
-	/** Visitor interface for the {@link Option} hierarchy.*/
+	/** Visitor interface for the {@link de.haumacher.msgbuf.generator.ast.Option} hierarchy.*/
 	public interface Visitor<R,A> {
 
-		/** Visit case for {@link StringOption}.*/
-		R visit(StringOption self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.StringOption}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.StringOption self, A arg);
 
-		/** Visit case for {@link NumberOption}.*/
-		R visit(NumberOption self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.NumberOption}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.NumberOption self, A arg);
 
-		/** Visit case for {@link Flag}.*/
-		R visit(Flag self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.Flag}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.Flag self, A arg);
 
 	}
 
@@ -51,7 +51,7 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public Option registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public de.haumacher.msgbuf.generator.ast.Option registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -61,7 +61,7 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	}
 
 	@Override
-	public Option unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public de.haumacher.msgbuf.generator.ast.Option unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -71,8 +71,8 @@ public abstract class Option extends de.haumacher.msgbuf.data.AbstractDataObject
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Option readOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Option result;
+	public static de.haumacher.msgbuf.generator.ast.Option readOption(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.generator.ast.Option result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {

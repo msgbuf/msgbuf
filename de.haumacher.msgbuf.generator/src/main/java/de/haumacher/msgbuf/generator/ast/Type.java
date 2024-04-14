@@ -5,32 +5,32 @@ package de.haumacher.msgbuf.generator.ast;
  */
 public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.observer.Observable {
 
-	/** Type codes for the {@link Type} hierarchy. */
+	/** Type codes for the {@link de.haumacher.msgbuf.generator.ast.Type} hierarchy. */
 	public enum TypeKind {
 
-		/** Type literal for {@link CustomType}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.CustomType}. */
 		CUSTOM_TYPE,
 
-		/** Type literal for {@link PrimitiveType}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.PrimitiveType}. */
 		PRIMITIVE_TYPE,
 
-		/** Type literal for {@link MapType}. */
+		/** Type literal for {@link de.haumacher.msgbuf.generator.ast.MapType}. */
 		MAP_TYPE,
 		;
 
 	}
 
-	/** Visitor interface for the {@link Type} hierarchy.*/
+	/** Visitor interface for the {@link de.haumacher.msgbuf.generator.ast.Type} hierarchy.*/
 	public interface Visitor<R,A> {
 
-		/** Visit case for {@link CustomType}.*/
-		R visit(CustomType self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.CustomType}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.CustomType self, A arg);
 
-		/** Visit case for {@link PrimitiveType}.*/
-		R visit(PrimitiveType self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.PrimitiveType}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.PrimitiveType self, A arg);
 
-		/** Visit case for {@link MapType}.*/
-		R visit(MapType self, A arg);
+		/** Visit case for {@link de.haumacher.msgbuf.generator.ast.MapType}.*/
+		R visit(de.haumacher.msgbuf.generator.ast.MapType self, A arg);
 
 	}
 
@@ -47,7 +47,7 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public Type registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public de.haumacher.msgbuf.generator.ast.Type registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -57,7 +57,7 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	@Override
-	public Type unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public de.haumacher.msgbuf.generator.ast.Type unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -67,8 +67,8 @@ public abstract class Type extends de.haumacher.msgbuf.data.AbstractDataObject i
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static Type readType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		Type result;
+	public static de.haumacher.msgbuf.generator.ast.Type readType(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.generator.ast.Type result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
