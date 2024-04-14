@@ -41,7 +41,7 @@ public interface Optional extends Shape {
 	test.hierarchy.data.Optional setHidden(boolean value);
 
 	/**
-	 * A {@link Shape} that can be dynamically hidden..
+	 * A {@link Shape} that can be dynamically hidden.
 	 */
 	test.hierarchy.data.Shape getShape();
 
