@@ -1,0 +1,43 @@
+package test.embedded.data;
+
+message Container {
+
+	string name;
+
+	repeated Base contents;
+	
+}
+
+message EmbeddingContainer {
+
+	string name;
+
+	@Embedded
+	repeated Base contents;
+	
+}
+
+message SingleContainer {
+
+	string name;
+
+	Base contents;
+	
+}
+
+message EmbeddingSingleContainer {
+
+	string name;
+
+	@Embedded
+	Base contents;
+	
+}
+
+abstract message Base {
+
+}
+
+message A extends Base {}
+
+message B extends Base {}
