@@ -4,7 +4,6 @@
 package de.haumacher.msgbuf.graph;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -87,7 +86,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 			return;
 		}
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
-		changes(node).put(property, SetProperty.create().setNode(node).setId(node.id()).setProperty(property));
+		changes(node).put(property, SetProperty.create().setNode(node).setId(id(node)).setProperty(property));
 	}
 
 	@Override
@@ -98,7 +97,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
 		Map<String, Command> changes = changes(node);
 		InsertElement insert = InsertElement.create();
-		insert.setElement(element).setIndex(index).setNode(node).setId(node.id()).setProperty(property);
+		insert.setElement(element).setIndex(index).setNode(node).setId(id(node)).setProperty(property);
 
 		putUpdate(changes, property, insert);
 	}
@@ -111,7 +110,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
 		Map<String, Command> changes = changes(node);
 		RemoveElement remove = RemoveElement.create();
-		remove.setIndex(index).setNode(node).setId(node.id()).setProperty(property);
+		remove.setIndex(index).setNode(node).setId(id(node)).setProperty(property);
 
 		putUpdate(changes, property, remove);
 	}
@@ -149,6 +148,20 @@ public class DefaultScope implements Listener, ScopeMixin {
 		current.setNext(update);
 		return clash;
 	}
+	
+	/** 
+	 * Checks whether there are changes to create a patch.
+	 */
+	public boolean hasChanges() {
+		return !_changes.isEmpty();
+	}
+
+	/** 
+	 * Removes all recorded changes.
+	 */
+	public void dropChanges() {
+		_changes.clear();
+	}
 
 	/**
 	 * Exports recorded changes to the given {@link JsonWriter}.
@@ -156,41 +169,52 @@ public class DefaultScope implements Listener, ScopeMixin {
 	 * <p>
 	 * The recored changes are reset when this method completes.
 	 * </p>
+	 * 
+	 * <p>
+	 * The patch is a list containing an entry for each command. Each entry is a
+	 * list with the command configuration at position 0 followed by optional
+	 * additional arguments for the command.
+	 * </p>
+	 * 
+	 * @see #applyChanges(JsonReader)
+	 * @see #hasChanges()
 	 */
 	public void createPatch(JsonWriter json) throws IOException {
 		json.beginArray();
-		json.beginArray();
-		foreachCommand(command -> command.writeTo(json));
+		foreachCommand(command -> {
+
+			json.beginArray();
+			command.writeTo(json);
+			command.visit(_extractor, json);
+			json.endArray();
+
+		});
 		json.endArray();
 
-		json.beginArray();
-		foreachCommand(command -> command.visit(_extractor, json));
-		json.endArray();
-		json.endArray();
-
-		_changes.clear();
+		dropChanges();
 	}
 
 	/**
-	 * Applies changes read from the given {@link JsonReader}. 
+	 * Applies changes read from the given {@link JsonReader}.
+	 * 
+	 * <p>
+	 * It is expected that the patch has the format as in
+	 * {@link #createPatch(JsonWriter)}.
+	 * </p>
+	 * 
+	 * @see #createPatch(JsonWriter)
 	 */
 	public void applyChanges(JsonReader json) throws IOException {
 		boolean before = _applying;
 		_applying = true;
 		try {
-			List<Command> commands = new ArrayList<>();
-			json.beginArray();
 			json.beginArray();
 			while (json.hasNext()) {
-				commands.add(Command.readCommand(json));
-			}
-			json.endArray();
-			
-			json.beginArray();
-			for (Command command : commands) {
+				json.beginArray();
+				Command command = Command.readCommand(json);
 				command.visit(_applicator, json);
+				json.endArray();
 			}
-			json.endArray();
 			json.endArray();
 		} finally {
 			_applying = before;
