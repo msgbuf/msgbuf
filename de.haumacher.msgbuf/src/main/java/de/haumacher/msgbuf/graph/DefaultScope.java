@@ -87,7 +87,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 			return;
 		}
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
-		changes(node).put(property, SetProperty.create().setNode(node).setId(node.id()).setProperty(property));
+		changes(node).put(property, SetProperty.create().setNode(node).setId(id(node)).setProperty(property));
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
 		Map<String, Command> changes = changes(node);
 		InsertElement insert = InsertElement.create();
-		insert.setElement(element).setIndex(index).setNode(node).setId(node.id()).setProperty(property);
+		insert.setElement(element).setIndex(index).setNode(node).setId(id(node)).setProperty(property);
 
 		putUpdate(changes, property, insert);
 	}
@@ -111,7 +111,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
 		Map<String, Command> changes = changes(node);
 		RemoveElement remove = RemoveElement.create();
-		remove.setIndex(index).setNode(node).setId(node.id()).setProperty(property);
+		remove.setIndex(index).setNode(node).setId(id(node)).setProperty(property);
 
 		putUpdate(changes, property, remove);
 	}
