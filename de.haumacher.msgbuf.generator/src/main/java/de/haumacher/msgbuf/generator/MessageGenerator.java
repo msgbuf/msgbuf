@@ -6,7 +6,7 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
-import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
+import static de.haumacher.msgbuf.generator.util.CodeUtil.stringLiteral;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1395,13 +1395,15 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (field.isRepeated()) {
 			line("case " + constant(field) + ": {");
 			{
+				line(mkType(field)+ " newValue = new java.util.ArrayList<>();");
 				line("in.beginArray();");
 				line("while (in.hasNext()) {");
 				{
-					line(adderName(field) + "(" + jsonReadEntry(type) + ");");
+					line("newValue.add(" + jsonReadEntry(type) + ");");
 				}
 				line("}");
 				line("in.endArray();");
+				line(setterName(field) + "(newValue);");
 			}
 			line("}");
 			line("break;");
@@ -1412,14 +1414,17 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				Type keyType = mapType.getKeyType();
 				Type valueType = mapType.getValueType();
 				if (keyType instanceof PrimitiveType && ((PrimitiveType) keyType).getKind() == Kind.STRING) {
+					line(mkType(field)+ " newValue = new java.util.LinkedHashMap<>();");
 					line("in.beginObject();");
 					line("while (in.hasNext()) {");
 					{
-						line(adderName(field) + "(in.nextName(), " + jsonReadEntry(valueType) + ");");
+						line("newValue.put(in.nextName(), " + jsonReadEntry(valueType) + ");");
 					}
 					line("}");
 					line("in.endObject();");
+					line(setterName(field) + "(newValue);");
 				} else {
+					line(mkType(field)+ " newValue = new java.util.LinkedHashMap<>();");
 					line("in.beginArray();");
 					line("while (in.hasNext()) {");
 					{
@@ -1435,11 +1440,12 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 							line("}");
 						}
 						line("}");
-						line(adderName(field) + "(key, value);");
+						line("newValue.put(key, value);");
 						line("in.endObject();");
 					}
 					line("}");
 					line("in.endArray();");
+					line(setterName(field) + "(newValue);");
 				}
 			}
 			line("break;");
