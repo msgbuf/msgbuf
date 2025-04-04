@@ -1,20 +1,13 @@
 # How to release to Maven Central
 
-## Set stable version number
+## Set stable version number and tag version
 
 ```
 mvn release:clean release:prepare
 ```
 
-## Create staging repository
-
-```
-mvn release:perform
-```
-
 ## Release to Maven Central
 
 ```
-cd target/checkout/
-mvn nexus-staging:release
+mvn release:perform
 ```
