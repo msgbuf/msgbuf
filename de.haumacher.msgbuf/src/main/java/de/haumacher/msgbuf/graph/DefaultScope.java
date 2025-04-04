@@ -148,6 +148,20 @@ public class DefaultScope implements Listener, ScopeMixin {
 		current.setNext(update);
 		return clash;
 	}
+	
+	/** 
+	 * Checks whether there are changes to create a patch.
+	 */
+	public boolean hasChanges() {
+		return !_changes.isEmpty();
+	}
+
+	/** 
+	 * Removes all recorded changes.
+	 */
+	public void dropChanges() {
+		_changes.clear();
+	}
 
 	/**
 	 * Exports recorded changes to the given {@link JsonWriter}.
@@ -163,6 +177,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 	 * </p>
 	 * 
 	 * @see #applyChanges(JsonReader)
+	 * @see #hasChanges()
 	 */
 	public void createPatch(JsonWriter json) throws IOException {
 		json.beginArray();
@@ -176,7 +191,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 		});
 		json.endArray();
 
-		_changes.clear();
+		dropChanges();
 	}
 
 	/**
