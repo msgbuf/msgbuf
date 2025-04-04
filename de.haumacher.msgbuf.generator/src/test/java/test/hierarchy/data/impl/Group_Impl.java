@@ -128,11 +128,13 @@ public class Group_Impl extends test.hierarchy.data.impl.Shape_Impl implements t
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case SHAPES__PROP: {
+				java.util.List<test.hierarchy.data.Shape> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(test.hierarchy.data.Shape.readShape(in));
+					newValue.add(test.hierarchy.data.Shape.readShape(in));
 				}
 				in.endArray();
+				setShapes(newValue);
 			}
 			break;
 			default: super.readField(in, field);

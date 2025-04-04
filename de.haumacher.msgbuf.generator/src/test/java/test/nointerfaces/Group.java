@@ -160,11 +160,13 @@ public class Group extends Shape {
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case SHAPES__PROP: {
+				java.util.List<test.nointerfaces.Shape> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(test.nointerfaces.Shape.readShape(in));
+					newValue.add(test.nointerfaces.Shape.readShape(in));
 				}
 				in.endArray();
+				setShapes(newValue);
 			}
 			break;
 			default: super.readField(in, field);

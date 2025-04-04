@@ -374,27 +374,33 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 			case BOOLEAN__PROP: setBoolean(in.nextBoolean()); break;
 			case STRING__PROP: setString(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case INT_LIST__PROP: {
+				java.util.List<Integer> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addIntList(in.nextInt());
+					newValue.add(in.nextInt());
 				}
 				in.endArray();
+				setIntList(newValue);
 			}
 			break;
 			case STRING_LIST__PROP: {
+				java.util.List<String> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addStringList(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
+					newValue.add(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
 				}
 				in.endArray();
+				setStringList(newValue);
 			}
 			break;
 			case STRING_INT_MAP__PROP: {
+				java.util.Map<String, Integer> newValue = new java.util.LinkedHashMap<>();
 				in.beginObject();
 				while (in.hasNext()) {
-					putStringIntMap(in.nextName(), in.nextInt());
+					newValue.put(in.nextName(), in.nextInt());
 				}
 				in.endObject();
+				setStringIntMap(newValue);
 				break;
 			}
 			case OPTIONAL_DECISION__PROP: setOptionalDecision(test.nullable.data.Decision.readDecision(in)); break;

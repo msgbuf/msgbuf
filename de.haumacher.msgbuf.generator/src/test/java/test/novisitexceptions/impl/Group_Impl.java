@@ -122,11 +122,13 @@ public class Group_Impl extends test.novisitexceptions.impl.Shape_Impl implement
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case SHAPES__PROP: {
+				java.util.List<test.novisitexceptions.Shape> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(test.novisitexceptions.Shape.readShape(in));
+					newValue.add(test.novisitexceptions.Shape.readShape(in));
 				}
 				in.endArray();
+				setShapes(newValue);
 			}
 			break;
 			default: super.readField(in, field);

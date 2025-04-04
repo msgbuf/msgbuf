@@ -156,11 +156,13 @@ public class Container_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 		switch (field) {
 			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case CONTENTS__PROP: {
+				java.util.List<test.embedded.data.Base> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addContent(test.embedded.data.Base.readBase(in));
+					newValue.add(test.embedded.data.Base.readBase(in));
 				}
 				in.endArray();
+				setContents(newValue);
 			}
 			break;
 			default: super.readField(in, field);

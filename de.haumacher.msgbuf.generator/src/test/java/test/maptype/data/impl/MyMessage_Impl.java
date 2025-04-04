@@ -198,14 +198,17 @@ public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case PROJECTS__PROP: {
+				java.util.Map<String, test.maptype.data.Project> newValue = new java.util.LinkedHashMap<>();
 				in.beginObject();
 				while (in.hasNext()) {
-					putProject(in.nextName(), test.maptype.data.Project.readProject(in));
+					newValue.put(in.nextName(), test.maptype.data.Project.readProject(in));
 				}
 				in.endObject();
+				setProjects(newValue);
 				break;
 			}
 			case RATING__PROP: {
+				java.util.Map<Integer, String> newValue = new java.util.LinkedHashMap<>();
 				in.beginArray();
 				while (in.hasNext()) {
 					in.beginObject();
@@ -218,10 +221,11 @@ public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 							default: in.skipValue(); break;
 						}
 					}
-					putRating(key, value);
+					newValue.put(key, value);
 					in.endObject();
 				}
 				in.endArray();
+				setRating(newValue);
 				break;
 			}
 			default: super.readField(in, field);
