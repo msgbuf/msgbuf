@@ -480,29 +480,35 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case CONTENTS__PROP: setContents(test.references.data.A.readA(in)); break;
 			case CHILDREN__PROP: {
+				java.util.List<test.references.data.A> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addChildren(test.references.data.A.readA(in));
+					newValue.add(test.references.data.A.readA(in));
 				}
 				in.endArray();
+				setChildren(newValue);
 			}
 			break;
 			case BS__PROP: {
+				java.util.List<test.references.data.B> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addBs(test.references.data.B.readB(in));
+					newValue.add(test.references.data.B.readB(in));
 				}
 				in.endArray();
+				setBs(newValue);
 			}
 			break;
 			case B__PROP: setB(test.references.data.B.readB(in)); break;
 			case OTHER__PROP: setOther(test.references.data.A.readA(in)); break;
 			case OTHERS__PROP: {
+				java.util.List<test.references.data.A> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addOthers(test.references.data.A.readA(in));
+					newValue.add(test.references.data.A.readA(in));
 				}
 				in.endArray();
+				setOthers(newValue);
 			}
 			break;
 			default: super.readField(in, field);

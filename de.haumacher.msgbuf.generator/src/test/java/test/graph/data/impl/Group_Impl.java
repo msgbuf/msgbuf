@@ -137,11 +137,13 @@ public class Group_Impl extends test.graph.data.impl.Shape_Impl implements test.
 	public void readField(de.haumacher.msgbuf.graph.Scope scope, de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case SHAPES__PROP: {
+				java.util.List<test.graph.data.Shape> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addShape(test.graph.data.Shape.readShape(scope, in));
+					newValue.add(test.graph.data.Shape.readShape(scope, in));
 				}
 				in.endArray();
+				setShapes(newValue);
 			}
 			break;
 			default: super.readField(scope, in, field);

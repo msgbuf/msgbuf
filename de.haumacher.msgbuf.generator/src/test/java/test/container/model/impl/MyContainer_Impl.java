@@ -323,19 +323,23 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			case CONTENT_1__PROP: setContent1(test.container.model.MyContent.readMyContent(in)); break;
 			case CONTENT_2__PROP: setContent2(test.container.model.MyContent.readMyContent(in)); break;
 			case CONTENT_LIST__PROP: {
+				java.util.List<test.container.model.MyContent> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addContentList(test.container.model.MyContent.readMyContent(in));
+					newValue.add(test.container.model.MyContent.readMyContent(in));
 				}
 				in.endArray();
+				setContentList(newValue);
 			}
 			break;
 			case CONTENT_MAP__PROP: {
+				java.util.Map<String, test.container.model.MyContent> newValue = new java.util.LinkedHashMap<>();
 				in.beginObject();
 				while (in.hasNext()) {
-					putContentMap(in.nextName(), test.container.model.MyContent.readMyContent(in));
+					newValue.put(in.nextName(), test.container.model.MyContent.readMyContent(in));
 				}
 				in.endObject();
+				setContentMap(newValue);
 				break;
 			}
 			default: super.readField(in, field);

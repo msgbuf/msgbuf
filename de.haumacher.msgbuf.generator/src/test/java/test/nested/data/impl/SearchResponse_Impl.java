@@ -184,11 +184,13 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 				case URL__PROP: setUrl(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 				case TITLE__PROP: setTitle(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 				case SNIPPETS__PROP: {
+					java.util.List<String> newValue = new java.util.ArrayList<>();
 					in.beginArray();
 					while (in.hasNext()) {
-						addSnippet(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
+						newValue.add(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
 					}
 					in.endArray();
+					setSnippets(newValue);
 				}
 				break;
 				default: super.readField(in, field);
@@ -499,11 +501,13 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case RESULTS__PROP: {
+				java.util.List<test.nested.data.SearchResponse.Result> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addResult(test.nested.data.SearchResponse.Result.readResult(in));
+					newValue.add(test.nested.data.SearchResponse.Result.readResult(in));
 				}
 				in.endArray();
+				setResults(newValue);
 			}
 			break;
 			default: super.readField(in, field);
