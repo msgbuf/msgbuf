@@ -20,7 +20,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 <dependency>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-api</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ To the `build/plugins` section add:
 <plugin>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-generator-maven-plugin</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7</version>
     
     <executions>
         <execution>
