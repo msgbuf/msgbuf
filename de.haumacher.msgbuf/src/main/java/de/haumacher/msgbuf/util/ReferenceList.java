@@ -112,7 +112,7 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 	public T set(int index, T element) {
 		beforeAdd(index, element);
 		T oldValue = super.set(index, element);
-		afterRemove(index, oldValue);
+		afterRemove(index + 1, oldValue);
 		return oldValue;
 	}
 
