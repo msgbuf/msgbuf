@@ -108,4 +108,12 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 
 	protected abstract void afterRemove(int index, T element);
 
+	@Override
+	public T set(int index, T element) {
+		beforeAdd(index, element);
+		T oldValue = super.set(index, element);
+		afterRemove(index + 1, oldValue);
+		return oldValue;
+	}
+
 }
