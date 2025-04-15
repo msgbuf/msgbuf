@@ -6,7 +6,7 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
-import static de.haumacher.msgbuf.generator.util.CodeUtil.stringLiteral;
+import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -650,17 +650,17 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				}
 				line(myType() + " " + setterName(field) + "(" + mkTypeReadOnly(field) + " " + "value" + ");");
 			}
-		} else {
+		} else if (!(field.isDerived() && override)) {
 			nl();
-			if (!field.isDerived()) {
+			if (field.isDerived()) {
+				docComment("Internal setter for updating derived field.");
+			} else {
 				if (!override && _noInterfaces) {
 					setterDoc(field);
 				} else {
 					// Only in interface for non-derived fields, therefore no override necessary for derived fields.
 					line("@Override");
 				}
-			} else {
-				docComment("Internal setter for updating derived field.");
 			}
 			line(setterModifier(field) + myType() + " " + setterName(field) + "(" + mkTypeReadOnly(field) + " " + "value" + ")" + " {");
 			{
