@@ -12,7 +12,7 @@ options
 PARSER_BEGIN(ProtobufParser)
 package de.haumacher.msgbuf.generator.parser;
 
-import de.haumacher.msgbuf.generator.Util;
+import de.haumacher.msgbuf.generator.common.Util;
 import de.haumacher.msgbuf.generator.ast.*;
 
 /**
@@ -60,6 +60,7 @@ TOKEN :
 | < MAX : "max" >
 | < TRUE : "true" >
 | < FALSE : "false" >
+| < NULL : "null" >
 | < INT_TYPE : "int" >
 | < LONG_TYPE : "long" >
 | < BOOLEAN_TYPE : "boolean" >
@@ -80,7 +81,8 @@ TOKEN :
     "string" |
     "bytes"
   >
-| < NUMBER : ( "-" )? ("0" | ( [ "1"-"9" ] ([ "0"-"9" ])* )) ("." ([ "0"-"9" ])+)? >
+| < #INT: ("0" | ( [ "1"-"9" ] ([ "0"-"9" ])* )) >
+| < NUMBER : ( "-" )? < INT > ("." ([ "0"-"9" ])+)? (["e", "E"] ( [ "+", "-" ] )?  < INT > )? >
 | < STRING : "'" (~[ "'", "\\" ] | < QUOTE > )* "'" | "\"" (~[ "\"", "\\" ] | < QUOTE > )* "\"" >
 | < XNAME : "`" (~[ "`" ] )+ "`" >
 | < #QUOTE : "\\\\" | "\\'" | "\\\"" >
@@ -303,7 +305,7 @@ Field field() :
   Field result = Field.create();
   Type type;
   String name;
-  Token index;
+  Token def;
   Token comment;
   Option option;
   Token optionName;
@@ -330,9 +332,9 @@ Field field() :
     result.setName(name);
   }
   (
-    "=" index=< NUMBER >
+    "=" (def=< NUMBER > | def=< TRUE > | def=< FALSE > | def=< STRING > | def=< NULL > )
     {
-      result.setIndex(Integer.parseInt(index.image));
+      result.setDefaultValue(def.image);
     }
   )?
   partOptions(result)

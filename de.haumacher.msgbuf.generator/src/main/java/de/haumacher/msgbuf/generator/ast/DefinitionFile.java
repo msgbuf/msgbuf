@@ -193,11 +193,13 @@ public class DefinitionFile extends WithOptions {
 		switch (field) {
 			case PACKAGE__PROP: setPackage(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			case DEFINITIONS__PROP: {
+				java.util.List<de.haumacher.msgbuf.generator.ast.Definition> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addDefinition(de.haumacher.msgbuf.generator.ast.Definition.readDefinition(in));
+					newValue.add(de.haumacher.msgbuf.generator.ast.Definition.readDefinition(in));
 				}
 				in.endArray();
+				setDefinitions(newValue);
 			}
 			break;
 			default: super.readField(in, field);

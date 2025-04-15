@@ -444,19 +444,23 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 			case ABSTRACT__PROP: setAbstract(in.nextBoolean()); break;
 			case EXTENDS__PROP: setExtends(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			case DEFINITIONS__PROP: {
+				java.util.List<de.haumacher.msgbuf.generator.ast.Definition> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addDefinition(de.haumacher.msgbuf.generator.ast.Definition.readDefinition(in));
+					newValue.add(de.haumacher.msgbuf.generator.ast.Definition.readDefinition(in));
 				}
 				in.endArray();
+				setDefinitions(newValue);
 			}
 			break;
 			case FIELDS__PROP: {
+				java.util.List<de.haumacher.msgbuf.generator.ast.Field> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addField(de.haumacher.msgbuf.generator.ast.Field.readField(in));
+					newValue.add(de.haumacher.msgbuf.generator.ast.Field.readField(in));
 				}
 				in.endArray();
+				setFields(newValue);
 			}
 			break;
 			default: super.readField(in, field);

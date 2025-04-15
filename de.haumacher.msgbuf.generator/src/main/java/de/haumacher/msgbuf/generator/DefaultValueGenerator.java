@@ -22,6 +22,11 @@ import de.haumacher.msgbuf.generator.common.Util;
 final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 	
 	public static String mkDefaultValue(Field field) {
+		String defaultValue = field.getDefaultValue();
+		if (defaultValue != null) {
+			return defaultValue;
+		}
+		
 		boolean nullable = Util.isNullable(field);
 		if (nullable) {
 			return "null";

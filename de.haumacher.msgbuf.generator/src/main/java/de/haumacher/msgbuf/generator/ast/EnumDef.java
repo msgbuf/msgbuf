@@ -174,11 +174,13 @@ public class EnumDef extends Definition {
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case CONSTANTS__PROP: {
+				java.util.List<de.haumacher.msgbuf.generator.ast.Constant> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addConstant(de.haumacher.msgbuf.generator.ast.Constant.readConstant(in));
+					newValue.add(de.haumacher.msgbuf.generator.ast.Constant.readConstant(in));
 				}
 				in.endArray();
+				setConstants(newValue);
 			}
 			break;
 			default: super.readField(in, field);

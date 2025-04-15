@@ -158,11 +158,13 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case NAMES__PROP: {
+				java.util.List<String> newValue = new java.util.ArrayList<>();
 				in.beginArray();
 				while (in.hasNext()) {
-					addName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
+					newValue.add(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in));
 				}
 				in.endArray();
+				setNames(newValue);
 			}
 			break;
 			default: super.readField(in, field);

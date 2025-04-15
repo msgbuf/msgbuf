@@ -1,0 +1,10 @@
+package test.defaultvalue.data;
+
+message A {
+
+	string s = "Hello world!";
+	int x = 13;
+	double y = -4213e-2;
+	bool state = true;
+	
+}

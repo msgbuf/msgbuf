@@ -19,10 +19,10 @@ public interface MyMessage extends de.haumacher.msgbuf.data.DataObject, de.hauma
 	String RATING__PROP = "rating";
 
 	/** Identifier for the property {@link #getProjects()} in binary format. */
-	static final int PROJECTS__ID = 3;
+	static final int PROJECTS__ID = 1;
 
 	/** Identifier for the property {@link #getRating()} in binary format. */
-	static final int RATING__ID = 4;
+	static final int RATING__ID = 2;
 
 	java.util.Map<String, test.maptype.data.Project> getProjects();
 

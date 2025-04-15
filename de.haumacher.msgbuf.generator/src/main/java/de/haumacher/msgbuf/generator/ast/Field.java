@@ -24,11 +24,16 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	/** @see #getType() */
 	public static final String TYPE__PROP = "type";
 
+	/** @see #getDefaultValue() */
+	public static final String DEFAULT_VALUE__PROP = "defaultValue";
+
 	private boolean _transient = false;
 
 	private boolean _repeated = false;
 
 	private de.haumacher.msgbuf.generator.ast.Type _type = null;
+
+	private String _defaultValue = null;
 
 	/**
 	 * Creates a {@link Field} instance.
@@ -114,6 +119,34 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		return _type != null;
 	}
 
+	/**
+	 * The initializer value to assign to the field.
+	 */
+	public final String getDefaultValue() {
+		return _defaultValue;
+	}
+
+	/**
+	 * @see #getDefaultValue()
+	 */
+	public de.haumacher.msgbuf.generator.ast.Field setDefaultValue(String value) {
+		internalSetDefaultValue(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getDefaultValue()} without chain call utility. */
+	protected final void internalSetDefaultValue(String value) {
+		_listener.beforeSet(this, DEFAULT_VALUE__PROP, value);
+		_defaultValue = value;
+	}
+
+	/**
+	 * Checks, whether {@link #getDefaultValue()} has a value.
+	 */
+	public final boolean hasDefaultValue() {
+		return _defaultValue != null;
+	}
+
 	@Override
 	public de.haumacher.msgbuf.generator.ast.Field setName(String value) {
 		internalSetName(value);
@@ -159,7 +192,8 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		java.util.Arrays.asList(
 			TRANSIENT__PROP, 
 			REPEATED__PROP, 
-			TYPE__PROP));
+			TYPE__PROP, 
+			DEFAULT_VALUE__PROP));
 
 	@Override
 	public java.util.List<String> properties() {
@@ -172,6 +206,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 			case TRANSIENT__PROP: return isTransient();
 			case REPEATED__PROP: return isRepeated();
 			case TYPE__PROP: return getType();
+			case DEFAULT_VALUE__PROP: return getDefaultValue();
 			default: return super.get(field);
 		}
 	}
@@ -182,6 +217,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 			case TRANSIENT__PROP: internalSetTransient((boolean) value); break;
 			case REPEATED__PROP: internalSetRepeated((boolean) value); break;
 			case TYPE__PROP: internalSetType((de.haumacher.msgbuf.generator.ast.Type) value); break;
+			case DEFAULT_VALUE__PROP: internalSetDefaultValue((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -204,6 +240,10 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 			out.name(TYPE__PROP);
 			getType().writeTo(out);
 		}
+		if (hasDefaultValue()) {
+			out.name(DEFAULT_VALUE__PROP);
+			out.value(getDefaultValue());
+		}
 	}
 
 	@Override
@@ -212,6 +252,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 			case TRANSIENT__PROP: setTransient(in.nextBoolean()); break;
 			case REPEATED__PROP: setRepeated(in.nextBoolean()); break;
 			case TYPE__PROP: setType(de.haumacher.msgbuf.generator.ast.Type.readType(in)); break;
+			case DEFAULT_VALUE__PROP: setDefaultValue(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}

@@ -198,11 +198,13 @@ public abstract class WithOptions extends de.haumacher.msgbuf.data.AbstractDataO
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case OPTIONS__PROP: {
+				java.util.Map<String, de.haumacher.msgbuf.generator.ast.Option> newValue = new java.util.LinkedHashMap<>();
 				in.beginObject();
 				while (in.hasNext()) {
-					putOption(in.nextName(), de.haumacher.msgbuf.generator.ast.Option.readOption(in));
+					newValue.put(in.nextName(), de.haumacher.msgbuf.generator.ast.Option.readOption(in));
 				}
 				in.endObject();
+				setOptions(newValue);
 				break;
 			}
 			default: super.readField(in, field);

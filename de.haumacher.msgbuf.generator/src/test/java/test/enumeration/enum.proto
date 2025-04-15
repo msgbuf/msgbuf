@@ -1,9 +1,10 @@
 package test.enumeration.data;
 
 message SearchRequest {
-  string query = 1;
-  int32 page_number = 2;
-  int32 result_per_page = 3;
+  string query;
+  int32 page_number;
+  int32 result_per_page;
+
   enum Corpus {
     UNIVERSAL = 0;
     WEB = 1;
@@ -13,5 +14,6 @@ message SearchRequest {
     PRODUCTS = 5;
     VIDEO = 6;
   }
-  Corpus corpus = 4;
+
+  Corpus corpus;
 }

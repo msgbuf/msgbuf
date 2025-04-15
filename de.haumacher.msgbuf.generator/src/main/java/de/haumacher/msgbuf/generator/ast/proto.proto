@@ -29,9 +29,6 @@ abstract message Part extends DefinitionBase {
     /** The name of this member. */
 	string name;
 	
-    /** The numeric identifier for this member.*/
-	int index;
-	
 	/** The {@link Definition} definint this {@link Part}. */
 	transient Definition owner;
 }
@@ -42,7 +39,10 @@ abstract message Part extends DefinitionBase {
  * @see EnumDef#constants
  */
 message Constant extends Part {
-	// No additional members.
+
+    /** The numeric identifier for this constant.*/
+	int index;
+
 }
 
 /**
@@ -135,6 +135,10 @@ message Field extends Part {
 	
 	/** The type of values that can be stored in this field. */
 	Type type;
+	
+	/** The initializer value to assign to the field. */
+	@Nullable
+	string defaultValue;
 	
 }
 

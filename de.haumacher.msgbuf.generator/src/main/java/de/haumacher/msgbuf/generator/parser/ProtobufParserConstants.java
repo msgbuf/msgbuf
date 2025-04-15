@@ -57,23 +57,27 @@ public interface ProtobufParserConstants {
   /** RegularExpression Id. */
   int FALSE = 23;
   /** RegularExpression Id. */
-  int INT_TYPE = 24;
+  int NULL = 24;
   /** RegularExpression Id. */
-  int LONG_TYPE = 25;
+  int INT_TYPE = 25;
   /** RegularExpression Id. */
-  int BOOLEAN_TYPE = 26;
+  int LONG_TYPE = 26;
   /** RegularExpression Id. */
-  int TYPE = 27;
+  int BOOLEAN_TYPE = 27;
   /** RegularExpression Id. */
-  int NUMBER = 28;
+  int TYPE = 28;
   /** RegularExpression Id. */
-  int STRING = 29;
+  int INT = 29;
   /** RegularExpression Id. */
-  int XNAME = 30;
+  int NUMBER = 30;
   /** RegularExpression Id. */
-  int QUOTE = 31;
+  int STRING = 31;
   /** RegularExpression Id. */
-  int NAME = 32;
+  int XNAME = 32;
+  /** RegularExpression Id. */
+  int QUOTE = 33;
+  /** RegularExpression Id. */
+  int NAME = 34;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -104,10 +108,12 @@ public interface ProtobufParserConstants {
     "\"max\"",
     "\"true\"",
     "\"false\"",
+    "\"null\"",
     "\"int\"",
     "\"long\"",
     "\"boolean\"",
     "<TYPE>",
+    "<INT>",
     "<NUMBER>",
     "<STRING>",
     "<XNAME>",

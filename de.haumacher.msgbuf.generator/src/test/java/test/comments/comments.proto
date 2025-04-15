@@ -6,7 +6,7 @@ package test.comments.data;
  */
 message SearchRequest {
   /** The query string to interpret */
-  string query = 1;
+  string query;
   
   /** 
    * The page of results to return. 
@@ -17,12 +17,12 @@ message SearchRequest {
    *
    * @see #result_per_page   
    */
-  int32 page_number = 2;  // Which page number do we want?
+  int32 page_number;  // Which page number do we want?
   
   /** 
    * The number of results to return at once.
    *
    * @see #page_number
    */
-  int32 result_per_page = 3;  // Number of results to return per page.
+  int32 result_per_page;  // Number of results to return per page.
 }
