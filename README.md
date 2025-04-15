@@ -181,6 +181,9 @@ Marks a reference to be the reverse end of the reference with the given name in 
 ### `@Container`
 Marks a reference point to the container of the current object.
 
+### `@Ref`
+Marks a reference as cross reference (non-composition). When setting values to fields marked as cross reference, container properties are not updated.
+
 ### `@type_id(4711)`
 Sets a custom ID for binary serialization.
 
