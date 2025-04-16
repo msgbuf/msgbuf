@@ -506,7 +506,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 							if (hasContainer) {
 								// Check early to not leave back inconsistent state upon error.
 								line(mkType(container) + " oldContainer = added." + getterName(container) + "();");
-								line("if (oldContainer != null && oldContainer != this) {");
+								line("if (oldContainer != null && oldContainer != " + implName(_def) + ".this) {");
 								{
 									line("throw new IllegalStateException(\"Object may not be part of two different containers.\");");
 								}
