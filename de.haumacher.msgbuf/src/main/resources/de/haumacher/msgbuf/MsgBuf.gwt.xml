@@ -9,8 +9,11 @@
 
   <source path='binary'/>
   <source path='data'/>
+  <source path='graph'/>
   <source path='io'/>
   <source path='json'/>
+  <source path='observer'/>
+  <source path='util'/>
 
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>
