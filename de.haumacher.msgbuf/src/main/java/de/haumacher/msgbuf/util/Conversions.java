@@ -24,11 +24,13 @@ public class Conversions {
 	public static <T> List<? extends T> asList(Class<T> type, Object value) {
 		@SuppressWarnings("unchecked")
 		List<? extends T> result = (List<? extends T>) value;
-		for (T element : result) {
-			if (element != null && !type.isInstance(element)) {
-				throw new ClassCastException("Not an instance of '" + type + "': " + element);
-			}
-		}
+		// Note: type.isInstance() is not compatible with GWT.
+		//
+//		for (T element : result) {
+//			if (element != null && !type.isInstance(element)) {
+//				throw new ClassCastException("Not an instance of '" + type + "': " + element);
+//			}
+//		}
 		return result;
 	}
 
