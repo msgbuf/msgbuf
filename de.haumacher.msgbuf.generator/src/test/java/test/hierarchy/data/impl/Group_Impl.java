@@ -5,7 +5,7 @@ package test.hierarchy.data.impl;
  */
 public class Group_Impl extends test.hierarchy.data.impl.Shape_Impl implements test.hierarchy.data.Group {
 
-	private final java.util.List<test.hierarchy.data.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<test.hierarchy.data.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.hierarchy.data.Shape>() {
 		@Override
 		protected void beforeAdd(int index, test.hierarchy.data.Shape element) {
 			_listener.beforeAdd(Group_Impl.this, SHAPES__PROP, index, element);

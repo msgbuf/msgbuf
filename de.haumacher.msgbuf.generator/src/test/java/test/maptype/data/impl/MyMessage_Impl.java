@@ -5,7 +5,7 @@ package test.maptype.data.impl;
  */
 public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.maptype.data.MyMessage {
 
-	private final java.util.Map<String, test.maptype.data.Project> _projects = new de.haumacher.msgbuf.util.ReferenceMap<>() {
+	private final java.util.Map<String, test.maptype.data.Project> _projects = new de.haumacher.msgbuf.util.ReferenceMap<String, test.maptype.data.Project>() {
 		@Override
 		protected void beforeAdd(String index, test.maptype.data.Project element) {
 			_listener.beforeAdd(MyMessage_Impl.this, PROJECTS__PROP, index, element);
@@ -17,7 +17,7 @@ public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 		}
 	};
 
-	private final java.util.Map<Integer, String> _rating = new de.haumacher.msgbuf.util.ReferenceMap<>() {
+	private final java.util.Map<Integer, String> _rating = new de.haumacher.msgbuf.util.ReferenceMap<Integer, String>() {
 		@Override
 		protected void beforeAdd(Integer index, String element) {
 			_listener.beforeAdd(MyMessage_Impl.this, RATING__PROP, index, element);

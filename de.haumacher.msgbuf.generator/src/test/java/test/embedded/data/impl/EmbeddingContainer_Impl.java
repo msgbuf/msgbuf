@@ -7,7 +7,7 @@ public class EmbeddingContainer_Impl extends de.haumacher.msgbuf.data.AbstractDa
 
 	private String _name = "";
 
-	private final java.util.List<test.embedded.data.Base> _contents = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<test.embedded.data.Base> _contents = new de.haumacher.msgbuf.util.ReferenceList<test.embedded.data.Base>() {
 		@Override
 		protected void beforeAdd(int index, test.embedded.data.Base element) {
 			_listener.beforeAdd(EmbeddingContainer_Impl.this, CONTENTS__PROP, index, element);

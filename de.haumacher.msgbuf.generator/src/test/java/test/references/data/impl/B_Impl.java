@@ -7,7 +7,7 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	private String _name = "";
 
-	private final java.util.List<test.references.data.A> _inBs = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<test.references.data.A> _inBs = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
 			_listener.beforeAdd(B_Impl.this, IN_BS__PROP, index, element);
@@ -19,7 +19,7 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		}
 	};
 
-	private final java.util.List<test.references.data.A> _inB = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<test.references.data.A> _inB = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
 		@Override
 		protected void beforeAdd(int index, test.references.data.A element) {
 			_listener.beforeAdd(B_Impl.this, IN_B__PROP, index, element);

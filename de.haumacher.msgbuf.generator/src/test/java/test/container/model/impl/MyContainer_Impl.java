@@ -11,12 +11,12 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 
 	private test.container.model.MyContent _content2 = null;
 
-	private final java.util.List<test.container.model.MyContent> _contentList = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<test.container.model.MyContent> _contentList = new de.haumacher.msgbuf.util.ReferenceList<test.container.model.MyContent>() {
 		@Override
 		protected void beforeAdd(int index, test.container.model.MyContent element) {
 			test.container.model.impl.MyContent_Impl added = (test.container.model.impl.MyContent_Impl) element;
 			test.container.model.MyContainer oldContainer = added.getContainer();
-			if (oldContainer != null && oldContainer != this) {
+			if (oldContainer != null && oldContainer != MyContainer_Impl.this) {
 				throw new IllegalStateException("Object may not be part of two different containers.");
 			}
 			_listener.beforeAdd(MyContainer_Impl.this, CONTENT_LIST__PROP, index, element);
@@ -31,12 +31,12 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		}
 	};
 
-	private final java.util.Map<String, test.container.model.MyContent> _contentMap = new de.haumacher.msgbuf.util.ReferenceMap<>() {
+	private final java.util.Map<String, test.container.model.MyContent> _contentMap = new de.haumacher.msgbuf.util.ReferenceMap<String, test.container.model.MyContent>() {
 		@Override
 		protected void beforeAdd(String index, test.container.model.MyContent element) {
 			test.container.model.impl.MyContent_Impl added = (test.container.model.impl.MyContent_Impl) element;
 			test.container.model.MyContainer oldContainer = added.getContainer();
-			if (oldContainer != null && oldContainer != this) {
+			if (oldContainer != null && oldContainer != MyContainer_Impl.this) {
 				throw new IllegalStateException("Object may not be part of two different containers.");
 			}
 			_listener.beforeAdd(MyContainer_Impl.this, CONTENT_MAP__PROP, index, element);

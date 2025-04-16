@@ -5,7 +5,7 @@ package test.notypekind.impl;
  */
 public class Group_Impl extends test.notypekind.impl.Shape_Impl implements test.notypekind.Group {
 
-	private final java.util.List<test.notypekind.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<test.notypekind.Shape> _shapes = new de.haumacher.msgbuf.util.ReferenceList<test.notypekind.Shape>() {
 		@Override
 		protected void beforeAdd(int index, test.notypekind.Shape element) {
 			_listener.beforeAdd(Group_Impl.this, SHAPES__PROP, index, element);
