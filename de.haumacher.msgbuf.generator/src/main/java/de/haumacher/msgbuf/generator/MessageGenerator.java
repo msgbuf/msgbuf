@@ -491,9 +491,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						"int" : 
 						mkTypeWrapped(((MapType) type).getKeyType());
 					
+					// Note: Anonymous type construction with omitted type arguments (<>) is not compatible with GWT. 
 					String collectionType = isList ? 
-							"de.haumacher.msgbuf.util.ReferenceList" + "<>" : 
-							"de.haumacher.msgbuf.util.ReferenceMap" + "<>"; 
+							"de.haumacher.msgbuf.util.ReferenceList" + "<" + mkTypeWrapped(type) + ">" : 
+							"de.haumacher.msgbuf.util.ReferenceMap" + "<" + mkTypeWrapped(((MapType) field.getType()).getKeyType()) + ", " + mkTypeWrapped(((MapType) type).getValueType()) + ">"; 
 					line("private" + mkTransient(field) + mkFinal(field) +  " " + mkType(field) + " " + fieldMemberName(field) + " = " + "new " + collectionType + "() {");
 					{
 						line("@Override");
