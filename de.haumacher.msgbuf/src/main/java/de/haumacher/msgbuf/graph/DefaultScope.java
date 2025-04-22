@@ -4,10 +4,12 @@
 package de.haumacher.msgbuf.graph;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.haumacher.msgbuf.graph.cmd.Command;
@@ -161,6 +163,13 @@ public class DefaultScope implements Listener, ScopeMixin {
 	 */
 	public void dropChanges() {
 		_changes.clear();
+	}
+	
+	/**
+	 * The set of nodes updated after the last sync.
+	 */
+	public Set<SharedGraphNode> getDirty() {
+		return Collections.unmodifiableSet(_changes.keySet());
 	}
 
 	/**
@@ -323,7 +332,21 @@ public class DefaultScope implements Listener, ScopeMixin {
 	}
 
 	private Map<String, Command> changes(SharedGraphNode obj) {
+		if (!_changes.isEmpty()) {
+			beforeChange();
+		}
 		return _changes.computeIfAbsent(obj, NEW_MAP);
+	}
+
+	/** 
+	 * Hook called before the first change is recorded.
+	 * 
+	 * <p>
+	 * The method is only called once during two synchronization cycles.
+	 * </p>
+	 */
+	protected void beforeChange() {
+		// Hook for subclasses.
 	}
 
 	@Override
