@@ -23,11 +23,19 @@ public class StringR implements Reader {
 
 	@Override
 	public int read() throws IOException {
+		if (_in.length() == _pos) {
+			// Finished.
+			return -1;
+		}
 		return _in.charAt(_pos++);
 	}
 	
 	@Override
 	public int read(char[] cbuf, int off, int len) throws IOException {
+		if (_in.length() == _pos) {
+			// Finished.
+			return -1;
+		}
 		int count = Math.min(len, _in.length() - _pos);
 		int end = _pos + count;
 		_in.getChars(_pos, end, cbuf, off);
