@@ -84,7 +84,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 
 	@Override
 	public void beforeSet(Observable obj, String property, Object value) {
-		if (_applying) {
+		if (_applying || obj.transientProperties().contains(property)) {
 			return;
 		}
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
@@ -93,7 +93,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 
 	@Override
 	public void beforeAdd(Observable obj, String property, int index, Object element) {
-		if (_applying) {
+		if (_applying || obj.transientProperties().contains(property)) {
 			return;
 		}
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;
@@ -106,7 +106,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 
 	@Override
 	public void afterRemove(Observable obj, String property, int index, Object element) {
-		if (_applying) {
+		if (_applying || obj.transientProperties().contains(property)) {
 			return;
 		}
 		AbstractSharedGraphNode node = (AbstractSharedGraphNode) obj;

@@ -134,9 +134,18 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 				TITLE__PROP, 
 				SNIPPETS__PROP));
 
+		private static java.util.Set<String> TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(new java.util.HashSet<>(
+				java.util.Arrays.asList(
+					)));
+
 		@Override
 		public java.util.List<String> properties() {
 			return PROPERTIES;
+		}
+
+		@Override
+		public java.util.Set<String> transientProperties() {
+			return TRANSIENT_PROPERTIES;
 		}
 
 		@Override
@@ -461,9 +470,18 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 		java.util.Arrays.asList(
 			RESULTS__PROP));
 
+	private static java.util.Set<String> TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(new java.util.HashSet<>(
+			java.util.Arrays.asList(
+				)));
+
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ package de.haumacher.msgbuf.data;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An object with generically accessible properties.
@@ -23,6 +24,13 @@ public interface ReflectiveDataObject {
 	 */
 	default List<String> properties() {
 		return Collections.emptyList();
+	}
+
+	/**
+	 * All {@link #properties()} that are marked <code>transient</code>.
+	 */
+	default Set<String> transientProperties() {
+		return Collections.emptySet();
 	}
 
 	/**

@@ -1113,6 +1113,32 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				nl();
 			}
 		}
+
+		nl();
+		line("private static java.util.Set<String> TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(new java.util.HashSet<>(");
+		{
+			line("java.util.Arrays.asList(");
+			{
+				boolean first = true;
+				for (Field field : getFields()) {
+					if (!field.isTransient()) {
+						continue;
+					}
+					if (first) {
+						first = false;
+					} else {
+						append(", ");
+						nl();
+					}
+					lineStart(constant(field));
+				}
+				if (first) {
+					lineStart("");
+				}
+				append(")));");
+				nl();
+			}
+		}
 	}
 
 	private void reflectionProperties() {
@@ -1121,6 +1147,14 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		line("public java.util.List<String> properties() {");
 		{
 			line("return PROPERTIES;");
+		}
+		line("}");
+
+		nl();
+		line("@Override");
+		line("public java.util.Set<String> transientProperties() {");
+		{
+			line("return TRANSIENT_PROPERTIES;");
 		}
 		line("}");
 	}
