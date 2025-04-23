@@ -177,5 +177,16 @@ public class TestContainer extends TestCase {
 		assertEquals(container, c.getContainer());
 		assertEquals(c, container.getContent1());
 	}
+	
+	public void testUpdateRef() {
+		MyContent c = MyContent.create().setName("c");
+		MyContainer container = MyContainer.create().setOther(c).addOthers(c);
+		
+		assertEquals(c, container.getOther());
+		assertNull(c.getContainer());
+		
+		container.setContent1(c);
+		assertEquals(container, c.getContainer());
+	}
 
 }
