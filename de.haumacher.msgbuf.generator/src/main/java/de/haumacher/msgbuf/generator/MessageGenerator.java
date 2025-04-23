@@ -501,7 +501,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						line("protected void beforeAdd(" + keyType + " " + "index" + ", " + contentTypeWrapped + " element) {");
 						{
 							if (hasContainer || hasReverseEnd) {
-								line(contentTypeImpl + " added = (" + contentTypeImpl + ") element;");
+								if (_noInterfaces) {
+									line(contentTypeWrapped + " added = element;");
+								} else {
+									line(contentTypeImpl + " added = (" + contentTypeImpl + ") element;");
+								}
 							}
 
 							if (hasContainer) {
@@ -533,7 +537,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						line("protected void afterRemove(" + keyType + " " + "index" + ", " + contentTypeWrapped + " element) {");
 						{
 							if (hasContainer || hasReverseEnd) {
-								line(contentTypeImpl + " removed = (" + contentTypeImpl + ") element;");
+								if (_noInterfaces) {
+									line(contentTypeWrapped + " removed = element;");
+								} else {
+									line(contentTypeImpl + " removed = (" + contentTypeImpl + ") element;");
+								}
 							}
 
 							if (hasReverseEnd) {
@@ -703,8 +711,13 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				boolean hasContainer = container != null;
 
 				if (hasContainer || hasReverseEnd) {
-					line(mkTypeWrappedImpl(type) + " before = (" + mkTypeWrappedImpl(type) + ") " + fieldMemberName(field) +";");
-					line(mkTypeWrappedImpl(type) + " after = (" + mkTypeWrappedImpl(type) + ") value;");
+					if (_noInterfaces) {
+						line(mkTypeWrapped(type) + " before = " + fieldMemberName(field) +";");
+						line(mkTypeWrapped(type) + " after = value;");
+					} else {
+						line(mkTypeWrappedImpl(type) + " before = (" + mkTypeWrappedImpl(type) + ") " + fieldMemberName(field) +";");
+						line(mkTypeWrappedImpl(type) + " after = (" + mkTypeWrappedImpl(type) + ") value;");
+					}
 				}
 
 				if (hasContainer) {
