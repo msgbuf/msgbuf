@@ -1,0 +1,28 @@
+package test.container.nointerfaces.model;
+
+option NoInterfaces;
+
+message MyContainer {
+	string name;
+	
+	MyContent content1;
+	MyContent content2;
+	
+	repeated MyContent contentList;
+	map<string, MyContent> contentMap;
+	
+	@Ref
+	MyContent other;
+	
+	@Ref
+	repeated MyContent others;
+}
+
+message MyContent {
+
+	@Container
+	MyContainer container;
+
+	string name;
+
+}
