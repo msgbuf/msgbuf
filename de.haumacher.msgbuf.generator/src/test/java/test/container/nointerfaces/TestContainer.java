@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2023 Bernhard Haumacher et al. All Rights Reserved.
  */
-package test.container;
+package test.container.nointerfaces;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import junit.framework.TestCase;
-import test.container.model.MyContainer;
-import test.container.model.MyContent;
+import test.container.nointerfaces.model.MyContainer;
+import test.container.nointerfaces.model.MyContent;
 
 /**
  * Test case for <code>@Container</code> annotations.

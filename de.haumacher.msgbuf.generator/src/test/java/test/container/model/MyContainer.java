@@ -27,6 +27,12 @@ public interface MyContainer extends de.haumacher.msgbuf.data.DataObject, de.hau
 	/** @see #getContentMap() */
 	String CONTENT_MAP__PROP = "contentMap";
 
+	/** @see #getOther() */
+	String OTHER__PROP = "other";
+
+	/** @see #getOthers() */
+	String OTHERS__PROP = "others";
+
 	/** Identifier for the property {@link #getName()} in binary format. */
 	static final int NAME__ID = 1;
 
@@ -41,6 +47,12 @@ public interface MyContainer extends de.haumacher.msgbuf.data.DataObject, de.hau
 
 	/** Identifier for the property {@link #getContentMap()} in binary format. */
 	static final int CONTENT_MAP__ID = 5;
+
+	/** Identifier for the property {@link #getOther()} in binary format. */
+	static final int OTHER__ID = 6;
+
+	/** Identifier for the property {@link #getOthers()} in binary format. */
+	static final int OTHERS__ID = 7;
 
 	String getName();
 
@@ -106,6 +118,35 @@ public interface MyContainer extends de.haumacher.msgbuf.data.DataObject, de.hau
 	 * Removes a key from the {@link #getContentMap()} map.
 	 */
 	void removeContentMap(String key);
+
+	test.container.model.MyContent getOther();
+
+	/**
+	 * @see #getOther()
+	 */
+	test.container.model.MyContainer setOther(test.container.model.MyContent value);
+
+	/**
+	 * Checks, whether {@link #getOther()} has a value.
+	 */
+	boolean hasOther();
+
+	java.util.List<test.container.model.MyContent> getOthers();
+
+	/**
+	 * @see #getOthers()
+	 */
+	test.container.model.MyContainer setOthers(java.util.List<? extends test.container.model.MyContent> value);
+
+	/**
+	 * Adds a value to the {@link #getOthers()} list.
+	 */
+	test.container.model.MyContainer addOthers(test.container.model.MyContent value);
+
+	/**
+	 * Removes a value from the {@link #getOthers()} list.
+	 */
+	void removeOthers(test.container.model.MyContent value);
 
 	@Override
 	public test.container.model.MyContainer registerListener(de.haumacher.msgbuf.observer.Listener l);

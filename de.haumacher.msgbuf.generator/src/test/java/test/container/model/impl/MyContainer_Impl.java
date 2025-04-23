@@ -51,6 +51,20 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		}
 	};
 
+	private test.container.model.MyContent _other = null;
+
+	private final java.util.List<test.container.model.MyContent> _others = new de.haumacher.msgbuf.util.ReferenceList<test.container.model.MyContent>() {
+		@Override
+		protected void beforeAdd(int index, test.container.model.MyContent element) {
+			_listener.beforeAdd(MyContainer_Impl.this, OTHERS__PROP, index, element);
+		}
+
+		@Override
+		protected void afterRemove(int index, test.container.model.MyContent element) {
+			_listener.afterRemove(MyContainer_Impl.this, OTHERS__PROP, index, element);
+		}
+	};
+
 	/**
 	 * Creates a {@link MyContainer_Impl} instance.
 	 *
@@ -220,6 +234,62 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		_contentMap.remove(key);
 	}
 
+	@Override
+	public final test.container.model.MyContent getOther() {
+		return _other;
+	}
+
+	@Override
+	public test.container.model.MyContainer setOther(test.container.model.MyContent value) {
+		internalSetOther(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getOther()} without chain call utility. */
+	protected final void internalSetOther(test.container.model.MyContent value) {
+		_listener.beforeSet(this, OTHER__PROP, value);
+		_other = value;
+	}
+
+	@Override
+	public final boolean hasOther() {
+		return _other != null;
+	}
+
+	@Override
+	public final java.util.List<test.container.model.MyContent> getOthers() {
+		return _others;
+	}
+
+	@Override
+	public test.container.model.MyContainer setOthers(java.util.List<? extends test.container.model.MyContent> value) {
+		internalSetOthers(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getOthers()} without chain call utility. */
+	protected final void internalSetOthers(java.util.List<? extends test.container.model.MyContent> value) {
+		if (value == null) throw new IllegalArgumentException("Property 'others' cannot be null.");
+		_others.clear();
+		_others.addAll(value);
+	}
+
+	@Override
+	public test.container.model.MyContainer addOthers(test.container.model.MyContent value) {
+		internalAddOthers(value);
+		return this;
+	}
+
+	/** Implementation of {@link #addOthers(test.container.model.MyContent)} without chain call utility. */
+	protected final void internalAddOthers(test.container.model.MyContent value) {
+		_others.add(value);
+	}
+
+	@Override
+	public final void removeOthers(test.container.model.MyContent value) {
+		_others.remove(value);
+	}
+
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
@@ -253,7 +323,9 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			CONTENT_1__PROP, 
 			CONTENT_2__PROP, 
 			CONTENT_LIST__PROP, 
-			CONTENT_MAP__PROP));
+			CONTENT_MAP__PROP, 
+			OTHER__PROP, 
+			OTHERS__PROP));
 
 	private static java.util.Set<String> TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(new java.util.HashSet<>(
 			java.util.Arrays.asList(
@@ -277,6 +349,8 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			case CONTENT_2__PROP: return getContent2();
 			case CONTENT_LIST__PROP: return getContentList();
 			case CONTENT_MAP__PROP: return getContentMap();
+			case OTHER__PROP: return getOther();
+			case OTHERS__PROP: return getOthers();
 			default: return test.container.model.MyContainer.super.get(field);
 		}
 	}
@@ -289,6 +363,8 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			case CONTENT_2__PROP: internalSetContent2((test.container.model.MyContent) value); break;
 			case CONTENT_LIST__PROP: internalSetContentList(de.haumacher.msgbuf.util.Conversions.asList(test.container.model.MyContent.class, value)); break;
 			case CONTENT_MAP__PROP: internalSetContentMap((java.util.Map<String, test.container.model.MyContent>) value); break;
+			case OTHER__PROP: internalSetOther((test.container.model.MyContent) value); break;
+			case OTHERS__PROP: internalSetOthers(de.haumacher.msgbuf.util.Conversions.asList(test.container.model.MyContent.class, value)); break;
 		}
 	}
 
@@ -323,6 +399,16 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			entry.getValue().writeTo(out);
 		}
 		out.endObject();
+		if (hasOther()) {
+			out.name(OTHER__PROP);
+			getOther().writeTo(out);
+		}
+		out.name(OTHERS__PROP);
+		out.beginArray();
+		for (test.container.model.MyContent x : getOthers()) {
+			x.writeTo(out);
+		}
+		out.endArray();
 	}
 
 	@Override
@@ -351,6 +437,17 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 				setContentMap(newValue);
 				break;
 			}
+			case OTHER__PROP: setOther(test.container.model.MyContent.readMyContent(in)); break;
+			case OTHERS__PROP: {
+				java.util.List<test.container.model.MyContent> newValue = new java.util.ArrayList<>();
+				in.beginArray();
+				while (in.hasNext()) {
+					newValue.add(test.container.model.MyContent.readMyContent(in));
+				}
+				in.endArray();
+				setOthers(newValue);
+			}
+			break;
 			default: super.readField(in, field);
 		}
 	}
@@ -390,6 +487,19 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			out.endArray();
 		}
 		out.name(CONTENT_MAP__ID);
+		if (hasOther()) {
+			out.name(OTHER__ID);
+			getOther().writeTo(out);
+		}
+		out.name(OTHERS__ID);
+		{
+			java.util.List<test.container.model.MyContent> values = getOthers();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (test.container.model.MyContent x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
 	}
 
 	/** Helper for creating an object of type {@link test.container.model.MyContainer} from a polymorphic composition. */
@@ -440,6 +550,15 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 				in.endArray();
 				break;
 			}
+			case OTHER__ID: setOther(test.container.model.MyContent.readMyContent(in)); break;
+			case OTHERS__ID: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addOthers(test.container.model.MyContent.readMyContent(in));
+				}
+				in.endArray();
+			}
+			break;
 			default: in.skipValue(); 
 		}
 	}
@@ -461,6 +580,12 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 
 	/** XML attribute or element name of a {@link #getContentMap} property. */
 	private static final String CONTENT_MAP__XML_ATTR = "content-map";
+
+	/** XML attribute or element name of a {@link #getOther} property. */
+	private static final String OTHER__XML_ATTR = "other";
+
+	/** XML attribute or element name of a {@link #getOthers} property. */
+	private static final String OTHERS__XML_ATTR = "others";
 
 	@Override
 	public String getXmlTagName() {
@@ -492,6 +617,16 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		}
 		out.writeStartElement(CONTENT_LIST__XML_ATTR);
 		for (test.container.model.MyContent element : getContentList()) {
+			element.writeTo(out);
+		}
+		out.writeEndElement();
+		if (hasOther()) {
+			out.writeStartElement(OTHER__XML_ATTR);
+			getOther().writeContent(out);
+			out.writeEndElement();
+		}
+		out.writeStartElement(OTHERS__XML_ATTR);
+		for (test.container.model.MyContent element : getOthers()) {
 			element.writeTo(out);
 		}
 		out.writeEndElement();
@@ -556,6 +691,14 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 				internalReadContentListListXml(in);
 				break;
 			}
+			case OTHER__XML_ATTR: {
+				setOther(test.container.model.impl.MyContent_Impl.readMyContent_XmlContent(in));
+				break;
+			}
+			case OTHERS__XML_ATTR: {
+				internalReadOthersListXml(in);
+				break;
+			}
 			default: {
 				internalSkipUntilMatchingEndElement(in);
 			}
@@ -580,6 +723,17 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			}
 
 			addContentList(test.container.model.impl.MyContent_Impl.readMyContent_XmlContent(in));
+		}
+	}
+
+	private void internalReadOthersListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		while (true) {
+			int event = in.nextTag();
+			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
+				break;
+			}
+
+			addOthers(test.container.model.impl.MyContent_Impl.readMyContent_XmlContent(in));
 		}
 	}
 

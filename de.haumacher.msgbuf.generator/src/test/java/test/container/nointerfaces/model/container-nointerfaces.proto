@@ -1,4 +1,6 @@
-package test.container.model;
+package test.container.nointerfaces.model;
+
+option NoInterfaces;
 
 message MyContainer {
 	string name;
