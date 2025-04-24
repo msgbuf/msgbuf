@@ -5,29 +5,26 @@ package de.haumacher.msgbuf.graph.cmd;
  */
 public abstract class ListUpdate extends Command {
 
-	/** Visitor interface for the {@link ListUpdate} hierarchy.*/
+	/** Visitor interface for the {@link de.haumacher.msgbuf.graph.cmd.ListUpdate} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {
 
-		/** Visit case for {@link InsertElement}.*/
-		R visit(InsertElement self, A arg) throws E;
+		/** Visit case for {@link de.haumacher.msgbuf.graph.cmd.InsertElement}.*/
+		R visit(de.haumacher.msgbuf.graph.cmd.InsertElement self, A arg) throws E;
 
-		/** Visit case for {@link RemoveElement}.*/
-		R visit(RemoveElement self, A arg) throws E;
+		/** Visit case for {@link de.haumacher.msgbuf.graph.cmd.RemoveElement}.*/
+		R visit(de.haumacher.msgbuf.graph.cmd.RemoveElement self, A arg) throws E;
 
 	}
 
 	/** @see #getIndex() */
-	public static final String INDEX = "i";
-
-	/** @see #getNext() */
-	public static final String NEXT = "next";
+	private static final String INDEX__PROP = "i";
 
 	/** Identifier for the property {@link #getIndex()} in binary format. */
-	public static final int INDEX__ID = 4;
+	static final int INDEX__ID = 4;
 
 	private int _index = 0;
 
-	private transient ListUpdate _next = null;
+	private transient de.haumacher.msgbuf.graph.cmd.ListUpdate _next = null;
 
 	/**
 	 * Creates a {@link ListUpdate} instance.
@@ -46,26 +43,34 @@ public abstract class ListUpdate extends Command {
 	/**
 	 * @see #getIndex()
 	 */
-	public final ListUpdate setIndex(int value) {
-		_listener.beforeSet(this, INDEX, value);
-		_index = value;
+	public de.haumacher.msgbuf.graph.cmd.ListUpdate setIndex(int value) {
+		internalSetIndex(value);
 		return this;
+	}
+
+	/** Internal setter for {@link #getIndex()} without chain call utility. */
+	protected final void internalSetIndex(int value) {
+		_index = value;
 	}
 
 	/**
 	 * Pointer to chain updates for the same property.
 	 */
-	public final ListUpdate getNext() {
+	public final de.haumacher.msgbuf.graph.cmd.ListUpdate getNext() {
 		return _next;
 	}
 
 	/**
 	 * @see #getNext()
 	 */
-	public final ListUpdate setNext(ListUpdate value) {
-		_listener.beforeSet(this, NEXT, value);
-		_next = value;
+	public de.haumacher.msgbuf.graph.cmd.ListUpdate setNext(de.haumacher.msgbuf.graph.cmd.ListUpdate value) {
+		internalSetNext(value);
 		return this;
+	}
+
+	/** Internal setter for {@link #getNext()} without chain call utility. */
+	protected final void internalSetNext(de.haumacher.msgbuf.graph.cmd.ListUpdate value) {
+		_next = value;
 	}
 
 	/**
@@ -75,37 +80,27 @@ public abstract class ListUpdate extends Command {
 		return _next != null;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			INDEX, 
-			NEXT));
-
 	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
+	public de.haumacher.msgbuf.graph.cmd.ListUpdate setId(int value) {
+		internalSetId(value);
+		return this;
 	}
 
 	@Override
-	public Object get(String field) {
-		switch (field) {
-			case INDEX: return getIndex();
-			case NEXT: return getNext();
-			default: return super.get(field);
-		}
+	public de.haumacher.msgbuf.graph.cmd.ListUpdate setProperty(String value) {
+		internalSetProperty(value);
+		return this;
 	}
 
 	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case INDEX: setIndex((int) value); break;
-			case NEXT: setNext((ListUpdate) value); break;
-			default: super.set(field, value); break;
-		}
+	public de.haumacher.msgbuf.graph.cmd.ListUpdate setNode(de.haumacher.msgbuf.graph.SharedGraphNode value) {
+		internalSetNode(value);
+		return this;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static ListUpdate readListUpdate(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		ListUpdate result;
+	public static de.haumacher.msgbuf.graph.cmd.ListUpdate readListUpdate(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.graph.cmd.ListUpdate result;
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
@@ -120,14 +115,14 @@ public abstract class ListUpdate extends Command {
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(INDEX);
+		out.name(INDEX__PROP);
 		out.value(getIndex());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case INDEX: setIndex(in.nextInt()); break;
+			case INDEX__PROP: setIndex(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -140,20 +135,16 @@ public abstract class ListUpdate extends Command {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static ListUpdate readListUpdate(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.graph.cmd.ListUpdate readListUpdate(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		ListUpdate result;
 		int typeField = in.nextName();
 		assert typeField == 0;
 		int type = in.nextInt();
+		de.haumacher.msgbuf.graph.cmd.ListUpdate result;
 		switch (type) {
-			case InsertElement.INSERT_ELEMENT__TYPE_ID: result = de.haumacher.msgbuf.graph.cmd.InsertElement.create(); break;
-			case RemoveElement.REMOVE_ELEMENT__TYPE_ID: result = de.haumacher.msgbuf.graph.cmd.RemoveElement.create(); break;
-			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
-		}
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
+			case de.haumacher.msgbuf.graph.cmd.InsertElement.INSERT_ELEMENT__TYPE_ID: result = de.haumacher.msgbuf.graph.cmd.InsertElement.readInsertElement_Content(in); break;
+			case de.haumacher.msgbuf.graph.cmd.RemoveElement.REMOVE_ELEMENT__TYPE_ID: result = de.haumacher.msgbuf.graph.cmd.RemoveElement.readRemoveElement_Content(in); break;
+			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();
 		return result;
@@ -170,10 +161,9 @@ public abstract class ListUpdate extends Command {
 	/** Accepts the given visitor. */
 	public abstract <R,A,E extends Throwable> R visit(Visitor<R,A,E> v, A arg) throws E;
 
-
 	@Override
-	public final <R,A,E extends Throwable> R visit(Command.Visitor<R,A,E> v, A arg) throws E {
-		return visit((Visitor<R,A,E>) v, arg);
+	public final <R,A,E extends Throwable> R visit(de.haumacher.msgbuf.graph.cmd.Command.Visitor<R,A,E> v, A arg) throws E {
+		return visit((de.haumacher.msgbuf.graph.cmd.ListUpdate.Visitor<R,A,E>) v, arg);
 	}
 
 }

@@ -6,27 +6,24 @@ package de.haumacher.msgbuf.graph.cmd;
 public class InsertElement extends ListUpdate {
 
 	/**
-	 * Creates a {@link InsertElement} instance.
+	 * Creates a {@link de.haumacher.msgbuf.graph.cmd.InsertElement} instance.
 	 */
-	public static InsertElement create() {
-		return new InsertElement();
+	public static de.haumacher.msgbuf.graph.cmd.InsertElement create() {
+		return new de.haumacher.msgbuf.graph.cmd.InsertElement();
 	}
 
-	/** Identifier for the {@link InsertElement} type in JSON format. */
+	/** Identifier for the {@link de.haumacher.msgbuf.graph.cmd.InsertElement} type in JSON format. */
 	public static final String INSERT_ELEMENT__TYPE = "I";
 
-	/** @see #getElement() */
-	public static final String ELEMENT = "element";
-
-	/** Identifier for the {@link InsertElement} type in binary format. */
-	public static final int INSERT_ELEMENT__TYPE_ID = 2;
+	/** Identifier for the {@link de.haumacher.msgbuf.graph.cmd.InsertElement} type in binary format. */
+	static final int INSERT_ELEMENT__TYPE_ID = 2;
 
 	private transient java.lang.Object _element = null;
 
 	/**
 	 * Creates a {@link InsertElement} instance.
 	 *
-	 * @see #create()
+	 * @see de.haumacher.msgbuf.graph.cmd.InsertElement#create()
 	 */
 	protected InsertElement() {
 		super();
@@ -47,10 +44,14 @@ public class InsertElement extends ListUpdate {
 	/**
 	 * @see #getElement()
 	 */
-	public final InsertElement setElement(java.lang.Object value) {
-		_listener.beforeSet(this, ELEMENT, value);
-		_element = value;
+	public de.haumacher.msgbuf.graph.cmd.InsertElement setElement(java.lang.Object value) {
+		internalSetElement(value);
 		return this;
+	}
+
+	/** Internal setter for {@link #getElement()} without chain call utility. */
+	protected final void internalSetElement(java.lang.Object value) {
+		_element = value;
 	}
 
 	/**
@@ -61,41 +62,44 @@ public class InsertElement extends ListUpdate {
 	}
 
 	@Override
+	public de.haumacher.msgbuf.graph.cmd.InsertElement setIndex(int value) {
+		internalSetIndex(value);
+		return this;
+	}
+
+	@Override
+	public de.haumacher.msgbuf.graph.cmd.InsertElement setNext(de.haumacher.msgbuf.graph.cmd.ListUpdate value) {
+		internalSetNext(value);
+		return this;
+	}
+
+	@Override
+	public de.haumacher.msgbuf.graph.cmd.InsertElement setId(int value) {
+		internalSetId(value);
+		return this;
+	}
+
+	@Override
+	public de.haumacher.msgbuf.graph.cmd.InsertElement setProperty(String value) {
+		internalSetProperty(value);
+		return this;
+	}
+
+	@Override
+	public de.haumacher.msgbuf.graph.cmd.InsertElement setNode(de.haumacher.msgbuf.graph.SharedGraphNode value) {
+		internalSetNode(value);
+		return this;
+	}
+
+	@Override
 	public String jsonType() {
 		return INSERT_ELEMENT__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			ELEMENT));
-
-	@Override
-	public java.util.List<String> properties() {
-		return PROPERTIES;
-	}
-
-	@Override
-	public Object get(String field) {
-		switch (field) {
-			case ELEMENT: return getElement();
-			default: return super.get(field);
-		}
-	}
-
-	@Override
-	public void set(String field, Object value) {
-		switch (field) {
-			case ELEMENT: setElement((java.lang.Object) value); break;
-			default: super.set(field, value); break;
-		}
-	}
-
 	/** Reads a new instance from the given reader. */
-	public static InsertElement readInsertElement(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		InsertElement result = new InsertElement();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+	public static de.haumacher.msgbuf.graph.cmd.InsertElement readInsertElement(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.graph.cmd.InsertElement result = new de.haumacher.msgbuf.graph.cmd.InsertElement();
+		result.readContent(in);
 		return result;
 	}
 
@@ -111,7 +115,7 @@ public class InsertElement extends ListUpdate {
 		}
 	}
 
-	@Override
+	/** The binary identifier for this concrete type in the polymorphic {@link de.haumacher.msgbuf.graph.cmd.InsertElement} hierarchy. */
 	public int typeId() {
 		return INSERT_ELEMENT__TYPE_ID;
 	}
@@ -122,14 +126,17 @@ public class InsertElement extends ListUpdate {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static InsertElement readInsertElement(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.graph.cmd.InsertElement readInsertElement(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		InsertElement result = new InsertElement();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
+		de.haumacher.msgbuf.graph.cmd.InsertElement result = de.haumacher.msgbuf.graph.cmd.InsertElement.readInsertElement_Content(in);
 		in.endObject();
+		return result;
+	}
+
+	/** Helper for creating an object of type {@link de.haumacher.msgbuf.graph.cmd.InsertElement} from a polymorphic composition. */
+	public static de.haumacher.msgbuf.graph.cmd.InsertElement readInsertElement_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.graph.cmd.InsertElement result = new InsertElement();
+		result.readContent(in);
 		return result;
 	}
 
@@ -141,7 +148,7 @@ public class InsertElement extends ListUpdate {
 	}
 
 	@Override
-	public <R,A,E extends Throwable> R visit(ListUpdate.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(de.haumacher.msgbuf.graph.cmd.ListUpdate.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 

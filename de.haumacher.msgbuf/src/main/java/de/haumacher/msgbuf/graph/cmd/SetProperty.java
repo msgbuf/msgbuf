@@ -6,22 +6,22 @@ package de.haumacher.msgbuf.graph.cmd;
 public class SetProperty extends Command {
 
 	/**
-	 * Creates a {@link SetProperty} instance.
+	 * Creates a {@link de.haumacher.msgbuf.graph.cmd.SetProperty} instance.
 	 */
-	public static SetProperty create() {
-		return new SetProperty();
+	public static de.haumacher.msgbuf.graph.cmd.SetProperty create() {
+		return new de.haumacher.msgbuf.graph.cmd.SetProperty();
 	}
 
-	/** Identifier for the {@link SetProperty} type in JSON format. */
+	/** Identifier for the {@link de.haumacher.msgbuf.graph.cmd.SetProperty} type in JSON format. */
 	public static final String SET_PROPERTY__TYPE = "S";
 
-	/** Identifier for the {@link SetProperty} type in binary format. */
-	public static final int SET_PROPERTY__TYPE_ID = 1;
+	/** Identifier for the {@link de.haumacher.msgbuf.graph.cmd.SetProperty} type in binary format. */
+	static final int SET_PROPERTY__TYPE_ID = 1;
 
 	/**
 	 * Creates a {@link SetProperty} instance.
 	 *
-	 * @see #create()
+	 * @see de.haumacher.msgbuf.graph.cmd.SetProperty#create()
 	 */
 	protected SetProperty() {
 		super();
@@ -33,38 +33,57 @@ public class SetProperty extends Command {
 	}
 
 	@Override
+	public de.haumacher.msgbuf.graph.cmd.SetProperty setId(int value) {
+		internalSetId(value);
+		return this;
+	}
+
+	@Override
+	public de.haumacher.msgbuf.graph.cmd.SetProperty setProperty(String value) {
+		internalSetProperty(value);
+		return this;
+	}
+
+	@Override
+	public de.haumacher.msgbuf.graph.cmd.SetProperty setNode(de.haumacher.msgbuf.graph.SharedGraphNode value) {
+		internalSetNode(value);
+		return this;
+	}
+
+	@Override
 	public String jsonType() {
 		return SET_PROPERTY__TYPE;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static SetProperty readSetProperty(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		SetProperty result = new SetProperty();
-		in.beginObject();
-		result.readFields(in);
-		in.endObject();
+	public static de.haumacher.msgbuf.graph.cmd.SetProperty readSetProperty(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.graph.cmd.SetProperty result = new de.haumacher.msgbuf.graph.cmd.SetProperty();
+		result.readContent(in);
 		return result;
 	}
 
-	@Override
+	/** The binary identifier for this concrete type in the polymorphic {@link de.haumacher.msgbuf.graph.cmd.SetProperty} hierarchy. */
 	public int typeId() {
 		return SET_PROPERTY__TYPE_ID;
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static SetProperty readSetProperty(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+	public static de.haumacher.msgbuf.graph.cmd.SetProperty readSetProperty(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 		in.beginObject();
-		SetProperty result = new SetProperty();
-		while (in.hasNext()) {
-			int field = in.nextName();
-			result.readField(in, field);
-		}
+		de.haumacher.msgbuf.graph.cmd.SetProperty result = de.haumacher.msgbuf.graph.cmd.SetProperty.readSetProperty_Content(in);
 		in.endObject();
 		return result;
 	}
 
+	/** Helper for creating an object of type {@link de.haumacher.msgbuf.graph.cmd.SetProperty} from a polymorphic composition. */
+	public static de.haumacher.msgbuf.graph.cmd.SetProperty readSetProperty_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		de.haumacher.msgbuf.graph.cmd.SetProperty result = new SetProperty();
+		result.readContent(in);
+		return result;
+	}
+
 	@Override
-	public <R,A,E extends Throwable> R visit(Command.Visitor<R,A,E> v, A arg) throws E {
+	public <R,A,E extends Throwable> R visit(de.haumacher.msgbuf.graph.cmd.Command.Visitor<R,A,E> v, A arg) throws E {
 		return v.visit(this, arg);
 	}
 
