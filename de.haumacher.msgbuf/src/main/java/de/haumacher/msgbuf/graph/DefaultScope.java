@@ -142,7 +142,9 @@ public class DefaultScope implements Listener, ScopeMixin {
 			cnt++;
 			if (cnt > 10) {
 				// Too many changes, create complete update.
-				return SetProperty.create().setNode(update.getNode())
+				return SetProperty.create()
+						.setId(update.getId())
+						.setNode(update.getNode())
 						.setProperty(update.getProperty());
 			}
 			current = next;
