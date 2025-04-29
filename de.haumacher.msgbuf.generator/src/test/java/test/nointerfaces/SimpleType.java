@@ -59,6 +59,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	protected final void internalSetStr(String value) {
 		_listener.beforeSet(this, STR__PROP, value);
 		_str = value;
+		_listener.afterChanged(this, STR__PROP);
 	}
 
 	/**
@@ -80,6 +81,7 @@ public class SimpleType extends de.haumacher.msgbuf.data.AbstractDataObject impl
 	protected final void internalSetX(int value) {
 		_listener.beforeSet(this, X__PROP, value);
 		_x = value;
+		_listener.afterChanged(this, X__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;

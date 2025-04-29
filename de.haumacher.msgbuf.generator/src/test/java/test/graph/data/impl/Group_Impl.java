@@ -15,6 +15,11 @@ public class Group_Impl extends test.graph.data.impl.Shape_Impl implements test.
 		protected void afterRemove(int index, test.graph.data.Shape element) {
 			_listener.afterRemove(Group_Impl.this, SHAPES__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(Group_Impl.this, SHAPES__PROP);
+		}
 	};
 
 	/**

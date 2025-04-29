@@ -59,6 +59,7 @@ public class Circle extends AtomicShape {
 	protected final void internalSetRadius(int value) {
 		_listener.beforeSet(this, RADIUS__PROP, value);
 		_radius = value;
+		_listener.afterChanged(this, RADIUS__PROP);
 	}
 
 	@Override

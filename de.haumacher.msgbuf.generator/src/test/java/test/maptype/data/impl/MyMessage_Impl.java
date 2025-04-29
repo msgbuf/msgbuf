@@ -15,6 +15,11 @@ public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 		protected void afterRemove(String index, test.maptype.data.Project element) {
 			_listener.afterRemove(MyMessage_Impl.this, PROJECTS__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MyMessage_Impl.this, PROJECTS__PROP);
+		}
 	};
 
 	private final java.util.Map<Integer, String> _rating = new de.haumacher.msgbuf.util.ReferenceMap<Integer, String>() {
@@ -26,6 +31,11 @@ public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 		@Override
 		protected void afterRemove(Integer index, String element) {
 			_listener.afterRemove(MyMessage_Impl.this, RATING__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MyMessage_Impl.this, RATING__PROP);
 		}
 	};
 

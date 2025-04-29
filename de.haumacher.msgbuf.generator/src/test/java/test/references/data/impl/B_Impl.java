@@ -17,6 +17,11 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		protected void afterRemove(int index, test.references.data.A element) {
 			_listener.afterRemove(B_Impl.this, IN_BS__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(B_Impl.this, IN_BS__PROP);
+		}
 	};
 
 	private final java.util.List<test.references.data.A> _inB = new de.haumacher.msgbuf.util.ReferenceList<test.references.data.A>() {
@@ -28,6 +33,11 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		@Override
 		protected void afterRemove(int index, test.references.data.A element) {
 			_listener.afterRemove(B_Impl.this, IN_B__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(B_Impl.this, IN_B__PROP);
 		}
 	};
 
@@ -55,6 +65,7 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	@Override

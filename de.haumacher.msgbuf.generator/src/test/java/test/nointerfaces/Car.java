@@ -75,6 +75,7 @@ public class Car extends Shape {
 	protected final void internalSetWheel1(test.nointerfaces.Circle value) {
 		_listener.beforeSet(this, WHEEL_1__PROP, value);
 		_wheel1 = value;
+		_listener.afterChanged(this, WHEEL_1__PROP);
 	}
 
 	/**
@@ -103,6 +104,7 @@ public class Car extends Shape {
 	protected final void internalSetWheel2(test.nointerfaces.Circle value) {
 		_listener.beforeSet(this, WHEEL_2__PROP, value);
 		_wheel2 = value;
+		_listener.afterChanged(this, WHEEL_2__PROP);
 	}
 
 	/**
@@ -131,6 +133,7 @@ public class Car extends Shape {
 	protected final void internalSetBody(test.nointerfaces.Rectangle value) {
 		_listener.beforeSet(this, BODY__PROP, value);
 		_body = value;
+		_listener.afterChanged(this, BODY__PROP);
 	}
 
 	/**

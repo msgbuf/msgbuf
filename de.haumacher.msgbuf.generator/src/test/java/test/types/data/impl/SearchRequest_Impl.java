@@ -35,6 +35,7 @@ public class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObj
 	protected final void internalSetQuery(String value) {
 		_listener.beforeSet(this, QUERY__PROP, value);
 		_query = value;
+		_listener.afterChanged(this, QUERY__PROP);
 	}
 
 	@Override
@@ -52,6 +53,7 @@ public class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObj
 	protected final void internalSetPageNumber(int value) {
 		_listener.beforeSet(this, PAGE_NUMBER__PROP, value);
 		_pageNumber = value;
+		_listener.afterChanged(this, PAGE_NUMBER__PROP);
 	}
 
 	@Override
@@ -69,6 +71,7 @@ public class SearchRequest_Impl extends de.haumacher.msgbuf.data.AbstractDataObj
 	protected final void internalSetResultPerPage(int value) {
 		_listener.beforeSet(this, RESULT_PER_PAGE__PROP, value);
 		_resultPerPage = value;
+		_listener.afterChanged(this, RESULT_PER_PAGE__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;

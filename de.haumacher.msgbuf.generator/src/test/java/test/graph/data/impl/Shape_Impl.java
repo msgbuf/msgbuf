@@ -31,6 +31,7 @@ public abstract class Shape_Impl extends de.haumacher.msgbuf.graph.AbstractShare
 	protected final void internalSetXCoordinate(int value) {
 		_listener.beforeSet(this, X_COORDINATE__PROP, value);
 		_xCoordinate = value;
+		_listener.afterChanged(this, X_COORDINATE__PROP);
 	}
 
 	@Override
@@ -48,6 +49,7 @@ public abstract class Shape_Impl extends de.haumacher.msgbuf.graph.AbstractShare
 	protected final void internalSetYCoordinate(int value) {
 		_listener.beforeSet(this, Y_COORDINATE__PROP, value);
 		_yCoordinate = value;
+		_listener.afterChanged(this, Y_COORDINATE__PROP);
 	}
 
 	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(

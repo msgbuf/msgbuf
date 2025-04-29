@@ -36,6 +36,7 @@ public class Circle_Impl extends test.novisit.impl.AtomicShape_Impl implements t
 	protected final void internalSetRadius(int value) {
 		_listener.beforeSet(this, RADIUS__PROP, value);
 		_radius = value;
+		_listener.afterChanged(this, RADIUS__PROP);
 	}
 
 	@Override

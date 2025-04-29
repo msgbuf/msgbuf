@@ -34,6 +34,11 @@ public class Group extends Shape {
 		protected void afterRemove(int index, test.nointerfaces.Shape element) {
 			_listener.afterRemove(Group.this, SHAPES__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(Group.this, SHAPES__PROP);
+		}
 	};
 
 	/**

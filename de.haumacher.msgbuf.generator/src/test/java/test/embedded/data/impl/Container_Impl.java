@@ -17,6 +17,11 @@ public class Container_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 		protected void afterRemove(int index, test.embedded.data.Base element) {
 			_listener.afterRemove(Container_Impl.this, CONTENTS__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(Container_Impl.this, CONTENTS__PROP);
+		}
 	};
 
 	/**
@@ -43,6 +48,7 @@ public class Container_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	@Override

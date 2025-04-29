@@ -37,6 +37,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		protected final void internalSetA1(test.lowercasemessage.A value) {
 			_listener.beforeSet(this, A_1__PROP, value);
 			_a1 = value;
+			_listener.afterChanged(this, A_1__PROP);
 		}
 
 		@Override
@@ -59,6 +60,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		protected final void internalSetB1(test.lowercasemessage.A.B value) {
 			_listener.beforeSet(this, B_1__PROP, value);
 			_b1 = value;
+			_listener.afterChanged(this, B_1__PROP);
 		}
 
 		@Override
@@ -336,6 +338,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetA1(test.lowercasemessage.A value) {
 		_listener.beforeSet(this, A_1__PROP, value);
 		_a1 = value;
+		_listener.afterChanged(this, A_1__PROP);
 	}
 
 	@Override
@@ -358,6 +361,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetB1(test.lowercasemessage.A.B value) {
 		_listener.beforeSet(this, B_1__PROP, value);
 		_b1 = value;
+		_listener.afterChanged(this, B_1__PROP);
 	}
 
 	@Override

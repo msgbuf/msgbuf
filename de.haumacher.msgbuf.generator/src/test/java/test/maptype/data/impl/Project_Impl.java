@@ -33,6 +33,7 @@ public class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	@Override
@@ -50,6 +51,7 @@ public class Project_Impl extends de.haumacher.msgbuf.data.AbstractDataObject im
 	protected final void internalSetCost(double value) {
 		_listener.beforeSet(this, COST__PROP, value);
 		_cost = value;
+		_listener.afterChanged(this, COST__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;

@@ -200,6 +200,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetAc(test.innertypeclash.A.C value) {
 		_listener.beforeSet(this, AC__PROP, value);
 		_ac = value;
+		_listener.afterChanged(this, AC__PROP);
 	}
 
 	@Override
@@ -222,6 +223,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetBc(test.innertypeclash.B.C value) {
 		_listener.beforeSet(this, BC__PROP, value);
 		_bc = value;
+		_listener.afterChanged(this, BC__PROP);
 	}
 
 	@Override
@@ -244,6 +246,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetC(test.innertypeclash.A.C value) {
 		_listener.beforeSet(this, C__PROP, value);
 		_c = value;
+		_listener.afterChanged(this, C__PROP);
 	}
 
 	@Override

@@ -53,6 +53,7 @@ public class MyContent extends de.haumacher.msgbuf.data.AbstractDataObject imple
 			throw new IllegalStateException("Object may not be part of two different containers.");
 		}
 		_container = value;
+		_listener.afterChanged(this, CONTAINER__PROP);
 	}
 
 	/**
@@ -78,6 +79,7 @@ public class MyContent extends de.haumacher.msgbuf.data.AbstractDataObject imple
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
