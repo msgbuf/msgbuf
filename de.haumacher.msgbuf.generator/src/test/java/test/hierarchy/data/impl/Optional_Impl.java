@@ -38,6 +38,7 @@ public class Optional_Impl extends test.hierarchy.data.impl.Shape_Impl implement
 	protected final void internalSetHidden(boolean value) {
 		_listener.beforeSet(this, HIDDEN__PROP, value);
 		_hidden = value;
+		_listener.afterChanged(this, HIDDEN__PROP);
 	}
 
 	@Override
@@ -55,6 +56,7 @@ public class Optional_Impl extends test.hierarchy.data.impl.Shape_Impl implement
 	protected final void internalSetShape(test.hierarchy.data.Shape value) {
 		_listener.beforeSet(this, SHAPE__PROP, value);
 		_shape = value;
+		_listener.afterChanged(this, SHAPE__PROP);
 	}
 
 	@Override

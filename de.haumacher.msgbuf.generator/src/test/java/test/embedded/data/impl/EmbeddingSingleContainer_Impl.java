@@ -33,6 +33,7 @@ public class EmbeddingSingleContainer_Impl extends de.haumacher.msgbuf.data.Abst
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	@Override
@@ -50,6 +51,7 @@ public class EmbeddingSingleContainer_Impl extends de.haumacher.msgbuf.data.Abst
 	protected final void internalSetContents(test.embedded.data.Base value) {
 		_listener.beforeSet(this, CONTENTS__PROP, value);
 		_contents = value;
+		_listener.afterChanged(this, CONTENTS__PROP);
 	}
 
 	@Override

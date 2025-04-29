@@ -29,6 +29,11 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			removed.internalSetContainer(null);
 			_listener.afterRemove(MyContainer_Impl.this, CONTENT_LIST__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MyContainer_Impl.this, CONTENT_LIST__PROP);
+		}
 	};
 
 	private final java.util.Map<String, test.container.model.MyContent> _contentMap = new de.haumacher.msgbuf.util.ReferenceMap<String, test.container.model.MyContent>() {
@@ -49,6 +54,11 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 			removed.internalSetContainer(null);
 			_listener.afterRemove(MyContainer_Impl.this, CONTENT_MAP__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MyContainer_Impl.this, CONTENT_MAP__PROP);
+		}
 	};
 
 	private test.container.model.MyContent _other = null;
@@ -62,6 +72,11 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		@Override
 		protected void afterRemove(int index, test.container.model.MyContent element) {
 			_listener.afterRemove(MyContainer_Impl.this, OTHERS__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MyContainer_Impl.this, OTHERS__PROP);
 		}
 	};
 
@@ -89,6 +104,7 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	@Override
@@ -120,6 +136,7 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		if (after != null) {
 			after.internalSetContainer(this);
 		}
+		_listener.afterChanged(this, CONTENT_1__PROP);
 	}
 
 	@Override
@@ -156,6 +173,7 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 		if (after != null) {
 			after.internalSetContainer(this);
 		}
+		_listener.afterChanged(this, CONTENT_2__PROP);
 	}
 
 	@Override
@@ -249,6 +267,7 @@ public class MyContainer_Impl extends de.haumacher.msgbuf.data.AbstractDataObjec
 	protected final void internalSetOther(test.container.model.MyContent value) {
 		_listener.beforeSet(this, OTHER__PROP, value);
 		_other = value;
+		_listener.afterChanged(this, OTHER__PROP);
 	}
 
 	@Override

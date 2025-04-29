@@ -31,6 +31,7 @@ public abstract class Shape_Impl implements test.nojson.Shape {
 	protected final void internalSetXCoordinate(int value) {
 		_listener.beforeSet(this, X_COORDINATE__PROP, value);
 		_xCoordinate = value;
+		_listener.afterChanged(this, X_COORDINATE__PROP);
 	}
 
 	@Override
@@ -48,6 +49,7 @@ public abstract class Shape_Impl implements test.nojson.Shape {
 	protected final void internalSetYCoordinate(int value) {
 		_listener.beforeSet(this, Y_COORDINATE__PROP, value);
 		_yCoordinate = value;
+		_listener.afterChanged(this, Y_COORDINATE__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;

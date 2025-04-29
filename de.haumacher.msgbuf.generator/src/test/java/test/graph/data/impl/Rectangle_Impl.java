@@ -38,6 +38,7 @@ public class Rectangle_Impl extends test.graph.data.impl.AtomicShape_Impl implem
 	protected final void internalSetWidth(int value) {
 		_listener.beforeSet(this, WIDTH__PROP, value);
 		_width = value;
+		_listener.afterChanged(this, WIDTH__PROP);
 	}
 
 	@Override
@@ -55,6 +56,7 @@ public class Rectangle_Impl extends test.graph.data.impl.AtomicShape_Impl implem
 	protected final void internalSetHeight(int value) {
 		_listener.beforeSet(this, HEIGHT__PROP, value);
 		_height = value;
+		_listener.afterChanged(this, HEIGHT__PROP);
 	}
 
 	@Override

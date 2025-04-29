@@ -23,6 +23,11 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 			protected void afterRemove(int index, String element) {
 				_listener.afterRemove(Result_Impl.this, SNIPPETS__PROP, index, element);
 			}
+
+			@Override
+			protected void afterChanged() {
+				_listener.afterChanged(Result_Impl.this, SNIPPETS__PROP);
+			}
 		};
 
 		/**
@@ -49,6 +54,7 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 		protected final void internalSetUrl(String value) {
 			_listener.beforeSet(this, URL__PROP, value);
 			_url = value;
+			_listener.afterChanged(this, URL__PROP);
 		}
 
 		@Override
@@ -66,6 +72,7 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 		protected final void internalSetTitle(String value) {
 			_listener.beforeSet(this, TITLE__PROP, value);
 			_title = value;
+			_listener.afterChanged(this, TITLE__PROP);
 		}
 
 		@Override
@@ -393,6 +400,11 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 		@Override
 		protected void afterRemove(int index, test.nested.data.SearchResponse.Result element) {
 			_listener.afterRemove(SearchResponse_Impl.this, RESULTS__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(SearchResponse_Impl.this, RESULTS__PROP);
 		}
 	};
 

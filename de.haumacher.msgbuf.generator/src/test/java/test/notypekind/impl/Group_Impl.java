@@ -15,6 +15,11 @@ public class Group_Impl extends test.notypekind.impl.Shape_Impl implements test.
 		protected void afterRemove(int index, test.notypekind.Shape element) {
 			_listener.afterRemove(Group_Impl.this, SHAPES__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(Group_Impl.this, SHAPES__PROP);
+		}
 	};
 
 	/**

@@ -36,6 +36,7 @@ public class SomeName_Impl extends test.underscorename.impl.BaseMsg_Impl impleme
 	protected final void internalSetMyField(String value) {
 		_listener.beforeSet(this, MY_FIELD__PROP, value);
 		_myField = value;
+		_listener.afterChanged(this, MY_FIELD__PROP);
 	}
 
 	@Override

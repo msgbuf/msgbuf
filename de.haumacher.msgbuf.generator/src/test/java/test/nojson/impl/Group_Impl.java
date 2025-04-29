@@ -15,6 +15,11 @@ public class Group_Impl extends test.nojson.impl.Shape_Impl implements test.nojs
 		protected void afterRemove(int index, test.nojson.Shape element) {
 			_listener.afterRemove(Group_Impl.this, SHAPES__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(Group_Impl.this, SHAPES__PROP);
+		}
 	};
 
 	/**

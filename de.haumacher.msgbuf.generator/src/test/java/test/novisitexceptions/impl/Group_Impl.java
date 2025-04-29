@@ -15,6 +15,11 @@ public class Group_Impl extends test.novisitexceptions.impl.Shape_Impl implement
 		protected void afterRemove(int index, test.novisitexceptions.Shape element) {
 			_listener.afterRemove(Group_Impl.this, SHAPES__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(Group_Impl.this, SHAPES__PROP);
+		}
 	};
 
 	/**

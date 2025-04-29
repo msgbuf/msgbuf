@@ -37,6 +37,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetS(String value) {
 		_listener.beforeSet(this, S__PROP, value);
 		_s = value;
+		_listener.afterChanged(this, S__PROP);
 	}
 
 	@Override
@@ -54,6 +55,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetX(int value) {
 		_listener.beforeSet(this, X__PROP, value);
 		_x = value;
+		_listener.afterChanged(this, X__PROP);
 	}
 
 	@Override
@@ -71,6 +73,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetY(double value) {
 		_listener.beforeSet(this, Y__PROP, value);
 		_y = value;
+		_listener.afterChanged(this, Y__PROP);
 	}
 
 	@Override
@@ -88,6 +91,7 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	protected final void internalSetState(boolean value) {
 		_listener.beforeSet(this, STATE__PROP, value);
 		_state = value;
+		_listener.afterChanged(this, STATE__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;

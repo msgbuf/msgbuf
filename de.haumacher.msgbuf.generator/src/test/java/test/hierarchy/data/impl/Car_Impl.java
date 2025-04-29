@@ -40,6 +40,7 @@ public class Car_Impl extends test.hierarchy.data.impl.Shape_Impl implements tes
 	protected final void internalSetWheel1(test.hierarchy.data.Circle value) {
 		_listener.beforeSet(this, WHEEL_1__PROP, value);
 		_wheel1 = value;
+		_listener.afterChanged(this, WHEEL_1__PROP);
 	}
 
 	@Override
@@ -62,6 +63,7 @@ public class Car_Impl extends test.hierarchy.data.impl.Shape_Impl implements tes
 	protected final void internalSetWheel2(test.hierarchy.data.Circle value) {
 		_listener.beforeSet(this, WHEEL_2__PROP, value);
 		_wheel2 = value;
+		_listener.afterChanged(this, WHEEL_2__PROP);
 	}
 
 	@Override
@@ -84,6 +86,7 @@ public class Car_Impl extends test.hierarchy.data.impl.Shape_Impl implements tes
 	protected final void internalSetBody(test.hierarchy.data.Rectangle value) {
 		_listener.beforeSet(this, BODY__PROP, value);
 		_body = value;
+		_listener.afterChanged(this, BODY__PROP);
 	}
 
 	@Override

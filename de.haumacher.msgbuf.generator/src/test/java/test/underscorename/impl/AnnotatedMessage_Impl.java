@@ -36,6 +36,7 @@ public class AnnotatedMessage_Impl extends test.underscorename.impl.BaseMsg_Impl
 	protected final void internalSetAnnotatedField(String value) {
 		_listener.beforeSet(this, ANNOTATED_FIELD__PROP, value);
 		_annotatedField = value;
+		_listener.afterChanged(this, ANNOTATED_FIELD__PROP);
 	}
 
 	@Override
