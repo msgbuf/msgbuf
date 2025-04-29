@@ -19,10 +19,11 @@ public abstract class ReferenceMap<K, V> extends HashMap<K, V> {
 
 	@Override
 	public V put(K key, V value) {
-		remove(key);
+		V oldValue = remove(key);
 		
 		beforeAdd(key, value);
-		return super.put(key, value);
+		super.put(key, value);
+		return oldValue; 
 	}
 
 	@Override
