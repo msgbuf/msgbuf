@@ -33,18 +33,17 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 
 	@Override
 	public boolean addAll(Collection<? extends T> collection) {
-		beforeAddAll(collection);
+		beforeAddAll(size(), collection);
 		return super.addAll(collection);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> collection) {
-		beforeAddAll(collection);
+		beforeAddAll(index, collection);
 		return super.addAll(index, collection);
 	}
 
-	private void beforeAddAll(Collection<? extends T> collection) {
-		int index = size();
+	private void beforeAddAll(int index, Collection<? extends T> collection) {
 		for (T element : collection) {
 			beforeAdd(index++, element);
 		}
