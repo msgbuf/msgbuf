@@ -6,7 +6,7 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
-import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
+import static de.haumacher.msgbuf.generator.util.CodeUtil.stringLiteral;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -557,6 +557,15 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 							}
 						}
 						line("}");
+						
+						if (_listener) {
+							nl();
+							
+							line("@Override");
+							line("protected void afterChanged() {");
+								line("_listener.afterChanged(" + implName(_def) + ".this, " + constant(field) + ");");
+							line("}");
+						}
 					}
 					line("};");
 					continue;
@@ -774,6 +783,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						}
 					}
 					line("}");
+				}
+				
+				if (_listener) {
+					line("_listener.afterChanged(this, " + constant(field) + ");");
 				}
 			}
 		}

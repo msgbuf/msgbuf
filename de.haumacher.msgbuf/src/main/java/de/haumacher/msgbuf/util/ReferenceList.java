@@ -23,24 +23,37 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 	public void add(int index, T element) {
 		beforeAdd(index, element);
 		super.add(index, element);
+		afterChanged();
 	}
 
 	@Override
 	public boolean add(T element) {
 		beforeAdd(size(), element);
-		return super.add(element);
+		boolean changed = super.add(element);
+		if (changed) {
+			afterChanged();
+		}
+		return changed;
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends T> collection) {
 		beforeAddAll(size(), collection);
-		return super.addAll(collection);
+		boolean changed = super.addAll(collection);
+		if (changed) {
+			afterChanged();
+		}
+		return changed;
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> collection) {
 		beforeAddAll(index, collection);
-		return super.addAll(index, collection);
+		boolean changed = super.addAll(index, collection);
+		if (changed) {
+			afterChanged();
+		}
+		return changed;
 	}
 
 	private void beforeAddAll(int index, Collection<? extends T> collection) {
@@ -53,6 +66,12 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 
 	@Override
 	public T remove(int index) {
+		T removed = internalRemove(index);
+		afterChanged();
+		return removed;
+	}
+
+	private T internalRemove(int index) {
 		T removed = super.remove(index);
 		afterRemove(index, removed);
 		return removed;
@@ -63,8 +82,8 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 		int index = super.indexOf(element);
 		boolean success = index >= 0;
 		if (success) {
-			final T removed = super.remove(index);
-			afterRemove(index, removed);
+			internalRemove(index);
+			afterChanged();
 		}
 		return success;
 	}
@@ -81,9 +100,14 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 
 	@Override
 	public void clear() {
-		for (int index = size() - 1; index >= 0; index--) {
-			remove(index);
+		int size = size();
+		if (size == 0) {
+			return;
 		}
+		for (int index = size - 1; index >= 0; index--) {
+			internalRemove(index);
+		}
+		afterChanged();
 	}
 
 	/**
@@ -98,9 +122,12 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 		for (int index = size() - 1; index >= 0; index--) {
 			T element = get(index);
 			if (test.contains(element) == removePresent) {
-				remove(index);
+				internalRemove(index);
 				changed = true;
 			}
+		}
+		if (changed) {
+			afterChanged();
 		}
 		return changed;
 	}
@@ -112,7 +139,11 @@ public abstract class ReferenceList<T> extends ArrayList<T> {
 		beforeAdd(index, element);
 		T oldValue = super.set(index, element);
 		afterRemove(index + 1, oldValue);
+		afterChanged();
 		return oldValue;
 	}
 
+	protected void afterChanged() {
+		// empty for compatibility.
+	}
 }

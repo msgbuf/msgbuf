@@ -6,6 +6,7 @@ package de.haumacher.msgbuf.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link Map} implementing a map-valued property of a data object that has a reverse end.
@@ -23,6 +24,7 @@ public abstract class ReferenceMap<K, V> extends HashMap<K, V> {
 		
 		beforeAdd(key, value);
 		super.put(key, value);
+		afterChanged();
 		return oldValue; 
 	}
 
@@ -30,6 +32,7 @@ public abstract class ReferenceMap<K, V> extends HashMap<K, V> {
 	public void putAll(Map<? extends K, ? extends V> collection) {
 		beforeAddAll(collection);
 		super.putAll(collection);
+		afterChanged();
 	}
 	
 	private void beforeAddAll(Map<? extends K, ? extends V> collection) {
@@ -42,6 +45,14 @@ public abstract class ReferenceMap<K, V> extends HashMap<K, V> {
 
 	@Override
 	public V remove(Object key) {
+		final V removed = internalRemove(key);
+		if (removed != null) {
+			afterChanged();
+		}
+		return removed;
+	}
+
+	private V internalRemove(Object key) {
 		final V removed = super.remove(key);
 		if (removed != null) {
 			@SuppressWarnings("unchecked")
@@ -60,17 +71,27 @@ public abstract class ReferenceMap<K, V> extends HashMap<K, V> {
 			@SuppressWarnings("unchecked")
 			V removed = (V) value;
 			afterRemove(removedKey, removed);
+			afterChanged();
 		}
 		return success;
 	}
 	
 	@Override
 	public void clear() {
-		for (K key : new ArrayList<>(keySet())) {
-			remove(key);
+		Set<K> keys = keySet();
+		if (keys.isEmpty()) {
+			return;
 		}
+		for (K key : new ArrayList<>(keys)) {
+			internalRemove(key);
+		}
+		afterChanged();
 	}
 
 	protected abstract void afterRemove(K key, V value);
 
+	protected void afterChanged() {
+		// empty for compatibility.
+	}
+	
 }

@@ -96,6 +96,25 @@ public interface Listener {
 		// Ignore.
 	}
 	
+	/** 
+	 * Informs this {@link Listener} that the property of an element was changed.
+	 * 
+	 * <p>
+	 * This method is also called after all other methods to indicate that a property has been changed. It is not 
+	 * called more than once for bulk operations (e.g. adding several objects to a list)
+	 * </p>
+	 * 
+	 * @param obj
+	 *        The {@link Observable} object.
+	 * @param property
+	 *        The name of the property to be modified.
+	 */
+	default void afterChanged(Observable obj, String property) {
+		// Ignore.
+	}
+	
+	
+	
 	/**
 	 * {@link Listener} that multiplexes events to a list of potentially multiple target {@link Listener}s.
 	 */
@@ -128,6 +147,13 @@ public interface Listener {
 		public void afterRemove(Observable obj, String property, int index, Object element) {
 			for (Listener l : current()) {
 				l.afterRemove(obj, property, index, element);
+			}
+		}
+		
+		@Override
+		public void afterChanged(Observable obj, String property) {
+			for (Listener l : current()) {
+				l.afterChanged(obj, property);
 			}
 		}
 
