@@ -90,40 +90,40 @@ Passing these definitions to the `msgbuf` compiler gives you a class hierarchy w
 
 ## Global protocol options
 
-### `@NoJson`
+### `option NoJson`
 Disables generation of read and write methods for the JSON format.
 
-### `@NoBinary`
+### `option NoBinary`
 Disables generation of read and write methods for binary format.
 
-### `@NoXml`
+### `option NoXml`
 Disables generation of read and write methods for XML format.
 
-### `@NoXmlNames`
+### `option NoXmlNames`
 Disables generation of constants for the XML format.
 
-### `@NoInterfaces`
+### `option NoInterfaces`
 Disables generation interfaces for data classes. Normally, data classes are represented by a Java interface. This 
 enables multiple inheritance for data classes. To reduce the amout of generated code, this can be disabled for simple 
 cases, where no multiple inheritance is required. 
 
-### `@NoListener`
+### `option NoListener`
 Disables generation of listener interfaces and corresponding registration methods. Add this options, if observing 
 data classes for changes is not required.
 
-### `@NoReflection`
+### `option NoReflection`
 Disables generation of reflective access methods that allow access to properties through their property names.
 
-### `@NoVisitor`
+### `option NoVisitor`
 Disables generation of visitor interfaces and visit methods. 
 
-### `@NoVisitorExceptions`
+### `option NoVisitorExceptions`
 Produces visitor interfaces that cannot throw declared exceptions.
 
-### `@NoTypeKind`
+### `option NoTypeKind`
 Suppresses the type kind enumeration for a data class hierarchy.
 
-### `@SharedGraph`
+### `option SharedGraph`
 Allows to handle multiple synchronized instances of a data class graph. Each graph can be observed for changes. Changes
 generate synchronization messages to keep other instances of the same shared graph up to date. With this option, 
 a shared graph can be instantiated on a server, transfered to a client while keeping the state in sync when changes 
