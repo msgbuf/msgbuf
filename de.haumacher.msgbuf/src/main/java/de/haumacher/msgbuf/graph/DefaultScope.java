@@ -334,7 +334,7 @@ public class DefaultScope implements Listener, ScopeMixin {
 	}
 
 	private Map<String, Command> changes(SharedGraphNode obj) {
-		if (!_changes.isEmpty()) {
+		if (_changes.isEmpty()) {
 			beforeChange();
 		}
 		return _changes.computeIfAbsent(obj, NEW_MAP);
