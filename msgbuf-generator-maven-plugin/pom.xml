@@ -14,6 +14,7 @@
 
 	<packaging>maven-plugin</packaging>
 
+        <name>MsgBuf Maven Plugin</name>
 	<description>
 		Maven Plugin for generating classes with the MsgBuf compiler.
 	</description>
