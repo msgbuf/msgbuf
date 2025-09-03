@@ -74,14 +74,21 @@ public abstract class Shape_Impl implements test.nojson.Shape {
 		_listener = de.haumacher.msgbuf.observer.Listener.unregister(_listener, l);
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
 			X_COORDINATE__PROP, 
-			Y_COORDINATE__PROP));
+			Y_COORDINATE__PROP);
+		PROPERTIES = java.util.Collections.unmodifiableList(local);
+	}
 
-	private static java.util.Set<String> TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(new java.util.HashSet<>(
-			java.util.Arrays.asList(
-				)));
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(java.util.Arrays.asList(
+				));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {

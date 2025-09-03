@@ -6,7 +6,7 @@ package de.haumacher.msgbuf.generator;
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
-import static de.haumacher.msgbuf.generator.util.CodeUtil.stringLiteral;
+import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1120,10 +1120,19 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 
 	private void reflectionPropertiesConstant() {
+		MessageDef anchestor = _def.getExtendedDef();
+		while (anchestor != null && !hasFields(anchestor)) {
+			anchestor = anchestor.getExtendedDef();
+		}
+		
 		nl();
-		line("private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(");
+		if (anchestor != null) {
+			line("@SuppressWarnings(\"hiding\")");
+		}
+		line("static final java.util.List<String> PROPERTIES;");
+		line("static {");
 		{
-			line("java.util.Arrays.asList(");
+			line("java.util.List<String> local = java.util.Arrays.asList(");
 			{
 				boolean first = true;
 				for (Field field : getFields()) {
@@ -1135,15 +1144,34 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					}
 					lineStart(constant(field));
 				}
-				append("));");
+				append(");");
 				nl();
 			}
+			
+			if (anchestor != null) {
+				line("java.util.List<String> tmp = new java.util.ArrayList<>();");
+				line("tmp.addAll(" + qImplName(anchestor) + ".PROPERTIES" + ");");
+				line("tmp.addAll(local);");
+				line("PROPERTIES = java.util.Collections.unmodifiableList(tmp);");
+			} else {
+				line("PROPERTIES = java.util.Collections.unmodifiableList(local);");
+			}
 		}
+		line("}");
 
 		nl();
-		line("private static java.util.Set<String> TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(new java.util.HashSet<>(");
+		if (anchestor != null) {
+			line("@SuppressWarnings(\"hiding\")");
+		}
+		line("static final java.util.Set<String> TRANSIENT_PROPERTIES;");
+		line("static {");
 		{
-			line("java.util.Arrays.asList(");
+			line("java.util.HashSet<String> tmp = new java.util.HashSet<>();");
+
+			if (anchestor != null) {
+				line("tmp.addAll(" + qImplName(anchestor) + ".TRANSIENT_PROPERTIES" + ");");
+			}
+			line("tmp.addAll(java.util.Arrays.asList(");
 			{
 				boolean first = true;
 				for (Field field : getFields()) {
@@ -1161,10 +1189,13 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				if (first) {
 					lineStart("");
 				}
-				append(")));");
+				append("));");
 				nl();
 			}
+			
+			line("TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);");
 		}
+		line("}");
 	}
 
 	private void reflectionProperties() {
