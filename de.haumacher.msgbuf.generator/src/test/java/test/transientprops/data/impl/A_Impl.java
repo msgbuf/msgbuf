@@ -1,63 +1,68 @@
-package test.novisit.impl;
+package test.transientprops.data.impl;
 
 /**
- * Implementation of {@link test.novisit.SimpleType}.
+ * Implementation of {@link test.transientprops.data.A}.
  */
-public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.novisit.SimpleType {
+public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.transientprops.data.A {
 
-	private String _str = "";
+	private String _x1 = "";
 
-	private int _x = 0;
+	private transient String _x2 = "";
 
 	/**
-	 * Creates a {@link SimpleType_Impl} instance.
+	 * Creates a {@link A_Impl} instance.
 	 *
-	 * @see test.novisit.SimpleType#create()
+	 * @see test.transientprops.data.A#create()
 	 */
-	public SimpleType_Impl() {
+	public A_Impl() {
 		super();
 	}
 
 	@Override
-	public final String getStr() {
-		return _str;
+	public TypeKind kind() {
+		return TypeKind.A;
 	}
 
 	@Override
-	public test.novisit.SimpleType setStr(String value) {
-		internalSetStr(value);
+	public final String getX1() {
+		return _x1;
+	}
+
+	@Override
+	public test.transientprops.data.A setX1(String value) {
+		internalSetX1(value);
 		return this;
 	}
 
-	/** Internal setter for {@link #getStr()} without chain call utility. */
-	protected final void internalSetStr(String value) {
-		_listener.beforeSet(this, STR__PROP, value);
-		_str = value;
-		_listener.afterChanged(this, STR__PROP);
+	/** Internal setter for {@link #getX1()} without chain call utility. */
+	protected final void internalSetX1(String value) {
+		_listener.beforeSet(this, X_1__PROP, value);
+		_x1 = value;
+		_listener.afterChanged(this, X_1__PROP);
 	}
 
 	@Override
-	public final int getX() {
-		return _x;
+	public final String getX2() {
+		return _x2;
 	}
 
 	@Override
-	public test.novisit.SimpleType setX(int value) {
-		internalSetX(value);
+	public test.transientprops.data.A setX2(String value) {
+		internalSetX2(value);
 		return this;
 	}
 
-	/** Internal setter for {@link #getX()} without chain call utility. */
-	protected final void internalSetX(int value) {
-		_listener.beforeSet(this, X__PROP, value);
-		_x = value;
-		_listener.afterChanged(this, X__PROP);
+	/** Internal setter for {@link #getX2()} without chain call utility. */
+	protected final void internalSetX2(String value) {
+		_listener.beforeSet(this, X_2__PROP, value);
+		_x2 = value;
+		_listener.afterChanged(this, X_2__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public test.novisit.SimpleType registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.transientprops.data.A registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -67,7 +72,7 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	}
 
 	@Override
-	public test.novisit.SimpleType unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.transientprops.data.A unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -78,14 +83,14 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 
 	@Override
 	public String jsonType() {
-		return SIMPLE_TYPE__TYPE;
+		return A__TYPE;
 	}
 
 	static final java.util.List<String> PROPERTIES;
 	static {
 		java.util.List<String> local = java.util.Arrays.asList(
-			STR__PROP, 
-			X__PROP);
+			X_1__PROP, 
+			X_2__PROP);
 		PROPERTIES = java.util.Collections.unmodifiableList(local);
 	}
 
@@ -93,7 +98,7 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	static {
 		java.util.HashSet<String> tmp = new java.util.HashSet<>();
 		tmp.addAll(java.util.Arrays.asList(
-				));
+				X_2__PROP));
 		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
 	}
 
@@ -110,17 +115,17 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case STR__PROP: return getStr();
-			case X__PROP: return getX();
-			default: return test.novisit.SimpleType.super.get(field);
+			case X_1__PROP: return getX1();
+			case X_2__PROP: return getX2();
+			default: return test.transientprops.data.A.super.get(field);
 		}
 	}
 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case STR__PROP: internalSetStr((String) value); break;
-			case X__PROP: internalSetX((int) value); break;
+			case X_1__PROP: internalSetX1((String) value); break;
+			case X_2__PROP: internalSetX2((String) value); break;
 		}
 	}
 
@@ -132,17 +137,14 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(STR__PROP);
-		out.value(getStr());
-		out.name(X__PROP);
-		out.value(getX());
+		out.name(X_1__PROP);
+		out.value(getX1());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case STR__PROP: setStr(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
-			case X__PROP: setX(in.nextInt()); break;
+			case X_1__PROP: setX1(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}
@@ -162,15 +164,13 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	 * @throws java.io.IOException If writing fails.
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
-		out.name(STR__ID);
-		out.value(getStr());
-		out.name(X__ID);
-		out.value(getX());
+		out.name(X_1__ID);
+		out.value(getX1());
 	}
 
-	/** Helper for creating an object of type {@link test.novisit.SimpleType} from a polymorphic composition. */
-	public static test.novisit.SimpleType readSimpleType_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
-		test.novisit.impl.SimpleType_Impl result = new SimpleType_Impl();
+	/** Helper for creating an object of type {@link test.transientprops.data.A} from a polymorphic composition. */
+	public static test.transientprops.data.A readA_Content(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		test.transientprops.data.impl.A_Impl result = new A_Impl();
 		result.readContent(in);
 		return result;
 	}
@@ -186,24 +186,23 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	/** Consumes the value for the field with the given ID and assigns its value. */
 	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
 		switch (field) {
-			case STR__ID: setStr(in.nextString()); break;
-			case X__ID: setX(in.nextInt()); break;
+			case X_1__ID: setX1(in.nextString()); break;
 			default: in.skipValue(); 
 		}
 	}
 
-	/** XML element name representing a {@link test.novisit.SimpleType} type. */
-	public static final String SIMPLE_TYPE__XML_ELEMENT = "simple-type";
+	/** XML element name representing a {@link test.transientprops.data.A} type. */
+	public static final String A__XML_ELEMENT = "a";
 
-	/** XML attribute or element name of a {@link #getStr} property. */
-	private static final String STR__XML_ATTR = "str";
+	/** XML attribute or element name of a {@link #getX1} property. */
+	private static final String X_1__XML_ATTR = "x-1";
 
-	/** XML attribute or element name of a {@link #getX} property. */
-	private static final String X__XML_ATTR = "x";
+	/** XML attribute or element name of a {@link #getX2} property. */
+	private static final String X_2__XML_ATTR = "x-2";
 
 	@Override
 	public String getXmlTagName() {
-		return SIMPLE_TYPE__XML_ELEMENT;
+		return A__XML_ELEMENT;
 	}
 
 	@Override
@@ -214,8 +213,8 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 
 	/** Serializes all fields that are written as XML attributes. */
 	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
-		out.writeAttribute(STR__XML_ATTR, getStr());
-		out.writeAttribute(X__XML_ATTR, Integer.toString(getX()));
+		out.writeAttribute(X_1__XML_ATTR, getX1());
+		out.writeAttribute(X_2__XML_ATTR, getX2());
 	}
 
 	/** Serializes all fields that are written as XML elements. */
@@ -223,9 +222,9 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 		// No element fields.
 	}
 
-	/** Creates a new {@link test.novisit.SimpleType} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static SimpleType_Impl readSimpleType_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		SimpleType_Impl result = new SimpleType_Impl();
+	/** Creates a new {@link test.transientprops.data.A} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static A_Impl readA_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+		A_Impl result = new A_Impl();
 		result.readContentXml(in);
 		return result;
 	}
@@ -253,12 +252,12 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	/** Parses the given attribute value and assigns it to the field with the given name. */
 	protected void readFieldXmlAttribute(String name, String value) {
 		switch (name) {
-			case STR__XML_ATTR: {
-				setStr(value);
+			case X_1__XML_ATTR: {
+				setX1(value);
 				break;
 			}
-			case X__XML_ATTR: {
-				setX(Integer.parseInt(value));
+			case X_2__XML_ATTR: {
+				setX2(value);
 				break;
 			}
 			default: {
@@ -270,12 +269,12 @@ public class SimpleType_Impl extends de.haumacher.msgbuf.data.AbstractDataObject
 	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
 	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
 		switch (localName) {
-			case STR__XML_ATTR: {
-				setStr(in.getElementText());
+			case X_1__XML_ATTR: {
+				setX1(in.getElementText());
 				break;
 			}
-			case X__XML_ATTR: {
-				setX(Integer.parseInt(in.getElementText()));
+			case X_2__XML_ATTR: {
+				setX2(in.getElementText());
 				break;
 			}
 			default: {

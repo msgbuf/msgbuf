@@ -1,0 +1,16 @@
+package test.transientprops.data;
+
+message A {
+	string x1;
+	transient string x2;
+}
+
+message B extends A {
+	string y1;
+	transient string y2;
+}
+
+message C extends B {
+	string z1;
+	transient string z2;
+}
