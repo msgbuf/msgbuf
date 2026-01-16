@@ -4,7 +4,6 @@
 package de.haumacher.msgbuf.generator;
 
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
-import static de.haumacher.msgbuf.generator.DefaultValueGenerator.*;
 import static de.haumacher.msgbuf.generator.TypeGenerator.*;
 import static de.haumacher.msgbuf.generator.util.CodeUtil.*;
 
@@ -41,7 +40,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private final NameTable _table;
 	private final MessageDef _def;
 	private final GeneratorPlugin _plugin;
-	
+	private final DefaultValueGenerator _defaultValues;
+
 	private boolean _graph;
 	private boolean _json;
 	private boolean _binary;
@@ -63,6 +63,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		_interface = isInterface;
 		_def = def;
 		_plugin = plugin;
+		_defaultValues = new DefaultValueGenerator(options);
 		_graph = isTrue(options.get("SharedGraph"), false);
 		_json = _graph || !isTrue(options.get("NoJson"), false);
 		_binary = !_graph && !isTrue(options.get("NoBinary"), false);
@@ -71,9 +72,6 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		_visitor = !isTrue(options.get("NoVisitor"), false);
 		_visitEx= !isTrue(options.get("NoVisitorExceptions"), false);
 		_typeKind = !isTrue(options.get("NoTypeKind"), false);
-
-		// Pass options to DefaultValueGenerator for map type selection
-		DefaultValueGenerator.setOptions(options);
 	}
 	
 	/**
@@ -994,7 +992,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	private void adderInitNullable(Field field) {
 		if (Util.isNullable(field)) {
-			line("if (" + fieldMemberName(field) + " == null) " + fieldMemberName(field) + " = " + mkDefaultValueNonNullable(field) + ";");
+			line("if (" + fieldMemberName(field) + " == null) " + fieldMemberName(field) + " = " + _defaultValues.mkDefaultValueNonNullable(field) + ";");
 		}
 	}
 
@@ -1524,8 +1522,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					line("while (in.hasNext()) {");
 					{
 						line("in.beginObject();");
-						line(mkType(keyType) + " key = " + mkDefaultValue(keyType) + ";");
-						line(mkType(valueType) + " value = " + mkDefaultValue(valueType) + ";");
+						line(mkType(keyType) + " key = " + _defaultValues.mkDefaultValue(keyType) + ";");
+						line(mkType(valueType) + " value = " + _defaultValues.mkDefaultValue(valueType) + ";");
 						line("while (in.hasNext()) {");
 						{
 							line("switch (in.nextName()) {");
@@ -1925,8 +1923,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				line("while (in.hasNext()) {");
 				{
 					line("in.beginObject();");
-					line(mkType(keyType) + " key = " + mkDefaultValue(keyType) + ";");
-					line(mkType(valueType) + " value = " + mkDefaultValue(valueType) + ";");
+					line(mkType(keyType) + " key = " + _defaultValues.mkDefaultValue(keyType) + ";");
+					line(mkType(valueType) + " value = " + _defaultValues.mkDefaultValue(valueType) + ";");
 					line("while (in.hasNext()) {");
 					{
 						line("switch (in.nextName()) {");
@@ -2171,7 +2169,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	}
 	
 	private String mkInitializer(Field field) {
-		return " = " + mkDefaultValue(field);
+		return " = " + _defaultValues.mkDefaultValue(field);
 	}
 	
 	static QName qName(String name) {

@@ -24,27 +24,32 @@ import de.haumacher.msgbuf.generator.common.Util;
  */
 final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 
-	private static Map<String, Option> _options;
+	private final Map<String, Option> _options;
 
-	public static void setOptions(Map<String, Option> options) {
+	/**
+	 * Creates a {@link DefaultValueGenerator}.
+	 *
+	 * @param options The global protocol options.
+	 */
+	public DefaultValueGenerator(Map<String, Option> options) {
 		_options = options;
 	}
 
-	public static String mkDefaultValue(Field field) {
+	public String mkDefaultValue(Field field) {
 		String defaultValue = field.getDefaultValue();
 		if (defaultValue != null) {
 			return defaultValue;
 		}
-		
+
 		boolean nullable = Util.isNullable(field);
 		if (nullable) {
 			return "null";
 		}
-		
+
 		return mkDefaultValueNonNullable(field);
 	}
 
-	public static String mkDefaultValueNonNullable(Field field) {
+	public String mkDefaultValueNonNullable(Field field) {
 		if (field.isRepeated()) {
 			return "new java.util.ArrayList<>()";
 		} else {
@@ -52,11 +57,9 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 		}
 	}
 
-	public static String mkDefaultValue(Type type) {
-		return type.visit(INSTANCE, null);
+	public String mkDefaultValue(Type type) {
+		return type.visit(this, null);
 	}
-
-	private static final Type.Visitor<String, Void> INSTANCE = new DefaultValueGenerator();
 
 	@Override
 	public String visit(PrimitiveType self, Void arg) {
