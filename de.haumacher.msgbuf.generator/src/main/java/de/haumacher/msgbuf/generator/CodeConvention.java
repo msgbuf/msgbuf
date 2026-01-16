@@ -153,18 +153,74 @@ public class CodeConvention {
 
 	private static String singularSuffix(Field field) {
 		String suffix = suffix(field);
-		if (suffix.endsWith("s")) {
-			String singularSuffix = suffix.substring(0, suffix.length() - 1);
-			String name = field.getName();
-			String singularName = name.substring(0, name.length() - 1);
-			
+		String name = field.getName();
+
+		// Try to compute the singular form
+		String singularSuffix = toSingular(suffix);
+		String singularName = toSingular(name);
+
+		// Check if we successfully converted to singular and it doesn't clash with existing field
+		if (!singularSuffix.equals(suffix)) {
 			MessageDef owner = (MessageDef) field.getOwner();
 			if (getField(owner, singularName) == null) {
 				// No clash with other singular field.
 				return singularSuffix;
 			}
 		}
+
 		return suffix;
+	}
+
+	/**
+	 * Converts a plural word to its singular form using common English pluralization rules.
+	 *
+	 * @param plural The plural form
+	 * @return The singular form, or the original word if no conversion rule applies
+	 */
+	private static String toSingular(String plural) {
+		if (plural.isEmpty()) {
+			return plural;
+		}
+
+		// Words ending in "ies" -> change to "y" (e.g., "properties" -> "property")
+		if (plural.endsWith("ies") && plural.length() > 3) {
+			char beforeIes = plural.charAt(plural.length() - 4);
+			// Make sure it's not "eies" which would suggest "eie" -> "eies" isn't a valid pattern
+			if (beforeIes != 'e' && beforeIes != 'a' && beforeIes != 'i' && beforeIes != 'o' && beforeIes != 'u') {
+				return plural.substring(0, plural.length() - 3) + "y";
+			}
+		}
+
+		// Words ending in "xes", "sses", "shes", "ches" -> remove "es" (e.g., "boxes" -> "box", "classes" -> "class")
+		if (plural.endsWith("xes") || plural.endsWith("sses") || plural.endsWith("shes") || plural.endsWith("ches")) {
+			return plural.substring(0, plural.length() - 2);
+		}
+
+		// Words ending in "oes" -> change to "o" (e.g., "tomatoes" -> "tomato", "heroes" -> "hero")
+		// But not "shoes" -> "sho", so check the character before "oes"
+		if (plural.endsWith("oes") && plural.length() > 3) {
+			char beforeOes = plural.charAt(plural.length() - 4);
+			if (beforeOes != 'o' && beforeOes != 'e') {
+				return plural.substring(0, plural.length() - 2);
+			}
+		}
+
+		// Words ending in "ves" -> change to "fe" or "f" (e.g., "knives" -> "knife", "wolves" -> "wolf")
+		// Use "fe" for words ending in "ife" pattern (knife, wife, life)
+		if (plural.endsWith("ives") && plural.length() > 4) {
+			return plural.substring(0, plural.length() - 4) + "ife";
+		}
+		if (plural.endsWith("ves") && plural.length() > 3) {
+			return plural.substring(0, plural.length() - 3) + "f";
+		}
+
+		// Words ending in "s" but not "ss" -> remove "s" (e.g., "items" -> "item", "entries" -> "entry")
+		if (plural.endsWith("s") && !plural.endsWith("ss")) {
+			return plural.substring(0, plural.length() - 1);
+		}
+
+		// No rule applies, return as-is
+		return plural;
 	}
 	
 	public static String hasName(Field field) {
