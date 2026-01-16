@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import java.util.Optional;
+
 import de.haumacher.msgbuf.generator.ast.Constant;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -16,8 +18,10 @@ import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
+import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
+import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
 import de.haumacher.msgbuf.generator.common.Util;
 import de.haumacher.msgbuf.generator.util.CodeUtil;
@@ -152,10 +156,17 @@ public class CodeConvention {
 	}
 
 	private static String singularSuffix(Field field) {
+		// Check for explicit @Singular annotation first
+		Optional<Option> singularOption = Util.getOption(field, "Singular");
+		if (singularOption.isPresent()) {
+			String explicitSingular = ((StringOption) singularOption.get()).getValue();
+			return camelCase(explicitSingular);
+		}
+
 		String suffix = suffix(field);
 		String name = field.getName();
 
-		// Try to compute the singular form
+		// Try to compute the singular form using heuristics
 		String singularSuffix = toSingular(suffix);
 		String singularName = toSingular(name);
 

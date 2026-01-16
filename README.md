@@ -166,8 +166,27 @@ public void testOperations() {
 ## Property options
 
 ### `@Nullable`
-A property of a primitive type that does not allow `null` values (e.g. `int` and `string`) can be explicitly marked to 
+A property of a primitive type that does not allow `null` values (e.g. `int` and `string`) can be explicitly marked to
 allow `null` values.
+
+### `@Singular("item")`
+Specifies the singular form for a repeated field, used when generating `addXxx()` and `removeXxx()` methods. This annotation
+takes precedence over the automatic pluralization heuristics. Useful for irregular plurals or when the heuristics produce
+incorrect results.
+
+Example:
+```protobuf
+message Container {
+    @Singular("person")
+    repeated string people;      // Generates addPerson() instead of addPeople()
+
+    @Singular("child")
+    repeated string children;    // Generates addChild() instead of addChildren()
+
+    @Singular("datum")
+    repeated string data;        // Generates addDatum() instead of addData()
+}
+```
 
 ### `@Name("myProp")`
 Sets a custom property name. This name is used in JSON serialization.
