@@ -125,9 +125,22 @@ Suppresses the type kind enumeration for a data class hierarchy.
 
 ### `option SharedGraph`
 Allows to handle multiple synchronized instances of a data class graph. Each graph can be observed for changes. Changes
-generate synchronization messages to keep other instances of the same shared graph up to date. With this option, 
-a shared graph can be instantiated on a server, transfered to a client while keeping the state in sync when changes 
+generate synchronization messages to keep other instances of the same shared graph up to date. With this option,
+a shared graph can be instantiated on a server, transfered to a client while keeping the state in sync when changes
 occur on each side.
+
+### `option UnorderedMaps`
+Uses `HashMap` instead of `LinkedHashMap` for map-type properties. By default, map properties use `LinkedHashMap` to
+preserve insertion order. This option switches to `HashMap` for better performance when insertion order is not important.
+
+Example:
+```protobuf
+option UnorderedMaps;  // Use HashMap for better performance
+
+message Config {
+    map<string, string> settings;  // Will use HashMap instead of LinkedHashMap
+}
+```
 
 ## Message options
 

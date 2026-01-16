@@ -5,11 +5,14 @@ package de.haumacher.msgbuf.generator;
 
 import static de.haumacher.msgbuf.generator.CodeConvention.*;
 
+import java.util.Map;
+
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
+import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.Type;
 import de.haumacher.msgbuf.generator.common.Util;
@@ -20,7 +23,13 @@ import de.haumacher.msgbuf.generator.common.Util;
  * @author <a href="mailto:haui@haumacher.de">Bernhard Haumacher</a>
  */
 final class DefaultValueGenerator implements Type.Visitor<String, Void> {
-	
+
+	private static Map<String, Option> _options;
+
+	public static void setOptions(Map<String, Option> options) {
+		_options = options;
+	}
+
 	public static String mkDefaultValue(Field field) {
 		String defaultValue = field.getDefaultValue();
 		if (defaultValue != null) {
@@ -85,6 +94,13 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 
 	@Override
 	public String visit(MapType self, Void arg) {
-		return "new java.util.HashMap<>()";
+		// Use LinkedHashMap by default to preserve insertion order
+		// Use HashMap only if UnorderedMaps option is explicitly set for performance reasons
+		boolean useUnorderedMaps = _options != null && AbstractMessageGenerator.isTrue(_options.get("UnorderedMaps"), false);
+		if (useUnorderedMaps) {
+			return "new java.util.HashMap<>()";
+		} else {
+			return "new java.util.LinkedHashMap<>()";
+		}
 	}
 }

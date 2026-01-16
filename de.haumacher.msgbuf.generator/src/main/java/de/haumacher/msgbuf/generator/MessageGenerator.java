@@ -71,6 +71,9 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		_visitor = !isTrue(options.get("NoVisitor"), false);
 		_visitEx= !isTrue(options.get("NoVisitorExceptions"), false);
 		_typeKind = !isTrue(options.get("NoTypeKind"), false);
+
+		// Pass options to DefaultValueGenerator for map type selection
+		DefaultValueGenerator.setOptions(options);
 	}
 	
 	/**

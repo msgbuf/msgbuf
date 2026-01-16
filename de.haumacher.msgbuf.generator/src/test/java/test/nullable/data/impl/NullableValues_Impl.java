@@ -209,7 +209,7 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	/** Internal setter for {@link #getStringIntMap()} without chain call utility. */
 	protected final void internalSetStringIntMap(java.util.Map<String, Integer> value) {
-		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
+		if (_stringIntMap == null) _stringIntMap = new java.util.LinkedHashMap<>();
 		_stringIntMap.clear();
 		_stringIntMap.putAll(value);
 	}
@@ -222,7 +222,7 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	/** Implementation of {@link #putStringIntMap(String, int)} without chain call utility. */
 	protected final void  internalPutStringIntMap(String key, int value) {
-		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
+		if (_stringIntMap == null) _stringIntMap = new java.util.LinkedHashMap<>();
 		if (_stringIntMap.containsKey(key)) {
 			throw new IllegalArgumentException("Property 'stringIntMap' already contains a value for key '" + key + "'.");
 		}
@@ -231,7 +231,7 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	@Override
 	public final void removeStringIntMap(String key) {
-		if (_stringIntMap == null) _stringIntMap = new java.util.HashMap<>();
+		if (_stringIntMap == null) _stringIntMap = new java.util.LinkedHashMap<>();
 		_stringIntMap.remove(key);
 	}
 
