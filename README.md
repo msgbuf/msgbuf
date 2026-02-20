@@ -386,9 +386,58 @@ In polymorphic hierarchy of classes as defined above, it is not enough for a cla
 
 ### Visitor pattern
 
-For processing polymorphic messages, generated classes provide support for the [visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) to allow writing custom code for each possible sub-type. Since the generated code should not be modified, you cannot add custom code directly to the data class. If you want to process (e.g. render) a received shape instance from the example above, you could of cause use an `instanceof` test to handle circles differently from rectangles and groups. But this leads to fragile code, where one of the possible choices is missed.
+In a client-server messaging scenario, the server (or client) receives polymorphic messages and must dispatch each one to the appropriate handler. Consider a protocol with different request types:
 
-A better alternative is the visitor pattern. This allows to separate processing code from the data class hierarchy without `instanceof` tests. An `abstract` base class provides a `Visitor` interface and a `visit(...)` method accepting such a visitor:
+```protobuf
+abstract message Request {
+    string sessionId;
+}
+
+message LoginRequest extends Request {
+    string username;
+    string password;
+}
+
+message QueryRequest extends Request {
+    string query;
+    int32 limit;
+}
+
+message LogoutRequest extends Request {
+}
+```
+
+You could use `instanceof` checks to handle each request type, but this is fragile — if a new request type is added to the protocol, the compiler won't warn you about the missing case, leading to silent failures at runtime.
+
+The generated visitor pattern solves this. Each abstract message hierarchy generates a `Visitor` interface with a case for every concrete subtype. When a new message type is added, every visitor implementation fails to compile until the new case is handled, guaranteeing completeness at compile time.
+
+```java
+public class RequestHandler implements Request.Visitor<Response, Session> {
+    @Override
+    public Response visit(LoginRequest self, Session session) {
+        return authenticate(self.getUsername(), self.getPassword());
+    }
+
+    @Override
+    public Response visit(QueryRequest self, Session session) {
+        return executeQuery(self.getQuery(), self.getLimit());
+    }
+
+    @Override
+    public Response visit(LogoutRequest self, Session session) {
+        session.invalidate();
+        return Response.ok();
+    }
+}
+
+// Dispatching a received message:
+Request request = Request.readRequest(new JsonReader(input));
+Response response = request.visit(handler, session);
+```
+
+The visitor pattern also works for non-messaging use cases. For the shape hierarchy defined above, a renderer could be implemented as follows.
+
+An `abstract` base class provides a `Visitor` interface and a `visit(...)` method accepting such a visitor:
 
 ```java
 public abstract class Shape {
@@ -428,7 +477,7 @@ public class Rectangle extends Shape {
 }
 ```
 
-This allow to creating e.g. a renderer implementation that is able to process all concrete types from the shape hierarchy by applying the appropriate code to them:
+This allows creating e.g. a renderer implementation that handles all concrete types from the shape hierarchy:
 
 ```java
 public class ShapeRenderer implements Shape.Visitor<Void, Graphics2D> {
