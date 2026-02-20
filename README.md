@@ -47,6 +47,10 @@ To the `build/plugins` section add:
 
 Now you are ready to create `*.proto` files in your source folder and build them with `mvn compile`.
 
+### Where to place proto files
+
+Proto files are placed in your Java source folder (`src/main/java/`) inside the directory matching their `package` declaration. The generated Java files are written next to the proto file. For example, a proto file with `package my.app.model;` should be placed at `src/main/java/my/app/model/shape.proto`, and the generated classes will appear in `src/main/java/my/app/model/`.
+
 ## Usage
  
 The `msgbuf` definition language is an extension of the [proto format](https://developers.google.com/protocol-buffers/docs/proto3) from `protobuf`. A defined message can `extend` another message type, or it can be marked `abstract`. 
