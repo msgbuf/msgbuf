@@ -88,6 +88,77 @@ message Group extends Shape {
 
 Passing these definitions to the `msgbuf` compiler gives you a class hierarchy with classes `Shape`, `Circle`, `Rectangle`, and `Group`. You can inspect the generation result in the test package [test.hierarchy](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data) of the compiler. The source of the example data class definitions can be seen in the [hierarchy.proto](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data/hierarchy.proto) file.
 
+### Enum types
+
+Enums define a fixed set of named constants. Each constant is terminated with a semicolon. Constants can optionally
+have explicit numeric IDs assigned:
+
+```protobuf
+enum Corpus {
+    UNIVERSAL = 0;
+    WEB = 1;
+    IMAGES = 2;
+}
+```
+
+Enums can also be nested inside messages:
+
+```protobuf
+message SearchRequest {
+    enum Corpus {
+        UNIVERSAL = 0;
+        WEB = 1;
+    }
+    Corpus corpus;
+}
+```
+
+### Nested messages
+
+Messages can be nested inside other messages:
+
+```protobuf
+message SearchResponse {
+    message Result {
+        string url;
+        string title;
+        repeated string snippets;
+    }
+    repeated Result results;
+}
+```
+
+### Transient fields
+
+Fields marked with `transient` are not serialized. They exist only in the in-memory representation:
+
+```protobuf
+message A {
+    string name;
+    transient string cachedValue;
+}
+```
+
+### Backtick-quoted identifiers
+
+Backticks can be used to escape identifiers that clash with msgbuf keywords:
+
+```protobuf
+message NullableValues {
+    @Nullable
+    int `int`;
+    @Nullable
+    boolean `boolean`;
+}
+```
+
+### Primitive type aliases
+
+In addition to the protobuf type names, `msgbuf` supports shorter aliases:
+- `int` for `int32`
+- `long` for `int64`
+- `boolean` for `bool`
+
 ## Global protocol options
 
 ### `option NoJson`
