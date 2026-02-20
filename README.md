@@ -384,6 +384,28 @@ public final void writeTo(JsonWriter out) throws IOException {
 }
 ```
 
+Note that `JsonReader` and `JsonWriter` use `de.haumacher.msgbuf.io.Reader` and `de.haumacher.msgbuf.io.Writer` instead of `java.io.Reader` and `java.io.Writer`. This is required for GWT compatibility, since `java.io` is not available in GWT. For in-memory string-based serialization, use `StringR` and `StringW`:
+
+```java
+// Writing to a JSON string:
+StringW out = new StringW();
+rectangle.writeTo(new JsonWriter(out));
+String json = out.toString();
+
+// Reading from a JSON string:
+Rectangle copy = Rectangle.readRectangle(new JsonReader(new StringR(json)));
+```
+
+On the server side (where GWT compatibility is not needed), you can use `ReaderAdapter` and `WriterAdapter` from `de.haumacher.msgbuf.server.io` to wrap standard `java.io.Reader`/`java.io.Writer` instances:
+
+```java
+// Reading from a java.io.Reader:
+Rectangle r = Rectangle.readRectangle(new JsonReader(new ReaderAdapter(javaIoReader)));
+
+// Writing to a java.io.Writer:
+rectangle.writeTo(new JsonWriter(new WriterAdapter(javaIoWriter)));
+```
+
 In polymorphic hierarchy of classes as defined above, it is not enough for a class to just write its own properties. Consider a `Group` instance from the example above. Its `shapes` list may contain multiple instances of either circles, rectangles, or even nested groups. Therefore, a class in a polymorphic hierarchy not only serializes its properties, but also its type. Reading back such polymorphic instance instantiates the correct class and fills it with its properties.
 
 ### Visitor pattern
