@@ -4,156 +4,106 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MsgBuf is a code generator for GWT-compatible Java data classes suitable for typed client-server messaging. Inspired by Google's Protocol Buffers, it generates Java classes from `.proto` definition files with additional features like inheritance, abstract classes, and polymorphic data composition.
+MsgBuf is a code generator for GWT-compatible Java data classes suitable for typed client-server messaging. It generates Java classes from `.proto` definition files (using `syntax = "msgbuf";`, not `proto3`) with features beyond standard protobuf: inheritance, abstract classes, polymorphic data composition, and visitor pattern generation.
 
-The project supports multiple serialization formats: JSON (primary), Binary, and XML.
+Supports multiple serialization formats: JSON (primary), Binary, and XML.
 
 ## Project Structure
 
-This is a multi-module Maven project with three core modules:
+Multi-module Maven project. Build order matters — modules depend on each other sequentially:
 
-- **de.haumacher.msgbuf** (`msgbuf-api`) - Runtime library containing base classes for generated code, serialization support (JSON/Binary/XML), and GWT-compatible I/O abstractions. Licensed under Apache-2.0.
-
-- **de.haumacher.msgbuf.generator** (`msgbuf-generator`) - Code generator that reads `.proto` files and generates Java classes. Uses JavaCC for parsing. Can be run standalone via shaded JAR. Licensed under GPL-3.0-or-later.
-
-- **msgbuf-generator-maven-plugin** - Maven plugin wrapper for the generator, allowing proto compilation during Maven build.
-
-- **de.haumacher.msgbuf.eclipse** - Eclipse plugin providing automatic proto file compilation (separate from Maven build).
+1. **de.haumacher.msgbuf** (`msgbuf-api`) — Runtime library with base classes, serialization support, GWT-compatible I/O abstractions. Apache-2.0.
+2. **de.haumacher.msgbuf.generator** (`msgbuf-generator`) — Code generator using JavaCC parser. GPL-3.0-or-later. **Self-bootstrapping**: the generator's own AST (`generator/ast/proto.proto`) is defined in msgbuf syntax and generates the Java classes the generator uses internally.
+3. **msgbuf-generator-maven-plugin** — Maven plugin wrapper for the generator.
+4. **de.haumacher.msgbuf.eclipse** — Eclipse plugin (separate build, not in reactor).
 
 ## Building and Testing
 
-### Full Build
 ```bash
+# Full build (must be done in order: api → generator → plugin)
 mvn clean install
-```
 
-### Build Individual Module
-```bash
-# Build runtime library only
+# Build individual module
 mvn clean install -pl de.haumacher.msgbuf
-
-# Build generator only
 mvn clean install -pl de.haumacher.msgbuf.generator
 
-# Build Maven plugin only
-mvn clean install -pl msgbuf-generator-maven-plugin
-```
-
-### Run Tests
-```bash
-# All tests
+# Run all tests
 mvn test
 
 # Single module tests
 mvn test -pl de.haumacher.msgbuf.generator
-```
 
-### Check for Vulnerabilities
-```bash
-mvn dependency-check:check
-```
+# Single test class
+mvn test -pl de.haumacher.msgbuf.generator -Dtest=test.hierarchy.TestHierarchy
 
-### Update Dependencies
-```bash
-mvn versions:use-latest-releases
-```
-
-## Development Workflow
-
-### Working with Proto Files
-
-Proto definition files use the `syntax = "msgbuf";` declaration (not `proto3`). Test proto files in `de.haumacher.msgbuf.generator/src/test/java/test/**/` demonstrate various features.
-
-Key proto file locations:
-- Test examples: `de.haumacher.msgbuf.generator/src/test/java/test/*/`
-- Generator's own AST model: `de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/ast/proto.proto`
-- Shared graph commands: `de.haumacher.msgbuf/src/main/java/de/haumacher/msgbuf/graph/cmd/update.proto`
-
-### Generator Architecture
-
-The code generator pipeline:
-1. **Parser** (JavaCC) - Parses `.proto` files into AST (see `generator/ast/proto.proto`)
-2. **Synthesizers** - Add field IDs and type IDs if not explicitly defined
-3. **Code Generators** - Generate Java source code:
-   - `MessageGenerator` - Concrete message classes
-   - `AbstractMessageGenerator` - Abstract base classes with visitor pattern
-   - `EnumGenerator` - Enum types
-   - `TypeGenerator` - Orchestrates generation
-
-Main entry point: `de.haumacher.msgbuf.generator.Generator.main()`
-
-### Running Generator Standalone
-
-The shaded JAR allows standalone execution:
-```bash
+# Run generator standalone (after building)
 java -jar de.haumacher.msgbuf.generator/target/msgbuf-generator-*-full.jar <proto-files>
 ```
 
-### Generated Code Structure
+## Generator Pipeline
 
-Each message definition generates:
-- Interface (if `NoInterfaces` option not set)
-- Implementation class with:
-  - Getters/setters for properties
-  - JSON read/write methods (`readX()`, `writeTo()`)
-  - Binary read/write methods (if `NoBinary` not set)
-  - XML read/write methods (if `NoXml` not set)
-  - Visitor pattern support (if abstract/polymorphic)
-  - Property listeners (if `NoListener` not set)
-  - Reflective property access (if `NoReflection` not set)
+The code generation follows a 4-stage pipeline in `Generator.main()`:
 
-## Key Concepts
+1. **Parsing** — JavaCC grammar (`protobuf.jj`) parses `.proto` files into AST nodes (`DefinitionFile` → `MessageDef`/`EnumDef` → `Field`)
+2. **Specialization building** — Resolves type references, links inheritance hierarchies (`extends`), populates `specializations` lists for polymorphism
+3. **ID synthesis** — `TypeIdSynthesizer` assigns type IDs for binary serialization; `FieldIDSynthesizer` auto-assigns field indices where not explicit
+4. **Code generation** — `PackageGenerator` visitor dispatches to `MessageGenerator` (concrete classes), `EnumGenerator` (enums). Uses `GeneratorPlugin` SPI for extensibility.
 
-### Inheritance and Polymorphism
+Key source locations:
+- Generator entry point: `de.haumacher.msgbuf.generator.Generator`
+- Code generators: `de.haumacher.msgbuf.generator.MessageGenerator`, `EnumGenerator`
+- JavaCC grammar: `de.haumacher.msgbuf.generator/src/main/javacc/protobuf.jj`
+- AST proto definition: `de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/ast/proto.proto`
 
-MsgBuf extends protobuf syntax with:
-- `abstract message` - Creates abstract base classes
-- `extends` keyword - Message inheritance
-- Visitor pattern generation for polymorphic hierarchies
-- Type discrimination in serialization
+## Runtime API Architecture
 
-### Serialization Formats
+Core class hierarchy in `msgbuf-api`:
 
-**JSON** - Primary format, uses modified Gson reader/writer abstracted for GWT compatibility
-**Binary** - Compact format using DataReader/DataWriter
-**XML** - Document format with XmlSerializable interface
+- `DataObject` (interface) — `writeTo(JsonWriter)`, `writeContent()`, `readContent()`
+- `AbstractDataObject` — Base impl with `writeFields()`/`readField()` hooks
+- `ReflectiveDataObject` — Adds reflective property access (`get(field)`, `set(field, value)`)
+- `Observable` — Change tracking with listener registration
 
-### GWT Compatibility
+GWT compatibility: no `java.io.Reader/Writer` — uses custom `StringR`/`StringW` and reimplemented `JsonReader`/`JsonWriter` based on Gson.
 
-The runtime library (`msgbuf-api`) avoids Java I/O classes (java.io.Reader/Writer) to work with GWT. Custom abstractions in `de.haumacher.msgbuf.io` package provide compatible interfaces.
+Generated classes have two property access patterns:
+- **Public API**: `setField(value)` returns `this` for fluent chaining
+- **Internal API**: `internalSetField(value)` triggers listeners, no chaining
 
-### Shared Graph Support
+## Proto File Syntax
 
-The `SharedGraph` option enables synchronized object graphs across client/server with change tracking and update commands (see `de.haumacher.msgbuf.graph.cmd`).
+Extensions beyond standard protobuf:
+- `abstract message Foo { ... }` — Abstract base classes
+- `message Bar extends Foo { ... }` — Inheritance
+- `transient` fields — Not serialized
+- Annotations: `@Name("x")`, `@Nullable`, `@Embedded`, `@Container`, `@Ref`, `@Reverse("prop")`, `@Operations("ClassName")`, `@Singular("item")`
+- File-level options: `option NoInterfaces;`, `option NoBinary;`, `option NoJson;`, `option NoXml;`, `option NoReflection;`, `option NoListener;`, `option NoVisitor;`, `option SharedGraph;`, `option UnorderedMaps;`
+- Backtick identifiers for reserved words: `` QName `package`; ``
 
-## Release Process
+## Key Gotchas
 
-Follow the documented release process:
-```bash
-# Set version and create tag
-mvn release:clean release:prepare
+- **Self-bootstrapping**: Changes to `generator/ast/proto.proto` require regenerating the AST Java classes with an existing generator, then rebuilding. Maven reactor handles this automatically.
+- **NoInterfaces mode**: When set, generates single classes instead of interface + impl. Changes package structure (no `impl` subpackage). Many conditionals in `MessageGenerator` depend on this flag.
+- **Polymorphic JSON**: Abstract types serialize as `[type, ...fields]` arrays. Concrete types in hierarchies use same format. Monomorphic references use `writeContent()` without type info.
+- **Field IDs**: Auto-synthesis starts at 1, skips manually assigned IDs, is inheritance-aware (child fields can't clash with parent IDs). Field ID 0 is reserved.
+- **Tests use JUnit 3 style** (`extends TestCase`) despite JUnit 4 dependency. Tests exercise generated code, not the generator itself directly.
+- **GWT constraint**: No Java I/O classes in `msgbuf-api`. No Java 8+ features in generated code.
 
-# Deploy to Maven Central
-mvn release:perform
-```
+## Testing
 
-Release configuration in parent POM includes GPG signing and automatic publishing to Maven Central via the central-publishing-maven-plugin.
+Test proto files and their tests are in `de.haumacher.msgbuf.generator/src/test/java/test/`:
+- `test.hierarchy` — Polymorphism, visitor pattern
+- `test.container` / `test.references` — Bidirectional references, containment
+- `test.graph` — Shared graph synchronization
+- `test.nullable`, `test.embedded`, `test.operations`, `test.defaultvalue`, `test.transientprops`, `test.onlyxml`
+- Various option combinations (NoInterfaces, NoJson, etc.)
+
+Maven plugin integration tests: `msgbuf-generator-maven-plugin/src/it/`
 
 ## Important Constraints
 
-- Java 11+ required (maven.compiler.source/target = 11)
-- Generated code must be GWT-compatible (no java.io usage in msgbuf-api)
-- Generator uses JavaCC for parsing - regenerate parser after grammar changes
-- Proto files must use `syntax = "msgbuf";` not `proto3`
-- Different licenses: API is Apache-2.0, Generator is GPL-3.0-or-later
-
-## Testing Strategy
-
-Test proto files in `de.haumacher.msgbuf.generator/src/test/java/test/` cover:
-- Hierarchy and inheritance (`test.hierarchy`)
-- Various options (NoJson, NoInterfaces, NoVisitor, etc.)
-- Container/reference handling (`test.container`, `test.references`)
-- Shared graphs (`test.graph`)
-- Edge cases (reserved names, lowercase messages, etc.)
-
-The Maven plugin has integration tests in `msgbuf-generator-maven-plugin/src/it/`.
+- Java 11+ required (`maven.compiler.source/target = 11`)
+- Generated code must be GWT-compatible (no `java.io` usage in `msgbuf-api`)
+- Generator uses JavaCC — regenerate parser after grammar changes to `protobuf.jj`
+- Proto files must use `syntax = "msgbuf";`
+- Different licenses: API is Apache-2.0, Generator is GPL-3.0-or-later (generated code is not GPL-encumbered)
