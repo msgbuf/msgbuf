@@ -340,9 +340,18 @@ understood.
 
 ## Plugin options
 
-### `@DartLib("path/to/output.dart")`
+### `option DartLib = "path/to/output.dart";`
 Generates a Dart library file containing Dart data classes with JSON serialization support for all messages and enums
 defined in the proto file. The path is relative to the generator output directory.
+
+```protobuf
+option DartLib = "../lib/protocol.dart";
+
+message MyMessage {
+    string name;
+    int count;
+}
+```
 
 ## Installation in Eclipse
 
