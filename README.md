@@ -57,8 +57,6 @@ Add `src/main/java/my/app/model/shape.proto` with the following contents:
 ```protobuf
 package my.app.model;
 
-syntax = "msgbuf";
-
 abstract message Shape {
   int32 xCoordinate;
   int32 yCoordinate;

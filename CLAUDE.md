@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MsgBuf is a code generator for GWT-compatible Java data classes suitable for typed client-server messaging. It generates Java classes from `.proto` definition files (using `syntax = "msgbuf";`, not `proto3`) with features beyond standard protobuf: inheritance, abstract classes, polymorphic data composition, and visitor pattern generation.
+MsgBuf is a code generator for GWT-compatible Java data classes suitable for typed client-server messaging. It generates Java classes from `.proto` definition files with features beyond standard protobuf: inheritance, abstract classes, polymorphic data composition, and visitor pattern generation.
 
 Supports multiple serialization formats: JSON (primary), Binary, and XML.
 
@@ -105,5 +105,4 @@ Maven plugin integration tests: `msgbuf-generator-maven-plugin/src/it/`
 - Java 11+ required (`maven.compiler.source/target = 11`)
 - Generated code must be GWT-compatible (no `java.io` usage in `msgbuf-api`)
 - Generator uses JavaCC — regenerate parser after grammar changes to `protobuf.jj`
-- Proto files must use `syntax = "msgbuf";`
 - Different licenses: API is Apache-2.0, Generator is GPL-3.0-or-later (generated code is not GPL-encumbered)
