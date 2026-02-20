@@ -6,21 +6,21 @@ Inspired by Google's [protocol buffers](https://developers.google.com/protocol-b
 In contrast to `protobuf`, `msgbuf` supports:
  * Code generation compatible with the [GWT Java-to-Javascript compiler](http://www.gwtproject.org/).
  * Inheritance of data classes.
- * Abstract data classes defining the root of a hierarchy of exchangable data fragments.
+ * Abstract data classes defining the root of a hierarchy of exchangeable data fragments.
  * Polymorphic data compositions.
- * [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) for processing polomorphic data structures.
+ * [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) for processing polymorphic data structures.
  
-`msgbuf` currently serializes messages in JSON format. For GWT-compatibility it uses a modified `JsonReader`/`JsonWriter` from the [gson library](https://github.com/google/gson) that was abstracted from the unsupported `Reader`/`Writer` Java API.
+`msgbuf` serializes messages in JSON, Binary, and XML formats. For GWT-compatibility it uses a modified `JsonReader`/`JsonWriter` from the [gson library](https://github.com/google/gson) that was abstracted from the unsupported `Reader`/`Writer` Java API.
 
 ## Setup with Maven
 
-### Add the MsgBuf runtime libary dependency to your project
+### Add the MsgBuf runtime library dependency to your project
 
 ```xml
 <dependency>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-api</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.11</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ To the `build/plugins` section add:
 <plugin>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-generator-maven-plugin</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.11</version>
     
     <executions>
         <execution>
@@ -103,9 +103,9 @@ Disables generation of read and write methods for XML format.
 Disables generation of constants for the XML format.
 
 ### `option NoInterfaces`
-Disables generation interfaces for data classes. Normally, data classes are represented by a Java interface. This 
-enables multiple inheritance for data classes. To reduce the amout of generated code, this can be disabled for simple 
-cases, where no multiple inheritance is required. 
+Disables generation interfaces for data classes. Normally, data classes are represented by a Java interface. This
+enables multiple inheritance for data classes. To reduce the amount of generated code, this can be disabled for simple
+cases, where no multiple inheritance is required.
 
 ### `option NoListener`
 Disables generation of listener interfaces and corresponding registration methods. Add this options, if observing 
@@ -126,7 +126,7 @@ Suppresses the type kind enumeration for a data class hierarchy.
 ### `option SharedGraph`
 Allows to handle multiple synchronized instances of a data class graph. Each graph can be observed for changes. Changes
 generate synchronization messages to keep other instances of the same shared graph up to date. With this option,
-a shared graph can be instantiated on a server, transfered to a client while keeping the state in sync when changes
+a shared graph can be instantiated on a server, transferred to a client while keeping the state in sync when changes
 occur on each side.
 
 ### `option UnorderedMaps`
@@ -217,8 +217,29 @@ Marks a reference point to the container of the current object.
 Marks a reference as cross reference (non-composition). When setting values to fields marked as cross reference, container properties are not updated.
 
 ### `@type_id(4711)`
-Sets a custom ID for binary serialization.
+Sets a custom type discriminator ID for binary serialization of polymorphic hierarchies.
 
+### Default values
+Fields can specify default values inline using `= value` syntax:
+
+```protobuf
+message Config {
+    string name = "default";
+    int count = 42;
+    double ratio = 3.14;
+    bool enabled = true;
+}
+```
+
+### `map<K,V>` fields
+Map-type fields are supported using the `map<KeyType, ValueType>` syntax:
+
+```protobuf
+message Config {
+    map<string, string> settings;
+    map<string, int32> counts;
+}
+```
 
 ### XML reference embedding (`@Embedded`)
 When serializing data classes to XML, all data fields and references are normally represented by XML tags with the same 
@@ -245,7 +266,10 @@ However, even with the `@Embedded` annotation, the verbose serialization with th
 understood.
 
 ## Plugin options
-`@DartLib("../lib/protocol.dart")`
+
+### `@DartLib("path/to/output.dart")`
+Generates a Dart library file containing Dart data classes with JSON serialization support for all messages and enums
+defined in the proto file. The path is relative to the generator output directory.
 
 ## Installation in Eclipse
 
@@ -263,7 +287,7 @@ There is an Eclipse plugin providing a project builder that automatically genera
  * Select your project in the `Package Explorer`.
  * In the context menu, select `Configure > Enable MsgBuf Builder`.
 
-### Test the installtion
+### Test the installation
 
  * Create a `MyMessage.proto` file in one of your packages in the source folder.
  * Add the package definition and a message declaration.
@@ -319,7 +343,7 @@ public abstract class Shape {
 }
 ```
 
-Each of the concrete sub-classes implement the `abstract` visit-method by delegating to the correspoinding case-method from the `Visitor` interface:
+Each of the concrete sub-classes implement the `abstract` visit-method by delegating to the corresponding case-method from the `Visitor` interface:
 
 ```java
 public class Rectangle extends Shape {
