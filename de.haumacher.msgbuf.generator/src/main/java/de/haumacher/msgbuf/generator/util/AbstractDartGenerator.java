@@ -12,7 +12,7 @@ public abstract class AbstractDartGenerator extends AbstractFileGenerator {
 	protected void docComment(String comment) {
 		if (!comment.isEmpty()) {
 			for (String line : comment.split("\n")) {
-				line("/// " + (line.isEmpty() ? "" : " " + line));
+				line("///" + (line.isEmpty() ? "" : "  " + line));
 			}
 		}
 	}

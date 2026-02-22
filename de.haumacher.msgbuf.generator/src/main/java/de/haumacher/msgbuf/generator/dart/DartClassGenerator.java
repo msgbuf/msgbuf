@@ -70,10 +70,10 @@ public class DartClassGenerator extends AbstractDartGenerator {
 			} else {
 				line(typeName + "({");
 				for (Field field : inheritedFields) {
-					line("super." + fieldName(field) + ", ");
+					line("super." + fieldName(field) + ",");
 				}
 				for (Field field : _def.getFields()) {
-					line("this." + fieldName(field) + initializer(field) + ", ");
+					line("this." + fieldName(field) + initializer(field) + ",");
 				}
 				line("});");
 			}
