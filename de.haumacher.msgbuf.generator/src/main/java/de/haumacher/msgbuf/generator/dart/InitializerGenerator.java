@@ -43,14 +43,17 @@ public class InitializerGenerator implements Type.Visitor<String, Field>, Defini
 	
 	@Override
 	public String visit(PrimitiveType self, Field field) {
+		if (field != null && field.isRepeated()) {
+			return " = const []";
+		}
 		switch (self.getKind()) {
-		case BOOL: 
+		case BOOL:
 			return " = false";
-			
+
 		case FLOAT:
 		case DOUBLE:
 			return " = 0.0";
-			
+
 		case FIXED_32:
 		case FIXED_64:
 		case INT_32:
@@ -62,8 +65,8 @@ public class InitializerGenerator implements Type.Visitor<String, Field>, Defini
 		case UINT_32:
 		case UINT_64:
 			return " = 0";
-			
-		case BYTES: 
+
+		case BYTES:
 		case STRING:
 			return " = \"\"";
 		}

@@ -33,14 +33,17 @@ public class TypeNameBuilder implements Type.Visitor<String, Field>, Definition.
 
 	@Override
 	public String visit(PrimitiveType self, Field arg) {
+		String typeName;
 		switch (self.getKind()) {
-		case BOOL: 
-			return "bool";
-			
+		case BOOL:
+			typeName = "bool";
+			break;
+
 		case FLOAT:
 		case DOUBLE:
-			return "double";
-			
+			typeName = "double";
+			break;
+
 		case FIXED_32:
 		case FIXED_64:
 		case INT_32:
@@ -51,13 +54,18 @@ public class TypeNameBuilder implements Type.Visitor<String, Field>, Definition.
 		case SINT_64:
 		case UINT_32:
 		case UINT_64:
-			return "int";
-			
-		case BYTES: 
+			typeName = "int";
+			break;
+
+		case BYTES:
 		case STRING:
-			return "String";
+			typeName = "String";
+			break;
+
+		default:
+			throw new IllegalArgumentException("No such type: " + self);
 		}
-		throw new IllegalArgumentException("No such type: " + self);
+		return arg != null && arg.isRepeated() ? "List<" + typeName + ">" : typeName;
 	}
 
 	@Override
