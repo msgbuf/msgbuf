@@ -1,0 +1,39 @@
+syntax = "msgbuf";
+
+package test.example.data;
+
+/**
+ * An abstract base class for all requests in the messaging protocol.
+ */
+abstract message Request {
+	/** The session identifier for this request. */
+	string sessionId;
+}
+
+/**
+ * A request to authenticate with the server.
+ */
+message LoginRequest extends Request {
+	/** The user name to log in with. */
+	string username;
+
+	/** The password for authentication. */
+	string password;
+}
+
+/**
+ * A request to execute a query.
+ */
+message QueryRequest extends Request {
+	/** The query string to execute. */
+	string query;
+
+	/** The maximum number of results to return. */
+	int32 limit;
+}
+
+/**
+ * A request to end the current session.
+ */
+message LogoutRequest extends Request {
+}
