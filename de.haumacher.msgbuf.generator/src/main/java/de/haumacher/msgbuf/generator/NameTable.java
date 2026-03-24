@@ -4,6 +4,7 @@
 package de.haumacher.msgbuf.generator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -112,28 +113,53 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 		System.err.println(message);
 	}
 
-	/** 
+	/**
 	 * TODO
 	 */
 	public Definition lookup(MessageDef context, QName name) {
 		String baseName = name.getNames().get(0);
-		
+
 		Definition base = lookupBase(context, baseName);
-		if (base == null) {
-			System.out.println("ERROR: Name cannot be resolved" + (context == null ? "" : " in '" + context.getName() + "'") + ": " + baseName);
-			return null;
-		}
-		for (int n = 1; n < name.getNames().size(); n++) {
-			String nextName = name.getNames().get(n);
-			Definition inner = lookupInner(base, nextName);
-			if (inner == null) {
-				System.out.println("ERROR: Name cannot be resolved in '" + base.getName() + "': " + nextName);
-				return null;
+
+		if (base != null) {
+			// Try resolving remaining parts as inner definitions
+			boolean resolved = true;
+			for (int n = 1; n < name.getNames().size(); n++) {
+				String nextName = name.getNames().get(n);
+				Definition inner = lookupInner(base, nextName);
+				if (inner == null) {
+					resolved = false;
+					break;
+				}
+				base = inner;
 			}
-			base = inner;
+			if (resolved) {
+				return base;
+			}
 		}
-		
-		return base;
+
+		// Try as package-qualified name.
+		// Try progressively longer package prefixes: a.b.c.Type -> try "a.b.c", "a.b", "a" as package
+		List<String> names = name.getNames();
+		for (int split = names.size() - 1; split >= 1; split--) {
+			String pkgName = String.join(".", names.subList(0, split));
+			Package pkg = _packageByName.get(pkgName);
+			if (pkg != null) {
+				String typeName = names.get(split);
+				Definition found = pkg._definitionsByName.get(typeName);
+				if (found != null) {
+					// Resolve remaining parts (if any) as inner definitions
+					for (int n = split + 1; n < names.size(); n++) {
+						found = lookupInner(found, names.get(n));
+						if (found == null) break;
+					}
+					if (found != null) return found;
+				}
+			}
+		}
+
+		error("Name cannot be resolved" + (context == null ? "" : " in '" + context.getName() + "'") + ": " + CodeConvention.qTypeName(name));
+		return null;
 	}
 
 	private Definition lookupInner(Definition base, String nextName) {
