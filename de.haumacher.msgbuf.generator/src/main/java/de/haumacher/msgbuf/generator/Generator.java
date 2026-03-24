@@ -12,9 +12,11 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -22,6 +24,7 @@ import de.haumacher.msgbuf.generator.ast.Definition.Visitor;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.Flag;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
@@ -29,6 +32,7 @@ import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.common.Util;
 import de.haumacher.msgbuf.generator.dart.DartLibGenerator;
 import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
@@ -49,9 +53,16 @@ public class Generator {
 	private NameTable _table = new NameTable();
 	private File _out = new File(".");
 	private List<DefinitionFile> _files = new ArrayList<>();
-	
+	private List<File> _includePaths = new ArrayList<>();
+	private Set<String> _loadedFiles = new HashSet<>();
+	private List<DefinitionFile> _importedFiles = new ArrayList<>();
+
 	public void setOut(File out) {
 		_out = out;
+	}
+
+	public void addIncludePath(File path) {
+		_includePaths.add(path);
 	}
 
 	public DefinitionFile load(String fileName) throws IOException, ParseException {
@@ -60,9 +71,13 @@ public class Generator {
 
 	public DefinitionFile load(File file)
 			throws ParseException, IOException, FileNotFoundException {
+		_loadedFiles.add(file.getCanonicalPath());
+		DefinitionFile content;
 		try (InputStream in = new FileInputStream(file)) {
-			return load(in);
+			content = load(parse(in));
 		}
+		resolveImports(content, file);
+		return content;
 	}
 
 	public DefinitionFile load(InputStream in) throws ParseException {
@@ -91,34 +106,99 @@ public class Generator {
 		for (DefinitionFile file : _files) {
 			buildSpecializations(file);
 		}
-		
+
+		for (DefinitionFile file : _files) {
+			validateOpenWorld(file);
+		}
+
 		TypeIdSynthesizer typeIdSynthesizer = new TypeIdSynthesizer();
 		for (DefinitionFile file : _files) {
-			typeIdSynthesizer.process(file);
+			if (!Util.getFlag(file, "OpenWorld")) {
+				typeIdSynthesizer.process(file);
+			}
 		}
-		
+
 		FieldIDSynthesizer synthesizer = new FieldIDSynthesizer();
 		for (DefinitionFile file : _files) {
 			synthesizer.process(file);
 		}
-		
+
 		for (DefinitionFile file : _files) {
+			if (_importedFiles.contains(file)) {
+				continue; // Imported for type resolution only, don't generate code
+			}
+
 			plugin.init(file.getOptions());
-			
+
 			File dir = mkdir(file.getPackage());
-			
+
 			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions(), plugin);
 			for (Definition def : file.getDefinitions()) {
 				def.visit(packageGenerator, null);
 			}
-			
+
 			Option dartLib = file.getOptions().get("DartLib");
 			if (dartLib != null) {
 				new DartLibGenerator(new File(_out, ((StringOption) dartLib).getValue()), file).run();
 			}
 		}
 	}
+
+	private void validateOpenWorld(DefinitionFile file) {
+		boolean openWorld = Util.getFlag(file, "OpenWorld");
+		if (!openWorld) {
+			return;
+		}
+		// OpenWorld implies NoBinary
+		file.getOptions().put("NoBinary", Flag.create().setValue(true));
+
+		boolean noInterfaces = Util.getFlag(file, "NoInterfaces");
+		if (noInterfaces) {
+			error("option OpenWorld cannot be combined with option NoInterfaces.");
+		}
+	}
 	
+	private void resolveImports(DefinitionFile file, File sourceFile) throws IOException, ParseException {
+		for (String importPath : file.getImports()) {
+			File resolved = resolveImportPath(importPath, sourceFile);
+			if (resolved == null) {
+				error("Cannot resolve import '" + importPath + "' from '" + sourceFile + "'.");
+				continue;
+			}
+			String canonical = resolved.getCanonicalPath();
+			if (_loadedFiles.contains(canonical)) {
+				continue;
+			}
+			_loadedFiles.add(canonical);
+			DefinitionFile imported;
+			try (InputStream in = new FileInputStream(resolved)) {
+				imported = parse(in);
+			}
+			// Add to table for name resolution, and to _files for buildSpecializations
+			_files.add(imported);
+			_table.enter(imported);
+			_importedFiles.add(imported);
+			// Recursively resolve imports of the imported file
+			resolveImports(imported, resolved);
+		}
+	}
+
+	private File resolveImportPath(String importPath, File sourceFile) {
+		// 1. Relative to importing file's directory
+		File relative = new File(sourceFile.getParentFile(), importPath);
+		if (relative.isFile()) {
+			return relative;
+		}
+		// 2. From configured include paths
+		for (File includePath : _includePaths) {
+			File candidate = new File(includePath, importPath);
+			if (candidate.isFile()) {
+				return candidate;
+			}
+		}
+		return null;
+	}
+
 	private void buildSpecializations(DefinitionFile file) {
 		NameTable table = _table;
 		
@@ -267,6 +347,8 @@ public class Generator {
 			} else if (arg.equals("-h")) {
 				printHelp();
 				return;
+			} else if (arg.equals("-I")) {
+				generator.addIncludePath(new File(args[n++]));
 			} else {
 				File file = new File(arg);
 				DefinitionFile content = generator.load(file);
