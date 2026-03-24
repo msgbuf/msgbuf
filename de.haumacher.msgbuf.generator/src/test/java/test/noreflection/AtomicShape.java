@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public abstract class AtomicShape extends Shape {
+public abstract class AtomicShape extends test.noreflection.Shape {
 
 	/** Visitor interface for the {@link test.noreflection.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {

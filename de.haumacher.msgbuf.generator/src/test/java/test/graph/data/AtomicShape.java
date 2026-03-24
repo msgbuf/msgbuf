@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public interface AtomicShape extends Shape {
+public interface AtomicShape extends test.graph.data.Shape {
 
 	/** Visitor interface for the {@link test.graph.data.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {

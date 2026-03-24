@@ -3,7 +3,7 @@ package test.novisitexceptions;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public interface Group extends test.novisitexceptions.Shape {
 
 	/**
 	 * Creates a {@link test.novisitexceptions.Group} instance.

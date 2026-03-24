@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public interface Car extends Shape {
+public interface Car extends test.graph.data.Shape {
 
 	/**
 	 * Creates a {@link test.graph.data.Car} instance.

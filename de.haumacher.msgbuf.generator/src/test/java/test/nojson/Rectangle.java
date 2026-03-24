@@ -3,7 +3,7 @@ package test.nojson;
 /**
  * A rectangle.
  */
-public interface Rectangle extends AtomicShape {
+public interface Rectangle extends test.nojson.AtomicShape {
 
 	/**
 	 * Creates a {@link test.nojson.Rectangle} instance.

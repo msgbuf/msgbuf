@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * A circle {@link Shape}.
  */
-public interface Circle extends AtomicShape {
+public interface Circle extends test.hierarchy.data.AtomicShape {
 
 	/**
 	 * Creates a {@link test.hierarchy.data.Circle} instance.

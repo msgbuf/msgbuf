@@ -3,7 +3,7 @@ package test.nolistener;
 /**
  * A circle {@link Shape}.
  */
-public interface Circle extends AtomicShape {
+public interface Circle extends test.nolistener.AtomicShape {
 
 	/**
 	 * Creates a {@link test.nolistener.Circle} instance.

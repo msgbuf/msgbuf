@@ -3,7 +3,7 @@ package test.example.data;
 /**
  * A request to end the current session.
  */
-public interface LogoutRequest extends Request {
+public interface LogoutRequest extends test.example.data.Request {
 
 	/**
 	 * Creates a {@link test.example.data.LogoutRequest} instance.

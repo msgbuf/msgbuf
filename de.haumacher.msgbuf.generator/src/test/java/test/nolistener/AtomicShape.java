@@ -3,7 +3,7 @@ package test.nolistener;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public interface AtomicShape extends Shape {
+public interface AtomicShape extends test.nolistener.Shape {
 
 	/** Visitor interface for the {@link test.nolistener.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {

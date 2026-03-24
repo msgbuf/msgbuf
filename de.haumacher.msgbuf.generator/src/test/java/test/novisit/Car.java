@@ -3,7 +3,7 @@ package test.novisit;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public interface Car extends Shape {
+public interface Car extends test.novisit.Shape {
 
 	/**
 	 * Creates a {@link test.novisit.Car} instance.

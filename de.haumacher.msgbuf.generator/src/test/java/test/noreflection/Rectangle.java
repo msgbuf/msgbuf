@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A rectangle.
  */
-public class Rectangle extends AtomicShape {
+public class Rectangle extends test.noreflection.AtomicShape {
 
 	/**
 	 * Creates a {@link test.noreflection.Rectangle} instance.

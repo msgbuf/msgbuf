@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A circle {@link Shape}.
  */
-public interface Circle extends AtomicShape {
+public interface Circle extends test.graph.data.AtomicShape {
 
 	/**
 	 * Creates a {@link test.graph.data.Circle} instance.

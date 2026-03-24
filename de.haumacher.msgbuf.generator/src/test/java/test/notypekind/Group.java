@@ -3,7 +3,7 @@ package test.notypekind;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public interface Group extends test.notypekind.Shape {
 
 	/**
 	 * Creates a {@link test.notypekind.Group} instance.

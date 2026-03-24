@@ -3,7 +3,7 @@ package test.nojson;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public interface Group extends test.nojson.Shape {
 
 	/**
 	 * Creates a {@link test.nojson.Group} instance.

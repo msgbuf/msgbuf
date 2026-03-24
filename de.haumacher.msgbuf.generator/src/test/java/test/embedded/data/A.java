@@ -1,6 +1,6 @@
 package test.embedded.data;
 
-public interface A extends Base {
+public interface A extends test.embedded.data.Base {
 
 	/**
 	 * Creates a {@link test.embedded.data.A} instance.

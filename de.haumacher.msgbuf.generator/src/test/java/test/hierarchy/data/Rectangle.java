@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * A rectangle.
  */
-public interface Rectangle extends AtomicShape {
+public interface Rectangle extends test.hierarchy.data.AtomicShape {
 
 	/**
 	 * Creates a {@link test.hierarchy.data.Rectangle} instance.
