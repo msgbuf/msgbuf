@@ -148,26 +148,28 @@ public class Ext1Types implements TypeRegistration {
 }
 ```
 
-**ServiceLoader bootstrap (standard Java only):** The base type's `readXxx()` method triggers ServiceLoader discovery lazily on first call, using a `volatile boolean` flag for thread-safe initialization:
+**ServiceLoader bootstrap (in msgbuf-api runtime):** The generator does not know whether the generated code will run on standard Java, GWT, or JS. Therefore, the ServiceLoader logic lives in `msgbuf-api` as a runtime helper class (e.g., `TypeRegistryLoader`). This helper attempts `ServiceLoader.load(TypeRegistration.class)` and silently catches `NoClassDefError`/`UnsupportedOperationException` if ServiceLoader is not available (GWT, JS).
 
 ```java
-private static volatile boolean _registryLoaded = false;
+// In msgbuf-api
+public class TypeRegistryLoader {
+    private static boolean _loaded = false;
 
-private static void ensureRegistryLoaded() {
-    if (!_registryLoaded) {
-        synchronized (SSEEvent.class) {
-            if (!_registryLoaded) {
-                for (TypeRegistration reg : ServiceLoader.load(TypeRegistration.class)) {
-                    reg.register();
-                }
-                _registryLoaded = true;
+    public static synchronized void ensureLoaded() {
+        if (_loaded) return;
+        _loaded = true;
+        try {
+            for (TypeRegistration reg : java.util.ServiceLoader.load(TypeRegistration.class)) {
+                reg.register();
             }
+        } catch (NoClassDefFoundError e) {
+            // ServiceLoader not available (GWT/JS) — registration via explicit init() calls
         }
     }
 }
 ```
 
-**GWT builds:** The ServiceLoader bootstrap code is not generated when GWT compatibility is required. Registration depends entirely on explicit `init()` calls. This is controlled by the existing GWT-related generation options.
+The generated `readXxx()` method calls `TypeRegistryLoader.ensureLoaded()` before consulting the registry. On GWT, this is a no-op and the user must call `Ext1Types.init()` explicitly. The `TypeRegistryLoader` class must be excluded from the GWT module's `<source>` paths or use GWT-safe patterns (e.g., GWT.isClient() guard or deferred binding). Alternatively, the GWT module provides a no-op replacement.
 
 ### 6. Visitor Pattern
 
