@@ -39,6 +39,12 @@ public class GenerateMessageClasses extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.sourceDirectory}", property = "input", required = true)
 	private File _input;
 
+	/**
+	 * Additional directories to search for imported .proto files.
+	 */
+	@Parameter(property = "includePaths")
+	private List<File> _includePaths;
+
 	@Override
 	public void execute() throws MojoExecutionException {
 		File outputDirectory = _outputDirectory;
@@ -63,6 +69,12 @@ public class GenerateMessageClasses extends AbstractMojo {
 			}
 		
 			ArrayList<String> argList = new ArrayList<>(Arrays.asList(Generator.OUTPUT_DIR_ARG, _outputDirectory.getAbsolutePath()));
+			if (_includePaths != null) {
+				for (File includePath : _includePaths) {
+					argList.add("-I");
+					argList.add(includePath.getAbsolutePath());
+				}
+			}
 			argList.addAll(files);
 			String[] args = argList.toArray(new String[0]);
 			Generator.main(args);
