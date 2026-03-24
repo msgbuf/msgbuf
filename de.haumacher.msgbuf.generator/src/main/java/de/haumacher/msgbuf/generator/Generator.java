@@ -142,6 +142,17 @@ public class Generator {
 				new DartLibGenerator(new File(_out, ((StringOption) dartLib).getValue()), file).run();
 			}
 		}
+
+		// Generate registration classes for extension modules
+		for (DefinitionFile file : _files) {
+			if (_importedFiles.contains(file)) {
+				continue;
+			}
+			List<MessageDef> crossFileExtensions = findCrossFileExtensions(file);
+			if (!crossFileExtensions.isEmpty()) {
+				generateRegistrationClass(file, crossFileExtensions);
+			}
+		}
 	}
 
 	private void validateOpenWorld(DefinitionFile file) {
@@ -258,6 +269,79 @@ public class Generator {
 		}
 	}
 	
+	private List<MessageDef> findCrossFileExtensions(DefinitionFile file) {
+		List<MessageDef> result = new ArrayList<>();
+		for (Definition def : file.getDefinitions()) {
+			if (def instanceof MessageDef) {
+				collectCrossFileExtensions((MessageDef) def, file, result);
+			}
+		}
+		return result;
+	}
+
+	private void collectCrossFileExtensions(MessageDef def, DefinitionFile file, List<MessageDef> result) {
+		MessageDef extended = def.getExtendedDef();
+		if (extended != null && extended.getFile() != file) {
+			if (Util.getFlag(extended.getFile(), "OpenWorld")) {
+				if (!def.isAbstract()) {
+					result.add(def);
+				}
+			}
+		}
+		for (Definition inner : def.getDefinitions()) {
+			if (inner instanceof MessageDef) {
+				collectCrossFileExtensions((MessageDef) inner, file, result);
+			}
+		}
+	}
+
+	private void generateRegistrationClass(DefinitionFile file, List<MessageDef> extensions) {
+		String packageName = CodeConvention.packageName(file.getPackage());
+		String[] parts = packageName.split("\\.");
+		String baseName = parts[parts.length - 1];
+		String className = Character.toUpperCase(baseName.charAt(0)) + baseName.substring(1) + "Types";
+
+		File dir = mkdir(file.getPackage());
+		File out = new File(dir, className + ".java");
+
+		try (FileOutputStream os = new FileOutputStream(out)) {
+			try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
+				System.out.println("Generating '" + out + "'.");
+				w.println("package " + packageName + ";");
+				w.println();
+				w.println("/**");
+				w.println(" * Registration of extension types for the OpenWorld protocol.");
+				w.println(" */");
+				w.println("public class " + className + " implements de.haumacher.msgbuf.data.TypeRegistration {");
+				w.println();
+				w.println("\t@Override");
+				w.println("\tpublic void register() {");
+				for (MessageDef ext : extensions) {
+					// Find the OpenWorld root type
+					MessageDef root = ext.getExtendedDef();
+					while (root.getExtendedDef() != null) {
+						root = root.getExtendedDef();
+					}
+					String rootQName = CodeConvention.qTypeName(root);
+					String extQName = CodeConvention.qTypeName(ext);
+					String typeConstant = CodeConvention.jsonTypeConstant(ext);
+					w.println("\t\t" + rootQName + ".register(" + extQName + "." + typeConstant + ", " + extQName + "::create);");
+				}
+				w.println("\t}");
+				w.println();
+				w.println("\t/**");
+				w.println("\t * Explicit initialization for GWT or manual use.");
+				w.println("\t */");
+				w.println("\tpublic static void init() {");
+				w.println("\t\tnew " + className + "().register();");
+				w.println("\t}");
+				w.println("}");
+			}
+		} catch (IOException ex) {
+			error("Error writing file '" + out + "'.", ex);
+		}
+	}
+
 	class PackageGenerator implements Definition.Visitor<Void, Void> {
 		private final File _dir;
 		private final Map<String, Option> _options;
