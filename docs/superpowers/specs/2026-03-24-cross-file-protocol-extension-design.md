@@ -29,7 +29,7 @@ abstract message SSEEvent { ... }
 
 **Implications of OpenWorld:**
 - Enables dynamic type registry on the abstract type
-- Implies `option NoBinary;` and `option NoXml;` — only JSON serialization is supported (avoids integer type-ID conflicts between independent modules)
+- Implies `option NoBinary;` — JSON and XML serialization are supported (both use string-based type names; only binary serialization has integer type-ID conflict issues)
 - Visitor gets a `visitDefault()` fallback method
 - `option OpenWorld;` on a non-abstract message is a compile error
 
@@ -215,7 +215,7 @@ The existing 4-stage pipeline is adapted:
 
 1. **Parsing** — Extended to support `import` statements. Imported files are parsed recursively and their definitions loaded into the NameTable.
 2. **Specialization building** — Cross-file `extends` references are resolved. The imported base type's `specializations` list is extended (in-memory only, not re-generated).
-3. **ID synthesis** — Skipped for OpenWorld hierarchies (NoBinary + NoXml implied). For non-OpenWorld types in the same file, behavior is unchanged.
+3. **ID synthesis** — Skipped for OpenWorld hierarchies (NoBinary implied). For non-OpenWorld types in the same file, behavior is unchanged.
 4. **Code generation** — Only the extension file's types are generated. The registry-based reader and registration class are generated for OpenWorld hierarchies.
 
 ### 8. NameTable Changes
@@ -259,7 +259,6 @@ test/openworld/
 ## Out of Scope
 
 - Binary serialization for OpenWorld types (explicitly excluded via NoBinary)
-- XML serialization for OpenWorld types (explicitly excluded via NoXml)
 - Circular imports (detected and reported as compile error)
 - JS/ESM code generation (future work)
 - Re-generation of base module code when extensions are added
