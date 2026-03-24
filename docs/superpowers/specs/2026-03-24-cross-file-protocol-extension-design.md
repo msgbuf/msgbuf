@@ -32,6 +32,7 @@ abstract message SSEEvent { ... }
 - Implies `option NoBinary;` — JSON and XML serialization are supported (both use string-based type names; only binary serialization has integer type-ID conflict issues)
 - Visitor gets a `visitDefault()` fallback method
 - `option OpenWorld;` on a non-abstract message is a compile error
+- `option OpenWorld;` combined with `option NoInterfaces;` is a compile error
 
 Without `option OpenWorld;`, behavior is unchanged (closed-world, static dispatch).
 
@@ -254,7 +255,7 @@ test/openworld/
 6. **Extended visitor** — GraphSSEVisitor handles GraphPatchEvent type-specifically
 7. **Unknown type handling** — Deserialization of completely unknown type returns null gracefully
 8. **Multi-level extension** — Type in ext1 extends a non-abstract type from base that itself extends the abstract root (if applicable)
-9. **NoInterfaces interaction** — Verify OpenWorld works correctly with `option NoInterfaces;` (single class mode, no `impl` subpackage)
+9. **NoInterfaces exclusion** — Verify that `option OpenWorld;` combined with `option NoInterfaces;` produces a compile error
 
 ## Out of Scope
 
