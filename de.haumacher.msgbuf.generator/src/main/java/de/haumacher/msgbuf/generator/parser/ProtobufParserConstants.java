@@ -27,57 +27,59 @@ public interface ProtobufParserConstants {
   /** RegularExpression Id. */
   int PACKAGE = 8;
   /** RegularExpression Id. */
-  int SYNTAX = 9;
+  int IMPORT = 9;
   /** RegularExpression Id. */
-  int MESSAGE = 10;
+  int SYNTAX = 10;
   /** RegularExpression Id. */
-  int ENUM = 11;
+  int MESSAGE = 11;
   /** RegularExpression Id. */
-  int MAP = 12;
+  int ENUM = 12;
   /** RegularExpression Id. */
-  int ONEOF = 13;
+  int MAP = 13;
   /** RegularExpression Id. */
-  int REPEATED = 14;
+  int ONEOF = 14;
   /** RegularExpression Id. */
-  int TRANSIENT = 15;
+  int REPEATED = 15;
   /** RegularExpression Id. */
-  int OPTION = 16;
+  int TRANSIENT = 16;
   /** RegularExpression Id. */
-  int EXTENDS = 17;
+  int OPTION = 17;
   /** RegularExpression Id. */
-  int ABSTRACT = 18;
+  int EXTENDS = 18;
   /** RegularExpression Id. */
-  int RESERVED = 19;
+  int ABSTRACT = 19;
   /** RegularExpression Id. */
-  int TO = 20;
+  int RESERVED = 20;
   /** RegularExpression Id. */
-  int MAX = 21;
+  int TO = 21;
   /** RegularExpression Id. */
-  int TRUE = 22;
+  int MAX = 22;
   /** RegularExpression Id. */
-  int FALSE = 23;
+  int TRUE = 23;
   /** RegularExpression Id. */
-  int NULL = 24;
+  int FALSE = 24;
   /** RegularExpression Id. */
-  int INT_TYPE = 25;
+  int NULL = 25;
   /** RegularExpression Id. */
-  int LONG_TYPE = 26;
+  int INT_TYPE = 26;
   /** RegularExpression Id. */
-  int BOOLEAN_TYPE = 27;
+  int LONG_TYPE = 27;
   /** RegularExpression Id. */
-  int TYPE = 28;
+  int BOOLEAN_TYPE = 28;
   /** RegularExpression Id. */
-  int INT = 29;
+  int TYPE = 29;
   /** RegularExpression Id. */
-  int NUMBER = 30;
+  int INT = 30;
   /** RegularExpression Id. */
-  int STRING = 31;
+  int NUMBER = 31;
   /** RegularExpression Id. */
-  int XNAME = 32;
+  int STRING = 32;
   /** RegularExpression Id. */
-  int QUOTE = 33;
+  int XNAME = 33;
   /** RegularExpression Id. */
-  int NAME = 34;
+  int QUOTE = 34;
+  /** RegularExpression Id. */
+  int NAME = 35;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -93,6 +95,7 @@ public interface ProtobufParserConstants {
     "<LINE_COMMENT>",
     "<DOC_COMMENT>",
     "\"package\"",
+    "\"import\"",
     "\"syntax\"",
     "\"message\"",
     "\"enum\"",
