@@ -111,6 +111,11 @@ public class Generator {
 			validateOpenWorld(file);
 		}
 
+		// Propagate NoBinary and NoTypeKind to extension files that extend OpenWorld bases
+		for (DefinitionFile file : _files) {
+			propagateOpenWorldOptions(file);
+		}
+
 		TypeIdSynthesizer typeIdSynthesizer = new TypeIdSynthesizer();
 		for (DefinitionFile file : _files) {
 			if (!Util.getFlag(file, "OpenWorld")) {
@@ -166,6 +171,24 @@ public class Generator {
 		boolean noInterfaces = Util.getFlag(file, "NoInterfaces");
 		if (noInterfaces) {
 			error("option OpenWorld cannot be combined with option NoInterfaces.");
+		}
+	}
+
+	private void propagateOpenWorldOptions(DefinitionFile file) {
+		if (Util.getFlag(file, "OpenWorld")) {
+			// Already an OpenWorld file, options already set
+			return;
+		}
+		for (Definition def : file.getDefinitions()) {
+			if (def instanceof MessageDef) {
+				MessageDef msg = (MessageDef) def;
+				MessageDef extended = msg.getExtendedDef();
+				if (extended != null && extended.getFile() != file && Util.getFlag(extended.getFile(), "OpenWorld")) {
+					// Extension file inherits NoBinary from OpenWorld base
+					file.getOptions().put("NoBinary", Flag.create().setValue(true));
+					return;
+				}
+			}
 		}
 	}
 	

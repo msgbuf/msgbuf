@@ -159,7 +159,13 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				}
 			}
 		} else {
-			generalizations.add(_interface || _noInterfaces ? qTypeName(_def.getExtends()) : qImplName(_def.getExtendedDef()));
+			if (_interface || _noInterfaces) {
+				// For cross-file extensions, use resolved definition to get correct package casing
+				MessageDef extDef = _def.getExtendedDef();
+				generalizations.add(extDef != null ? qTypeName(extDef) : qTypeName(_def.getExtends()));
+			} else {
+				generalizations.add(qImplName(_def.getExtendedDef()));
+			}
 		}
 		
 		if (_interface) {
@@ -620,7 +626,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private void generateKindLookup() {
 		boolean hasSpecializations = !_def.getSpecializations().isEmpty();
 		boolean hasTypeLookup = !isBaseClass() || hasSpecializations;
-		
+
 		if (hasTypeLookup) {
 			if (_interface) {
 				if (isBaseClass()) {
@@ -635,6 +641,15 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						kindLookupComment();
 						line("public abstract " + TYPE_KIND_NAME + " kind();");
 					}
+				} else if (isCrossFileExtension()) {
+					// Cross-file extensions are not in the base's TypeKind enum, return null
+					nl();
+					line("@Override");
+					line("public " + TYPE_KIND_NAME + " kind() {");
+					{
+						line("return null;");
+					}
+					line("}");
 				} else {
 					nl();
 					line("@Override");
@@ -1170,7 +1185,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (anchestor != null) {
 			line("@SuppressWarnings(\"hiding\")");
 		}
-		line("static final java.util.List<String> PROPERTIES;");
+		String propsVisibility = (isOpenWorld() || isCrossFileExtension()) ? "protected " : "";
+		line(propsVisibility + "static final java.util.List<String> PROPERTIES;");
 		line("static {");
 		{
 			line("java.util.List<String> local = java.util.Arrays.asList(");
@@ -1188,7 +1204,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				append(");");
 				nl();
 			}
-			
+
 			if (anchestor != null) {
 				line("java.util.List<String> tmp = new java.util.ArrayList<>();");
 				line("tmp.addAll(" + qImplName(anchestor) + ".PROPERTIES" + ");");
@@ -1204,7 +1220,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (anchestor != null) {
 			line("@SuppressWarnings(\"hiding\")");
 		}
-		line("static final java.util.Set<String> TRANSIENT_PROPERTIES;");
+		line(propsVisibility + "static final java.util.Set<String> TRANSIENT_PROPERTIES;");
 		line("static {");
 		{
 			line("java.util.HashSet<String> tmp = new java.util.HashSet<>();");
