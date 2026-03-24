@@ -19,7 +19,7 @@ import de.haumacher.msgbuf.generator.Generator;
 /**
  * Goal that invokes the MsgBuf compiler.
  */
-@Mojo(name = GenerateMessageClasses.NAME, defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+@Mojo(name = GenerateMessageClasses.NAME, defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GenerateMessageClasses extends AbstractMojo {
 	
 	/**
