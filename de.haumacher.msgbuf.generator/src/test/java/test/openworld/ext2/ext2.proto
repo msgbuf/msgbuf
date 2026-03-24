@@ -1,0 +1,12 @@
+package test.openworld.ext2;
+
+import "../base/base.proto";
+
+/** An analytics event extending the base SSE protocol. */
+message AnalyticsPatchEvent extends test.openworld.base.SSEEvent {
+    /** Name of the metric. */
+    string metricName;
+
+    /** Value of the metric. */
+    double metricValue;
+}

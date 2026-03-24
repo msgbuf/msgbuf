@@ -1,0 +1,15 @@
+package test.openworld.base;
+
+option OpenWorld;
+
+/** Base event for server-sent events. */
+abstract message SSEEvent {
+    /** Timestamp of the event. */
+    long timestamp;
+}
+
+/** A simple text event. */
+message TextEvent extends SSEEvent {
+    /** The text content. */
+    string text;
+}
