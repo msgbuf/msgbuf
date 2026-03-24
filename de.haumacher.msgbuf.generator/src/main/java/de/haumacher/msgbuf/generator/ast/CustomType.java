@@ -60,6 +60,7 @@ public class CustomType extends Type {
 	protected final void internalSetName(de.haumacher.msgbuf.generator.ast.QName value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	/**
@@ -88,6 +89,7 @@ public class CustomType extends Type {
 	protected final void internalSetDefinition(de.haumacher.msgbuf.generator.ast.Definition value) {
 		_listener.beforeSet(this, DEFINITION__PROP, value);
 		_definition = value;
+		_listener.afterChanged(this, DEFINITION__PROP);
 	}
 
 	/**
@@ -102,14 +104,30 @@ public class CustomType extends Type {
 		return CUSTOM_TYPE__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
 			NAME__PROP, 
-			DEFINITION__PROP));
+			DEFINITION__PROP);
+		PROPERTIES = java.util.Collections.unmodifiableList(local);
+	}
+
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(java.util.Arrays.asList(
+				DEFINITION__PROP));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

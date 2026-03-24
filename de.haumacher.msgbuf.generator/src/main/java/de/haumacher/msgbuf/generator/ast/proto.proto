@@ -28,7 +28,10 @@ abstract message DefinitionBase extends WithOptions {
 abstract message Part extends DefinitionBase {
     /** The name of this member. */
 	string name;
-	
+
+	/** The numeric index for binary serialization. */
+	int index;
+
 	/** The {@link Definition} definint this {@link Part}. */
 	transient Definition owner;
 }
@@ -40,9 +43,6 @@ abstract message Part extends DefinitionBase {
  */
 message Constant extends Part {
 
-    /** The numeric identifier for this constant.*/
-	int index;
-
 }
 
 /**
@@ -53,7 +53,10 @@ message Constant extends Part {
 message DefinitionFile extends WithOptions {
     /** The package name for all types in this file. */
 	QName `package`;
-	
+
+    /** Import paths referencing other .proto files. */
+	repeated string imports;
+
     /** All definitions in this file. */
 	repeated Definition definitions;
 }

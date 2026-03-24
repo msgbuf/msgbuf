@@ -230,6 +230,7 @@ public class PrimitiveType extends Type {
 		if (value == null) throw new IllegalArgumentException("Property 'kind' cannot be null.");
 		_listener.beforeSet(this, KIND__PROP, value);
 		_kind = value;
+		_listener.afterChanged(this, KIND__PROP);
 	}
 
 	@Override
@@ -237,13 +238,29 @@ public class PrimitiveType extends Type {
 		return PRIMITIVE_TYPE__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			KIND__PROP));
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
+			KIND__PROP);
+		PROPERTIES = java.util.Collections.unmodifiableList(local);
+	}
+
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(java.util.Arrays.asList(
+				));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

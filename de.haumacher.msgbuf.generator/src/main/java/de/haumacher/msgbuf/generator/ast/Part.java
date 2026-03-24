@@ -57,10 +57,11 @@ public abstract class Part extends DefinitionBase {
 	protected final void internalSetName(String value) {
 		_listener.beforeSet(this, NAME__PROP, value);
 		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	/**
-	 * The numeric identifier for this member.
+	 * The numeric index for binary serialization.
 	 */
 	public final int getIndex() {
 		return _index;
@@ -78,6 +79,7 @@ public abstract class Part extends DefinitionBase {
 	protected final void internalSetIndex(int value) {
 		_listener.beforeSet(this, INDEX__PROP, value);
 		_index = value;
+		_listener.afterChanged(this, INDEX__PROP);
 	}
 
 	/**
@@ -99,6 +101,7 @@ public abstract class Part extends DefinitionBase {
 	protected final void internalSetOwner(de.haumacher.msgbuf.generator.ast.Definition value) {
 		_listener.beforeSet(this, OWNER__PROP, value);
 		_owner = value;
+		_listener.afterChanged(this, OWNER__PROP);
 	}
 
 	/**
@@ -126,15 +129,37 @@ public abstract class Part extends DefinitionBase {
 		return this;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
+	@SuppressWarnings("hiding")
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
 			NAME__PROP, 
 			INDEX__PROP, 
-			OWNER__PROP));
+			OWNER__PROP);
+		java.util.List<String> tmp = new java.util.ArrayList<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.DefinitionBase.PROPERTIES);
+		tmp.addAll(local);
+		PROPERTIES = java.util.Collections.unmodifiableList(tmp);
+	}
+
+	@SuppressWarnings("hiding")
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.DefinitionBase.TRANSIENT_PROPERTIES);
+		tmp.addAll(java.util.Arrays.asList(
+				OWNER__PROP));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

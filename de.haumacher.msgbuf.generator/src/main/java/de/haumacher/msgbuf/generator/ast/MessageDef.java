@@ -40,7 +40,7 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 
 	private de.haumacher.msgbuf.generator.ast.QName _extends = null;
 
-	private final java.util.List<de.haumacher.msgbuf.generator.ast.Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<de.haumacher.msgbuf.generator.ast.Definition> _definitions = new de.haumacher.msgbuf.util.ReferenceList<de.haumacher.msgbuf.generator.ast.Definition>() {
 		@Override
 		protected void beforeAdd(int index, de.haumacher.msgbuf.generator.ast.Definition element) {
 			_listener.beforeAdd(MessageDef.this, DEFINITIONS__PROP, index, element);
@@ -50,9 +50,14 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 		protected void afterRemove(int index, de.haumacher.msgbuf.generator.ast.Definition element) {
 			_listener.afterRemove(MessageDef.this, DEFINITIONS__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MessageDef.this, DEFINITIONS__PROP);
+		}
 	};
 
-	private final java.util.List<de.haumacher.msgbuf.generator.ast.Field> _fields = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<de.haumacher.msgbuf.generator.ast.Field> _fields = new de.haumacher.msgbuf.util.ReferenceList<de.haumacher.msgbuf.generator.ast.Field>() {
 		@Override
 		protected void beforeAdd(int index, de.haumacher.msgbuf.generator.ast.Field element) {
 			_listener.beforeAdd(MessageDef.this, FIELDS__PROP, index, element);
@@ -62,9 +67,14 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 		protected void afterRemove(int index, de.haumacher.msgbuf.generator.ast.Field element) {
 			_listener.afterRemove(MessageDef.this, FIELDS__PROP, index, element);
 		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MessageDef.this, FIELDS__PROP);
+		}
 	};
 
-	private transient final java.util.List<de.haumacher.msgbuf.generator.ast.MessageDef> _specializations = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private transient final java.util.List<de.haumacher.msgbuf.generator.ast.MessageDef> _specializations = new de.haumacher.msgbuf.util.ReferenceList<de.haumacher.msgbuf.generator.ast.MessageDef>() {
 		@Override
 		protected void beforeAdd(int index, de.haumacher.msgbuf.generator.ast.MessageDef element) {
 			_listener.beforeAdd(MessageDef.this, SPECIALIZATIONS__PROP, index, element);
@@ -73,6 +83,11 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 		@Override
 		protected void afterRemove(int index, de.haumacher.msgbuf.generator.ast.MessageDef element) {
 			_listener.afterRemove(MessageDef.this, SPECIALIZATIONS__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(MessageDef.this, SPECIALIZATIONS__PROP);
 		}
 	};
 
@@ -113,6 +128,7 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 	protected final void internalSetAbstract(boolean value) {
 		_listener.beforeSet(this, ABSTRACT__PROP, value);
 		_abstract = value;
+		_listener.afterChanged(this, ABSTRACT__PROP);
 	}
 
 	/**
@@ -134,6 +150,7 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 	protected final void internalSetExtends(de.haumacher.msgbuf.generator.ast.QName value) {
 		_listener.beforeSet(this, EXTENDS__PROP, value);
 		_extends = value;
+		_listener.afterChanged(this, EXTENDS__PROP);
 	}
 
 	/**
@@ -294,6 +311,7 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 	protected final void internalSetExtendedDef(de.haumacher.msgbuf.generator.ast.MessageDef value) {
 		_listener.beforeSet(this, EXTENDED_DEF__PROP, value);
 		_extendedDef = value;
+		_listener.afterChanged(this, EXTENDED_DEF__PROP);
 	}
 
 	/**
@@ -322,6 +340,7 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 	protected final void internalSetId(int value) {
 		_listener.beforeSet(this, ID__PROP, value);
 		_id = value;
+		_listener.afterChanged(this, ID__PROP);
 	}
 
 	@Override
@@ -365,19 +384,43 @@ public class MessageDef extends Definition implements de.haumacher.msgbuf.genera
 		return MESSAGE_DEF__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
+	@SuppressWarnings("hiding")
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
 			ABSTRACT__PROP, 
 			EXTENDS__PROP, 
 			DEFINITIONS__PROP, 
 			FIELDS__PROP, 
 			SPECIALIZATIONS__PROP, 
 			EXTENDED_DEF__PROP, 
-			ID__PROP));
+			ID__PROP);
+		java.util.List<String> tmp = new java.util.ArrayList<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.Definition.PROPERTIES);
+		tmp.addAll(local);
+		PROPERTIES = java.util.Collections.unmodifiableList(tmp);
+	}
+
+	@SuppressWarnings("hiding")
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.Definition.TRANSIENT_PROPERTIES);
+		tmp.addAll(java.util.Arrays.asList(
+				SPECIALIZATIONS__PROP, 
+				EXTENDED_DEF__PROP, 
+				ID__PROP));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override
