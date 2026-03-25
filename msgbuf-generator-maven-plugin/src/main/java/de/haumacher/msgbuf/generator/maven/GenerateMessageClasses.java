@@ -1,9 +1,9 @@
 package de.haumacher.msgbuf.generator.maven;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,13 +13,15 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 
 import de.haumacher.msgbuf.generator.Generator;
 
 /**
  * Goal that invokes the MsgBuf compiler.
  */
-@Mojo(name = GenerateMessageClasses.NAME, defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = GenerateMessageClasses.NAME, defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class GenerateMessageClasses extends AbstractMojo {
 	
 	/**
@@ -51,6 +53,9 @@ public class GenerateMessageClasses extends AbstractMojo {
 	@Parameter(defaultValue = "${project.basedir}/src/main/resources", property = "resourceOutputDir")
 	private File _resourceOutputDirectory;
 
+	@Parameter(defaultValue = "${project}", readonly = true, required = true)
+	private MavenProject _project;
+
 	@Override
 	public void execute() throws MojoExecutionException {
 		File outputDirectory = _outputDirectory;
@@ -59,35 +64,47 @@ public class GenerateMessageClasses extends AbstractMojo {
 		}
 		
 		try {
-			List<String> files;
+			List<File> protoFiles;
 			if (_input.isDirectory()) {
-				files = Files.walk(_input.toPath())
-					.filter(p -> p.toFile().isFile())
-					.filter(p -> p.getFileName().toString().endsWith(".proto"))
-					.map(p -> p.toAbsolutePath().toString())
+				protoFiles = Files.walk(_input.toPath())
+					.map(p -> p.toFile())
+					.filter(File::isFile)
+					.filter(p -> p.getName().endsWith(".proto"))
 					.collect(Collectors.toList());
 			} else {
-				files = Collections.singletonList(_input.getAbsolutePath());
+				protoFiles = Collections.singletonList(_input);
 			}
-			if (files.isEmpty()) {
+			if (protoFiles.isEmpty()) {
 				getLog().info("No protocol files found, skipping.");
 				return;
 			}
-		
-			ArrayList<String> argList = new ArrayList<>(Arrays.asList(Generator.OUTPUT_DIR_ARG, _outputDirectory.getAbsolutePath()));
+
+			Generator generator = new Generator();
+			generator.setOut(outputDirectory);
 			if (_resourceOutputDirectory != null) {
-				argList.add(Generator.RESOURCE_DIR_ARG);
-				argList.add(_resourceOutputDirectory.getAbsolutePath());
+				generator.setResourceOut(_resourceOutputDirectory);
 			}
 			if (_includePaths != null) {
 				for (File includePath : _includePaths) {
-					argList.add("-I");
-					argList.add(includePath.getAbsolutePath());
+					generator.addIncludePath(includePath);
 				}
 			}
-			argList.addAll(files);
-			String[] args = argList.toArray(new String[0]);
-			Generator.main(args);
+
+			// Build classpath from compile dependencies for resolving imports from JARs
+			List<String> classpathElements = _project.getCompileClasspathElements();
+			if (classpathElements != null && !classpathElements.isEmpty()) {
+				URL[] urls = new URL[classpathElements.size()];
+				for (int i = 0; i < classpathElements.size(); i++) {
+					urls[i] = new File(classpathElements.get(i)).toURI().toURL();
+				}
+				generator.setImportClassLoader(new URLClassLoader(urls, null));
+			}
+
+			for (File protoFile : protoFiles) {
+				generator.load(protoFile);
+			}
+
+			generator.generate(Generator.loadPlugins());
 		} catch (Throwable ex) {
 			throw new MojoExecutionException("Failed to invoke the generator: " + ex.getMessage(), ex);
 		}

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +62,7 @@ public class Generator {
 	private File _resourceOut;
 	private List<DefinitionFile> _files = new ArrayList<>();
 	private List<File> _includePaths = new ArrayList<>();
+	private ClassLoader _importClassLoader;
 	private Set<String> _loadedFiles = new HashSet<>();
 	private List<DefinitionFile> _importedFiles = new ArrayList<>();
 
@@ -73,6 +76,14 @@ public class Generator {
 
 	public void addIncludePath(File path) {
 		_includePaths.add(path);
+	}
+
+	/**
+	 * Sets a class loader used to resolve imports from the classpath.
+	 * Proto files packaged as resources in dependency JARs can be found this way.
+	 */
+	public void setImportClassLoader(ClassLoader classLoader) {
+		_importClassLoader = classLoader;
 	}
 
 	public DefinitionFile load(String fileName) throws IOException, ParseException {
@@ -209,34 +220,85 @@ public class Generator {
 	
 	private void resolveImports(DefinitionFile file, File sourceFile) throws IOException, ParseException {
 		for (String importPath : file.getImports()) {
-			File resolved = resolveImportPath(importPath, sourceFile);
-			if (resolved == null) {
-				error("Cannot resolve import '" + importPath + "' from '" + sourceFile + "'.");
+			// Try file system first
+			File resolved = resolveImportPathFromFileSystem(importPath, sourceFile);
+			if (resolved != null) {
+				String canonical = resolved.getCanonicalPath();
+				if (_loadedFiles.contains(canonical)) {
+					continue;
+				}
+				_loadedFiles.add(canonical);
+				DefinitionFile imported;
+				try (InputStream in = new FileInputStream(resolved)) {
+					imported = parse(in);
+				}
+				_files.add(imported);
+				_table.enter(imported);
+				_importedFiles.add(imported);
+				resolveImports(imported, resolved);
 				continue;
 			}
-			String canonical = resolved.getCanonicalPath();
-			if (_loadedFiles.contains(canonical)) {
-				continue;
+
+			// Fall back to classpath
+			if (_importClassLoader != null) {
+				String resourceKey = "classpath:" + importPath;
+				if (_loadedFiles.contains(resourceKey)) {
+					continue;
+				}
+				InputStream classpathStream = _importClassLoader.getResourceAsStream(importPath);
+				if (classpathStream != null) {
+					_loadedFiles.add(resourceKey);
+					DefinitionFile imported;
+					try (InputStream in = classpathStream) {
+						imported = parse(in);
+					}
+					_files.add(imported);
+					_table.enter(imported);
+					_importedFiles.add(imported);
+					// Recursive imports from classpath-loaded files can only resolve via classpath
+					resolveImportsFromClasspath(imported);
+					continue;
+				}
 			}
-			_loadedFiles.add(canonical);
-			DefinitionFile imported;
-			try (InputStream in = new FileInputStream(resolved)) {
-				imported = parse(in);
-			}
-			// Add to table for name resolution, and to _files for buildSpecializations
-			_files.add(imported);
-			_table.enter(imported);
-			_importedFiles.add(imported);
-			// Recursively resolve imports of the imported file
-			resolveImports(imported, resolved);
+
+			error("Cannot resolve import '" + importPath + "' from '" + sourceFile + "'.");
 		}
 	}
 
-	private File resolveImportPath(String importPath, File sourceFile) {
-		// 1. Relative to importing file's directory
-		File relative = new File(sourceFile.getParentFile(), importPath);
-		if (relative.isFile()) {
-			return relative;
+	private void resolveImportsFromClasspath(DefinitionFile file) throws IOException, ParseException {
+		for (String importPath : file.getImports()) {
+			String resourceKey = "classpath:" + importPath;
+			if (_loadedFiles.contains(resourceKey)) {
+				continue;
+			}
+
+			if (_importClassLoader != null) {
+				InputStream classpathStream = _importClassLoader.getResourceAsStream(importPath);
+				if (classpathStream != null) {
+					_loadedFiles.add(resourceKey);
+					DefinitionFile imported;
+					try (InputStream in = classpathStream) {
+						imported = parse(in);
+					}
+					_files.add(imported);
+					_table.enter(imported);
+					_importedFiles.add(imported);
+					resolveImportsFromClasspath(imported);
+					continue;
+				}
+			}
+
+			error("Cannot resolve import '" + importPath + "'.");
+		}
+	}
+
+	private File resolveImportPathFromFileSystem(String importPath, File sourceFile) {
+		if (sourceFile != null) {
+			// 1. Relative to importing file's directory
+			File relative = new File(sourceFile.getParentFile(), importPath);
+			if (relative.isFile()) {
+				return relative;
+			}
 		}
 		// 2. From configured include paths
 		for (File includePath : _includePaths) {
@@ -508,6 +570,14 @@ public class Generator {
 				return;
 			} else if (arg.equals("-I")) {
 				generator.addIncludePath(new File(args[n++]));
+			} else if (arg.equals("-cp")) {
+				String classpath = args[n++];
+				String[] entries = classpath.split(File.pathSeparator);
+				URL[] urls = new URL[entries.length];
+				for (int i = 0; i < entries.length; i++) {
+					urls[i] = new File(entries[i]).toURI().toURL();
+				}
+				generator.setImportClassLoader(new URLClassLoader(urls, null));
 			} else {
 				File file = new File(arg);
 				DefinitionFile content = generator.load(file);
@@ -520,14 +590,19 @@ public class Generator {
 			generator.setOut(out);
 		}
 		
+		generator.generate(loadPlugins());
+	}
+
+	/**
+	 * Loads generator plugins via {@link ServiceLoader}.
+	 */
+	public static GeneratorPlugin loadPlugins() {
 		ServiceLoader<GeneratorPlugin> pluginLoader = ServiceLoader.load(GeneratorPlugin.class);
-		
 		GeneratorPlugin plugin = GeneratorPlugin.none();
 		for (GeneratorPlugin p : pluginLoader) {
 			plugin = plugin.andThen(p);
 		}
-		
-		generator.generate(plugin);
+		return plugin;
 	}
 
 	private static void printHelp() {
