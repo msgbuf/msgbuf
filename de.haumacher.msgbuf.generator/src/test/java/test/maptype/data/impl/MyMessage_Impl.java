@@ -274,7 +274,31 @@ public class MyMessage_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		out.name(PROJECTS__ID);
+		{
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, getProjects().size());
+			for (java.util.Map.Entry<String,test.maptype.data.Project> entry : getProjects().entrySet()) {
+				out.beginObject();
+				out.name(1);
+				out.value(entry.getKey());
+				out.name(2);
+				entry.getValue().writeTo(out);
+				out.endObject();
+			}
+			out.endArray();
+		}
 		out.name(RATING__ID);
+		{
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, getRating().size());
+			for (java.util.Map.Entry<Integer,String> entry : getRating().entrySet()) {
+				out.beginObject();
+				out.name(1);
+				out.value(entry.getKey());
+				out.name(2);
+				out.value(entry.getValue());
+				out.endObject();
+			}
+			out.endArray();
+		}
 	}
 
 	/** Helper for creating an object of type {@link test.maptype.data.MyMessage} from a polymorphic composition. */

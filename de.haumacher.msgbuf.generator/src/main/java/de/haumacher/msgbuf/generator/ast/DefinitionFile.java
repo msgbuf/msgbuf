@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see #getDefinitions()
  */
-public class DefinitionFile extends WithOptions {
+public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOptions {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.DefinitionFile} instance.

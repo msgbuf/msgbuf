@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Option} annotating a boolean value
  */
-public class Flag extends Option {
+public class Flag extends de.haumacher.msgbuf.generator.ast.Option {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.Flag} instance.

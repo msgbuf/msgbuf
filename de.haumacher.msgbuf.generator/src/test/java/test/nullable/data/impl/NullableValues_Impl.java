@@ -479,6 +479,18 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 		}
 		if (hasStringIntMap()) {
 			out.name(STRING_INT_MAP__ID);
+			{
+				out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, getStringIntMap().size());
+				for (java.util.Map.Entry<String,Integer> entry : getStringIntMap().entrySet()) {
+					out.beginObject();
+					out.name(1);
+					out.value(entry.getKey());
+					out.name(2);
+					out.value(entry.getValue());
+					out.endObject();
+				}
+				out.endArray();
+			}
 		}
 		if (hasOptionalDecision()) {
 			out.name(OPTIONAL_DECISION__ID);

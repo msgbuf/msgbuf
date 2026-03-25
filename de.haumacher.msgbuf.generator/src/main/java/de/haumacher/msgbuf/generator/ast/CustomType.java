@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * A custom type is either a {@link EnumDef}, or a {@link MessageDef}.
  */
-public class CustomType extends Type {
+public class CustomType extends de.haumacher.msgbuf.generator.ast.Type {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.CustomType} instance.

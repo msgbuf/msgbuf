@@ -65,6 +65,7 @@ TOKEN :
 | < INT_TYPE : "int" >
 | < LONG_TYPE : "long" >
 | < BOOLEAN_TYPE : "boolean" >
+| < JSON_TYPE : "json" >
 | < TYPE :
     "double" |
     "float" |
@@ -452,6 +453,8 @@ PrimitiveType primitiveType() :
     { result = PrimitiveType.create().setKind(PrimitiveType.Kind.INT_64); }
   | t=< BOOLEAN_TYPE >
     { result = PrimitiveType.create().setKind(PrimitiveType.Kind.BOOL); }
+  | t=< JSON_TYPE >
+    { result = PrimitiveType.create().setKind(PrimitiveType.Kind.JSON); }
   )
   { return result; }
 }
@@ -512,6 +515,8 @@ String name() :
   | t = < TO >
     { result = t.image; }
   | t = < MAX >
+    { result = t.image; }
+  | t = < JSON_TYPE >
     { result = t.image; }
   | t = < XNAME >
     { result = t.image.substring(1, t.image.length() - 1); }

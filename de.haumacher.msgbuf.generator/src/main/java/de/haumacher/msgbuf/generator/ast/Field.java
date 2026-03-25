@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A field definition of a {@link MessageDef}.
  */
-public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOperations {
+public class Field extends de.haumacher.msgbuf.generator.ast.Part implements de.haumacher.msgbuf.generator.FieldOperations {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.Field} instance.

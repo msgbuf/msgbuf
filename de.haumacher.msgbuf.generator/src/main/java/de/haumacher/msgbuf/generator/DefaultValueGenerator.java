@@ -66,6 +66,7 @@ final class DefaultValueGenerator implements Type.Visitor<String, Void> {
 		switch (self.getKind()) {
 		case BOOL: return "false";
 		case BYTES: return "null";
+		case JSON: return "null";
 		case DOUBLE: return "0.0d";
 		case FLOAT: return "0.0f";
 		case STRING: return "\"\"";

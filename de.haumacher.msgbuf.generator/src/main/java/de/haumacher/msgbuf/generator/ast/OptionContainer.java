@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Container for temporary collecting annotations without further semantics.
  */
-public class OptionContainer extends WithOptions {
+public class OptionContainer extends de.haumacher.msgbuf.generator.ast.WithOptions {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.OptionContainer} instance.

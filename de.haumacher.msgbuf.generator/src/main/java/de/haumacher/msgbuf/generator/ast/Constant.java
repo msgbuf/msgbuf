@@ -5,7 +5,7 @@ package de.haumacher.msgbuf.generator.ast;
  *
  * @see EnumDef#getConstants()
  */
-public class Constant extends Part {
+public class Constant extends de.haumacher.msgbuf.generator.ast.Part {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.Constant} instance.

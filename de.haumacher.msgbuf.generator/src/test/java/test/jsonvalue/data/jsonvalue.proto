@@ -1,0 +1,27 @@
+package test.jsonvalue.data;
+
+option NoBinary;
+option NoXml;
+option NoReflection;
+option NoListener;
+option NoVisitor;
+
+/** A message carrying an opaque JSON payload. */
+message PatchEvent {
+    /** ID of the control being patched. */
+    string controlId;
+
+    /** The patch data as a native JSON value. */
+    json patch;
+}
+
+/** A message with multiple json fields. */
+message DynamicConfig {
+    string name;
+
+    /** Primary configuration (any JSON structure). */
+    json config;
+
+    /** Optional metadata. */
+    json metadata;
+}

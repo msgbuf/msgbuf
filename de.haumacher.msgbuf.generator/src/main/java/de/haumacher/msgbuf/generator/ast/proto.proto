@@ -216,6 +216,9 @@ message PrimitiveType extends Type {
 	    
 		/** A string of octets. */
 	    BYTES;
+
+		/** An opaque JSON value (any valid JSON: object, array, string, number, boolean, null). */
+	    JSON;
 	}
 
     /** The type kind. */

@@ -551,8 +551,11 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			
 		case BYTES:
 			return "java.util.Base64.getDecoder().decode(" + value + ");";
+
+		case JSON:
+			return "de.haumacher.msgbuf.json.JsonUtil.parseJsonValue(" + value + ")";
 		}
-		
+
 		throw new UnsupportedOperationException("Cannot read values of type: " + primitiveType);
 	}
 
@@ -593,8 +596,11 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			
 		case BYTES:
 			return "java.util.Base64.getEncoder().encodeToString(" + value + ");";
+
+		case JSON:
+			return "de.haumacher.msgbuf.json.JsonUtil.jsonStringValue(" + value + ")";
 		}
-		
+
 		throw new UnsupportedOperationException("Cannot read values of type: " + primitiveType);
 	}
 	

@@ -1,0 +1,14 @@
+package test.jsonbinary.data;
+
+option NoXml;
+option NoReflection;
+option NoListener;
+option NoVisitor;
+
+/** A message with json fields, supporting both JSON and Binary serialization. */
+message BinaryPatchEvent {
+    string controlId;
+
+    /** The patch data as a native JSON value. */
+    json patch;
+}
