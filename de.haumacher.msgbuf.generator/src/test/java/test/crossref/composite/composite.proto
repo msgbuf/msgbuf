@@ -1,0 +1,34 @@
+package test.crossref.composite;
+
+import "../shared/shared.proto";
+
+/** A person with an address from the shared protocol. */
+message Person {
+    string name;
+
+    /** The person's home address (embedded from shared protocol). */
+    test.crossref.shared.Address address;
+
+    /** The person's location. */
+    test.crossref.shared.Coordinate location;
+}
+
+/** A delivery order referencing shared types. */
+message DeliveryOrder {
+    string orderId;
+
+    /** Sender address. */
+    test.crossref.shared.Address sender;
+
+    /** Recipient address. */
+    test.crossref.shared.Address recipient;
+
+    /** Delivery items. */
+    repeated Item items;
+}
+
+/** An item in a delivery. */
+message Item {
+    string productName;
+    int32 quantity;
+}
