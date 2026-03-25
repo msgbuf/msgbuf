@@ -48,7 +48,7 @@ public class GenerateMessageClasses extends AbstractMojo {
 	/**
 	 * Directory where to generate resource files (e.g. META-INF/services).
 	 */
-	@Parameter(defaultValue = "${project.basedir}/src/main/resources", property = "resourceOutputDir")
+	@Parameter(property = "resourceOutputDir")
 	private File _resourceOutputDirectory;
 
 	@Override
