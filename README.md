@@ -246,26 +246,33 @@ Extension types are discovered at runtime via `ServiceLoader`. The generator pro
 (e.g. `GraphEventsTypes`) and a `META-INF/services` descriptor automatically when the `-resources` output
 directory is configured. On platforms without `ServiceLoader` (e.g. GWT), call `GraphEventsTypes.init()` explicitly.
 
+The base module's `.proto` files should be packaged as resources in its JAR (e.g. in `src/main/resources`).
+The Maven plugin automatically resolves imports from compile-scope dependency JARs, so no file system paths
+to the base module are needed.
+
 Implications:
 - Implies `option NoBinary` (only JSON and XML serialization are supported)
 - Cannot be combined with `option NoInterfaces`
 - The generated `Visitor` interface includes a `visitDefault()` fallback method for unknown extension types
 - Extension types generate their own `Visitor` sub-interface with an `instanceof`-based dispatch
 
-CLI usage with imports:
-```
-java -jar msgbuf-generator.jar -out src/main/java -resources src/main/resources -I /path/to/base-module/src/main/java extension.proto
-```
-
-Maven plugin configuration:
+Maven plugin configuration (extension module):
 ```xml
 <configuration>
-    <includePaths>
-        <includePath>${project.basedir}/../base-module/src/main/java</includePath>
-    </includePaths>
     <resourceOutputDir>${project.basedir}/src/main/resources</resourceOutputDir>
 </configuration>
 ```
+
+Imports are resolved automatically from the compile classpath. If the base module packages its `.proto` files
+as resources, no additional configuration is needed beyond declaring the dependency.
+
+CLI usage (standalone, without Maven):
+```
+java -jar msgbuf-generator.jar -out src/main/java -resources src/main/resources -cp base-module.jar extension.proto
+```
+
+The `-cp` option specifies JARs to search for imported `.proto` files. The `-I` option can still be used
+for file system include paths.
 
 ## Message options
 
