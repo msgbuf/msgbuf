@@ -73,10 +73,10 @@ public interface Shape extends de.haumacher.msgbuf.graph.SharedGraphNode, de.hau
 		String type = in.nextString();
 		int id = in.nextInt();
 		switch (type) {
-			case Group.GROUP__TYPE: result = test.graph.data.Group.create(); break;
-			case Car.CAR__TYPE: result = test.graph.data.Car.create(); break;
 			case Circle.CIRCLE__TYPE: result = test.graph.data.Circle.create(); break;
 			case Rectangle.RECTANGLE__TYPE: result = test.graph.data.Rectangle.create(); break;
+			case Group.GROUP__TYPE: result = test.graph.data.Group.create(); break;
+			case Car.CAR__TYPE: result = test.graph.data.Car.create(); break;
 			default: in.skipValue(); result = null; break;
 		}
 		if (result != null) {

@@ -86,10 +86,10 @@ public interface Shape extends de.haumacher.msgbuf.binary.BinaryDataObject, de.h
 		int type = in.nextInt();
 		test.nojson.Shape result;
 		switch (type) {
-			case test.nojson.Group.GROUP__TYPE_ID: result = test.nojson.impl.Group_Impl.readGroup_Content(in); break;
-			case test.nojson.Car.CAR__TYPE_ID: result = test.nojson.impl.Car_Impl.readCar_Content(in); break;
 			case test.nojson.Circle.CIRCLE__TYPE_ID: result = test.nojson.impl.Circle_Impl.readCircle_Content(in); break;
 			case test.nojson.Rectangle.RECTANGLE__TYPE_ID: result = test.nojson.impl.Rectangle_Impl.readRectangle_Content(in); break;
+			case test.nojson.Group.GROUP__TYPE_ID: result = test.nojson.impl.Group_Impl.readGroup_Content(in); break;
+			case test.nojson.Car.CAR__TYPE_ID: result = test.nojson.impl.Car_Impl.readCar_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();

@@ -39,6 +39,8 @@ public class TestParser extends TestCase {
 		System.out.println("Processing: " + _proto.getName());
 		Generator generator = new Generator();
 		generator.setOut(testDir());
+		generator.setResourceOut(testResourceDir());
+		generator.addIncludePath(new File(testDir(), "test"));
 		generator.load(_proto);
 		generator.generate(new XmlStreamingPlugin());
 	}
@@ -46,11 +48,15 @@ public class TestParser extends TestCase {
 	private static File testDir() {
 		return new File("src" + File.separator + "test" + File.separator + "java");
 	}
-	
+
+	private static File testResourceDir() {
+		return new File("src" + File.separator + "test" + File.separator + "resources");
+	}
+
 	public static Test suite() throws IOException {
 		TestSuite result = new TestSuite();
 		File fixturesDir = new File(testDir(), "test");
-		
+
 		Files.walk(fixturesDir.toPath())
 			.map(p -> p.toFile())
 			.filter(f -> f.isFile())

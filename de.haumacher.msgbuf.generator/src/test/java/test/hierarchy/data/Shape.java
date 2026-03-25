@@ -103,11 +103,11 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
+			case Circle.CIRCLE__TYPE: result = test.hierarchy.data.Circle.readCircle(in); break;
+			case Rectangle.RECTANGLE__TYPE: result = test.hierarchy.data.Rectangle.readRectangle(in); break;
 			case Group.GROUP__TYPE: result = test.hierarchy.data.Group.readGroup(in); break;
 			case Optional.OPTIONAL__TYPE: result = test.hierarchy.data.Optional.readOptional(in); break;
 			case Car.CAR__TYPE: result = test.hierarchy.data.Car.readCar(in); break;
-			case Circle.CIRCLE__TYPE: result = test.hierarchy.data.Circle.readCircle(in); break;
-			case Rectangle.RECTANGLE__TYPE: result = test.hierarchy.data.Rectangle.readRectangle(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -125,11 +125,11 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		int type = in.nextInt();
 		test.hierarchy.data.Shape result;
 		switch (type) {
+			case test.hierarchy.data.Circle.CIRCLE__TYPE_ID: result = test.hierarchy.data.impl.Circle_Impl.readCircle_Content(in); break;
+			case test.hierarchy.data.Rectangle.RECTANGLE__TYPE_ID: result = test.hierarchy.data.impl.Rectangle_Impl.readRectangle_Content(in); break;
 			case test.hierarchy.data.Group.GROUP__TYPE_ID: result = test.hierarchy.data.impl.Group_Impl.readGroup_Content(in); break;
 			case test.hierarchy.data.Optional.OPTIONAL__TYPE_ID: result = test.hierarchy.data.impl.Optional_Impl.readOptional_Content(in); break;
 			case test.hierarchy.data.Car.CAR__TYPE_ID: result = test.hierarchy.data.impl.Car_Impl.readCar_Content(in); break;
-			case test.hierarchy.data.Circle.CIRCLE__TYPE_ID: result = test.hierarchy.data.impl.Circle_Impl.readCircle_Content(in); break;
-			case test.hierarchy.data.Rectangle.RECTANGLE__TYPE_ID: result = test.hierarchy.data.impl.Rectangle_Impl.readRectangle_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();

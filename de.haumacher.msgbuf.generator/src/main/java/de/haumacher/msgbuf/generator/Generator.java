@@ -385,10 +385,28 @@ public class Generator {
 		File servicesDir = new File(_resourceOut, "META-INF/services");
 		servicesDir.mkdirs();
 		File descriptor = new File(servicesDir, "de.haumacher.msgbuf.data.TypeRegistration");
+
+		// Read existing entries to avoid duplicates (supports multiple generator runs)
+		Set<String> existing = new HashSet<>();
+		if (descriptor.isFile()) {
+			try (java.io.BufferedReader r = new java.io.BufferedReader(new java.io.InputStreamReader(new FileInputStream(descriptor), "utf-8"))) {
+				String line;
+				while ((line = r.readLine()) != null) {
+					line = line.trim();
+					if (!line.isEmpty()) {
+						existing.add(line);
+					}
+				}
+			} catch (IOException ex) {
+				// Ignore, will overwrite
+			}
+		}
+		existing.addAll(registrationClasses);
+
 		try (FileOutputStream os = new FileOutputStream(descriptor)) {
 			try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
 				System.out.println("Generating '" + descriptor + "'.");
-				for (String className : registrationClasses) {
+				for (String className : existing) {
 					w.println(className);
 				}
 			}

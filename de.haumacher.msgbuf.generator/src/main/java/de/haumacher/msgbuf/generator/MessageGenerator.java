@@ -383,7 +383,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			line("/** Visitor interface for the {@link " + qTypeName(_def) + "} hierarchy.*/");
 			lineStart("public interface Visitor<R,A" + onVisitEx(",E extends Throwable") + ">");
 			boolean first = true;
-			for (MessageDef specialization : _def.getSpecializations()) {
+			for (MessageDef specialization : localSpecializations(_def)) {
 				if (!specialization.isAbstract()) {
 					continue;
 				}
@@ -399,7 +399,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			nl();
 			{
 				boolean hasCase = false;
-				for (MessageDef specialization : _def.getSpecializations()) {
+				for (MessageDef specialization : localSpecializations(_def)) {
 					if (specialization.isAbstract()) {
 						continue;
 					}
@@ -1349,7 +1349,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						line("int id = in.nextInt();");
 					}
 					line("switch (type) {");
-					for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
+					for (MessageDef specialization : concreteSpecializations(_def)) {
 						if (_graph) {
 							line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + ".create(); break;");
 						} else {
@@ -1894,7 +1894,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					line("int type = in.nextInt();");
 					line(thisType() + " result;");
 					line("switch (type) {");
-					for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
+					for (MessageDef specialization : concreteSpecializations(_def)) {
 						line("case " + mkBinaryTypeConstantRef(specialization) + ": result = " + qImplName(specialization) + "." + readerNameContent(specialization) + "(in); break;");
 					}
 					line("default: result = null; while (in.hasNext()) {in.skipValue(); }");
@@ -2310,6 +2310,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		MessageDef gen = getAbstractGeneralization();
 		if (gen == null) return false;
 		return gen.getFile() != _def.getFile() && Util.getFlag(gen.getFile(), "OpenWorld");
+	}
+
+	private List<MessageDef> localSpecializations(MessageDef def) {
+		return localSpecializations(def, _def.getFile());
 	}
 
 }
