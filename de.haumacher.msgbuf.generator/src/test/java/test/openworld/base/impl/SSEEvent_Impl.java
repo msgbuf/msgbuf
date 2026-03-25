@@ -5,6 +5,10 @@ package test.openworld.base.impl;
  */
 public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.openworld.base.SSEEvent {
 
+	static {
+		de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();
+	}
+
 	private long _timestamp = 0L;
 
 	/**

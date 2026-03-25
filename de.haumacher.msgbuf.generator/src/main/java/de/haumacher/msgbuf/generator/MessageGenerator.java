@@ -279,6 +279,14 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		generateConstants();
 		
 		if (!_interface) {
+			if (isOpenWorld() && _def.isAbstract() && _def.getExtendedDef() == null) {
+				nl();
+				line("static {");
+				{
+					line("de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();");
+				}
+				line("}");
+			}
 			generateFieldMembers();
 			generateConstructor();
 		}
@@ -1335,9 +1343,6 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				
 				if (_def.isAbstract()) {
 					line(thisType() + " result;");
-					if (isOpenWorld()) {
-						line("de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();");
-					}
 					line("in.beginArray();");
 					line("String type = in.nextString();");
 					if (_graph) {

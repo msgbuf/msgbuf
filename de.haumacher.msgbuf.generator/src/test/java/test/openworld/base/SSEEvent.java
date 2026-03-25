@@ -60,7 +60,6 @@ public interface SSEEvent extends de.haumacher.msgbuf.data.DataObject, de.haumac
 	/** Reads a new instance from the given reader. */
 	static test.openworld.base.SSEEvent readSSEEvent(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 		test.openworld.base.SSEEvent result;
-		de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
