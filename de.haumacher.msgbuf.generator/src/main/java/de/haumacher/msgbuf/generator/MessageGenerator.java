@@ -1683,8 +1683,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			
 		case BYTES:
 			return "de.haumacher.msgbuf.json.JsonUtil.nextBinaryOptional(in)";
-		}			
-		
+
+		case JSON:
+			return "de.haumacher.msgbuf.json.JsonUtil.nextJsonValue(in)";
+		}
+
 		throw new RuntimeException("No such type: " + primitive);
 	}
 
@@ -1697,6 +1700,10 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			switch (((PrimitiveType) type).getKind()) {
 			case BYTES: {
 				line("de.haumacher.msgbuf.json.JsonUtil.writeBinaryOptional(out, " + x + ");");
+				break;
+			}
+			case JSON: {
+				line("de.haumacher.msgbuf.json.JsonUtil.writeJsonValue(out, " + x + ");");
 				break;
 			}
 			default: {
@@ -1873,11 +1880,34 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	private void binaryWriteValue(Type type, String x) {
 		if (type instanceof PrimitiveType) {
-			line("out.value(" + x + ");");
+			if (((PrimitiveType) type).getKind() == Kind.JSON) {
+				line("de.haumacher.msgbuf.json.JsonUtil.toJsonValue(" + x + ").writeTo(out);");
+			} else {
+				line("out.value(" + x + ");");
+			}
 		} else if (type instanceof CustomType) {
 			line(x + ".writeTo(out);");
-		} else {
-			// TODO
+		} else if (type instanceof MapType) {
+			MapType mapType = (MapType) type;
+			Type keyType = mapType.getKeyType();
+			Type valueType = mapType.getValueType();
+			line("{");
+			{
+				String entry = "entry";
+				line("out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, " + x + ".size());");
+				line("for (" + mkEntryType(mapType) + " " + entry + " : " + x + ".entrySet()) {");
+				{
+					line("out.beginObject();");
+					line("out.name(1);");
+					binaryWriteValue(keyType, entry + ".getKey()");
+					line("out.name(2);");
+					binaryWriteValue(valueType, entry + ".getValue()");
+					line("out.endObject();");
+				}
+				line("}");
+				line("out.endArray();");
+			}
+			line("}");
 		}
 	}
 
@@ -2079,8 +2109,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			
 		case BYTES:
 			return "in.nextBinary()";
-		}			
-		
+
+		case JSON:
+			return "de.haumacher.msgbuf.json.JsonUtil.fromJsonValue(de.haumacher.msgbuf.json.value.JsonValue.readJsonValue(in))";
+		}
+
 		throw new RuntimeException("No such type: " + kind);
 	}
 
@@ -2132,8 +2165,11 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			
 		case BYTES:
 			return DataType.BINARY;
-		}			
-		
+
+		case JSON:
+			return DataType.OBJECT;
+		}
+
 		throw new RuntimeException("No such type: " + primitive);
 	}
 

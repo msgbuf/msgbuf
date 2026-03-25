@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Option} annotating a string value
  */
-public class StringOption extends Option {
+public class StringOption extends de.haumacher.msgbuf.generator.ast.Option {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.StringOption} instance.

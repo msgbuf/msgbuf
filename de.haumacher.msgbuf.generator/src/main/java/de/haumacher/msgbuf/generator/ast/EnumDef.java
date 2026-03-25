@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Definition} of an enumeration.
  */
-public class EnumDef extends Definition {
+public class EnumDef extends de.haumacher.msgbuf.generator.ast.Definition {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.EnumDef} instance.

@@ -1,0 +1,44 @@
+package de.haumacher.msgbuf.json.value;
+
+option NoInterfaces;
+option NoReflection;
+option NoListener;
+option NoVisitor;
+
+/** Envelope type representing any JSON value for binary and XML serialization. */
+abstract message JsonValue {
+}
+
+/** A JSON string value. */
+message JsonString extends JsonValue {
+    string value;
+}
+
+/** A JSON integer number value (fits in a long). */
+message JsonLong extends JsonValue {
+    long value;
+}
+
+/** A JSON floating-point number value. */
+message JsonDouble extends JsonValue {
+    double value;
+}
+
+/** A JSON boolean value. */
+message JsonBoolean extends JsonValue {
+    boolean value;
+}
+
+/** A JSON null value. */
+message JsonNull extends JsonValue {
+}
+
+/** A JSON array value. */
+message JsonArray extends JsonValue {
+    repeated JsonValue elements;
+}
+
+/** A JSON object value (ordered map of string keys to JSON values). */
+message JsonObject extends JsonValue {
+    map<string, JsonValue> entries;
+}

@@ -108,6 +108,8 @@ public class TypeGenerator implements Type.Visitor<String, Boolean> {
 			return wrapped ? "Long" : "long";
 		case STRING:
 			return "String";
+		case JSON:
+			return "Object";
 		}
 		throw new RuntimeException("No such type: " + type.getKind());
 	}

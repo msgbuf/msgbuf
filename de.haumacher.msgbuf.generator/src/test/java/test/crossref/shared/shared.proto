@@ -1,0 +1,14 @@
+package test.crossref.shared;
+
+/** Shared address type used by other protocols. */
+message Address {
+    string street;
+    string city;
+    string zip;
+}
+
+/** A coordinate pair. */
+message Coordinate {
+    double lat;
+    double lon;
+}

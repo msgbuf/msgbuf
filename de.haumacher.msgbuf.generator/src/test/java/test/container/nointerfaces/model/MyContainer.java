@@ -594,6 +594,18 @@ public class MyContainer extends de.haumacher.msgbuf.data.AbstractDataObject imp
 			out.endArray();
 		}
 		out.name(CONTENT_MAP__ID);
+		{
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, getContentMap().size());
+			for (java.util.Map.Entry<String,test.container.nointerfaces.model.MyContent> entry : getContentMap().entrySet()) {
+				out.beginObject();
+				out.name(1);
+				out.value(entry.getKey());
+				out.name(2);
+				entry.getValue().writeTo(out);
+				out.endObject();
+			}
+			out.endArray();
+		}
 		if (hasOther()) {
 			out.name(OTHER__ID);
 			getOther().writeTo(out);

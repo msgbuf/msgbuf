@@ -17,6 +17,7 @@ import de.haumacher.msgbuf.generator.ast.Flag;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.Part;
+import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.Type;
 import de.haumacher.msgbuf.generator.ast.WithOptions;
@@ -76,6 +77,9 @@ public class Util {
 	}
 
 	public static boolean isNullable(Type type) {
+		if (type instanceof PrimitiveType) {
+			return ((PrimitiveType) type).getKind() == PrimitiveType.Kind.JSON;
+		}
 		return type instanceof CustomType && !isEnumType(type);
 	}
 

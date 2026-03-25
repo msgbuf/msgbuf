@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A primitive built-in {@link Type}.
  */
-public class PrimitiveType extends Type {
+public class PrimitiveType extends de.haumacher.msgbuf.generator.ast.Type {
 
 	/**
 	 * Supported built-in types.
@@ -85,6 +85,11 @@ public class PrimitiveType extends Type {
 		 */
 		BYTES("BYTES"),
 
+		/**
+		 * An opaque JSON value (any valid JSON: object, array, string, number, boolean, null).
+		 */
+		JSON("JSON"),
+
 		;
 
 		private final String _protocolName;
@@ -122,6 +127,7 @@ public class PrimitiveType extends Type {
 				case "FLOAT": return FLOAT;
 				case "DOUBLE": return DOUBLE;
 				case "BYTES": return BYTES;
+				case "JSON": return JSON;
 			}
 			return INT_32;
 		}
@@ -154,6 +160,7 @@ public class PrimitiveType extends Type {
 				case FLOAT: out.value(13); break;
 				case DOUBLE: out.value(14); break;
 				case BYTES: out.value(15); break;
+				case JSON: out.value(16); break;
 				default: out.value(0);
 			}
 		}
@@ -176,6 +183,7 @@ public class PrimitiveType extends Type {
 				case 13: return FLOAT;
 				case 14: return DOUBLE;
 				case 15: return BYTES;
+				case 16: return JSON;
 				default: return INT_32;
 			}
 		}

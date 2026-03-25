@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * {@link Definition} of a data class.
  */
-public class MessageDef extends Definition implements de.haumacher.msgbuf.generator.MessageDefOperations {
+public class MessageDef extends de.haumacher.msgbuf.generator.ast.Definition implements de.haumacher.msgbuf.generator.MessageDefOperations {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.MessageDef} instance.

@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * Base class for type and field definitions.
  */
-public abstract class DefinitionBase extends WithOptions {
+public abstract class DefinitionBase extends de.haumacher.msgbuf.generator.ast.WithOptions {
 
 	/** Visitor interface for the {@link de.haumacher.msgbuf.generator.ast.DefinitionBase} hierarchy.*/
 	public interface Visitor<R,A> extends de.haumacher.msgbuf.generator.ast.Part.Visitor<R,A>, de.haumacher.msgbuf.generator.ast.Definition.Visitor<R,A> {

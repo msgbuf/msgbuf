@@ -3,7 +3,7 @@ package de.haumacher.msgbuf.generator.ast;
 /**
  * A {@link Type} that is composed of a key and a value.
  */
-public class MapType extends Type {
+public class MapType extends de.haumacher.msgbuf.generator.ast.Type {
 
 	/**
 	 * Creates a {@link de.haumacher.msgbuf.generator.ast.MapType} instance.
