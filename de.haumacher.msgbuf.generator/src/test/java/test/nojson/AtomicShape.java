@@ -3,7 +3,7 @@ package test.nojson;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public interface AtomicShape extends Shape {
+public interface AtomicShape extends test.nojson.Shape {
 
 	/** Visitor interface for the {@link test.nojson.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {

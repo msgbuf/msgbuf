@@ -3,7 +3,7 @@ package test.nojson;
 /**
  * A circle {@link Shape}.
  */
-public interface Circle extends AtomicShape {
+public interface Circle extends test.nojson.AtomicShape {
 
 	/**
 	 * Creates a {@link test.nojson.Circle} instance.

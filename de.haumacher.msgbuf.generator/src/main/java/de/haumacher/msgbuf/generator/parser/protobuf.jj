@@ -45,6 +45,7 @@ SPECIAL_TOKEN:
 TOKEN :
 {
   < PACKAGE : "package" >
+| < IMPORT : "import" >
 | < SYNTAX : "syntax" >
 | < MESSAGE : "message" >
 | < ENUM : "enum" >
@@ -105,7 +106,14 @@ DefinitionFile file() :
 		result.setPackage(pkgName);
     }
   )?
-  
+
+  (
+    < IMPORT > { Token importPath; }
+    importPath = < STRING >
+    { result.addImport(de.haumacher.msgbuf.generator.common.Util.stringContent(importPath.image)); }
+    ";"
+  )*
+
   (    optionStatement(result)
   )*
   

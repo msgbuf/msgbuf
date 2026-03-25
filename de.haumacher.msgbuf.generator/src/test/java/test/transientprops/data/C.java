@@ -1,6 +1,6 @@
 package test.transientprops.data;
 
-public interface C extends B {
+public interface C extends test.transientprops.data.B {
 
 	/**
 	 * Creates a {@link test.transientprops.data.C} instance.

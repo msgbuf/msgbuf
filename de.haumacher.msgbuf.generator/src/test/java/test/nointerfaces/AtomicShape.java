@@ -3,7 +3,7 @@ package test.nointerfaces;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public abstract class AtomicShape extends Shape {
+public abstract class AtomicShape extends test.nointerfaces.Shape {
 
 	/** Visitor interface for the {@link test.nointerfaces.AtomicShape} hierarchy.*/
 	public interface Visitor<R,A,E extends Throwable> {

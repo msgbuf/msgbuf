@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public interface Car extends Shape {
+public interface Car extends test.hierarchy.data.Shape {
 
 	/**
 	 * Creates a {@link test.hierarchy.data.Car} instance.

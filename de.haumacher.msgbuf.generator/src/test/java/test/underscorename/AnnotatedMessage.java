@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public interface AnnotatedMessage extends BaseMsg {
+public interface AnnotatedMessage extends test.underscorename.BaseMsg {
 
 	/**
 	 * Creates a {@link test.underscorename.AnnotatedMessage} instance.

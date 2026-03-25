@@ -1,6 +1,6 @@
 package test.operations.data;
 
-public interface ExtendedData extends Data, test.operations.ExtendedOperations {
+public interface ExtendedData extends test.operations.data.Data, test.operations.ExtendedOperations {
 
 	/**
 	 * Creates a {@link test.operations.data.ExtendedData} instance.

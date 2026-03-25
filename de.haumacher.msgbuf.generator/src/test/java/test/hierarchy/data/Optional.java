@@ -3,7 +3,7 @@ package test.hierarchy.data;
 /**
  * A shape that can be dynamically hidden.
  */
-public interface Optional extends Shape {
+public interface Optional extends test.hierarchy.data.Shape {
 
 	/**
 	 * Creates a {@link test.hierarchy.data.Optional} instance.

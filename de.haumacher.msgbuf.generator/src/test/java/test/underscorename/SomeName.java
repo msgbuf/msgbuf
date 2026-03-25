@@ -1,6 +1,6 @@
 package test.underscorename;
 
-public interface SomeName extends BaseMsg {
+public interface SomeName extends test.underscorename.BaseMsg {
 
 	/**
 	 * Creates a {@link test.underscorename.SomeName} instance.

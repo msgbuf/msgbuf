@@ -215,6 +215,65 @@ message Config {
 }
 ```
 
+### `option OpenWorld`
+Enables cross-file protocol extension for abstract type hierarchies. With this option, subtypes can be defined in
+separate `.proto` files (and separate modules) using `import` and `extends`:
+
+```protobuf
+// base-module: events.proto
+option OpenWorld;
+
+abstract message Event {
+    long timestamp;
+}
+
+message TextEvent extends Event {
+    string text;
+}
+```
+
+```protobuf
+// extension-module: graph-events.proto
+import "../base-module/events.proto";
+
+message GraphPatchEvent extends base.pkg.Event {
+    string controlId;
+    string patch;
+}
+```
+
+Extension types are discovered at runtime via `ServiceLoader`. The generator produces a registration class
+(e.g. `GraphEventsTypes`) and a `META-INF/services` descriptor automatically when the `-resources` output
+directory is configured. On platforms without `ServiceLoader` (e.g. GWT), call `GraphEventsTypes.init()` explicitly.
+
+The base module's `.proto` files should be packaged as resources in its JAR (e.g. in `src/main/resources`).
+The Maven plugin automatically resolves imports from compile-scope dependency JARs, so no file system paths
+to the base module are needed.
+
+Implications:
+- Implies `option NoBinary` (only JSON and XML serialization are supported)
+- Cannot be combined with `option NoInterfaces`
+- The generated `Visitor` interface includes a `visitDefault()` fallback method for unknown extension types
+- Extension types generate their own `Visitor` sub-interface with an `instanceof`-based dispatch
+
+Maven plugin configuration (extension module):
+```xml
+<configuration>
+    <resourceOutputDir>${project.basedir}/src/main/resources</resourceOutputDir>
+</configuration>
+```
+
+Imports are resolved automatically from the compile classpath. If the base module packages its `.proto` files
+as resources, no additional configuration is needed beyond declaring the dependency.
+
+CLI usage (standalone, without Maven):
+```
+java -jar msgbuf-generator.jar -out src/main/java -resources src/main/resources -cp base-module.jar extension.proto
+```
+
+The `-cp` option specifies JARs to search for imported `.proto` files. The `-I` option can still be used
+for file system include paths.
+
 ## Message options
 
 ### Mix-in interfaces (`@Operations(...)`)

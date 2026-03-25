@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A circle {@link Shape}.
  */
-public class Circle extends AtomicShape {
+public class Circle extends test.noreflection.AtomicShape {
 
 	/**
 	 * Creates a {@link test.noreflection.Circle} instance.

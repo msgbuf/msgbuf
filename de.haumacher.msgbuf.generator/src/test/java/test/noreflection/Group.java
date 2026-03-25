@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A group of shapes.
  */
-public class Group extends Shape {
+public class Group extends test.noreflection.Shape {
 
 	/**
 	 * Creates a {@link test.noreflection.Group} instance.

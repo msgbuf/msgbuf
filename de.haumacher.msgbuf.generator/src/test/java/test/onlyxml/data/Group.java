@@ -3,7 +3,7 @@ package test.onlyxml.data;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public interface Group extends test.onlyxml.data.Shape {
 
 	/**
 	 * Creates a {@link test.onlyxml.data.Group} instance.

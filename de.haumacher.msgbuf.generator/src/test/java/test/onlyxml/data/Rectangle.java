@@ -3,7 +3,7 @@ package test.onlyxml.data;
 /**
  * A rectangle.
  */
-public interface Rectangle extends AtomicShape {
+public interface Rectangle extends test.onlyxml.data.AtomicShape {
 
 	/**
 	 * Creates a {@link test.onlyxml.data.Rectangle} instance.

@@ -68,6 +68,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	protected final void internalSetTransient(boolean value) {
 		_listener.beforeSet(this, TRANSIENT__PROP, value);
 		_transient = value;
+		_listener.afterChanged(this, TRANSIENT__PROP);
 	}
 
 	/**
@@ -89,6 +90,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	protected final void internalSetRepeated(boolean value) {
 		_listener.beforeSet(this, REPEATED__PROP, value);
 		_repeated = value;
+		_listener.afterChanged(this, REPEATED__PROP);
 	}
 
 	/**
@@ -110,6 +112,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	protected final void internalSetType(de.haumacher.msgbuf.generator.ast.Type value) {
 		_listener.beforeSet(this, TYPE__PROP, value);
 		_type = value;
+		_listener.afterChanged(this, TYPE__PROP);
 	}
 
 	/**
@@ -138,6 +141,7 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 	protected final void internalSetDefaultValue(String value) {
 		_listener.beforeSet(this, DEFAULT_VALUE__PROP, value);
 		_defaultValue = value;
+		_listener.afterChanged(this, DEFAULT_VALUE__PROP);
 	}
 
 	/**
@@ -188,16 +192,38 @@ public class Field extends Part implements de.haumacher.msgbuf.generator.FieldOp
 		return FIELD__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
+	@SuppressWarnings("hiding")
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
 			TRANSIENT__PROP, 
 			REPEATED__PROP, 
 			TYPE__PROP, 
-			DEFAULT_VALUE__PROP));
+			DEFAULT_VALUE__PROP);
+		java.util.List<String> tmp = new java.util.ArrayList<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.Part.PROPERTIES);
+		tmp.addAll(local);
+		PROPERTIES = java.util.Collections.unmodifiableList(tmp);
+	}
+
+	@SuppressWarnings("hiding")
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.Part.TRANSIENT_PROPERTIES);
+		tmp.addAll(java.util.Arrays.asList(
+				));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

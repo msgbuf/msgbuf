@@ -159,7 +159,13 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				}
 			}
 		} else {
-			generalizations.add(_interface || _noInterfaces ? qTypeName(_def.getExtends()) : qImplName(_def.getExtendedDef()));
+			if (_interface || _noInterfaces) {
+				// For cross-file extensions, use resolved definition to get correct package casing
+				MessageDef extDef = _def.getExtendedDef();
+				generalizations.add(extDef != null ? qTypeName(extDef) : qTypeName(_def.getExtends()));
+			} else {
+				generalizations.add(qImplName(_def.getExtendedDef()));
+			}
 		}
 		
 		if (_interface) {
@@ -256,8 +262,14 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			if (_typeKind) {
 				generateTypeCodeEnum();
 			}
+			if (isOpenWorld() && _interface && _def.isAbstract() && _def.getExtendedDef() == null) {
+				generateOpenWorldRegistry();
+			}
 			if (_visitor) {
 				generateVisitorInterface();
+			}
+			if (isCrossFileExtension() && !_def.isAbstract() && (_interface || _noInterfaces)) {
+				generateExtensionVisitorInterface();
 			}
 		}
 		generateInnerDefinitions();
@@ -267,6 +279,14 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		generateConstants();
 		
 		if (!_interface) {
+			if (isOpenWorld() && _def.isAbstract() && _def.getExtendedDef() == null) {
+				nl();
+				line("static {");
+				{
+					line("de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();");
+				}
+				line("}");
+			}
 			generateFieldMembers();
 			generateConstructor();
 		}
@@ -329,13 +349,41 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		}
 	}
 
+	private void generateOpenWorldRegistry() {
+		nl();
+		line("/** Registry for dynamically registered subtypes. */");
+		line("static final java.util.Map<String, de.haumacher.msgbuf.data.Factory<? extends " + thisType() + ">> REGISTRY = new java.util.HashMap<>();");
+		nl();
+		line("/**");
+		line(" * Registers a subtype factory for polymorphic deserialization.");
+		line(" */");
+		line("static void register(String typeId, de.haumacher.msgbuf.data.Factory<? extends " + thisType() + "> factory) {");
+		{
+			line("REGISTRY.put(typeId, factory);");
+		}
+		line("}");
+	}
+
+	private void generateExtensionVisitorInterface() {
+		nl();
+		line("/** Extended visitor that can handle {@link " + typeName(_def) + "}. */");
+		line("public interface Visitor<R,A" + onVisitEx(",E extends Throwable") + "> extends " + qTypeName(getAbstractGeneralization()) + ".Visitor<R,A" + onVisitEx(",E") + "> {");
+		{
+			nl();
+			line("/** Visit case for {@link " + typeName(_def) + "}. */");
+			line("R visit(" + qTypeName(_def) + " self, A arg)" + onVisitEx(" throws E") + ";");
+		}
+		nl();
+		line("}");
+	}
+
 	private void generateVisitorInterface() {
 		if (_def.isAbstract()) {
 			nl();
 			line("/** Visitor interface for the {@link " + qTypeName(_def) + "} hierarchy.*/");
 			lineStart("public interface Visitor<R,A" + onVisitEx(",E extends Throwable") + ">");
 			boolean first = true;
-			for (MessageDef specialization : _def.getSpecializations()) {
+			for (MessageDef specialization : localSpecializations(_def)) {
 				if (!specialization.isAbstract()) {
 					continue;
 				}
@@ -351,7 +399,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			nl();
 			{
 				boolean hasCase = false;
-				for (MessageDef specialization : _def.getSpecializations()) {
+				for (MessageDef specialization : localSpecializations(_def)) {
 					if (specialization.isAbstract()) {
 						continue;
 					}
@@ -366,6 +414,12 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				if (!hasCase) {
 					nl();
 					line("// Pure sum interface.");
+				}
+
+				if (isOpenWorld()) {
+					nl();
+					line("/** Fallback for visiting subtypes not known at compile time. */");
+					line("R visitDefault(" + qTypeName(_def) + " self, A arg)" + onVisitEx(" throws E") + ";");
 				}
 			}
 			nl();
@@ -580,7 +634,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private void generateKindLookup() {
 		boolean hasSpecializations = !_def.getSpecializations().isEmpty();
 		boolean hasTypeLookup = !isBaseClass() || hasSpecializations;
-		
+
 		if (hasTypeLookup) {
 			if (_interface) {
 				if (isBaseClass()) {
@@ -595,6 +649,15 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						kindLookupComment();
 						line("public abstract " + TYPE_KIND_NAME + " kind();");
 					}
+				} else if (isCrossFileExtension()) {
+					// Cross-file extensions are not in the base's TypeKind enum, return null
+					nl();
+					line("@Override");
+					line("public " + TYPE_KIND_NAME + " kind() {");
+					{
+						line("return null;");
+					}
+					line("}");
 				} else {
 					nl();
 					line("@Override");
@@ -1130,7 +1193,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (anchestor != null) {
 			line("@SuppressWarnings(\"hiding\")");
 		}
-		line("static final java.util.List<String> PROPERTIES;");
+		String propsVisibility = (isOpenWorld() || isCrossFileExtension()) ? "protected " : "";
+		line(propsVisibility + "static final java.util.List<String> PROPERTIES;");
 		line("static {");
 		{
 			line("java.util.List<String> local = java.util.Arrays.asList(");
@@ -1148,7 +1212,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				append(");");
 				nl();
 			}
-			
+
 			if (anchestor != null) {
 				line("java.util.List<String> tmp = new java.util.ArrayList<>();");
 				line("tmp.addAll(" + qImplName(anchestor) + ".PROPERTIES" + ");");
@@ -1164,7 +1228,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (anchestor != null) {
 			line("@SuppressWarnings(\"hiding\")");
 		}
-		line("static final java.util.Set<String> TRANSIENT_PROPERTIES;");
+		line(propsVisibility + "static final java.util.Set<String> TRANSIENT_PROPERTIES;");
 		line("static {");
 		{
 			line("java.util.HashSet<String> tmp = new java.util.HashSet<>();");
@@ -1285,14 +1349,33 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						line("int id = in.nextInt();");
 					}
 					line("switch (type) {");
-					for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
+					for (MessageDef specialization : concreteSpecializations(_def)) {
 						if (_graph) {
 							line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + ".create(); break;");
 						} else {
 							line("case " + jsonTypeConstantRef(specialization) + ": result = " + qTypeName(specialization) + "." + readerName(specialization) + "(in); break;");
 						}
 					}
-					line("default: in.skipValue(); result = null; break;");
+					if (isOpenWorld()) {
+						line("default: {");
+						{
+							line("de.haumacher.msgbuf.data.Factory<? extends " + thisType() + "> factory = " + getOpenWorldRoot() + ".REGISTRY.get(type);");
+							line("if (factory != null) {");
+							{
+								line("result = factory.create();");
+								line("result.readContent(in);");
+							}
+							line("} else {");
+							{
+								line("in.skipValue();");
+								line("result = null;");
+							}
+							line("}");
+						}
+						line("} break;");
+					} else {
+						line("default: in.skipValue(); result = null; break;");
+					}
 					line("}");
 					if (_graph) {
 						line("if (result != null) {");
@@ -1811,7 +1894,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					line("int type = in.nextInt();");
 					line(thisType() + " result;");
 					line("switch (type) {");
-					for (MessageDef specialization : Util.concreteTransitiveSpecializations(_def)) {
+					for (MessageDef specialization : concreteSpecializations(_def)) {
 						line("case " + mkBinaryTypeConstantRef(specialization) + ": result = " + qImplName(specialization) + "." + readerNameContent(specialization) + "(in); break;");
 					}
 					line("default: result = null; while (in.hasNext()) {in.skipValue(); }");
@@ -2082,6 +2165,13 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				{
 					if (_def.isAbstract()) {
 						line("return visit((" + qTypeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
+					} else if (isCrossFileExtension()) {
+						line("if (v instanceof " + qTypeName(_def) + ".Visitor) {");
+						{
+							line("return ((" + qTypeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v).visit(this, arg);");
+						}
+						line("}");
+						line("return v.visitDefault(this, arg);");
 					} else {
 						line("return v.visit(this, arg);");
 					}
@@ -2202,6 +2292,28 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	
 	static Field getLocalReverseField(MessageDef def, String name) {
 		return def.getFields().stream().filter(f -> f.isReverseOf(name)).findFirst().orElse(null);
+	}
+
+	private boolean isOpenWorld() {
+		return isTrue(getOptions().get("OpenWorld"), false);
+	}
+
+	private String getOpenWorldRoot() {
+		MessageDef current = _def;
+		while (current.getExtendedDef() != null) {
+			current = current.getExtendedDef();
+		}
+		return qTypeName(current);
+	}
+
+	private boolean isCrossFileExtension() {
+		MessageDef gen = getAbstractGeneralization();
+		if (gen == null) return false;
+		return gen.getFile() != _def.getFile() && Util.getFlag(gen.getFile(), "OpenWorld");
+	}
+
+	private List<MessageDef> localSpecializations(MessageDef def) {
+		return localSpecializations(def, _def.getFile());
 	}
 
 }

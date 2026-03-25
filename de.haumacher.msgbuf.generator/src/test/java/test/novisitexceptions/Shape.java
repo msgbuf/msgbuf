@@ -81,10 +81,10 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case Group.GROUP__TYPE: result = test.novisitexceptions.Group.readGroup(in); break;
-			case Car.CAR__TYPE: result = test.novisitexceptions.Car.readCar(in); break;
 			case Circle.CIRCLE__TYPE: result = test.novisitexceptions.Circle.readCircle(in); break;
 			case Rectangle.RECTANGLE__TYPE: result = test.novisitexceptions.Rectangle.readRectangle(in); break;
+			case Group.GROUP__TYPE: result = test.novisitexceptions.Group.readGroup(in); break;
+			case Car.CAR__TYPE: result = test.novisitexceptions.Car.readCar(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
@@ -102,10 +102,10 @@ public interface Shape extends de.haumacher.msgbuf.data.DataObject, de.haumacher
 		int type = in.nextInt();
 		test.novisitexceptions.Shape result;
 		switch (type) {
-			case test.novisitexceptions.Group.GROUP__TYPE_ID: result = test.novisitexceptions.impl.Group_Impl.readGroup_Content(in); break;
-			case test.novisitexceptions.Car.CAR__TYPE_ID: result = test.novisitexceptions.impl.Car_Impl.readCar_Content(in); break;
 			case test.novisitexceptions.Circle.CIRCLE__TYPE_ID: result = test.novisitexceptions.impl.Circle_Impl.readCircle_Content(in); break;
 			case test.novisitexceptions.Rectangle.RECTANGLE__TYPE_ID: result = test.novisitexceptions.impl.Rectangle_Impl.readRectangle_Content(in); break;
+			case test.novisitexceptions.Group.GROUP__TYPE_ID: result = test.novisitexceptions.impl.Group_Impl.readGroup_Content(in); break;
+			case test.novisitexceptions.Car.CAR__TYPE_ID: result = test.novisitexceptions.impl.Car_Impl.readCar_Content(in); break;
 			default: result = null; while (in.hasNext()) {in.skipValue(); }
 		}
 		in.endObject();

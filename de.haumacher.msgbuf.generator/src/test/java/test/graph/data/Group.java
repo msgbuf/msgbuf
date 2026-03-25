@@ -3,7 +3,7 @@ package test.graph.data;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public interface Group extends test.graph.data.Shape {
 
 	/**
 	 * Creates a {@link test.graph.data.Group} instance.

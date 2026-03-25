@@ -3,7 +3,7 @@ package test.notypekind;
 /**
  * A rectangle.
  */
-public interface Rectangle extends AtomicShape {
+public interface Rectangle extends test.notypekind.AtomicShape {
 
 	/**
 	 * Creates a {@link test.notypekind.Rectangle} instance.

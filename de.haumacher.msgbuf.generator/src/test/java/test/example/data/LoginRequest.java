@@ -3,7 +3,7 @@ package test.example.data;
 /**
  * A request to authenticate with the server.
  */
-public interface LoginRequest extends Request {
+public interface LoginRequest extends test.example.data.Request {
 
 	/**
 	 * Creates a {@link test.example.data.LoginRequest} instance.

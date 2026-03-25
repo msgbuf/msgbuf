@@ -1,0 +1,12 @@
+package test.openworld.ext1;
+
+import "../base/base.proto";
+
+/** A graph patch event extending the base SSE protocol. */
+message GraphPatchEvent extends test.openworld.base.SSEEvent {
+    /** ID of the control being patched. */
+    string controlId;
+
+    /** Patch data. */
+    string patch;
+}

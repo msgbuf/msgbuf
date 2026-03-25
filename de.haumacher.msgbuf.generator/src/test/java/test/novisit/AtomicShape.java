@@ -3,7 +3,7 @@ package test.novisit;
 /**
  * A {@link Shape} that has no sub-shapes.
  */
-public interface AtomicShape extends Shape {
+public interface AtomicShape extends test.novisit.Shape {
 
 	@Override
 	test.novisit.AtomicShape setXCoordinate(int value);

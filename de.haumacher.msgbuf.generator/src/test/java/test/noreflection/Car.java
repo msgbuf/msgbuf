@@ -3,7 +3,7 @@ package test.noreflection;
 /**
  * A special {@link Shape} that contains concrete monomorphic references to type in a polymorphic hierarchy.
  */
-public class Car extends Shape {
+public class Car extends test.noreflection.Shape {
 
 	/**
 	 * Creates a {@link test.noreflection.Car} instance.

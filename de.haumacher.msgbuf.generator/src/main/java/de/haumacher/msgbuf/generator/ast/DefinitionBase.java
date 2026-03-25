@@ -43,6 +43,7 @@ public abstract class DefinitionBase extends WithOptions {
 	protected final void internalSetComment(String value) {
 		_listener.beforeSet(this, COMMENT__PROP, value);
 		_comment = value;
+		_listener.afterChanged(this, COMMENT__PROP);
 	}
 
 	@Override
@@ -57,13 +58,35 @@ public abstract class DefinitionBase extends WithOptions {
 		return this;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			COMMENT__PROP));
+	@SuppressWarnings("hiding")
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
+			COMMENT__PROP);
+		java.util.List<String> tmp = new java.util.ArrayList<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.WithOptions.PROPERTIES);
+		tmp.addAll(local);
+		PROPERTIES = java.util.Collections.unmodifiableList(tmp);
+	}
+
+	@SuppressWarnings("hiding")
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.WithOptions.TRANSIENT_PROPERTIES);
+		tmp.addAll(java.util.Arrays.asList(
+				));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

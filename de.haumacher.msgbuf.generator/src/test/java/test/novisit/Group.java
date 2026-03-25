@@ -3,7 +3,7 @@ package test.novisit;
 /**
  * A group of shapes.
  */
-public interface Group extends Shape {
+public interface Group extends test.novisit.Shape {
 
 	/**
 	 * Creates a {@link test.novisit.Group} instance.

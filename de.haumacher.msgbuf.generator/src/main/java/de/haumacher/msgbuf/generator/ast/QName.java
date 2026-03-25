@@ -18,7 +18,7 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 	/** @see #getNames() */
 	public static final String NAMES__PROP = "names";
 
-	private final java.util.List<String> _names = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<String> _names = new de.haumacher.msgbuf.util.ReferenceList<String>() {
 		@Override
 		protected void beforeAdd(int index, String element) {
 			_listener.beforeAdd(QName.this, NAMES__PROP, index, element);
@@ -27,6 +27,11 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 		@Override
 		protected void afterRemove(int index, String element) {
 			_listener.afterRemove(QName.this, NAMES__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(QName.this, NAMES__PROP);
 		}
 	};
 
@@ -107,13 +112,29 @@ public class QName extends de.haumacher.msgbuf.data.AbstractDataObject implement
 		return QNAME__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			NAMES__PROP));
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
+			NAMES__PROP);
+		PROPERTIES = java.util.Collections.unmodifiableList(local);
+	}
+
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(java.util.Arrays.asList(
+				));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override

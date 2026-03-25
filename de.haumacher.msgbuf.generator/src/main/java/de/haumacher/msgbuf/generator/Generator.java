@@ -11,10 +11,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
@@ -22,6 +26,7 @@ import de.haumacher.msgbuf.generator.ast.Definition.Visitor;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
+import de.haumacher.msgbuf.generator.ast.Flag;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
 import de.haumacher.msgbuf.generator.ast.Option;
@@ -29,6 +34,7 @@ import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.common.Util;
 import de.haumacher.msgbuf.generator.dart.DartLibGenerator;
 import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
@@ -45,13 +51,39 @@ public class Generator {
 	 * Argument giving the output directory.
 	 */
 	public static final String OUTPUT_DIR_ARG = "-out";
-	
+
+	/**
+	 * Argument giving the resource output directory for generated service descriptors.
+	 */
+	public static final String RESOURCE_DIR_ARG = "-resources";
+
 	private NameTable _table = new NameTable();
 	private File _out = new File(".");
+	private File _resourceOut;
 	private List<DefinitionFile> _files = new ArrayList<>();
-	
+	private List<File> _includePaths = new ArrayList<>();
+	private ClassLoader _importClassLoader;
+	private Set<String> _loadedFiles = new HashSet<>();
+	private List<DefinitionFile> _importedFiles = new ArrayList<>();
+
 	public void setOut(File out) {
 		_out = out;
+	}
+
+	public void setResourceOut(File resourceOut) {
+		_resourceOut = resourceOut;
+	}
+
+	public void addIncludePath(File path) {
+		_includePaths.add(path);
+	}
+
+	/**
+	 * Sets a class loader used to resolve imports from the classpath.
+	 * Proto files packaged as resources in dependency JARs can be found this way.
+	 */
+	public void setImportClassLoader(ClassLoader classLoader) {
+		_importClassLoader = classLoader;
 	}
 
 	public DefinitionFile load(String fileName) throws IOException, ParseException {
@@ -60,9 +92,13 @@ public class Generator {
 
 	public DefinitionFile load(File file)
 			throws ParseException, IOException, FileNotFoundException {
+		_loadedFiles.add(file.getCanonicalPath());
+		DefinitionFile content;
 		try (InputStream in = new FileInputStream(file)) {
-			return load(in);
+			content = load(parse(in));
 		}
+		resolveImports(content, file);
+		return content;
 	}
 
 	public DefinitionFile load(InputStream in) throws ParseException {
@@ -91,34 +127,189 @@ public class Generator {
 		for (DefinitionFile file : _files) {
 			buildSpecializations(file);
 		}
-		
+
+		for (DefinitionFile file : _files) {
+			validateOpenWorld(file);
+		}
+
+		// Propagate NoBinary and NoTypeKind to extension files that extend OpenWorld bases
+		for (DefinitionFile file : _files) {
+			propagateOpenWorldOptions(file);
+		}
+
 		TypeIdSynthesizer typeIdSynthesizer = new TypeIdSynthesizer();
 		for (DefinitionFile file : _files) {
-			typeIdSynthesizer.process(file);
+			if (!Util.getFlag(file, "OpenWorld")) {
+				typeIdSynthesizer.process(file);
+			}
 		}
-		
+
 		FieldIDSynthesizer synthesizer = new FieldIDSynthesizer();
 		for (DefinitionFile file : _files) {
 			synthesizer.process(file);
 		}
-		
+
 		for (DefinitionFile file : _files) {
+			if (_importedFiles.contains(file)) {
+				continue; // Imported for type resolution only, don't generate code
+			}
+
 			plugin.init(file.getOptions());
-			
+
 			File dir = mkdir(file.getPackage());
-			
+
 			PackageGenerator packageGenerator = new PackageGenerator(dir, file.getOptions(), plugin);
 			for (Definition def : file.getDefinitions()) {
 				def.visit(packageGenerator, null);
 			}
-			
+
 			Option dartLib = file.getOptions().get("DartLib");
 			if (dartLib != null) {
 				new DartLibGenerator(new File(_out, ((StringOption) dartLib).getValue()), file).run();
 			}
 		}
+
+		// Generate registration classes and service loader descriptors for extension modules
+		List<String> registrationClasses = new ArrayList<>();
+		for (DefinitionFile file : _files) {
+			if (_importedFiles.contains(file)) {
+				continue;
+			}
+			List<MessageDef> crossFileExtensions = findCrossFileExtensions(file);
+			if (!crossFileExtensions.isEmpty()) {
+				String fqClassName = generateRegistrationClass(file, crossFileExtensions);
+				registrationClasses.add(fqClassName);
+			}
+		}
+		if (!registrationClasses.isEmpty() && _resourceOut != null) {
+			generateServiceDescriptor(registrationClasses);
+		}
+	}
+
+	private void validateOpenWorld(DefinitionFile file) {
+		boolean openWorld = Util.getFlag(file, "OpenWorld");
+		if (!openWorld) {
+			return;
+		}
+		// OpenWorld implies NoBinary
+		file.getOptions().put("NoBinary", Flag.create().setValue(true));
+
+		boolean noInterfaces = Util.getFlag(file, "NoInterfaces");
+		if (noInterfaces) {
+			error("option OpenWorld cannot be combined with option NoInterfaces.");
+		}
+	}
+
+	private void propagateOpenWorldOptions(DefinitionFile file) {
+		if (Util.getFlag(file, "OpenWorld")) {
+			// Already an OpenWorld file, options already set
+			return;
+		}
+		for (Definition def : file.getDefinitions()) {
+			if (def instanceof MessageDef) {
+				MessageDef msg = (MessageDef) def;
+				MessageDef extended = msg.getExtendedDef();
+				if (extended != null && extended.getFile() != file && Util.getFlag(extended.getFile(), "OpenWorld")) {
+					// Extension file inherits NoBinary from OpenWorld base
+					file.getOptions().put("NoBinary", Flag.create().setValue(true));
+					return;
+				}
+			}
+		}
 	}
 	
+	private void resolveImports(DefinitionFile file, File sourceFile) throws IOException, ParseException {
+		for (String importPath : file.getImports()) {
+			// Try file system first
+			File resolved = resolveImportPathFromFileSystem(importPath, sourceFile);
+			if (resolved != null) {
+				String canonical = resolved.getCanonicalPath();
+				if (_loadedFiles.contains(canonical)) {
+					continue;
+				}
+				_loadedFiles.add(canonical);
+				DefinitionFile imported;
+				try (InputStream in = new FileInputStream(resolved)) {
+					imported = parse(in);
+				}
+				_files.add(imported);
+				_table.enter(imported);
+				_importedFiles.add(imported);
+				resolveImports(imported, resolved);
+				continue;
+			}
+
+			// Fall back to classpath
+			if (_importClassLoader != null) {
+				String resourceKey = "classpath:" + importPath;
+				if (_loadedFiles.contains(resourceKey)) {
+					continue;
+				}
+				InputStream classpathStream = _importClassLoader.getResourceAsStream(importPath);
+				if (classpathStream != null) {
+					_loadedFiles.add(resourceKey);
+					DefinitionFile imported;
+					try (InputStream in = classpathStream) {
+						imported = parse(in);
+					}
+					_files.add(imported);
+					_table.enter(imported);
+					_importedFiles.add(imported);
+					// Recursive imports from classpath-loaded files can only resolve via classpath
+					resolveImportsFromClasspath(imported);
+					continue;
+				}
+			}
+
+			error("Cannot resolve import '" + importPath + "' from '" + sourceFile + "'.");
+		}
+	}
+
+	private void resolveImportsFromClasspath(DefinitionFile file) throws IOException, ParseException {
+		for (String importPath : file.getImports()) {
+			String resourceKey = "classpath:" + importPath;
+			if (_loadedFiles.contains(resourceKey)) {
+				continue;
+			}
+
+			if (_importClassLoader != null) {
+				InputStream classpathStream = _importClassLoader.getResourceAsStream(importPath);
+				if (classpathStream != null) {
+					_loadedFiles.add(resourceKey);
+					DefinitionFile imported;
+					try (InputStream in = classpathStream) {
+						imported = parse(in);
+					}
+					_files.add(imported);
+					_table.enter(imported);
+					_importedFiles.add(imported);
+					resolveImportsFromClasspath(imported);
+					continue;
+				}
+			}
+
+			error("Cannot resolve import '" + importPath + "'.");
+		}
+	}
+
+	private File resolveImportPathFromFileSystem(String importPath, File sourceFile) {
+		if (sourceFile != null) {
+			// 1. Relative to importing file's directory
+			File relative = new File(sourceFile.getParentFile(), importPath);
+			if (relative.isFile()) {
+				return relative;
+			}
+		}
+		// 2. From configured include paths
+		for (File includePath : _includePaths) {
+			File candidate = new File(includePath, importPath);
+			if (candidate.isFile()) {
+				return candidate;
+			}
+		}
+		return null;
+	}
+
 	private void buildSpecializations(DefinitionFile file) {
 		NameTable table = _table;
 		
@@ -178,6 +369,114 @@ public class Generator {
 		}
 	}
 	
+	private List<MessageDef> findCrossFileExtensions(DefinitionFile file) {
+		List<MessageDef> result = new ArrayList<>();
+		for (Definition def : file.getDefinitions()) {
+			if (def instanceof MessageDef) {
+				collectCrossFileExtensions((MessageDef) def, file, result);
+			}
+		}
+		return result;
+	}
+
+	private void collectCrossFileExtensions(MessageDef def, DefinitionFile file, List<MessageDef> result) {
+		MessageDef extended = def.getExtendedDef();
+		if (extended != null && extended.getFile() != file) {
+			if (Util.getFlag(extended.getFile(), "OpenWorld")) {
+				if (!def.isAbstract()) {
+					result.add(def);
+				}
+			}
+		}
+		for (Definition inner : def.getDefinitions()) {
+			if (inner instanceof MessageDef) {
+				collectCrossFileExtensions((MessageDef) inner, file, result);
+			}
+		}
+	}
+
+	private String generateRegistrationClass(DefinitionFile file, List<MessageDef> extensions) {
+		String packageName = CodeConvention.packageName(file.getPackage());
+		String[] parts = packageName.split("\\.");
+		String baseName = parts[parts.length - 1];
+		String className = Character.toUpperCase(baseName.charAt(0)) + baseName.substring(1) + "Types";
+
+		File dir = mkdir(file.getPackage());
+		File out = new File(dir, className + ".java");
+
+		try (FileOutputStream os = new FileOutputStream(out)) {
+			try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
+				System.out.println("Generating '" + out + "'.");
+				w.println("package " + packageName + ";");
+				w.println();
+				w.println("/**");
+				w.println(" * Registration of extension types for the OpenWorld protocol.");
+				w.println(" */");
+				w.println("public class " + className + " implements de.haumacher.msgbuf.data.TypeRegistration {");
+				w.println();
+				w.println("\t@Override");
+				w.println("\tpublic void register() {");
+				for (MessageDef ext : extensions) {
+					// Find the OpenWorld root type
+					MessageDef root = ext.getExtendedDef();
+					while (root.getExtendedDef() != null) {
+						root = root.getExtendedDef();
+					}
+					String rootQName = CodeConvention.qTypeName(root);
+					String extQName = CodeConvention.qTypeName(ext);
+					String typeConstant = CodeConvention.jsonTypeConstant(ext);
+					w.println("\t\t" + rootQName + ".register(" + extQName + "." + typeConstant + ", " + extQName + "::create);");
+				}
+				w.println("\t}");
+				w.println();
+				w.println("\t/**");
+				w.println("\t * Explicit initialization for GWT or manual use.");
+				w.println("\t */");
+				w.println("\tpublic static void init() {");
+				w.println("\t\tnew " + className + "().register();");
+				w.println("\t}");
+				w.println("}");
+			}
+		} catch (IOException ex) {
+			error("Error writing file '" + out + "'.", ex);
+		}
+		return packageName + "." + className;
+	}
+
+	private void generateServiceDescriptor(List<String> registrationClasses) {
+		File servicesDir = new File(_resourceOut, "META-INF/services");
+		servicesDir.mkdirs();
+		File descriptor = new File(servicesDir, "de.haumacher.msgbuf.data.TypeRegistration");
+
+		// Read existing entries to avoid duplicates (supports multiple generator runs)
+		Set<String> existing = new HashSet<>();
+		if (descriptor.isFile()) {
+			try (java.io.BufferedReader r = new java.io.BufferedReader(new java.io.InputStreamReader(new FileInputStream(descriptor), "utf-8"))) {
+				String line;
+				while ((line = r.readLine()) != null) {
+					line = line.trim();
+					if (!line.isEmpty()) {
+						existing.add(line);
+					}
+				}
+			} catch (IOException ex) {
+				// Ignore, will overwrite
+			}
+		}
+		existing.addAll(registrationClasses);
+
+		try (FileOutputStream os = new FileOutputStream(descriptor)) {
+			try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
+				System.out.println("Generating '" + descriptor + "'.");
+				for (String className : existing) {
+					w.println(className);
+				}
+			}
+		} catch (IOException ex) {
+			error("Error writing file '" + descriptor + "'.", ex);
+		}
+	}
+
 	class PackageGenerator implements Definition.Visitor<Void, Void> {
 		private final File _dir;
 		private final Map<String, Option> _options;
@@ -264,9 +563,21 @@ public class Generator {
 			String arg = args[n++];
 			if (arg.equals(OUTPUT_DIR_ARG)) {
 				out = new File(args[n++]);
+			} else if (arg.equals(RESOURCE_DIR_ARG)) {
+				generator.setResourceOut(new File(args[n++]));
 			} else if (arg.equals("-h")) {
 				printHelp();
 				return;
+			} else if (arg.equals("-I")) {
+				generator.addIncludePath(new File(args[n++]));
+			} else if (arg.equals("-cp")) {
+				String classpath = args[n++];
+				String[] entries = classpath.split(File.pathSeparator);
+				URL[] urls = new URL[entries.length];
+				for (int i = 0; i < entries.length; i++) {
+					urls[i] = new File(entries[i]).toURI().toURL();
+				}
+				generator.setImportClassLoader(new URLClassLoader(urls, null));
 			} else {
 				File file = new File(arg);
 				DefinitionFile content = generator.load(file);
@@ -279,14 +590,19 @@ public class Generator {
 			generator.setOut(out);
 		}
 		
+		generator.generate(loadPlugins());
+	}
+
+	/**
+	 * Loads generator plugins via {@link ServiceLoader}.
+	 */
+	public static GeneratorPlugin loadPlugins() {
 		ServiceLoader<GeneratorPlugin> pluginLoader = ServiceLoader.load(GeneratorPlugin.class);
-		
 		GeneratorPlugin plugin = GeneratorPlugin.none();
 		for (GeneratorPlugin p : pluginLoader) {
 			plugin = plugin.andThen(p);
 		}
-		
-		generator.generate(plugin);
+		return plugin;
 	}
 
 	private static void printHelp() {

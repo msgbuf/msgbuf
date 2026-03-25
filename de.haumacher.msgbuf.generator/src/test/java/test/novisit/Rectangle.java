@@ -3,7 +3,7 @@ package test.novisit;
 /**
  * A rectangle.
  */
-public interface Rectangle extends AtomicShape {
+public interface Rectangle extends test.novisit.AtomicShape {
 
 	/**
 	 * Creates a {@link test.novisit.Rectangle} instance.

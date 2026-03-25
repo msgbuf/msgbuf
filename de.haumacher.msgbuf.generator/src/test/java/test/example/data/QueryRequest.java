@@ -3,7 +3,7 @@ package test.example.data;
 /**
  * A request to execute a query.
  */
-public interface QueryRequest extends Request {
+public interface QueryRequest extends test.example.data.Request {
 
 	/**
 	 * Creates a {@link test.example.data.QueryRequest} instance.

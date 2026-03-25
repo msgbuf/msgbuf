@@ -18,7 +18,7 @@ public class EnumDef extends Definition {
 	/** @see #getConstants() */
 	public static final String CONSTANTS__PROP = "constants";
 
-	private final java.util.List<de.haumacher.msgbuf.generator.ast.Constant> _constants = new de.haumacher.msgbuf.util.ReferenceList<>() {
+	private final java.util.List<de.haumacher.msgbuf.generator.ast.Constant> _constants = new de.haumacher.msgbuf.util.ReferenceList<de.haumacher.msgbuf.generator.ast.Constant>() {
 		@Override
 		protected void beforeAdd(int index, de.haumacher.msgbuf.generator.ast.Constant element) {
 			_listener.beforeAdd(EnumDef.this, CONSTANTS__PROP, index, element);
@@ -27,6 +27,11 @@ public class EnumDef extends Definition {
 		@Override
 		protected void afterRemove(int index, de.haumacher.msgbuf.generator.ast.Constant element) {
 			_listener.afterRemove(EnumDef.this, CONSTANTS__PROP, index, element);
+		}
+
+		@Override
+		protected void afterChanged() {
+			_listener.afterChanged(EnumDef.this, CONSTANTS__PROP);
 		}
 	};
 
@@ -127,13 +132,35 @@ public class EnumDef extends Definition {
 		return ENUM_DEF__TYPE;
 	}
 
-	private static java.util.List<String> PROPERTIES = java.util.Collections.unmodifiableList(
-		java.util.Arrays.asList(
-			CONSTANTS__PROP));
+	@SuppressWarnings("hiding")
+	static final java.util.List<String> PROPERTIES;
+	static {
+		java.util.List<String> local = java.util.Arrays.asList(
+			CONSTANTS__PROP);
+		java.util.List<String> tmp = new java.util.ArrayList<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.Definition.PROPERTIES);
+		tmp.addAll(local);
+		PROPERTIES = java.util.Collections.unmodifiableList(tmp);
+	}
+
+	@SuppressWarnings("hiding")
+	static final java.util.Set<String> TRANSIENT_PROPERTIES;
+	static {
+		java.util.HashSet<String> tmp = new java.util.HashSet<>();
+		tmp.addAll(de.haumacher.msgbuf.generator.ast.Definition.TRANSIENT_PROPERTIES);
+		tmp.addAll(java.util.Arrays.asList(
+				));
+		TRANSIENT_PROPERTIES = java.util.Collections.unmodifiableSet(tmp);
+	}
 
 	@Override
 	public java.util.List<String> properties() {
 		return PROPERTIES;
+	}
+
+	@Override
+	public java.util.Set<String> transientProperties() {
+		return TRANSIENT_PROPERTIES;
 	}
 
 	@Override
