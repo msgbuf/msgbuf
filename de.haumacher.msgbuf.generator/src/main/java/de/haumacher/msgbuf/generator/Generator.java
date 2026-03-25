@@ -49,9 +49,15 @@ public class Generator {
 	 * Argument giving the output directory.
 	 */
 	public static final String OUTPUT_DIR_ARG = "-out";
-	
+
+	/**
+	 * Argument giving the resource output directory for generated service descriptors.
+	 */
+	public static final String RESOURCE_DIR_ARG = "-resources";
+
 	private NameTable _table = new NameTable();
 	private File _out = new File(".");
+	private File _resourceOut;
 	private List<DefinitionFile> _files = new ArrayList<>();
 	private List<File> _includePaths = new ArrayList<>();
 	private Set<String> _loadedFiles = new HashSet<>();
@@ -59,6 +65,10 @@ public class Generator {
 
 	public void setOut(File out) {
 		_out = out;
+	}
+
+	public void setResourceOut(File resourceOut) {
+		_resourceOut = resourceOut;
 	}
 
 	public void addIncludePath(File path) {
@@ -148,15 +158,20 @@ public class Generator {
 			}
 		}
 
-		// Generate registration classes for extension modules
+		// Generate registration classes and service loader descriptors for extension modules
+		List<String> registrationClasses = new ArrayList<>();
 		for (DefinitionFile file : _files) {
 			if (_importedFiles.contains(file)) {
 				continue;
 			}
 			List<MessageDef> crossFileExtensions = findCrossFileExtensions(file);
 			if (!crossFileExtensions.isEmpty()) {
-				generateRegistrationClass(file, crossFileExtensions);
+				String fqClassName = generateRegistrationClass(file, crossFileExtensions);
+				registrationClasses.add(fqClassName);
 			}
+		}
+		if (!registrationClasses.isEmpty() && _resourceOut != null) {
+			generateServiceDescriptor(registrationClasses);
 		}
 	}
 
@@ -318,7 +333,7 @@ public class Generator {
 		}
 	}
 
-	private void generateRegistrationClass(DefinitionFile file, List<MessageDef> extensions) {
+	private String generateRegistrationClass(DefinitionFile file, List<MessageDef> extensions) {
 		String packageName = CodeConvention.packageName(file.getPackage());
 		String[] parts = packageName.split("\\.");
 		String baseName = parts[parts.length - 1];
@@ -362,6 +377,23 @@ public class Generator {
 			}
 		} catch (IOException ex) {
 			error("Error writing file '" + out + "'.", ex);
+		}
+		return packageName + "." + className;
+	}
+
+	private void generateServiceDescriptor(List<String> registrationClasses) {
+		File servicesDir = new File(_resourceOut, "META-INF/services");
+		servicesDir.mkdirs();
+		File descriptor = new File(servicesDir, "de.haumacher.msgbuf.data.TypeRegistration");
+		try (FileOutputStream os = new FileOutputStream(descriptor)) {
+			try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
+				System.out.println("Generating '" + descriptor + "'.");
+				for (String className : registrationClasses) {
+					w.println(className);
+				}
+			}
+		} catch (IOException ex) {
+			error("Error writing file '" + descriptor + "'.", ex);
 		}
 	}
 
@@ -451,6 +483,8 @@ public class Generator {
 			String arg = args[n++];
 			if (arg.equals(OUTPUT_DIR_ARG)) {
 				out = new File(args[n++]);
+			} else if (arg.equals(RESOURCE_DIR_ARG)) {
+				generator.setResourceOut(new File(args[n++]));
 			} else if (arg.equals("-h")) {
 				printHelp();
 				return;

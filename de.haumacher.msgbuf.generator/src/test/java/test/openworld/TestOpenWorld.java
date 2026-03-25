@@ -7,23 +7,14 @@ import de.haumacher.msgbuf.json.JsonReader;
 import junit.framework.TestCase;
 import test.openworld.base.SSEEvent;
 import test.openworld.base.TextEvent;
-import test.openworld.ext1.Ext1Types;
 import test.openworld.ext1.GraphPatchEvent;
 import test.openworld.ext2.AnalyticsPatchEvent;
-import test.openworld.ext2.Ext2Types;
 
 /**
  * Test case for OpenWorld extensible type hierarchies.
  */
 @SuppressWarnings("javadoc")
 public class TestOpenWorld extends TestCase {
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		Ext1Types.init();
-		Ext2Types.init();
-	}
 
 	public void testBaseTypeRoundTrip() throws IOException {
 		TextEvent event = TextEvent.create().setText("hello").setTimestamp(12345);

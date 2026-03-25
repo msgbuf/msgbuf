@@ -45,6 +45,12 @@ public class GenerateMessageClasses extends AbstractMojo {
 	@Parameter(property = "includePaths")
 	private List<File> _includePaths;
 
+	/**
+	 * Directory where to generate resource files (e.g. META-INF/services).
+	 */
+	@Parameter(defaultValue = "${project.build.outputDirectory}", property = "resourceOutputDir")
+	private File _resourceOutputDirectory;
+
 	@Override
 	public void execute() throws MojoExecutionException {
 		File outputDirectory = _outputDirectory;
@@ -69,6 +75,10 @@ public class GenerateMessageClasses extends AbstractMojo {
 			}
 		
 			ArrayList<String> argList = new ArrayList<>(Arrays.asList(Generator.OUTPUT_DIR_ARG, _outputDirectory.getAbsolutePath()));
+			if (_resourceOutputDirectory != null) {
+				argList.add(Generator.RESOURCE_DIR_ARG);
+				argList.add(_resourceOutputDirectory.getAbsolutePath());
+			}
 			if (_includePaths != null) {
 				for (File includePath : _includePaths) {
 					argList.add("-I");
