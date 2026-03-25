@@ -215,6 +215,58 @@ message Config {
 }
 ```
 
+### `option OpenWorld`
+Enables cross-file protocol extension for abstract type hierarchies. With this option, subtypes can be defined in
+separate `.proto` files (and separate modules) using `import` and `extends`:
+
+```protobuf
+// base-module: events.proto
+option OpenWorld;
+
+abstract message Event {
+    long timestamp;
+}
+
+message TextEvent extends Event {
+    string text;
+}
+```
+
+```protobuf
+// extension-module: graph-events.proto
+import "../base-module/events.proto";
+
+message GraphPatchEvent extends base.pkg.Event {
+    string controlId;
+    string patch;
+}
+```
+
+Extension types are discovered at runtime via `ServiceLoader`. The generator produces a registration class
+(e.g. `GraphEventsTypes`) and a `META-INF/services` descriptor automatically when the `-resources` output
+directory is configured. On platforms without `ServiceLoader` (e.g. GWT), call `GraphEventsTypes.init()` explicitly.
+
+Implications:
+- Implies `option NoBinary` (only JSON and XML serialization are supported)
+- Cannot be combined with `option NoInterfaces`
+- The generated `Visitor` interface includes a `visitDefault()` fallback method for unknown extension types
+- Extension types generate their own `Visitor` sub-interface with an `instanceof`-based dispatch
+
+CLI usage with imports:
+```
+java -jar msgbuf-generator.jar -out src/main/java -resources src/main/resources -I /path/to/base-module/src/main/java extension.proto
+```
+
+Maven plugin configuration:
+```xml
+<configuration>
+    <includePaths>
+        <includePath>${project.basedir}/../base-module/src/main/java</includePath>
+    </includePaths>
+    <resourceOutputDir>${project.basedir}/src/main/resources</resourceOutputDir>
+</configuration>
+```
+
 ## Message options
 
 ### Mix-in interfaces (`@Operations(...)`)
