@@ -20,7 +20,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 <dependency>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-api</artifactId>
-    <version>1.1.11</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ To the `build/plugins` section add:
 <plugin>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-generator-maven-plugin</artifactId>
-    <version>1.1.11</version>
+    <version>1.2.0</version>
     
     <executions>
         <execution>
@@ -160,6 +160,38 @@ In addition to the protobuf type names, `msgbuf` supports shorter aliases:
 - `int` for `int32`
 - `long` for `int64`
 - `boolean` for `bool`
+
+### Native JSON value type (`json`)
+
+The `json` type represents an opaque JSON value — any valid JSON structure (object, array, string, number, boolean, or null). This avoids double-serialization when a message needs to carry dynamically-typed data:
+
+```protobuf
+message PatchEvent {
+    string controlId;
+    json patch;
+}
+```
+
+In JSON format, the value is written natively without string-wrapping:
+
+```json
+{"controlId":"c1","patch":{"nodes":{"n1":{"x":100}}}}
+```
+
+The generated Java API uses `Object` as the field type. Supported value types are `Map<String, Object>`, `List<Object>`, `String`, `Long`, `Double`, `Boolean`, and `null`:
+
+```java
+Map<String, Object> patch = new LinkedHashMap<>();
+patch.put("nodes", ...);
+PatchEvent event = PatchEvent.create()
+    .setControlId("c1")
+    .setPatch(patch);
+
+// Reading back:
+Object value = event.getPatch(); // Map, List, String, Number, Boolean, or null
+```
+
+For binary serialization, json values are wrapped in a `JsonValue` message envelope (defined in `de.haumacher.msgbuf.json.value`). For XML, json values are encoded as JSON strings in element text.
 
 ## Global protocol options
 
