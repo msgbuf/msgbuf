@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+### Bug Fixes
+- **GWT compatibility for `json` field type**: Remove XML serialization (`javax.xml.stream.*`) from `JsonValue` envelope classes in `msgbuf-api`, which broke GWT compilation. JSON fields in XML format are serialized as JSON text strings instead.
+
 ## 1.2.0
 
 ### New Features
