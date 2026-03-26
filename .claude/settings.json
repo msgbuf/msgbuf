@@ -1,0 +1,21 @@
+{                                                                                                                                                                                                                                                  
+  "permissions": {
+    "allow": [                                                                                                                                                                                                                                     
+      "Bash(mvn *)"
+    ],
+    "deny": []
+  },
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": [
+          "~/.m2/repository"                                                                                                                                                                                                                       
+      ]
+    },          
+    "network": {
+      "allowedHosts": [
+        "repo.maven.apache.org",
+        "dev.top-logic.com"
+      ]                                                                                                                                                                                                                                            
+    }
+  }                                                                                                                                                                                                                                                
+}               
