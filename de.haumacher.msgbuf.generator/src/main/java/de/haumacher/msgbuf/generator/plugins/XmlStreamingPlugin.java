@@ -553,6 +553,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			return "java.util.Base64.getDecoder().decode(" + value + ");";
 
 		case JSON:
+			// JSON values are encoded as JSON text strings in XML instead of using the JsonValue
+			// envelope types. The JsonValue classes (in msgbuf-api) cannot have XML serialization
+			// because msgbuf-api must be GWT-compatible, and GWT does not support javax.xml.stream.
 			return "de.haumacher.msgbuf.json.JsonUtil.parseJsonValue(" + value + ")";
 		}
 
@@ -598,6 +601,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			return "java.util.Base64.getEncoder().encodeToString(" + value + ");";
 
 		case JSON:
+			// See fromStringSingle(): JSON values are transmitted as JSON text strings in XML.
 			return "de.haumacher.msgbuf.json.JsonUtil.jsonStringValue(" + value + ")";
 		}
 

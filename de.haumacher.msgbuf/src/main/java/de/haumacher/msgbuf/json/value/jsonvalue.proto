@@ -1,11 +1,22 @@
 package de.haumacher.msgbuf.json.value;
 
 option NoInterfaces;
+option NoXml;
 option NoReflection;
 option NoListener;
 option NoVisitor;
 
-/** Envelope type representing any JSON value for binary and XML serialization. */
+/**
+ * Envelope type representing any JSON value for binary serialization.
+ *
+ * <p>
+ * Note: XML serialization is intentionally disabled (NoXml) because these classes are part of the
+ * msgbuf-api runtime library, which must be GWT-compatible. XML serialization would pull in
+ * {@code javax.xml.stream.*} (StAX API), which is not available in GWT environments. When JSON
+ * fields are serialized over XML, they are encoded as JSON text strings instead (see
+ * {@code XmlStreamingPlugin} in the generator).
+ * </p>
+ */
 abstract message JsonValue {
 }
 
