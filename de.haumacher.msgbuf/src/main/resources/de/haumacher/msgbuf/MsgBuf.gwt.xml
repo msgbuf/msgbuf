@@ -7,6 +7,10 @@
   "../../../dtd/gwt-module-2.9.0.dtd">
 <module rename-to='MsgBuf'>
 
+  <!-- No-op replacement for TypeRegistryLoader which uses java.util.ServiceLoader
+       (not available in GWT). -->
+  <super-source path="super"/>
+
   <source path='binary'/>
   <source path='data'/>
   <source path='graph'/>
