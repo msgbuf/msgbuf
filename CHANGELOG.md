@@ -34,6 +34,14 @@
 - **Redeclared fields** (#21): A field that redeclares an inherited field (directly or through any generalization,
   also across files), a field declared twice, and fields whose names generate the same Java names (e.g. `foo_bar` and
   `fooBar`) are rejected with an error. Before, the generator silently produced Java code that did not compile.
+- **Extensions across files require OpenWorld** (#25): A message that extends a message of another file is rejected
+  unless that file declares `option OpenWorld`. Extending from another package produced Java that did not compile.
+  **Source compatibility:** extending a message of an only imported (not generated together) file of the same package
+  compiled before, but the readers of the base did not know the subtype. It is now rejected as well. A closed
+  hierarchy split into files of the same package that are generated together is still accepted. Inheritance cycles
+  are rejected with an error instead of crashing the generator.
+- **Nested specializations of the outer message** (#32): A message nested in its own generalization (e.g.
+  `abstract message Expr { message Sum extends Expr {…} }`) crashed the generator with a `StackOverflowError`.
 
 ## 1.2.1
 

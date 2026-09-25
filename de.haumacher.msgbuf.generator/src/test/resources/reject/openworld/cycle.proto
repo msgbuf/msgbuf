@@ -1,0 +1,9 @@
+package reject.ow;
+
+message A extends B {
+	string a;
+}
+
+message B extends A {
+	string b;
+}

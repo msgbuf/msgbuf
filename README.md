@@ -279,7 +279,13 @@ message Config {
 
 ### `option OpenWorld`
 Enables cross-file protocol extension for abstract type hierarchies. With this option, subtypes can be defined in
-separate `.proto` files (and separate modules) using `import` and `extends`:
+separate `.proto` files (and separate modules) using `import` and `extends`.
+
+A message can extend a message of another file only if that file declares `option OpenWorld`, so that the readers of
+the hierarchy resolve types of other files. This also holds for an intermediate: to extend a message of an extension
+file, the extension file must declare `option OpenWorld` as well. The only exception is a hierarchy without
+`OpenWorld` that is split into several files of the same package, which are generated together. The generator rejects
+other extensions across files with an error.
 
 ```protobuf
 // base-module: events.proto

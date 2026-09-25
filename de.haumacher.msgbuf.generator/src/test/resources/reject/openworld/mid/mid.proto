@@ -1,0 +1,7 @@
+package reject.ow.mid;
+import "../base/open.proto";
+
+/** An intermediate in a file without option OpenWorld. */
+abstract message Signal extends reject.ow.base.Event {
+	int level;
+}

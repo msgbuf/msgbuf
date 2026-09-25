@@ -20,6 +20,11 @@ import de.haumacher.msgbuf.generator.common.Util;
  * assigned in the message definition.
  */
 public class FieldIDSynthesizer implements Definition.Visitor<Map<Integer, String>, Void> {
+
+	/**
+	 * Names of all fields by index for each processed message, including inherited fields.
+	 */
+	private final Map<MessageDef, Map<Integer, String>> _indexes = new HashMap<>();
 	
 	/** 
 	 * Assigns IDs in the given file.
@@ -65,9 +70,33 @@ public class FieldIDSynthesizer implements Definition.Visitor<Map<Integer, Strin
 
 	@Override
 	public Map<Integer, String> visit(MessageDef self, Void arg) {
+		Map<Integer, String> result = indexes(self);
+		for (Definition inner : self.getDefinitions()) {
+			inner.visit(this, arg);
+		}
+		return result;
+	}
+
+	/**
+	 * Assigns the field indexes of the given message (and its generalizations) and returns the
+	 * names of all its fields, including the inherited ones, by index.
+	 *
+	 * <p>
+	 * Walks the generalizations only, not the nested definitions: a nested message may extend its
+	 * outer message.
+	 * </p>
+	 */
+	private Map<Integer, String> indexes(MessageDef self) {
+		Map<Integer, String> cached = _indexes.get(self);
+		if (cached != null) {
+			return cached;
+		}
+		// Guards against an inheritance cycle, which the generator rejects before.
+		_indexes.put(self, new HashMap<>());
+
 		Map<Integer, String> partByIndex;
 		if (self.getExtendedDef() != null) {
-			partByIndex = self.getExtendedDef().visit(this, arg);
+			partByIndex = new HashMap<>(indexes(self.getExtendedDef()));
 		} else {
 			partByIndex = new HashMap<>();
 		}
@@ -94,11 +123,8 @@ public class FieldIDSynthesizer implements Definition.Visitor<Map<Integer, Strin
 				field.setIndex(nextIndex);
 			}
 		}
-		
-		for (Definition inner : self.getDefinitions()) {
-			inner.visit(this, arg);
-		}
 
+		_indexes.put(self, partByIndex);
 		return partByIndex;
 	}
 
