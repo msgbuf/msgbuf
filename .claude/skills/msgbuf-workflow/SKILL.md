@@ -132,9 +132,10 @@ general?" not "does the happy path work?". Keep passing probes as permanent test
   is installed — use `-am`, and then `-Dsurefire.failIfNoSpecifiedTests=false` with `-Dtest=…`.
 - **Stale jar**: `target/msgbuf-generator-*-full.jar` is whatever the last `install`/`package` built,
   possibly on another branch. Rebuild before probing a change.
-- **A green unit build does not cover the plugin integration test**: `-Prun-its` runs it, and
-  `simple-it` is the archetype template calling a non-existent `touch` goal (#18) — it fails on
-  `main` too. Report it as known, don't chase it.
+- **A green unit build does not cover the plugin integration test**: `-Prun-its` runs `simple-it`,
+  a consumer project that configures the plugin with the documented parameter names, generates and
+  compiles. The plugin testing harness (`MojoRule.lookupConfiguredMojo`) does not resolve parameter
+  aliases, so configuration names can only be tested there.
 - **CLAUDE.md is not always right about the wire format**: polymorphic values are written as
   `[typeId, {fields}]` (a two-element array whose second element is the object), and only when the
   hierarchy root is abstract; references to a concrete type use `writeContent()` without a tag.
@@ -175,7 +176,7 @@ cd .. && mvn clean install              # the regenerated sources compile and pa
   generated code: an unexplained change is a regression.
 - **AST change** (`ast/proto.proto`): regenerate the AST classes with the previous generator
   (`java -jar $J -out src/main/java src/main/java/de/haumacher/msgbuf/generator/ast/proto.proto`),
-  then rebuild. The build does not do this for you (#23; CLAUDE.md still claims otherwise).
+  then rebuild. The build does not do this for you.
 - **Grammar change** (`parser/protobuf.jj`, next to the parser sources): the JavaCC plugin
   regenerates the parser into `src/main/java` during the build; the regenerated parser files are
   checked in and ride the same commit.
@@ -184,8 +185,7 @@ cd .. && mvn clean install              # the regenerated sources compile and pa
   rerun without the flag. Type-check the golden files plus a usage file with `@ts-expect-error`
   negative cases in the scratchpad:
   `npx -y -p typescript tsc --strict --noEmit --isolatedModules --verbatimModuleSyntax --moduleResolution bundler --module esnext --target es2020 <files>`.
-- **Maven plugin changes**: also run `mvn install -Prun-its -pl msgbuf-generator-maven-plugin`
-  (known failure #18 until fixed).
+- **Maven plugin changes**: also run `mvn install -Prun-its -pl msgbuf-generator-maven-plugin`.
 - The Eclipse plugin (`de.haumacher.msgbuf.eclipse`, `de.haumacher.msgbuf.feature`) is not in
   the reactor; changes there need a separate Eclipse/PDE build and are rare.
 
