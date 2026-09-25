@@ -169,9 +169,6 @@ public class B_Impl extends test.transientprops.data.impl.A_Impl implements test
 	/** XML attribute or element name of a {@link #getY1} property. */
 	private static final String Y_1__XML_ATTR = "y-1";
 
-	/** XML attribute or element name of a {@link #getY2} property. */
-	private static final String Y_2__XML_ATTR = "y-2";
-
 	@Override
 	public String getXmlTagName() {
 		return B__XML_ELEMENT;
@@ -182,7 +179,6 @@ public class B_Impl extends test.transientprops.data.impl.A_Impl implements test
 	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
 		super.writeAttributes(out);
 		out.writeAttribute(Y_1__XML_ATTR, getY1());
-		out.writeAttribute(Y_2__XML_ATTR, getY2());
 	}
 
 	/** Serializes all fields that are written as XML elements. */
@@ -206,10 +202,6 @@ public class B_Impl extends test.transientprops.data.impl.A_Impl implements test
 				setY1(value);
 				break;
 			}
-			case Y_2__XML_ATTR: {
-				setY2(value);
-				break;
-			}
 			default: {
 				super.readFieldXmlAttribute(name, value);
 			}
@@ -221,10 +213,6 @@ public class B_Impl extends test.transientprops.data.impl.A_Impl implements test
 		switch (localName) {
 			case Y_1__XML_ATTR: {
 				setY1(in.getElementText());
-				break;
-			}
-			case Y_2__XML_ATTR: {
-				setY2(in.getElementText());
 				break;
 			}
 			default: {

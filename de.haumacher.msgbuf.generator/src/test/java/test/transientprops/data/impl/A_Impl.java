@@ -197,9 +197,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	/** XML attribute or element name of a {@link #getX1} property. */
 	private static final String X_1__XML_ATTR = "x-1";
 
-	/** XML attribute or element name of a {@link #getX2} property. */
-	private static final String X_2__XML_ATTR = "x-2";
-
 	@Override
 	public String getXmlTagName() {
 		return A__XML_ELEMENT;
@@ -214,7 +211,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	/** Serializes all fields that are written as XML attributes. */
 	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
 		out.writeAttribute(X_1__XML_ATTR, getX1());
-		out.writeAttribute(X_2__XML_ATTR, getX2());
 	}
 
 	/** Serializes all fields that are written as XML elements. */
@@ -256,10 +252,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 				setX1(value);
 				break;
 			}
-			case X_2__XML_ATTR: {
-				setX2(value);
-				break;
-			}
 			default: {
 				// Skip unknown attribute.
 			}
@@ -271,10 +263,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		switch (localName) {
 			case X_1__XML_ATTR: {
 				setX1(in.getElementText());
-				break;
-			}
-			case X_2__XML_ATTR: {
-				setX2(in.getElementText());
 				break;
 			}
 			default: {

@@ -132,7 +132,8 @@ message SearchResponse {
 
 ### Transient fields
 
-Fields marked with `transient` are not serialized. They exist only in the in-memory representation:
+Fields marked with `transient` are not serialized in any format (JSON, binary, XML). They exist only in the in-memory
+representation. Readers ignore values of transient fields, e.g. in XML documents written by versions before 1.2.3:
 
 ```protobuf
 message A {
@@ -210,7 +211,8 @@ other file. The generator rejects a reference to a definition generated without 
 in that case. Either disable the format in the referencing file as well, or enable it in the referenced one. The same
 holds for `option SharedGraph`, which has its own JSON methods for messages: a message can reference messages of
 another file only if both files use `option SharedGraph`, or neither does. Enums are not affected by
-`option SharedGraph`. `transient` fields are not written in JSON or binary format, so they don't need these formats.
+`option SharedGraph`. `transient` fields and derived references (`@Container`, `@Reverse`) are not serialized, so they
+don't need these formats.
 
 ### `option NoXmlNames`
 Disables generation of constants for the XML format.
@@ -383,7 +385,8 @@ Sets a custom tag name for XML serialization.
 Marks a reference to be the reverse end of the reference with the given name in the target type.
 
 ### `@Container`
-Marks a reference point to the container of the current object.
+Marks a reference point to the container of the current object. The container reference is derived from the
+containment and not serialized.
 
 ### `@Ref`
 Marks a reference as cross reference (non-composition). When setting values to fields marked as cross reference, container properties are not updated.
