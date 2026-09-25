@@ -68,8 +68,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		_graph = isTrue(options.get("SharedGraph"), false);
 		_json = isJson(options);
 		_binary = isBinary(options);
-		_listener = _graph || !isTrue(options.get("NoListener"), false);
-		_reflection = _listener || !isTrue(options.get("NoReflection"), false);
+		_listener = isListener(options);
+		_reflection = isReflection(options);
 		_visitor = !isTrue(options.get("NoVisitor"), false);
 		_visitEx= !isTrue(options.get("NoVisitorExceptions"), false);
 		_typeKind = !isTrue(options.get("NoTypeKind"), false);
@@ -269,7 +269,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 			if (_visitor) {
 				generateVisitorInterface();
 			}
-			if (isCrossFileExtension() && !_def.isAbstract() && (_interface || _noInterfaces)) {
+			if (_visitor && isCrossFileExtension() && !_def.isAbstract() && (_interface || _noInterfaces)) {
 				generateExtensionVisitorInterface();
 			}
 		}
@@ -432,6 +432,20 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		for (Definition def : _def.getDefinitions()) {
 			def.visit(this, null);
 		}
+	}
+
+	/**
+	 * Whether listener support is generated for the given file options.
+	 */
+	public static boolean isListener(Map<String, Option> options) {
+		return isTrue(options.get("SharedGraph"), false) || !isTrue(options.get("NoListener"), false);
+	}
+
+	/**
+	 * Whether reflective property access is generated for the given file options.
+	 */
+	public static boolean isReflection(Map<String, Option> options) {
+		return isListener(options) || !isTrue(options.get("NoReflection"), false);
 	}
 
 	/**

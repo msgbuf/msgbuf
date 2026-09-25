@@ -1,0 +1,8 @@
+package test.openworld.novisitor.ext;
+import "../base/base.proto";
+
+option NoVisitor;
+
+message Square extends test.openworld.novisitor.base.Shape {
+	int side;
+}

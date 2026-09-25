@@ -234,6 +234,12 @@ another file only if both files use `option SharedGraph`, or neither does. Enums
 `option SharedGraph`. `transient` fields and derived references (`@Container`, `@Reverse`) are not serialized, so they
 don't need these formats.
 
+A message that extends a message of another file implements and overrides its generated methods. So both files must
+agree on the serialization formats, `option NoVisitor`, `option NoVisitorExceptions`, `option NoTypeKind` and
+`option NoInterfaces`. A specialization may be generated without the listener (`option NoListener`) or reflection
+(`option NoReflection`) support of its generalization, but not with support its generalization lacks. The generator
+rejects other combinations with an error naming both files.
+
 ### `option NoXmlNames`
 Disables generation of constants for the XML format.
 
@@ -327,7 +333,8 @@ itself be extended in further files, if the extension file declares `option Open
 
 Implications:
 - Implies `option NoBinary` (only JSON and XML serialization are supported)
-- Cannot be combined with `option NoInterfaces`
+- Cannot be combined with `option NoInterfaces` or `option SharedGraph`
+- The root's file must declare `option OpenWorld` if any file of the hierarchy does
 - The generated `Visitor` interface includes a `visitDefault()` fallback method for unknown extension types
 - Extension types generate their own `Visitor` sub-interface with an `instanceof`-based dispatch
 

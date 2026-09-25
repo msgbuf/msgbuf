@@ -1,0 +1,5 @@
+package reject.opt.split;
+
+abstract message Root {
+	string name;
+}

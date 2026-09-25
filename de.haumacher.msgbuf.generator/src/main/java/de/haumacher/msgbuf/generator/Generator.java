@@ -175,8 +175,9 @@ public class Generator {
 			buildSpecializations(file);
 		}
 
+		List<String> errors = new ArrayList<>();
 		for (DefinitionFile file : _files) {
-			validateOpenWorld(file);
+			validateOpenWorld(file, errors);
 		}
 
 		// Propagate NoBinary and NoTypeKind to extension files that extend OpenWorld bases
@@ -184,10 +185,9 @@ public class Generator {
 			propagateOpenWorldOptions(file);
 		}
 
-		List<String> errors = new ArrayList<>();
 		for (DefinitionFile file : _files) {
 			if (!_importedFiles.contains(file)) {
-				validateGeneralizations(file, errors);
+				validateGeneralizations(file, plugin, errors);
 			}
 		}
 		if (!errors.isEmpty()) {
@@ -315,7 +315,7 @@ public class Generator {
 		return relative.startsWith("../") ? relative : "./" + relative;
 	}
 
-	private void validateOpenWorld(DefinitionFile file) {
+	private void validateOpenWorld(DefinitionFile file, List<String> errors) {
 		boolean openWorld = Util.getFlag(file, "OpenWorld");
 		if (!openWorld) {
 			return;
@@ -323,9 +323,14 @@ public class Generator {
 		// OpenWorld implies NoBinary
 		file.getOptions().put("NoBinary", Flag.create().setValue(true));
 
-		boolean noInterfaces = Util.getFlag(file, "NoInterfaces");
-		if (noInterfaces) {
-			error("option OpenWorld cannot be combined with option NoInterfaces.");
+		if (_importedFiles.contains(file)) {
+			return;
+		}
+		for (String option : new String[] { "NoInterfaces", "SharedGraph" }) {
+			if (Util.getFlag(file, option)) {
+				errors.add(sourceDescription(file) + ": option OpenWorld cannot be combined with option " + option
+					+ ". Remove one of the options.");
+			}
 		}
 	}
 
@@ -371,19 +376,20 @@ public class Generator {
 	 * extended message are generated with all its specializations.
 	 * </p>
 	 */
-	private void validateGeneralizations(DefinitionFile file, List<String> errors) {
+	private void validateGeneralizations(DefinitionFile file, GeneratorPlugin plugin, List<String> errors) {
 		for (Definition def : file.getDefinitions()) {
-			validateGeneralizations(file, def, errors);
+			validateGeneralizations(file, def, plugin, errors);
 		}
 	}
 
-	private void validateGeneralizations(DefinitionFile file, Definition def, List<String> errors) {
+	private void validateGeneralizations(DefinitionFile file, Definition def, GeneratorPlugin plugin, List<String> errors) {
 		if (!(def instanceof MessageDef)) {
 			return;
 		}
 		MessageDef message = (MessageDef) def;
 		MessageDef extended = message.getExtendedDef();
 		if (extended != null) {
+			int errorCount = errors.size();
 			List<MessageDef> path = new ArrayList<>();
 			path.add(message);
 			for (MessageDef current = extended; current != null; current = current.getExtendedDef()) {
@@ -412,10 +418,91 @@ public class Generator {
 					+ " (a hierarchy without OpenWorld can only be split into files of the same package"
 					+ " that are generated together).");
 			}
+
+			if (Util.getFlag(file, "OpenWorld") && errors.size() == errorCount) {
+				MessageDef root = extended;
+				Set<MessageDef> seen = new HashSet<>();
+				while (root.getExtendedDef() != null && seen.add(root)) {
+					root = root.getExtendedDef();
+				}
+				DefinitionFile rootFile = Util.definingFile(root);
+				if (!Util.getFlag(rootFile, "OpenWorld")) {
+					errors.add(sourceDescription(file) + ": File declares option OpenWorld, but message '"
+						+ Util.toString(message) + "' belongs to the hierarchy of '" + Util.toString(root) + "' of '"
+						+ sourceDescription(rootFile) + "', which does not declare option OpenWorld. Add 'option OpenWorld;' to '"
+						+ sourceDescription(rootFile) + "', or remove it from '" + sourceDescription(file) + "'.");
+				}
+			}
+
+			if (extendedFile != file && errors.size() == errorCount) {
+				validateExtensionOptions(file, message, extended, extendedFile, plugin, errors);
+			}
 		}
 
 		for (Definition inner : message.getDefinitions()) {
-			validateGeneralizations(file, inner, errors);
+			validateGeneralizations(file, inner, plugin, errors);
+		}
+	}
+
+	/**
+	 * Rejects an extension of a message of another file, if the two files generate incompatible
+	 * code.
+	 *
+	 * <p>
+	 * A specialization implements the abstract methods and overrides the methods of its
+	 * generalization. So both files must generate the same serialization formats, visitors and type
+	 * kinds, and use the same interface mode. A specialization may omit listener and reflection
+	 * support of its generalization, but cannot add it.
+	 * </p>
+	 */
+	private void validateExtensionOptions(DefinitionFile file, MessageDef message, MessageDef extended,
+			DefinitionFile extendedFile, GeneratorPlugin plugin, List<String> errors) {
+		String prefix = sourceDescription(file) + ": Message '" + Util.toString(message) + "' extends message '"
+			+ Util.toString(extended) + "' of '" + sourceDescription(extendedFile) + "'";
+
+		Set<String> formats = formats(file, plugin);
+		Set<String> extendedFormats = formats(extendedFile, plugin);
+		for (String format : extendedFormats) {
+			if (!formats.contains(format) && !format.equals(GRAPH_JSON_FORMAT)) {
+				errors.add(prefix + ", which is generated with " + format + " serialization, but '"
+					+ sourceDescription(file) + "' is generated without (" + disabledBy(file, format)
+					+ "). Use the same format options in both files.");
+			}
+		}
+
+		Map<String, Option> options = file.getOptions();
+		Map<String, Option> extendedOptions = extendedFile.getOptions();
+		boolean visitor = !MessageGenerator.isTrue(options.get("NoVisitor"), false);
+		boolean extendedVisitor = !MessageGenerator.isTrue(extendedOptions.get("NoVisitor"), false);
+		checkSameOption(prefix, file, extendedFile, "NoVisitor", errors);
+		if (visitor && extendedVisitor) {
+			checkSameOption(prefix, file, extendedFile, "NoVisitorExceptions", errors);
+		}
+		checkSameOption(prefix, file, extendedFile, "NoTypeKind", errors);
+		checkSameOption(prefix, file, extendedFile, "NoInterfaces", errors);
+
+		boolean listener = MessageGenerator.isListener(options);
+		boolean reflection = MessageGenerator.isReflection(options);
+		if (listener && !MessageGenerator.isListener(extendedOptions)) {
+			errors.add(prefix + ", which is generated without listener support (option NoListener), but '"
+				+ sourceDescription(file) + "' is generated with it. Add 'option NoListener;' to '"
+				+ sourceDescription(file) + "', or remove it from '" + sourceDescription(extendedFile) + "'.");
+		} else if (reflection && !MessageGenerator.isReflection(extendedOptions)) {
+			errors.add(prefix + ", which is generated without reflection (option NoReflection), but '"
+				+ sourceDescription(file) + "' is generated with it. Add 'option NoReflection;' and 'option NoListener;' to '"
+				+ sourceDescription(file) + "', or remove them from '" + sourceDescription(extendedFile) + "'.");
+		}
+	}
+
+	private void checkSameOption(String prefix, DefinitionFile file, DefinitionFile extendedFile, String option,
+			List<String> errors) {
+		boolean set = MessageGenerator.isTrue(file.getOptions().get(option), false);
+		boolean extendedSet = MessageGenerator.isTrue(extendedFile.getOptions().get(option), false);
+		if (set != extendedSet) {
+			DefinitionFile with = set ? file : extendedFile;
+			DefinitionFile without = set ? extendedFile : file;
+			errors.add(prefix + ", but only '" + sourceDescription(with) + "' declares option " + option
+				+ ", '" + sourceDescription(without) + "' does not. Use the same setting in both files.");
 		}
 	}
 

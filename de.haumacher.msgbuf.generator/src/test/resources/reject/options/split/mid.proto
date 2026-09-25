@@ -1,0 +1,8 @@
+package reject.opt.split;
+import "root.proto";
+
+option OpenWorld;
+
+abstract message Mid extends Root {
+	int level;
+}

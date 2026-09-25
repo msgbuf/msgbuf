@@ -42,6 +42,14 @@
   are rejected with an error instead of crashing the generator.
 - **Nested specializations of the outer message** (#32): A message nested in its own generalization (e.g.
   `abstract message Expr { message Sum extends Expr {…} }`) crashed the generator with a `StackOverflowError`.
+- **Consistent options across `extends`** (#37, #38, #39, #40, #41): A message that extends a message of another
+  file is rejected if the files disagree on the serialization formats, `NoVisitor`, `NoVisitorExceptions`,
+  `NoTypeKind` or `NoInterfaces`, or if it adds listener or reflection support its generalization lacks. These
+  combinations generated uncompilable code. The exception is `NoJson` (or `NoXml`) only on an OpenWorld extension
+  file: it compiled, but the extension type was written without its own fields and could not be read. It is rejected
+  now as well. `option OpenWorld` on a file whose hierarchy root is in a file without it, and `OpenWorld` combined
+  with `SharedGraph` or `NoInterfaces` (before only a message on the console), are rejected. `option NoVisitor` now
+  also suppresses the visitor of OpenWorld extension types.
 - **OpenWorld readers of abstract intermediates** (#26): The JSON reader of an abstract message below the root of an
   `option OpenWorld` hierarchy (e.g. `Bird` in `Animal > Bird > Parrot`, top-level or nested) no longer fails to
   compile. It reads the types of other files registered with the root, if they are specializations of the message; a
