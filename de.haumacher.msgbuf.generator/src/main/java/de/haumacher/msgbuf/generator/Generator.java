@@ -41,6 +41,7 @@ import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
 import de.haumacher.msgbuf.generator.parser.ProtobufParserConstants;
 import de.haumacher.msgbuf.generator.parser.Token;
+import de.haumacher.msgbuf.generator.plugins.XmlStreamingPlugin;
 import de.haumacher.msgbuf.generator.ts.TypeScriptGenerator;
 import de.haumacher.msgbuf.generator.util.FileGenerator;
 
@@ -180,6 +181,16 @@ public class Generator {
 		// Propagate NoBinary and NoTypeKind to extension files that extend OpenWorld bases
 		for (DefinitionFile file : _files) {
 			propagateOpenWorldOptions(file);
+		}
+
+		List<String> errors = new ArrayList<>();
+		for (DefinitionFile file : _files) {
+			if (!_importedFiles.contains(file)) {
+				validateFormatReferences(file, plugin, errors);
+			}
+		}
+		if (!errors.isEmpty()) {
+			throw new GeneratorException(errors);
 		}
 
 		TypeIdSynthesizer typeIdSynthesizer = new TypeIdSynthesizer();
@@ -337,6 +348,175 @@ public class Generator {
 		return false;
 	}
 	
+	/**
+	 * Rejects references to definitions of other files that are generated without a serialization
+	 * format that the referencing code needs.
+	 *
+	 * <p>
+	 * The generated read and write methods of a message call the corresponding methods of the
+	 * messages and enums of its fields and of its generalization. If one of these is defined in
+	 * another file that disables the format, the generated code would not compile.
+	 * </p>
+	 */
+	private void validateFormatReferences(DefinitionFile file, GeneratorPlugin plugin, List<String> errors) {
+		for (Definition def : file.getDefinitions()) {
+			validateFormatReferences(file, def, plugin, errors);
+		}
+	}
+
+	private void validateFormatReferences(DefinitionFile file, Definition def, GeneratorPlugin plugin, List<String> errors) {
+		if (!(def instanceof MessageDef)) {
+			return;
+		}
+		MessageDef message = (MessageDef) def;
+		Set<String> formats = formats(file, plugin);
+
+		MessageDef extended = message.getExtendedDef();
+		if (extended != null) {
+			checkFormats(file, formats, "Message '" + Util.toString(message) + "' extends", extended, plugin, errors);
+		}
+
+		for (Field field : message.getFields()) {
+			Set<String> fieldFormats = fieldFormats(file, field, plugin);
+			for (Definition target : referencedDefinitions(field.getType())) {
+				checkFormats(file, fieldFormats,
+					"Field '" + Util.toString(message) + "." + field.getName() + "' references", target, plugin, errors);
+			}
+		}
+
+		for (Definition inner : message.getDefinitions()) {
+			validateFormatReferences(file, inner, plugin, errors);
+		}
+	}
+
+	private void checkFormats(DefinitionFile file, Set<String> formats, String reference, Definition target,
+			GeneratorPlugin plugin, List<String> errors) {
+		DefinitionFile targetFile = Util.definingFile(target);
+		if (targetFile == file) {
+			return;
+		}
+		boolean isEnum = target instanceof EnumDef;
+		Set<String> targetFormats = isEnum ? enumFormats(targetFile.getOptions()) : formats(targetFile, plugin);
+		String prefix = sourceDescription(file) + ": " + reference + (isEnum ? " enum '" : " message '")
+			+ Util.toString(target) + "' of '" + sourceDescription(targetFile) + "'";
+		for (String format : formats) {
+			if (isEnum) {
+				if (format.equals(GRAPH_JSON_FORMAT)) {
+					// The JSON methods of an enum do not depend on the graph mode.
+					format = JSON_FORMAT;
+				} else if (!format.equals(JSON_FORMAT) && !format.equals(BINARY_FORMAT)) {
+					// Enums are serialized in plug-in formats through their protocol names.
+					continue;
+				}
+			}
+			if (targetFormats.contains(format)) {
+				continue;
+			}
+			if (format.equals(GRAPH_JSON_FORMAT) || (format.equals(JSON_FORMAT) && targetFormats.contains(GRAPH_JSON_FORMAT))) {
+				errors.add(prefix + ", but only one of the files uses option SharedGraph. Use option SharedGraph in both"
+					+ " files or in neither.");
+			} else {
+				errors.add(prefix + ", which is generated without " + format + " serialization ("
+					+ disabledBy(targetFile, format) + "). Add 'option " + DISABLE_OPTION.get(format) + ";' to '"
+					+ sourceDescription(file) + "', or enable " + format + " serialization in '"
+					+ sourceDescription(targetFile) + "'.");
+			}
+		}
+	}
+
+	private static final String JSON_FORMAT = "JSON";
+
+	/**
+	 * JSON of the SharedGraph mode, which has its own read and write methods.
+	 */
+	private static final String GRAPH_JSON_FORMAT = "SharedGraph JSON";
+
+	private static final String BINARY_FORMAT = "binary";
+
+	private static final Map<String, String> DISABLE_OPTION =
+		Map.of(JSON_FORMAT, "NoJson", BINARY_FORMAT, "NoBinary", XmlStreamingPlugin.XML_FORMAT, "NoXml");
+
+	private static Set<String> formats(DefinitionFile file, GeneratorPlugin plugin) {
+		Set<String> result = coreFormats(file.getOptions());
+		plugin.addFormats(file.getOptions(), result);
+		return result;
+	}
+
+	private static Set<String> fieldFormats(DefinitionFile file, Field field, GeneratorPlugin plugin) {
+		Set<String> result = new HashSet<>();
+		if (!field.isTransient() && !field.isDerived()) {
+			result.addAll(coreFormats(file.getOptions()));
+		}
+		plugin.addFieldFormats(file.getOptions(), field, result);
+		return result;
+	}
+
+	/**
+	 * The formats of the generated read and write methods of messages.
+	 */
+	private static Set<String> coreFormats(Map<String, Option> options) {
+		Set<String> result = new HashSet<>();
+		if (MessageGenerator.isJson(options)) {
+			result.add(MessageGenerator.isTrue(options.get("SharedGraph"), false) ? GRAPH_JSON_FORMAT : JSON_FORMAT);
+		}
+		if (MessageGenerator.isBinary(options)) {
+			result.add(BINARY_FORMAT);
+		}
+		return result;
+	}
+
+	/**
+	 * The formats of the generated read and write methods of enums.
+	 */
+	private static Set<String> enumFormats(Map<String, Option> options) {
+		Set<String> result = new HashSet<>();
+		if (MessageGenerator.isJson(options)) {
+			result.add(JSON_FORMAT);
+		}
+		if (MessageGenerator.isBinary(options)) {
+			result.add(BINARY_FORMAT);
+		}
+		return result;
+	}
+
+	private static String disabledBy(DefinitionFile file, String format) {
+		if (format.equals(BINARY_FORMAT)) {
+			if (Util.getFlag(file, "SharedGraph")) {
+				return "option SharedGraph";
+			}
+			if (Util.getFlag(file, "OpenWorld")) {
+				return "option OpenWorld implies NoBinary";
+			}
+		}
+		return "option " + DISABLE_OPTION.get(format);
+	}
+
+	private static List<Definition> referencedDefinitions(Type type) {
+		List<Definition> result = new ArrayList<>();
+		type.visit(new Type.Visitor<Void, Void>() {
+			@Override
+			public Void visit(CustomType self, Void arg) {
+				if (self.getDefinition() != null) {
+					result.add(self.getDefinition());
+				}
+				return null;
+			}
+
+			@Override
+			public Void visit(PrimitiveType self, Void arg) {
+				return null;
+			}
+
+			@Override
+			public Void visit(MapType self, Void arg) {
+				self.getKeyType().visit(this, arg);
+				self.getValueType().visit(this, arg);
+				return null;
+			}
+		}, null);
+		return result;
+	}
+
 	private void resolveImports(DefinitionFile file, File sourceFile) throws IOException, ParseException {
 		for (String importPath : file.getImports()) {
 			// Try file system first
@@ -613,7 +793,7 @@ public class Generator {
 
 		@Override
 		public Void visit(EnumDef def, Void arg) {
-			return generateJava(CodeConvention.typeName(def), null, new EnumGenerator(def));
+			return generateJava(CodeConvention.typeName(def), null, new EnumGenerator(_options, def));
 		}
 		
 		@Override
@@ -715,7 +895,14 @@ public class Generator {
 			generator.setOut(out);
 		}
 		
-		generator.generate(loadPlugins());
+		try {
+			generator.generate(loadPlugins());
+		} catch (GeneratorException ex) {
+			for (String error : ex.getErrors()) {
+				System.err.println("ERROR: " + error);
+			}
+			System.exit(1);
+		}
 	}
 
 	/**

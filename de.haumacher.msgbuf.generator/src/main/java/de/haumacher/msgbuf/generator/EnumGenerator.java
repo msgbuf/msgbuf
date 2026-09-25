@@ -8,11 +8,13 @@ import static de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.haumacher.msgbuf.generator.ast.Constant;
 import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
+import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol;
 import de.haumacher.msgbuf.generator.util.AbstractJavaGenerator;
@@ -25,13 +27,22 @@ public class EnumGenerator extends AbstractJavaGenerator {
 
 	private EnumDef _def;
 
+	private final boolean _json;
+
+	private final boolean _binary;
+
 	/** 
 	 * Creates a {@link EnumGenerator}.
 	 *
+	 * @param options
+	 *        The options of the file defining the enumeration, selecting the serialization formats.
 	 * @param def
+	 *        The enumeration to generate.
 	 */
-	public EnumGenerator(EnumDef def) {
+	public EnumGenerator(Map<String, Option> options, EnumDef def) {
 		_def = def;
+		_json = MessageGenerator.isJson(options);
+		_binary = MessageGenerator.isBinary(options);
 	}
 
 	@Override
@@ -87,6 +98,17 @@ public class EnumGenerator extends AbstractJavaGenerator {
 		}
 		line("}");
 		
+		if (_json) {
+			generateJsonIO();
+		}
+		if (_binary) {
+			generateBinaryIO();
+		}
+
+		line("}");
+	}
+
+	private void generateJsonIO() {
 		nl();
 		line("/** Writes this instance to the given output. */");
 		line("public final void writeTo(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {");
@@ -102,7 +124,10 @@ public class EnumGenerator extends AbstractJavaGenerator {
 			line("return " + CodeConvention.ENUM_VALUE_OF_PROTOCOL + "(in.nextString());");
 		}
 		line("}");
-		
+	}
+
+	private void generateBinaryIO() {
+		List<Constant> constants = _def.getConstants();
 		nl();
 		line("/** Writes this instance to the given binary output. */");
 		line("public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {");
@@ -130,8 +155,6 @@ public class EnumGenerator extends AbstractJavaGenerator {
 			line("default: return " + defaultValue() + ";");
 			line("}");
 		}
-		line("}");
-		
 		line("}");
 	}
 

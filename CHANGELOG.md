@@ -18,6 +18,12 @@
   their qualified names in the generated JSON and XML readers (previously uncompilable). For `option OpenWorld`, the
   "same file" test for local subtypes and the implied `NoBinary` of extension files now also hold for nested
   definitions.
+- **Format options for enums** (#20): `option NoBinary` and `option NoJson` (and the implied `NoBinary` of
+  `option SharedGraph` and `option OpenWorld`) now also suppress the binary and JSON methods of enums.
+  **Source compatibility:** a file that uses an enum of another file in a format the other file disables did compile
+  before, because enums always had all methods. It is now rejected with an error naming both files and the option,
+  as are references to messages of such files and mixed `option SharedGraph` references, which generated uncompilable
+  code before. The generator (CLI and Maven plugin) now stops without writing code when it finds such errors.
 
 ## 1.2.1
 

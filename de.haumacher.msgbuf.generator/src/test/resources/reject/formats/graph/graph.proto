@@ -1,0 +1,10 @@
+package reject.formats.graph;
+import "../colors/colors.proto";
+
+option SharedGraph;
+
+/** A shared graph can use the enum, but not the message, of a file without SharedGraph. */
+message Node {
+	reject.formats.colors.Color color;
+	reject.formats.colors.Shade shade;
+}

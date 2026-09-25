@@ -1,0 +1,18 @@
+package test.enumoptions.nojson;
+
+option NoJson;
+
+/** Enums honor `option NoJson` like messages do (issue #20). */
+message M {
+	enum Nested {
+		A;
+		B;
+	}
+	Nested nested;
+	TopLevel top;
+}
+
+enum TopLevel {
+	X;
+	Y;
+}

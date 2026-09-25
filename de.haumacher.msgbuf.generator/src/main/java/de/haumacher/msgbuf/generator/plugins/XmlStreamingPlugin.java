@@ -32,6 +32,13 @@ import de.haumacher.msgbuf.generator.util.FileGenerator;
  * {@link GeneratorPlugin} generating XML reading code for the {@link javax.xml.stream.XMLStreamReader} interface.
  */
 public class XmlStreamingPlugin implements GeneratorPlugin {
+
+	/**
+	 * Name of the XML format.
+	 *
+	 * @see #addFormats(Map, Set)
+	 */
+	public static final String XML_FORMAT = "XML";
 	
 	private boolean _noXmlNames;
 
@@ -40,6 +47,21 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		_noXmlNames = noXmlNames(options);
 	}
 	
+	@Override
+	public void addFormats(Map<String, Option> options, Set<String> formats) {
+		if (!noXml(options)) {
+			formats.add(XML_FORMAT);
+		}
+	}
+
+	@Override
+	public void addFieldFormats(Map<String, Option> options, Field field, Set<String> formats) {
+		// All fields except maps are written and read, including transient ones.
+		if (!noXml(options) && field.getType().kind() != Type.TypeKind.MAP_TYPE) {
+			formats.add(XML_FORMAT);
+		}
+	}
+
 	@Override
 	public void addInterfaces(Map<String, Option> options, MessageDef def, List<String> generalizations) {
 		if (noXml(options)) {
