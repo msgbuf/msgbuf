@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +42,7 @@ import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
 import de.haumacher.msgbuf.generator.parser.ProtobufParserConstants;
 import de.haumacher.msgbuf.generator.parser.Token;
+import de.haumacher.msgbuf.generator.plugins.XmlStreamingPlugin;
 import de.haumacher.msgbuf.generator.ts.TypeScriptGenerator;
 import de.haumacher.msgbuf.generator.util.FileGenerator;
 
@@ -182,6 +184,17 @@ public class Generator {
 			propagateOpenWorldOptions(file);
 		}
 
+		List<String> errors = new ArrayList<>();
+		for (DefinitionFile file : _files) {
+			if (!_importedFiles.contains(file)) {
+				validateFieldNames(file, errors);
+				validateFormatReferences(file, plugin, errors);
+			}
+		}
+		if (!errors.isEmpty()) {
+			throw new GeneratorException(errors);
+		}
+
 		TypeIdSynthesizer typeIdSynthesizer = new TypeIdSynthesizer();
 		for (DefinitionFile file : _files) {
 			if (!Util.getFlag(file, "OpenWorld")) {
@@ -312,19 +325,295 @@ public class Generator {
 			// Already an OpenWorld file, options already set
 			return;
 		}
-		for (Definition def : file.getDefinitions()) {
+		if (extendsOpenWorldFromOtherFile(file, file.getDefinitions())) {
+			// Extension file inherits NoBinary from OpenWorld base
+			file.getOptions().put("NoBinary", Flag.create().setValue(true));
+		}
+	}
+
+	private static boolean extendsOpenWorldFromOtherFile(DefinitionFile file, List<Definition> definitions) {
+		for (Definition def : definitions) {
 			if (def instanceof MessageDef) {
 				MessageDef msg = (MessageDef) def;
 				MessageDef extended = msg.getExtendedDef();
-				if (extended != null && extended.getFile() != file && Util.getFlag(extended.getFile(), "OpenWorld")) {
-					// Extension file inherits NoBinary from OpenWorld base
-					file.getOptions().put("NoBinary", Flag.create().setValue(true));
-					return;
+				if (extended != null) {
+					DefinitionFile extendedFile = Util.definingFile(extended);
+					if (extendedFile != file && Util.getFlag(extendedFile, "OpenWorld")) {
+						return true;
+					}
+				}
+				if (extendsOpenWorldFromOtherFile(file, msg.getDefinitions())) {
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
+	/**
+	 * Rejects fields whose generated names clash with the names of other fields of the same message,
+	 * declared in the message itself or inherited from a generalization.
+	 *
+	 * <p>
+	 * A sub-message cannot redeclare an inherited field (not even to narrow its type), since the
+	 * generated accessors and property constants of both declarations would clash.
+	 * </p>
+	 */
+	private void validateFieldNames(DefinitionFile file, List<String> errors) {
+		for (Definition def : file.getDefinitions()) {
+			validateFieldNames(def, errors);
+		}
+	}
+
+	private void validateFieldNames(Definition def, List<String> errors) {
+		if (!(def instanceof MessageDef)) {
+			return;
+		}
+		MessageDef message = (MessageDef) def;
+
+		// Generated names of the inherited fields, most general first.
+		Map<String, Field> inherited = new HashMap<>();
+		Map<Field, MessageDef> owners = new HashMap<>();
+		List<MessageDef> generalizations = new ArrayList<>();
+		Set<MessageDef> seen = new HashSet<>();
+		seen.add(message);
+		for (MessageDef current = message.getExtendedDef(); current != null && seen.add(current); current = current.getExtendedDef()) {
+			generalizations.add(0, current);
+		}
+		for (MessageDef generalization : generalizations) {
+			for (Field field : generalization.getFields()) {
+				owners.put(field, generalization);
+				for (String name : generatedNames(field)) {
+					inherited.putIfAbsent(name, field);
+				}
+			}
+		}
+
+		Map<String, Field> local = new HashMap<>();
+		for (Field field : message.getFields()) {
+			Field clash = null;
+			for (String name : generatedNames(field)) {
+				clash = local.get(name);
+				if (clash != null) {
+					break;
+				}
+			}
+			if (clash != null) {
+				errors.add(fieldError(message, field) + (clash.getName().equals(field.getName())
+					? " is declared twice. Rename or remove one of the declarations."
+					: " clashes with field '" + clash.getName() + "' of the same message: both generate the same Java names ('"
+						+ CodeConvention.getterName(field) + "()', '" + CodeConvention.constant(field)
+						+ "'). Rename one of the fields."));
+			} else {
+				for (String name : generatedNames(field)) {
+					clash = inherited.get(name);
+					if (clash != null) {
+						break;
+					}
+				}
+				if (clash != null) {
+					MessageDef owner = owners.get(clash);
+					String origin = "'" + Util.toString(owner) + "' of '" + sourceDescription(Util.definingFile(owner)) + "'";
+					errors.add(fieldError(message, field) + (clash.getName().equals(field.getName())
+						? " redeclares the field inherited from " + origin
+							+ ". A sub-message cannot redeclare an inherited field (not even to narrow its type)."
+							+ " Remove the declaration or rename the field."
+						: " clashes with field '" + clash.getName() + "' inherited from " + origin
+							+ ": both generate the same Java names ('" + CodeConvention.getterName(field) + "()', '"
+							+ CodeConvention.constant(field) + "'). Rename the field."));
+				}
+			}
+			for (String name : generatedNames(field)) {
+				local.putIfAbsent(name, field);
+			}
+		}
+
+		for (Definition inner : message.getDefinitions()) {
+			validateFieldNames(inner, errors);
+		}
+	}
+
+	private String fieldError(MessageDef message, Field field) {
+		return sourceDescription(Util.definingFile(message)) + ": Field '" + Util.toString(message) + "." + field.getName() + "'";
+	}
+
+	/**
+	 * The names derived from a field that must be unique among all fields of a message and its
+	 * generalizations.
+	 */
+	private static List<String> generatedNames(Field field) {
+		return Arrays.asList("suffix:" + CodeConvention.suffix(field), "constant:" + CodeConvention.constant(field));
+	}
+
+	/**
+	 * Rejects references to definitions of other files that are generated without a serialization
+	 * format that the referencing code needs.
+	 *
+	 * <p>
+	 * The generated read and write methods of a message call the corresponding methods of the
+	 * messages and enums of its fields and of its generalization. If one of these is defined in
+	 * another file that disables the format, the generated code would not compile.
+	 * </p>
+	 */
+	private void validateFormatReferences(DefinitionFile file, GeneratorPlugin plugin, List<String> errors) {
+		for (Definition def : file.getDefinitions()) {
+			validateFormatReferences(file, def, plugin, errors);
+		}
+	}
+
+	private void validateFormatReferences(DefinitionFile file, Definition def, GeneratorPlugin plugin, List<String> errors) {
+		if (!(def instanceof MessageDef)) {
+			return;
+		}
+		MessageDef message = (MessageDef) def;
+		Set<String> formats = formats(file, plugin);
+
+		MessageDef extended = message.getExtendedDef();
+		if (extended != null) {
+			checkFormats(file, formats, "Message '" + Util.toString(message) + "' extends", extended, plugin, errors);
+		}
+
+		for (Field field : message.getFields()) {
+			Set<String> fieldFormats = fieldFormats(file, field, plugin);
+			for (Definition target : referencedDefinitions(field.getType())) {
+				checkFormats(file, fieldFormats,
+					"Field '" + Util.toString(message) + "." + field.getName() + "' references", target, plugin, errors);
+			}
+		}
+
+		for (Definition inner : message.getDefinitions()) {
+			validateFormatReferences(file, inner, plugin, errors);
+		}
+	}
+
+	private void checkFormats(DefinitionFile file, Set<String> formats, String reference, Definition target,
+			GeneratorPlugin plugin, List<String> errors) {
+		DefinitionFile targetFile = Util.definingFile(target);
+		if (targetFile == file) {
+			return;
+		}
+		boolean isEnum = target instanceof EnumDef;
+		Set<String> targetFormats = isEnum ? enumFormats(targetFile.getOptions()) : formats(targetFile, plugin);
+		String prefix = sourceDescription(file) + ": " + reference + (isEnum ? " enum '" : " message '")
+			+ Util.toString(target) + "' of '" + sourceDescription(targetFile) + "'";
+		for (String format : formats) {
+			if (isEnum) {
+				if (format.equals(GRAPH_JSON_FORMAT)) {
+					// The JSON methods of an enum do not depend on the graph mode.
+					format = JSON_FORMAT;
+				} else if (!format.equals(JSON_FORMAT) && !format.equals(BINARY_FORMAT)) {
+					// Enums are serialized in plug-in formats through their protocol names.
+					continue;
+				}
+			}
+			if (targetFormats.contains(format)) {
+				continue;
+			}
+			if (format.equals(GRAPH_JSON_FORMAT) || (format.equals(JSON_FORMAT) && targetFormats.contains(GRAPH_JSON_FORMAT))) {
+				errors.add(prefix + ", but only one of the files uses option SharedGraph. Use option SharedGraph in both"
+					+ " files or in neither.");
+			} else {
+				errors.add(prefix + ", which is generated without " + format + " serialization ("
+					+ disabledBy(targetFile, format) + "). Add 'option " + DISABLE_OPTION.get(format) + ";' to '"
+					+ sourceDescription(file) + "', or enable " + format + " serialization in '"
+					+ sourceDescription(targetFile) + "'.");
+			}
+		}
+	}
+
+	private static final String JSON_FORMAT = "JSON";
+
+	/**
+	 * JSON of the SharedGraph mode, which has its own read and write methods.
+	 */
+	private static final String GRAPH_JSON_FORMAT = "SharedGraph JSON";
+
+	private static final String BINARY_FORMAT = "binary";
+
+	private static final Map<String, String> DISABLE_OPTION =
+		Map.of(JSON_FORMAT, "NoJson", BINARY_FORMAT, "NoBinary", XmlStreamingPlugin.XML_FORMAT, "NoXml");
+
+	private static Set<String> formats(DefinitionFile file, GeneratorPlugin plugin) {
+		Set<String> result = coreFormats(file.getOptions());
+		plugin.addFormats(file.getOptions(), result);
+		return result;
+	}
+
+	private static Set<String> fieldFormats(DefinitionFile file, Field field, GeneratorPlugin plugin) {
+		Set<String> result = new HashSet<>();
+		if (!field.isTransient() && !field.isDerived()) {
+			result.addAll(coreFormats(file.getOptions()));
+		}
+		plugin.addFieldFormats(file.getOptions(), field, result);
+		return result;
+	}
+
+	/**
+	 * The formats of the generated read and write methods of messages.
+	 */
+	private static Set<String> coreFormats(Map<String, Option> options) {
+		Set<String> result = new HashSet<>();
+		if (MessageGenerator.isJson(options)) {
+			result.add(MessageGenerator.isTrue(options.get("SharedGraph"), false) ? GRAPH_JSON_FORMAT : JSON_FORMAT);
+		}
+		if (MessageGenerator.isBinary(options)) {
+			result.add(BINARY_FORMAT);
+		}
+		return result;
+	}
+
+	/**
+	 * The formats of the generated read and write methods of enums.
+	 */
+	private static Set<String> enumFormats(Map<String, Option> options) {
+		Set<String> result = new HashSet<>();
+		if (MessageGenerator.isJson(options)) {
+			result.add(JSON_FORMAT);
+		}
+		if (MessageGenerator.isBinary(options)) {
+			result.add(BINARY_FORMAT);
+		}
+		return result;
+	}
+
+	private static String disabledBy(DefinitionFile file, String format) {
+		if (format.equals(BINARY_FORMAT)) {
+			if (Util.getFlag(file, "SharedGraph")) {
+				return "option SharedGraph";
+			}
+			if (Util.getFlag(file, "OpenWorld")) {
+				return "option OpenWorld implies NoBinary";
+			}
+		}
+		return "option " + DISABLE_OPTION.get(format);
+	}
+
+	private static List<Definition> referencedDefinitions(Type type) {
+		List<Definition> result = new ArrayList<>();
+		type.visit(new Type.Visitor<Void, Void>() {
+			@Override
+			public Void visit(CustomType self, Void arg) {
+				if (self.getDefinition() != null) {
+					result.add(self.getDefinition());
+				}
+				return null;
+			}
+
+			@Override
+			public Void visit(PrimitiveType self, Void arg) {
+				return null;
+			}
+
+			@Override
+			public Void visit(MapType self, Void arg) {
+				self.getKeyType().visit(this, arg);
+				self.getValueType().visit(this, arg);
+				return null;
+			}
+		}, null);
+		return result;
+	}
+
 	private void resolveImports(DefinitionFile file, File sourceFile) throws IOException, ParseException {
 		for (String importPath : file.getImports()) {
 			// Try file system first
@@ -491,8 +780,9 @@ public class Generator {
 
 	private void collectCrossFileExtensions(MessageDef def, DefinitionFile file, List<MessageDef> result) {
 		MessageDef extended = def.getExtendedDef();
-		if (extended != null && extended.getFile() != file) {
-			if (Util.getFlag(extended.getFile(), "OpenWorld")) {
+		DefinitionFile extendedFile = extended == null ? null : Util.definingFile(extended);
+		if (extendedFile != null && extendedFile != file) {
+			if (Util.getFlag(extendedFile, "OpenWorld")) {
 				if (!def.isAbstract()) {
 					result.add(def);
 				}
@@ -600,7 +890,7 @@ public class Generator {
 
 		@Override
 		public Void visit(EnumDef def, Void arg) {
-			return generateJava(CodeConvention.typeName(def), null, new EnumGenerator(def));
+			return generateJava(CodeConvention.typeName(def), null, new EnumGenerator(_options, def));
 		}
 		
 		@Override
@@ -702,7 +992,14 @@ public class Generator {
 			generator.setOut(out);
 		}
 		
-		generator.generate(loadPlugins());
+		try {
+			generator.generate(loadPlugins());
+		} catch (GeneratorException ex) {
+			for (String error : ex.getErrors()) {
+				System.err.println("ERROR: " + error);
+			}
+			System.exit(1);
+		}
 	}
 
 	/**

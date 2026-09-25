@@ -1,0 +1,18 @@
+package test.enumoptions.sharedgraph;
+
+option SharedGraph;
+
+/** Enums honor `option SharedGraph` like messages do (issue #20). */
+message M {
+	enum Nested {
+		A;
+		B;
+	}
+	Nested nested;
+	TopLevel top;
+}
+
+enum TopLevel {
+	X;
+	Y;
+}

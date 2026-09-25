@@ -1,0 +1,32 @@
+package test.nested.doc;
+
+/**
+ * A hierarchy nested two levels deep with an abstract intermediate, a nested enum, a reserved-word
+ * property and message name, and fields holding it as repeated, map and nullable values (issue #16).
+ */
+message Doc {
+	message Sec {
+		abstract message Item {
+			enum Kind { PLAIN; RICH; }
+			Kind kind;
+			string `package`;
+		}
+		abstract message Block extends Item {
+			int weight;
+		}
+		message Para extends Block {
+			string text;
+		}
+		message `Case` extends Block {
+			repeated Item children;
+		}
+	}
+	repeated Sec.Item items;
+	map<string, Sec.Item> byName;
+	@Nullable Sec.Item maybe;
+}
+
+/** A top-level specialization of a nested abstract intermediate. */
+message Figure extends Doc.Sec.Block {
+	string src;
+}

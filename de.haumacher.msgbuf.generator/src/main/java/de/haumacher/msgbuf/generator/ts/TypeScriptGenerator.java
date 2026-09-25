@@ -534,7 +534,7 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 		for (MessageDef specialization : Util.concreteTransitiveSpecializations(def)) {
 			alternatives.add("[" + stringLiteral(MsgBufJsonProtocol.typeId(specialization)) + ", " + ref(specialization, def) + "]");
 		}
-		if (Util.getFlag(fileOf(root(def)), "OpenWorld")) {
+		if (Util.getFlag(Util.definingFile(root(def)), "OpenWorld")) {
 			// Extension types from other modules.
 			alternatives.add("[string, " + ref(def, def) + "]");
 		}
@@ -633,13 +633,13 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 	 */
 	private String ref(Definition target, Definition context) {
 		List<String> path = path(target);
-		return ref(fileOf(target), path, context);
+		return ref(Util.definingFile(target), path, context);
 	}
 
 	private String polymorphicRef(MessageDef target, Definition context) {
 		List<String> path = path(target);
 		path.set(path.size() - 1, polymorphicName(target));
-		return ref(fileOf(target), path, context);
+		return ref(Util.definingFile(target), path, context);
 	}
 
 	private String ref(DefinitionFile file, List<String> path, Definition context) {
@@ -696,21 +696,6 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 			bindings.put(name, binding);
 		}
 		return binding;
-	}
-
-	/**
-	 * The file containing the given definition.
-	 *
-	 * <p>
-	 * Only top-level definitions have a direct reference to their file.
-	 * </p>
-	 */
-	private static DefinitionFile fileOf(Definition def) {
-		Definition current = def;
-		while (current.getOuter() != null) {
-			current = current.getOuter();
-		}
-		return current.getFile();
 	}
 
 	private static List<String> path(Definition def) {

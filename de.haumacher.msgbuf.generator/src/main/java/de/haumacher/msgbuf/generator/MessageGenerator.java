@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import de.haumacher.msgbuf.binary.DataType;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
+import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
@@ -65,8 +66,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		_plugin = plugin;
 		_defaultValues = new DefaultValueGenerator(options);
 		_graph = isTrue(options.get("SharedGraph"), false);
-		_json = _graph || !isTrue(options.get("NoJson"), false);
-		_binary = !_graph && !isTrue(options.get("NoBinary"), false);
+		_json = isJson(options);
+		_binary = isBinary(options);
 		_listener = _graph || !isTrue(options.get("NoListener"), false);
 		_reflection = _listener || !isTrue(options.get("NoReflection"), false);
 		_visitor = !isTrue(options.get("NoVisitor"), false);
@@ -433,10 +434,24 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		}
 	}
 
+	/**
+	 * Whether JSON serialization code is generated for the given file options.
+	 */
+	public static boolean isJson(Map<String, Option> options) {
+		return isTrue(options.get("SharedGraph"), false) || !isTrue(options.get("NoJson"), false);
+	}
+
+	/**
+	 * Whether binary serialization code is generated for the given file options.
+	 */
+	public static boolean isBinary(Map<String, Option> options) {
+		return !isTrue(options.get("SharedGraph"), false) && !isTrue(options.get("NoBinary"), false);
+	}
+
 	@Override
 	public Void visit(EnumDef def, Void arg) {
 		if (_interface || _noInterfaces) {
-			include(new EnumGenerator(def));
+			include(new EnumGenerator(getOptions(), def));
 		}
 		return null;
 	}
@@ -2345,11 +2360,12 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private boolean isCrossFileExtension() {
 		MessageDef gen = getAbstractGeneralization();
 		if (gen == null) return false;
-		return gen.getFile() != _def.getFile() && Util.getFlag(gen.getFile(), "OpenWorld");
+		DefinitionFile genFile = Util.definingFile(gen);
+		return genFile != Util.definingFile(_def) && Util.getFlag(genFile, "OpenWorld");
 	}
 
 	private List<MessageDef> localSpecializations(MessageDef def) {
-		return localSpecializations(def, _def.getFile());
+		return localSpecializations(def, Util.definingFile(_def));
 	}
 
 }

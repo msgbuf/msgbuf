@@ -1,0 +1,19 @@
+package test.nested.owbase;
+
+option OpenWorld;
+
+/**
+ * An OpenWorld hierarchy with a nested abstract root (issue #16).
+ */
+message Events {
+	/** Nested abstract root, extended from another file. */
+	abstract message Event {
+		long timestamp;
+	}
+
+	message TextEvent extends Event {
+		string text;
+	}
+
+	repeated Event events;
+}

@@ -1,0 +1,14 @@
+package reject.formats.paint;
+import "../colors/colors.proto";
+
+/** Uses the enum of a NoBinary file, but generates binary serialization itself. */
+message Paint {
+	message Layer {
+		repeated reject.formats.colors.Color colors;
+	}
+	reject.formats.colors.Color color;
+	map<string, reject.formats.colors.Shade> shades;
+
+	/** Not serialized in binary format, not a problem. */
+	transient reject.formats.colors.Shade cached;
+}

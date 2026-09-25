@@ -198,9 +198,6 @@ public class MyContent_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/** XML element name representing a {@link test.container.model.MyContent} type. */
 	public static final String MY_CONTENT__XML_ELEMENT = "my-content";
 
-	/** XML attribute or element name of a {@link #getContainer} property. */
-	private static final String CONTAINER__XML_ATTR = "container";
-
 	/** XML attribute or element name of a {@link #getName} property. */
 	private static final String NAME__XML_ATTR = "name";
 
@@ -222,11 +219,7 @@ public class MyContent_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 
 	/** Serializes all fields that are written as XML elements. */
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
-		if (hasContainer()) {
-			out.writeStartElement(CONTAINER__XML_ATTR);
-			getContainer().writeContent(out);
-			out.writeEndElement();
-		}
+		// No element fields.
 	}
 
 	/** Creates a new {@link test.container.model.MyContent} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
@@ -272,10 +265,6 @@ public class MyContent_Impl extends de.haumacher.msgbuf.data.AbstractDataObject 
 	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
 	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
 		switch (localName) {
-			case CONTAINER__XML_ATTR: {
-				setContainer(test.container.model.impl.MyContainer_Impl.readMyContainer_XmlContent(in));
-				break;
-			}
 			case NAME__XML_ATTR: {
 				setName(in.getElementText());
 				break;

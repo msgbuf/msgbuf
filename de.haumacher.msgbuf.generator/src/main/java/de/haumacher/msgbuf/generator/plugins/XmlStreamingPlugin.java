@@ -32,6 +32,13 @@ import de.haumacher.msgbuf.generator.util.FileGenerator;
  * {@link GeneratorPlugin} generating XML reading code for the {@link javax.xml.stream.XMLStreamReader} interface.
  */
 public class XmlStreamingPlugin implements GeneratorPlugin {
+
+	/**
+	 * Name of the XML format.
+	 *
+	 * @see #addFormats(Map, Set)
+	 */
+	public static final String XML_FORMAT = "XML";
 	
 	private boolean _noXmlNames;
 
@@ -40,6 +47,34 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		_noXmlNames = noXmlNames(options);
 	}
 	
+	@Override
+	public void addFormats(Map<String, Option> options, Set<String> formats) {
+		if (!noXml(options)) {
+			formats.add(XML_FORMAT);
+		}
+	}
+
+	@Override
+	public void addFieldFormats(Map<String, Option> options, Field field, Set<String> formats) {
+		// Maps are not supported in XML.
+		if (!noXml(options) && xmlSerialized(field) && field.getType().kind() != Type.TypeKind.MAP_TYPE) {
+			formats.add(XML_FORMAT);
+		}
+	}
+
+	/**
+	 * Whether the given field is written and read in XML format.
+	 *
+	 * <p>
+	 * Like in JSON and binary format, transient and derived fields (container and reverse
+	 * references) are not serialized. Readers skip such attributes and elements in documents of
+	 * earlier versions.
+	 * </p>
+	 */
+	static boolean xmlSerialized(Field field) {
+		return !field.isTransient() && !field.isDerived();
+	}
+
 	@Override
 	public void addInterfaces(Map<String, Option> options, MessageDef def, List<String> generalizations) {
 		if (noXml(options)) {
@@ -86,6 +121,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 				line("public static final String " + xmlTypeNameConstant(def) + " = \"" + xmlTypeName(def) + "\";");
 				
 				for (Field field : def.getFields()) {
+					if (!xmlSerialized(field)) {
+						continue;
+					}
 					nl();
 					line("/** XML attribute or element name of a {@link #" + getterName(field) + "} property. */");
 					line("private static final String " + xmlFieldNameConstant(field) + " = \"" + xmlFieldName(field) + "\";");
@@ -123,6 +161,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 						line("super.writeAttributes(out);");
 					}
 					for (Field field : def.getFields()) {
+						if (!xmlSerialized(field)) {
+							continue;
+						}
 						if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
 							line("out.writeAttribute(" + xmlFieldNameConstant(field) + ", " + asString(field, CodeConvention.getterName(field) + "()") + ");");
 						}
@@ -143,6 +184,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 
 					boolean hasElementFields = false;
 					for (Field field : def.getFields()) {
+						if (!xmlSerialized(field)) {
+							continue;
+						}
 						Type type = field.getType();
 						switch (type.kind()) {
 							case PRIMITIVE_TYPE: {
@@ -268,6 +312,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					line("switch (name) {");
 					{
 						for (Field field : def.getFields()) {
+							if (!xmlSerialized(field)) {
+								continue;
+							}
 							if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
 								line("case " + xmlFieldNameConstant(field) + ": {");
 								{
@@ -306,6 +353,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					{
 						Set<String> names = new HashSet<>();
 						for (Field field : def.getFields()) {
+							if (!xmlSerialized(field)) {
+								continue;
+							}
 							if (!names.add(xmlFieldName(field))) {
 								System.err.println("ERROR: Ambiguous element name '" + xmlFieldName(field) + "' in type '" + def.getName() + "'.");
 								continue;
@@ -442,7 +492,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			}
 
 			String xmlTypeNameRef(MessageDef def) {
-				return implName(def) + "." + xmlTypeNameConstant(def);
+				// A nested specialization is not in scope by its simple name in the code of its generalization.
+				String implRef = def.getFile() == null ? qImplName(def) : implName(def);
+				return implRef + "." + xmlTypeNameConstant(def);
 			}
 		};
 	}

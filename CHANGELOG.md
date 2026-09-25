@@ -13,9 +13,27 @@
   of the `.proto` file (`DefinitionFile.comment`) and emitted as TSDoc `@packageDocumentation` of the TypeScript module.
 
 ### Bug Fixes
+- **Nested polymorphic hierarchies** (#16): An abstract message nested in another message no longer crashes the
+  generator with a `NullPointerException`. Nested sub-messages of a top-level abstract message are referenced by
+  their qualified names in the generated JSON and XML readers (previously uncompilable). For `option OpenWorld`, the
+  "same file" test for local subtypes and the implied `NoBinary` of extension files now also hold for nested
+  definitions.
 - **Maven plugin parameter names** (#17): The parameters `input`, `outputDirectory`, `resourceOutputDirectory` and
   `includePaths` can be set under these names in the plugin `<configuration>`. Before, only the user properties
   (`-DoutputDir=…`) worked, and the README's `<resourceOutputDir>` was silently ignored.
+- **Format options for enums** (#20): `option NoBinary` and `option NoJson` (and the implied `NoBinary` of
+  `option SharedGraph` and `option OpenWorld`) now also suppress the binary and JSON methods of enums.
+  **Source compatibility:** a file that uses an enum of another file in a format the other file disables did compile
+  before, because enums always had all methods. It is now rejected with an error naming both files and the option,
+  as are references to messages of such files and mixed `option SharedGraph` references, which generated uncompilable
+  code before. The generator (CLI and Maven plugin) now stops without writing code when it finds such errors.
+- **XML format: transient and derived fields** (#29): `transient` fields are no longer written in XML format, like in
+  JSON and binary format. **Wire format change:** XML documents no longer contain these attributes and elements;
+  readers ignore them in documents of earlier versions. The same applies to derived references (`@Container`,
+  `@Reverse`): writing an object whose container was set to XML recursed endlessly (`StackOverflowError`).
+- **Redeclared fields** (#21): A field that redeclares an inherited field (directly or through any generalization,
+  also across files), a field declared twice, and fields whose names generate the same Java names (e.g. `foo_bar` and
+  `fooBar`) are rejected with an error. Before, the generator silently produced Java code that did not compile.
 
 ## 1.2.1
 

@@ -1,0 +1,17 @@
+package test.nested.owext;
+
+import "../owbase/owbase.proto";
+
+/**
+ * Nested extensions of a nested OpenWorld root declared in another file.
+ *
+ * <p>
+ * No top-level definition of this file extends the OpenWorld root: the implied NoBinary must be
+ * detected from the nested extension.
+ * </p>
+ */
+message Patches {
+	message PatchEvent extends test.nested.owbase.Events.Event {
+		string patch;
+	}
+}

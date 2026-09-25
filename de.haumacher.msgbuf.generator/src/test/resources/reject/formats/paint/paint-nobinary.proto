@@ -1,0 +1,10 @@
+package reject.formats.paint;
+import "../colors/colors.proto";
+
+option NoBinary;
+
+/** Uses the enum and message of a NoBinary file without binary serialization itself. */
+message PaintNoBinary {
+	reject.formats.colors.Color color;
+	reject.formats.colors.Shade shade;
+}

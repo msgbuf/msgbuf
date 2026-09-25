@@ -1,0 +1,13 @@
+package test.nested.note;
+import "../doc/doc.proto";
+
+/**
+ * References to a nested polymorphic hierarchy of another file (issue #16).
+ */
+message Note {
+	message Inner {
+		repeated test.nested.doc.Doc.Sec.Item refs;
+	}
+	test.nested.doc.Doc.Sec.Item target;
+	Inner inner;
+}

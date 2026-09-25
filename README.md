@@ -105,6 +105,11 @@ message Group extends Shape {
 
 Passing these definitions to the `msgbuf` compiler gives you a class hierarchy with classes `Shape`, `Circle`, `Rectangle`, and `Group`. You can inspect the generation result in the test package [test.hierarchy](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data) of the compiler. The source of the example data class definitions can be seen in the [hierarchy.proto](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data/hierarchy.proto) file.
 
+A sub-message inherits all fields of its generalizations and cannot redeclare them, not even to narrow the type. The
+names of all fields of a message, including the inherited ones, must also generate distinct Java names: `foo_bar`
+and `fooBar` both generate `getFooBar()`. The generator rejects such definitions with an error naming the field and
+the message declaring the other one.
+
 ### Enum types
 
 Enums define a fixed set of named constants. Each constant is terminated with a semicolon. Constants can optionally
@@ -147,7 +152,8 @@ message SearchResponse {
 
 ### Transient fields
 
-Fields marked with `transient` are not serialized. They exist only in the in-memory representation:
+Fields marked with `transient` are not serialized in any format (JSON, binary, XML). They exist only in the in-memory
+representation. Readers ignore values of transient fields, e.g. in XML documents written by versions before 1.2.3:
 
 ```protobuf
 message A {
@@ -211,13 +217,22 @@ For binary serialization, json values are wrapped in a `JsonValue` message envel
 ## Global protocol options
 
 ### `option NoJson`
-Disables generation of read and write methods for the JSON format.
+Disables generation of read and write methods for the JSON format (for messages and enums).
 
 ### `option NoBinary`
-Disables generation of read and write methods for binary format.
+Disables generation of read and write methods for binary format (for messages and enums).
 
 ### `option NoXml`
 Disables generation of read and write methods for XML format.
+
+The format options apply to all messages and enums of a file. A message that references a message or enum of another
+file (as field type or with `extends`) needs the read and write methods of each format it generates itself in that
+other file. The generator rejects a reference to a definition generated without such a format, and generates no code
+in that case. Either disable the format in the referencing file as well, or enable it in the referenced one. The same
+holds for `option SharedGraph`, which has its own JSON methods for messages: a message can reference messages of
+another file only if both files use `option SharedGraph`, or neither does. Enums are not affected by
+`option SharedGraph`. `transient` fields and derived references (`@Container`, `@Reverse`) are not serialized, so they
+don't need these formats.
 
 ### `option NoXmlNames`
 Disables generation of constants for the XML format.
@@ -390,7 +405,8 @@ Sets a custom tag name for XML serialization.
 Marks a reference to be the reverse end of the reference with the given name in the target type.
 
 ### `@Container`
-Marks a reference point to the container of the current object.
+Marks a reference point to the container of the current object. The container reference is derived from the
+containment and not serialized.
 
 ### `@Ref`
 Marks a reference as cross reference (non-composition). When setting values to fields marked as cross reference, container properties are not updated.

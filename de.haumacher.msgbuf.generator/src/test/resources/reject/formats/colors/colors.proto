@@ -1,0 +1,13 @@
+package reject.formats.colors;
+
+option NoBinary;
+
+/** Shared enums of a file without binary serialization. */
+enum Color {
+	RED;
+	GREEN;
+}
+
+message Shade {
+	string name;
+}

@@ -3,8 +3,14 @@
  */
 package test.container;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
 import test.container.model.MyContainer;
@@ -187,6 +193,27 @@ public class TestContainer extends TestCase {
 		
 		container.setContent1(c);
 		assertEquals(container, c.getContainer());
+	}
+
+	/**
+	 * The container reference is derived and not written in XML format. Writing it made XML
+	 * serialization recurse endlessly (issue #29).
+	 */
+	public void testXml() throws XMLStreamException {
+		MyContainer container = MyContainer.create().setName("c");
+		container.setContent1(MyContent.create().setName("x"));
+		container.addContentList(MyContent.create().setName("y"));
+
+		StringWriter buffer = new StringWriter();
+		container.writeTo(XMLOutputFactory.newDefaultFactory().createXMLStreamWriter(buffer));
+		String xml = buffer.toString();
+		assertEquals("<my-container name=\"c\"><content-1 name=\"x\"></content-1>"
+			+ "<content-list><my-content name=\"y\"></my-content></content-list><others></others></my-container>", xml);
+
+		MyContainer copy = MyContainer.readMyContainer(XMLInputFactory.newFactory().createXMLStreamReader(new StringReader(xml)));
+		assertEquals("x", copy.getContent1().getName());
+		assertSame(copy, copy.getContent1().getContainer());
+		assertSame(copy, copy.getContentList().get(0).getContainer());
 	}
 
 }

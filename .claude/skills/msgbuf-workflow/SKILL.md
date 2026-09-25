@@ -208,9 +208,10 @@ check `git status` first. When reporting, give the numbers (tests per module) an
   description in the same step (§4 for the `gh` workaround).
 - **The agents don't commit; you do**, after review. Pushing and force-pushing a shared branch are
   the user's call; a history rewrite of a PR branch others may have checked out needs explicit consent.
-- **Releases are the user's**: `mvn release:clean release:prepare` / `release:perform`
-  (HOWTO-RELEASE.md) publish to Maven Central. Never run them, never edit the version numbers the
-  release plugin manages.
+- **Releases are the user's**: `mvn release:clean release:prepare` pushes a `msgbuf-api-<version>`
+  tag, and the tag push runs `.github/workflows/release.yml`, which deploys to Maven Central
+  (HOWTO-RELEASE.md). Never run `release:*`, never push a `msgbuf-api-*` tag, never edit the
+  version numbers the release plugin manages.
 
 ## 7. Wire-format and generated-code doctrines (enforce in every brief and review)
 

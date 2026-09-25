@@ -140,8 +140,10 @@
 
 	<profiles>
 		<!-- 
-			Release profile, activated by the maven-release-plugin (see releaseProfiles) during release:perform. 
-			Activate explicitly with -Possrh for a manual deployment to Maven Central.
+			Release profile, activated by the release workflow (.github/workflows/release.yml) and by the 
+			maven-release-plugin (see releaseProfiles) during release:perform. Activate explicitly with -Possrh 
+			for a manual deployment to Maven Central. Signing reads the key passphrase from the environment 
+			variable MAVEN_GPG_PASSPHRASE if set, and uses the gpg-agent otherwise.
 		-->
 		<profile>
 			<id>ossrh</id>
@@ -151,7 +153,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>3.2.7</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
