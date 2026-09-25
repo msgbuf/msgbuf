@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -186,6 +187,7 @@ public class Generator {
 		List<String> errors = new ArrayList<>();
 		for (DefinitionFile file : _files) {
 			if (!_importedFiles.contains(file)) {
+				validateFieldNames(file, errors);
 				validateFormatReferences(file, plugin, errors);
 			}
 		}
@@ -348,6 +350,101 @@ public class Generator {
 		return false;
 	}
 	
+	/**
+	 * Rejects fields whose generated names clash with the names of other fields of the same message,
+	 * declared in the message itself or inherited from a generalization.
+	 *
+	 * <p>
+	 * A sub-message cannot redeclare an inherited field (not even to narrow its type), since the
+	 * generated accessors and property constants of both declarations would clash.
+	 * </p>
+	 */
+	private void validateFieldNames(DefinitionFile file, List<String> errors) {
+		for (Definition def : file.getDefinitions()) {
+			validateFieldNames(def, errors);
+		}
+	}
+
+	private void validateFieldNames(Definition def, List<String> errors) {
+		if (!(def instanceof MessageDef)) {
+			return;
+		}
+		MessageDef message = (MessageDef) def;
+
+		// Generated names of the inherited fields, most general first.
+		Map<String, Field> inherited = new HashMap<>();
+		Map<Field, MessageDef> owners = new HashMap<>();
+		List<MessageDef> generalizations = new ArrayList<>();
+		Set<MessageDef> seen = new HashSet<>();
+		seen.add(message);
+		for (MessageDef current = message.getExtendedDef(); current != null && seen.add(current); current = current.getExtendedDef()) {
+			generalizations.add(0, current);
+		}
+		for (MessageDef generalization : generalizations) {
+			for (Field field : generalization.getFields()) {
+				owners.put(field, generalization);
+				for (String name : generatedNames(field)) {
+					inherited.putIfAbsent(name, field);
+				}
+			}
+		}
+
+		Map<String, Field> local = new HashMap<>();
+		for (Field field : message.getFields()) {
+			Field clash = null;
+			for (String name : generatedNames(field)) {
+				clash = local.get(name);
+				if (clash != null) {
+					break;
+				}
+			}
+			if (clash != null) {
+				errors.add(fieldError(message, field) + (clash.getName().equals(field.getName())
+					? " is declared twice. Rename or remove one of the declarations."
+					: " clashes with field '" + clash.getName() + "' of the same message: both generate the same Java names ('"
+						+ CodeConvention.getterName(field) + "()', '" + CodeConvention.constant(field)
+						+ "'). Rename one of the fields."));
+			} else {
+				for (String name : generatedNames(field)) {
+					clash = inherited.get(name);
+					if (clash != null) {
+						break;
+					}
+				}
+				if (clash != null) {
+					MessageDef owner = owners.get(clash);
+					String origin = "'" + Util.toString(owner) + "' of '" + sourceDescription(Util.definingFile(owner)) + "'";
+					errors.add(fieldError(message, field) + (clash.getName().equals(field.getName())
+						? " redeclares the field inherited from " + origin
+							+ ". A sub-message cannot redeclare an inherited field (not even to narrow its type)."
+							+ " Remove the declaration or rename the field."
+						: " clashes with field '" + clash.getName() + "' inherited from " + origin
+							+ ": both generate the same Java names ('" + CodeConvention.getterName(field) + "()', '"
+							+ CodeConvention.constant(field) + "'). Rename the field."));
+				}
+			}
+			for (String name : generatedNames(field)) {
+				local.putIfAbsent(name, field);
+			}
+		}
+
+		for (Definition inner : message.getDefinitions()) {
+			validateFieldNames(inner, errors);
+		}
+	}
+
+	private String fieldError(MessageDef message, Field field) {
+		return sourceDescription(Util.definingFile(message)) + ": Field '" + Util.toString(message) + "." + field.getName() + "'";
+	}
+
+	/**
+	 * The names derived from a field that must be unique among all fields of a message and its
+	 * generalizations.
+	 */
+	private static List<String> generatedNames(Field field) {
+		return Arrays.asList("suffix:" + CodeConvention.suffix(field), "constant:" + CodeConvention.constant(field));
+	}
+
 	/**
 	 * Rejects references to definitions of other files that are generated without a serialization
 	 * format that the referencing code needs.

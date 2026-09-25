@@ -1,0 +1,9 @@
+package test.redeclare;
+
+message A {
+	json value;
+}
+
+message B extends A {
+	string value;
+}

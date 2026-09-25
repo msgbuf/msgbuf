@@ -1,0 +1,7 @@
+package reject.fields;
+
+option OpenWorld;
+
+abstract message Event {
+	string source;
+}

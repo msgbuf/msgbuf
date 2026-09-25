@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2026 Bernhard Haumacher et al. All Rights Reserved.
  */
-package test.enumoptions;
+package test.validation;
 
 import java.io.File;
 import java.io.IOException;

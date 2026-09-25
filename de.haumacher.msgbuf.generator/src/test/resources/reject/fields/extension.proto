@@ -1,0 +1,6 @@
+package reject.fields.ext;
+import "base.proto";
+
+message Ping extends reject.fields.Event {
+	string source;
+}

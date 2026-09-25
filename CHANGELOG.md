@@ -28,6 +28,9 @@
   JSON and binary format. **Wire format change:** XML documents no longer contain these attributes and elements;
   readers ignore them in documents of earlier versions. The same applies to derived references (`@Container`,
   `@Reverse`): writing an object whose container was set to XML recursed endlessly (`StackOverflowError`).
+- **Redeclared fields** (#21): A field that redeclares an inherited field (directly or through any generalization,
+  also across files), a field declared twice, and fields whose names generate the same Java names (e.g. `foo_bar` and
+  `fooBar`) are rejected with an error. Before, the generator silently produced Java code that did not compile.
 
 ## 1.2.1
 

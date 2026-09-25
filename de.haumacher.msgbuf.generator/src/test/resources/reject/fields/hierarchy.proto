@@ -1,0 +1,37 @@
+package reject.fields;
+
+/** Redeclarations through an abstract intermediate, in nested messages, and clashing generated names. */
+abstract message Root {
+	string name;
+	int fooBar;
+}
+
+abstract message Middle extends Root {
+	int weight;
+}
+
+message Outer {
+	message Leaf extends Middle {
+		string name;
+	}
+
+	message Other extends Root {
+		string foo_bar;
+	}
+
+	string label;
+	int label;
+}
+
+/** Siblings may declare the same field, and nested messages may reuse names of their outer message. */
+message Sibling1 extends Middle {
+	string extra;
+}
+
+message Sibling2 extends Middle {
+	int extra;
+
+	message Inner {
+		int extra;
+	}
+}
