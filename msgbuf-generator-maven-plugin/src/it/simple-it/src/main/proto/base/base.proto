@@ -1,0 +1,7 @@
+package it.base;
+
+option OpenWorld;
+
+abstract message Event {
+	string source;
+}

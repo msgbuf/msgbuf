@@ -12,6 +12,11 @@
 - **File documentation comment**: A doc comment before the `syntax` or `package` declaration is kept as the documentation
   of the `.proto` file (`DefinitionFile.comment`) and emitted as TSDoc `@packageDocumentation` of the TypeScript module.
 
+### Bug Fixes
+- **Maven plugin parameter names** (#17): The parameters `input`, `outputDirectory`, `resourceOutputDirectory` and
+  `includePaths` can be set under these names in the plugin `<configuration>`. Before, only the user properties
+  (`-DoutputDir=…`) worked, and the README's `<resourceOutputDir>` was silently ignored.
+
 ## 1.2.1
 
 ### Bug Fixes

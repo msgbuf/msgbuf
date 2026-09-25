@@ -7,11 +7,24 @@
   <artifactId>simple-it</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <description>A simple IT verifying the basic use case.</description>
+  <description>
+    Generates and compiles data classes in a consumer project, configuring the plugin with the parameter names
+    documented in the README.
+  </description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>de.haumacher.msgbuf</groupId>
+      <artifactId>msgbuf-api</artifactId>
+      <version>@project.version@</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -21,11 +34,38 @@
         <version>@project.version@</version>
         <executions>
           <execution>
-            <id>touch</id>
-            <phase>validate</phase>
             <goals>
-              <goal>touch</goal>
+              <goal>generate</goal>
             </goals>
+            <configuration>
+              <input>${project.basedir}/src/main/proto</input>
+              <includePaths>
+                <includePath>${project.basedir}/src/main/proto</includePath>
+              </includePaths>
+              <outputDirectory>${project.build.directory}/generated-sources/msgbuf</outputDirectory>
+              <resourceOutputDirectory>${project.build.directory}/generated-resources/msgbuf</resourceOutputDirectory>
+              <typeScriptOutputDirectory>${project.build.directory}/generated-ts</typeScriptOutputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>add-generated-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/msgbuf</source>
+              </sources>
+            </configuration>
           </execution>
         </executions>
       </plugin>

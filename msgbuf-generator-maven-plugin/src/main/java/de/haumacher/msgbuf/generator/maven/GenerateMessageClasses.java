@@ -32,25 +32,25 @@ public class GenerateMessageClasses extends AbstractMojo {
 	/**
 	 * Directory where to generate source code to.
 	 */
-	@Parameter(defaultValue = "${project.build.sourceDirectory}", property = "outputDir", required = true)
+	@Parameter(alias = "outputDirectory", defaultValue = "${project.build.sourceDirectory}", property = "outputDir", required = true)
 	private File _outputDirectory;
 	
 	/**
 	 * Input where to search for <code>*.proto</code> files.
 	 */
-	@Parameter(defaultValue = "${project.build.sourceDirectory}", property = "input", required = true)
+	@Parameter(alias = "input", defaultValue = "${project.build.sourceDirectory}", property = "input", required = true)
 	private File _input;
 
 	/**
 	 * Additional directories to search for imported .proto files.
 	 */
-	@Parameter(property = "includePaths")
+	@Parameter(alias = "includePaths", property = "includePaths")
 	private List<File> _includePaths;
 
 	/**
 	 * Directory where to generate resource files (e.g. META-INF/services).
 	 */
-	@Parameter(defaultValue = "${project.basedir}/src/main/resources", property = "resourceOutputDir")
+	@Parameter(alias = "resourceOutputDirectory", defaultValue = "${project.basedir}/src/main/resources", property = "resourceOutputDir")
 	private File _resourceOutputDirectory;
 
 	/**
