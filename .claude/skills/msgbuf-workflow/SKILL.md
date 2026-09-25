@@ -34,8 +34,9 @@ Work is a pipeline, not a pile:
 3. **Dispatch** one sub-agent per coherent package (§2), or do it yourself when the package is
    small. msgbuf has one toolchain and one reactor, so parallel work needs separate worktrees (§3).
 4. **Review with a novel probe** (§4). Non-negotiable.
-5. **Gate** (§5), **commit and open or update the PR** (§6), close the issue with the fixing
-   commit or PR plus a summary comment naming the regression test.
+5. **Gate** (§5), **commit and open or update the PR** (§6), and **merge it** once review and gate
+   are green (§6). Close the issue with the fixing commit or PR plus a summary comment naming the
+   regression test.
 6. **Before finishing: `gh issue list -R msgbuf/msgbuf`.** Anything you find and defer becomes an
    issue (like #16–#21, found while building the TypeScript target), so a crashed session loses
    nothing.
@@ -208,6 +209,13 @@ check `git status` first. When reporting, give the numbers (tests per module) an
   description in the same step (§4 for the `gh` workaround).
 - **The agents don't commit; you do**, after review. Pushing and force-pushing a shared branch are
   the user's call; a history rewrite of a PR branch others may have checked out needs explicit consent.
+- **Merge verified PRs yourself.** A PR that passed the probe review (§4) and the gate (§5) is
+  merged, not left open for the user. Use a merge commit, like the history (`gh api -X PUT
+  repos/msgbuf/msgbuf/pulls/<n>/merge -f merge_method=merge`; `gh pr merge` may hit the GraphQL error
+  of §4). Merge stacked PRs bottom-up, retargeting the next one to `main` first (`gh api -X PATCH
+  …/pulls/<n> -f base=main`), and delete a merged branch only after nothing is based on it. A PR that
+  conflicts with `main` gets `main` merged in, then the gate runs on that merged tree before it lands.
+  Stop at PRs that carry an open design question, and say so.
 - **Releases are the user's**: `mvn release:clean release:prepare` pushes a `msgbuf-api-<version>`
   tag, and the tag push runs `.github/workflows/release.yml`, which deploys to Maven Central
   (HOWTO-RELEASE.md). Never run `release:*`, never push a `msgbuf-api-*` tag, never edit the
