@@ -1,0 +1,6 @@
+package it.ext;
+import "base/base.proto";
+
+message Ping extends it.base.Event {
+	int count;
+}

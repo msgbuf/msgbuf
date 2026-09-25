@@ -187,6 +187,15 @@ public class Generator {
 		List<String> errors = new ArrayList<>();
 		for (DefinitionFile file : _files) {
 			if (!_importedFiles.contains(file)) {
+				validateGeneralizations(file, errors);
+			}
+		}
+		if (!errors.isEmpty()) {
+			// Checks below depend on a consistent hierarchy.
+			throw new GeneratorException(errors);
+		}
+		for (DefinitionFile file : _files) {
+			if (!_importedFiles.contains(file)) {
 				validateFieldNames(file, errors);
 				validateFormatReferences(file, plugin, errors);
 			}
@@ -350,6 +359,75 @@ public class Generator {
 		return false;
 	}
 	
+	/**
+	 * Rejects inheritance cycles and extensions of messages of other files that are inconsistent
+	 * with <code>option OpenWorld</code>.
+	 *
+	 * <p>
+	 * The readers of a hierarchy must know all its types. A message of another file can therefore
+	 * only be extended if that file declares <code>option OpenWorld</code>, which makes its readers
+	 * resolve extension types through a registry. The only exception is a closed hierarchy that is
+	 * split into several files of the same package and generated together: then the readers of the
+	 * extended message are generated with all its specializations.
+	 * </p>
+	 */
+	private void validateGeneralizations(DefinitionFile file, List<String> errors) {
+		for (Definition def : file.getDefinitions()) {
+			validateGeneralizations(file, def, errors);
+		}
+	}
+
+	private void validateGeneralizations(DefinitionFile file, Definition def, List<String> errors) {
+		if (!(def instanceof MessageDef)) {
+			return;
+		}
+		MessageDef message = (MessageDef) def;
+		MessageDef extended = message.getExtendedDef();
+		if (extended != null) {
+			List<MessageDef> path = new ArrayList<>();
+			path.add(message);
+			for (MessageDef current = extended; current != null; current = current.getExtendedDef()) {
+				if (current == message) {
+					path.add(current);
+					errors.add(sourceDescription(file) + ": Message '" + Util.toString(message)
+						+ "' is part of an inheritance cycle: "
+						+ path.stream().map(Util::toString).collect(java.util.stream.Collectors.joining(" extends "))
+						+ ". Remove one of the extends clauses.");
+					break;
+				}
+				if (path.contains(current)) {
+					// A cycle not containing this message, reported for its members.
+					break;
+				}
+				path.add(current);
+			}
+
+			DefinitionFile extendedFile = Util.definingFile(extended);
+			if (extendedFile != file && !Util.getFlag(extendedFile, "OpenWorld")
+				&& !(samePackage(file, extendedFile) && !_importedFiles.contains(extendedFile))) {
+				errors.add(sourceDescription(file) + ": Message '" + Util.toString(message) + "' extends message '"
+					+ Util.toString(extended) + "' of '" + sourceDescription(extendedFile)
+					+ "', which does not declare option OpenWorld. Add 'option OpenWorld;' to '"
+					+ sourceDescription(extendedFile) + "' to extend its messages in other files"
+					+ " (a hierarchy without OpenWorld can only be split into files of the same package"
+					+ " that are generated together).");
+			}
+		}
+
+		for (Definition inner : message.getDefinitions()) {
+			validateGeneralizations(file, inner, errors);
+		}
+	}
+
+	private static boolean samePackage(DefinitionFile file, DefinitionFile other) {
+		QName pkg = file.getPackage();
+		QName otherPkg = other.getPackage();
+		if (pkg == null || otherPkg == null) {
+			return pkg == otherPkg;
+		}
+		return pkg.getNames().equals(otherPkg.getNames());
+	}
+
 	/**
 	 * Rejects fields whose generated names clash with the names of other fields of the same message,
 	 * declared in the message itself or inherited from a generalization.

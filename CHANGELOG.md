@@ -18,6 +18,9 @@
   their qualified names in the generated JSON and XML readers (previously uncompilable). For `option OpenWorld`, the
   "same file" test for local subtypes and the implied `NoBinary` of extension files now also hold for nested
   definitions.
+- **Maven plugin parameter names** (#17): The parameters `input`, `outputDirectory`, `resourceOutputDirectory` and
+  `includePaths` can be set under these names in the plugin `<configuration>`. Before, only the user properties
+  (`-DoutputDir=…`) worked, and the README's `<resourceOutputDir>` was silently ignored.
 - **Format options for enums** (#20): `option NoBinary` and `option NoJson` (and the implied `NoBinary` of
   `option SharedGraph` and `option OpenWorld`) now also suppress the binary and JSON methods of enums.
   **Source compatibility:** a file that uses an enum of another file in a format the other file disables did compile
@@ -31,6 +34,14 @@
 - **Redeclared fields** (#21): A field that redeclares an inherited field (directly or through any generalization,
   also across files), a field declared twice, and fields whose names generate the same Java names (e.g. `foo_bar` and
   `fooBar`) are rejected with an error. Before, the generator silently produced Java code that did not compile.
+- **Extensions across files require OpenWorld** (#25): A message that extends a message of another file is rejected
+  unless that file declares `option OpenWorld`. Extending from another package produced Java that did not compile.
+  **Source compatibility:** extending a message of an only imported (not generated together) file of the same package
+  compiled before, but the readers of the base did not know the subtype. It is now rejected as well. A closed
+  hierarchy split into files of the same package that are generated together is still accepted. Inheritance cycles
+  are rejected with an error instead of crashing the generator.
+- **Nested specializations of the outer message** (#32): A message nested in its own generalization (e.g.
+  `abstract message Expr { message Sum extends Expr {…} }`) crashed the generator with a `StackOverflowError`.
 - **OpenWorld readers of abstract intermediates** (#26): The JSON reader of an abstract message below the root of an
   `option OpenWorld` hierarchy (e.g. `Bird` in `Animal > Bird > Parrot`, top-level or nested) no longer fails to
   compile. It reads the types of other files registered with the root, if they are specializations of the message; a

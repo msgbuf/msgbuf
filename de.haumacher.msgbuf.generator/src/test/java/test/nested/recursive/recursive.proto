@@ -1,0 +1,28 @@
+package test.nested.recursive;
+
+/**
+ * Specializations nested in their own generalization (issue #32).
+ */
+abstract message Expr {
+	string label;
+
+	message Literal extends Expr {
+		int value;
+	}
+
+	message Sum extends Expr {
+		repeated Expr operands;
+		Literal first;
+	}
+}
+
+/** A concrete message with a nested specialization of itself. */
+message Node {
+	string name;
+
+	message Special extends Node {
+		int weight;
+	}
+
+	repeated Node children;
+}
