@@ -66,7 +66,7 @@ message DefinitionFile extends WithOptions {
 }
 ```
 
-**Bootstrapping note:** Since the generator is self-bootstrapping, this change requires: (1) add the field to `proto.proto`, (2) regenerate AST Java classes with the existing generator, (3) rebuild the generator. The Maven reactor handles this automatically.
+**Bootstrapping note:** Since the generator is self-bootstrapping, this change requires: (1) add the field to `proto.proto`, (2) regenerate AST Java classes with the existing generator, (3) rebuild the generator. The build does not regenerate the AST classes; step (2) is a manual run of the generator (see CLAUDE.md, "Self-bootstrapping").
 
 ### 4. Dynamic Type Registry
 

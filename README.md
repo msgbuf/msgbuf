@@ -51,6 +51,21 @@ Now you are ready to create `*.proto` files in your source folder and build them
 
 Proto files are placed in your Java source folder (`src/main/java/`) inside the directory matching their `package` declaration. The generated Java files are written next to the proto file. For example, a proto file with `package my.app.model;` should be placed at `src/main/java/my/app/model/shape.proto`, and the generated classes will appear in `src/main/java/my/app/model/`.
 
+### Plugin parameters
+
+All parameters are optional. Set them in the `<configuration>` of the plugin (or its execution), or with the user
+property on the command line (`-D<property>=...`):
+
+| Parameter | User property | Default | Description |
+|---|---|---|---|
+| `input` | `input` | `${project.build.sourceDirectory}` | Directory searched for `.proto` files (or a single `.proto` file). |
+| `outputDirectory` | `outputDir` | `${project.build.sourceDirectory}` | Directory the Java sources are generated to. |
+| `resourceOutputDirectory` | `resourceOutputDir` | `${project.basedir}/src/main/resources` | Directory resource files (`META-INF/services`) are generated to. |
+| `typeScriptOutputDirectory` | `typeScriptOutputDir` | none | Directory TypeScript types are generated to (see [TypeScript](#typescript-type-definitions)). |
+| `includePaths` | `includePaths` | none | Additional directories searched for imported `.proto` files. |
+
+If `outputDirectory` is not a source folder of the project, add it as one (e.g. with the `build-helper-maven-plugin`).
+
 ## Usage
  
 The `msgbuf` definition language is an extension of the [proto format](https://developers.google.com/protocol-buffers/docs/proto3) from `protobuf`. A defined message can `extend` another message type, or it can be marked `abstract`. 
@@ -306,7 +321,7 @@ Implications:
 Maven plugin configuration (extension module):
 ```xml
 <configuration>
-    <resourceOutputDir>${project.basedir}/src/main/resources</resourceOutputDir>
+    <resourceOutputDirectory>${project.basedir}/src/main/resources</resourceOutputDirectory>
 </configuration>
 ```
 
