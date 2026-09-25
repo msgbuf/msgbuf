@@ -17,6 +17,9 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	/** Identifier for the {@link de.haumacher.msgbuf.generator.ast.DefinitionFile} type in JSON format. */
 	public static final String DEFINITION_FILE__TYPE = "DefinitionFile";
 
+	/** @see #getComment() */
+	public static final String COMMENT__PROP = "comment";
+
 	/** @see #getPackage() */
 	public static final String PACKAGE__PROP = "package";
 
@@ -25,6 +28,8 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 
 	/** @see #getDefinitions() */
 	public static final String DEFINITIONS__PROP = "definitions";
+
+	private String _comment = "";
 
 	private de.haumacher.msgbuf.generator.ast.QName _package = null;
 
@@ -74,6 +79,28 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	@Override
 	public TypeKind kind() {
 		return TypeKind.DEFINITION_FILE;
+	}
+
+	/**
+	 * The documentation comment of the file (the doc comment before the <code>syntax</code> or <code>package</code> declaration).
+	 */
+	public final String getComment() {
+		return _comment;
+	}
+
+	/**
+	 * @see #getComment()
+	 */
+	public de.haumacher.msgbuf.generator.ast.DefinitionFile setComment(String value) {
+		internalSetComment(value);
+		return this;
+	}
+
+	/** Internal setter for {@link #getComment()} without chain call utility. */
+	protected final void internalSetComment(String value) {
+		_listener.beforeSet(this, COMMENT__PROP, value);
+		_comment = value;
+		_listener.afterChanged(this, COMMENT__PROP);
 	}
 
 	/**
@@ -209,6 +236,7 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	static final java.util.List<String> PROPERTIES;
 	static {
 		java.util.List<String> local = java.util.Arrays.asList(
+			COMMENT__PROP, 
 			PACKAGE__PROP, 
 			IMPORTS__PROP, 
 			DEFINITIONS__PROP);
@@ -241,6 +269,7 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	@Override
 	public Object get(String field) {
 		switch (field) {
+			case COMMENT__PROP: return getComment();
 			case PACKAGE__PROP: return getPackage();
 			case IMPORTS__PROP: return getImports();
 			case DEFINITIONS__PROP: return getDefinitions();
@@ -251,6 +280,7 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
+			case COMMENT__PROP: internalSetComment((String) value); break;
 			case PACKAGE__PROP: internalSetPackage((de.haumacher.msgbuf.generator.ast.QName) value); break;
 			case IMPORTS__PROP: internalSetImports(de.haumacher.msgbuf.util.Conversions.asList(String.class, value)); break;
 			case DEFINITIONS__PROP: internalSetDefinitions(de.haumacher.msgbuf.util.Conversions.asList(de.haumacher.msgbuf.generator.ast.Definition.class, value)); break;
@@ -268,6 +298,8 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
+		out.name(COMMENT__PROP);
+		out.value(getComment());
 		if (hasPackage()) {
 			out.name(PACKAGE__PROP);
 			getPackage().writeTo(out);
@@ -289,6 +321,7 @@ public class DefinitionFile extends de.haumacher.msgbuf.generator.ast.WithOption
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
+			case COMMENT__PROP: setComment(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			case PACKAGE__PROP: setPackage(de.haumacher.msgbuf.generator.ast.QName.readQName(in)); break;
 			case IMPORTS__PROP: {
 				java.util.List<String> newValue = new java.util.ArrayList<>();

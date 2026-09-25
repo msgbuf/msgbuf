@@ -51,6 +51,9 @@ message Constant extends Part {
  * @see #definitions
  */
 message DefinitionFile extends WithOptions {
+    /** The documentation comment of the file (the doc comment before the <code>syntax</code> or <code>package</code> declaration). */
+	string comment;
+
     /** The package name for all types in this file. */
 	QName `package`;
 

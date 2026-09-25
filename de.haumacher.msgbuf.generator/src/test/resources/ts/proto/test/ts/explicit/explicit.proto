@@ -1,0 +1,16 @@
+syntax = "msgbuf";
+
+package test.ts.explicit;
+
+import "../common/common.proto";
+
+option TypeScript = "../ts/custom/explicit-types.ts";
+
+/** A message placed in an explicitly configured module. */
+message Explicit {
+	/** Mode. */
+	test.ts.common.DisplayMode mode;
+
+	/** Leaves. */
+	repeated test.ts.common.Leaf leaves;
+}

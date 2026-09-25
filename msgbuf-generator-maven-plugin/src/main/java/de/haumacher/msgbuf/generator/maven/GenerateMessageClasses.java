@@ -53,6 +53,19 @@ public class GenerateMessageClasses extends AbstractMojo {
 	@Parameter(defaultValue = "${project.basedir}/src/main/resources", property = "resourceOutputDir")
 	private File _resourceOutputDirectory;
 
+	/**
+	 * Directory where to generate TypeScript type definitions for the JSON format to.
+	 *
+	 * <p>
+	 * If set, a TypeScript module is generated for each <code>.proto</code> file. The module for a
+	 * file <code>name.proto</code> with <code>package a.b.c;</code> is written to
+	 * <code>a/b/c/name.ts</code> within this directory. If not set, TypeScript modules are only
+	 * generated for <code>.proto</code> files with an explicit <code>option TypeScript</code>.
+	 * </p>
+	 */
+	@Parameter(alias = "typeScriptOutputDirectory", property = "typeScriptOutputDir")
+	private File _typeScriptOutputDirectory;
+
 	@Parameter(defaultValue = "${project}", readonly = true, required = true)
 	private MavenProject _project;
 
@@ -83,6 +96,9 @@ public class GenerateMessageClasses extends AbstractMojo {
 			generator.setOut(outputDirectory);
 			if (_resourceOutputDirectory != null) {
 				generator.setResourceOut(_resourceOutputDirectory);
+			}
+			if (_typeScriptOutputDirectory != null) {
+				generator.setTypeScriptOut(_typeScriptOutputDirectory);
 			}
 			if (_includePaths != null) {
 				for (File includePath : _includePaths) {

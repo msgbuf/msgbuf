@@ -96,13 +96,24 @@ DefinitionFile file() :
   DefinitionFile result = DefinitionFile.create();
   QName pkgName;
   Definition def;
+  Token t;
 }
 {
-  (    < SYNTAX > "=" < STRING > ";"
+  (
+    t=< SYNTAX > "=" < STRING > ";"
+    {
+      result.setComment(Util.stripComment(t));
+    }
   )?
   
   (
-    < PACKAGE > pkgName = qName() ";"
+    t=< PACKAGE >
+    {
+      if (result.getComment().isEmpty()) {
+        result.setComment(Util.stripComment(t));
+      }
+    }
+    pkgName = qName() ";"
     {
 		result.setPackage(pkgName);
     }

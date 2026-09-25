@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.3
+
+### New Features
+- **TypeScript type definitions**: Generate a types-only TypeScript module per `.proto` file describing its JSON
+  format (interfaces for messages, string-literal unions for enums, type-tagged tuple unions for polymorphic values).
+  Top-level types are named with the suffix `Json` (e.g. `ShapeJson`, `AnyShapeJson`), since they describe the JSON
+  format, not the data itself. Properties the Java writer always emits are required, only nullable fields are optional.
+  Enabled for all files with the Maven plugin parameter `typeScriptOutputDirectory` or the `-ts <dir>` CLI argument,
+  or per file with `option TypeScript = "path/to/module.ts";`.
+- **File documentation comment**: A doc comment before the `syntax` or `package` declaration is kept as the documentation
+  of the `.proto` file (`DefinitionFile.comment`) and emitted as TSDoc `@packageDocumentation` of the TypeScript module.
+
 ## 1.2.1
 
 ### Bug Fixes

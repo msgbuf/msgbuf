@@ -52,6 +52,7 @@ The code generation follows a 4-stage pipeline in `Generator.main()`:
 Key source locations:
 - Generator entry point: `de.haumacher.msgbuf.generator.Generator`
 - Code generators: `de.haumacher.msgbuf.generator.MessageGenerator`, `EnumGenerator`
+- Other targets: Dart (`generator.dart.DartLibGenerator`, `option DartLib`), TypeScript types (`generator.ts.TypeScriptGenerator`, `-ts <dir>` / Maven `typeScriptOutputDirectory` / `option TypeScript`; golden-file test `TestTypeScriptGenerator`, update expected files with `-Dmsgbuf.ts.update=true`)
 - JavaCC grammar: `de.haumacher.msgbuf.generator/src/main/javacc/protobuf.jj`
 - AST proto definition: `de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/ast/proto.proto`
 
