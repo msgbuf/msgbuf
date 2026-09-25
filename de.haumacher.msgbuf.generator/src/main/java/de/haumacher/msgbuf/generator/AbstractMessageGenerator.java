@@ -71,7 +71,7 @@ public abstract class AbstractMessageGenerator extends AbstractJavaGenerator {
 
 	protected static List<MessageDef> concreteSpecializations(MessageDef def) {
 		ArrayList<MessageDef> result = new ArrayList<>();
-		addConcreteSpecializations(result, def, def.getFile());
+		addConcreteSpecializations(result, def, Util.definingFile(def));
 		return result;
 	}
 
@@ -95,7 +95,7 @@ public abstract class AbstractMessageGenerator extends AbstractJavaGenerator {
 			return def.getSpecializations();
 		}
 		return def.getSpecializations().stream()
-			.filter(s -> s.getFile() == originFile)
+			.filter(s -> Util.definingFile(s) == originFile)
 			.collect(Collectors.toList());
 	}
 	

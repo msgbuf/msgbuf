@@ -279,7 +279,9 @@ public class CodeConvention {
 	}
 
 	public static String jsonTypeConstantRef(MessageDef def) {
-		return typeName(def) + "." + jsonTypeConstant(def);
+		// A nested specialization is not in scope by its simple name in the code of its generalization.
+		String typeRef = def.getFile() == null ? qTypeName(def) : typeName(def);
+		return typeRef + "." + jsonTypeConstant(def);
 	}
 
 	public static String mkBinaryTypeConstant(MessageDef def) {

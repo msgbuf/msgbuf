@@ -312,17 +312,29 @@ public class Generator {
 			// Already an OpenWorld file, options already set
 			return;
 		}
-		for (Definition def : file.getDefinitions()) {
+		if (extendsOpenWorldFromOtherFile(file, file.getDefinitions())) {
+			// Extension file inherits NoBinary from OpenWorld base
+			file.getOptions().put("NoBinary", Flag.create().setValue(true));
+		}
+	}
+
+	private static boolean extendsOpenWorldFromOtherFile(DefinitionFile file, List<Definition> definitions) {
+		for (Definition def : definitions) {
 			if (def instanceof MessageDef) {
 				MessageDef msg = (MessageDef) def;
 				MessageDef extended = msg.getExtendedDef();
-				if (extended != null && extended.getFile() != file && Util.getFlag(extended.getFile(), "OpenWorld")) {
-					// Extension file inherits NoBinary from OpenWorld base
-					file.getOptions().put("NoBinary", Flag.create().setValue(true));
-					return;
+				if (extended != null) {
+					DefinitionFile extendedFile = Util.definingFile(extended);
+					if (extendedFile != file && Util.getFlag(extendedFile, "OpenWorld")) {
+						return true;
+					}
+				}
+				if (extendsOpenWorldFromOtherFile(file, msg.getDefinitions())) {
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
 	private void resolveImports(DefinitionFile file, File sourceFile) throws IOException, ParseException {
@@ -491,8 +503,9 @@ public class Generator {
 
 	private void collectCrossFileExtensions(MessageDef def, DefinitionFile file, List<MessageDef> result) {
 		MessageDef extended = def.getExtendedDef();
-		if (extended != null && extended.getFile() != file) {
-			if (Util.getFlag(extended.getFile(), "OpenWorld")) {
+		DefinitionFile extendedFile = extended == null ? null : Util.definingFile(extended);
+		if (extendedFile != null && extendedFile != file) {
+			if (Util.getFlag(extendedFile, "OpenWorld")) {
 				if (!def.isAbstract()) {
 					result.add(def);
 				}

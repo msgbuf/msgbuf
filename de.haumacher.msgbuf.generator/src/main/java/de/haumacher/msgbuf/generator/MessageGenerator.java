@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import de.haumacher.msgbuf.binary.DataType;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
+import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.MapType;
@@ -2345,11 +2346,12 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 	private boolean isCrossFileExtension() {
 		MessageDef gen = getAbstractGeneralization();
 		if (gen == null) return false;
-		return gen.getFile() != _def.getFile() && Util.getFlag(gen.getFile(), "OpenWorld");
+		DefinitionFile genFile = Util.definingFile(gen);
+		return genFile != Util.definingFile(_def) && Util.getFlag(genFile, "OpenWorld");
 	}
 
 	private List<MessageDef> localSpecializations(MessageDef def) {
-		return localSpecializations(def, _def.getFile());
+		return localSpecializations(def, Util.definingFile(_def));
 	}
 
 }

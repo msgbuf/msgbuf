@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import de.haumacher.msgbuf.generator.CodeConvention;
 import de.haumacher.msgbuf.generator.ast.CustomType;
 import de.haumacher.msgbuf.generator.ast.Definition;
+import de.haumacher.msgbuf.generator.ast.DefinitionFile;
 import de.haumacher.msgbuf.generator.ast.EnumDef;
 import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.Flag;
@@ -43,6 +44,24 @@ public class Util {
 	
 	public static String stringContent(String stringLiteral) {
 		return stringLiteral.substring(1, stringLiteral.length() - 1).replaceAll("\\\\(.)", "$1");
+	}
+
+	/**
+	 * The file the given definition is declared in.
+	 *
+	 * <p>
+	 * Only top-level definitions have a direct reference to their file ({@link Definition#getFile()}
+	 * is <code>null</code> for nested definitions, which marks them as nested for name
+	 * qualification). For a nested definition, the file of its top-level outer definition is
+	 * returned.
+	 * </p>
+	 */
+	public static DefinitionFile definingFile(Definition def) {
+		Definition current = def;
+		while (current.getOuter() != null) {
+			current = current.getOuter();
+		}
+		return current.getFile();
 	}
 
 	public static String toString(Definition def) {

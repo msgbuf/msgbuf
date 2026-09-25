@@ -1,0 +1,100 @@
+package test.nested.data;
+
+/**
+ * Hierarchies with an abstract root declared inside other messages (issue #16).
+ */
+message Outer {
+	/** Abstract root of a hierarchy nested in a top-level message. */
+	abstract message Shape {
+		string name;
+	}
+
+	message Circle extends Shape {
+		int32 radius;
+	}
+
+	message Square extends Shape {
+		int32 side;
+	}
+
+	/** A sibling message holding values of the nested abstract type. */
+	message Drawing {
+		Shape main;
+		repeated Shape shapes;
+	}
+
+	/** A field of the nested abstract type in the outer message itself. */
+	Shape shape;
+}
+
+/**
+ * A hierarchy nested two levels deep.
+ */
+message Level1 {
+	message Level2 {
+		abstract message Node {
+			string label;
+		}
+
+		/** Abstract intermediate. */
+		abstract message Composite extends Node {
+			repeated Node children;
+		}
+
+		message Leaf extends Node {
+			int32 value;
+		}
+
+		message Branch extends Composite {
+			bool expanded;
+		}
+
+		message Root extends Composite {
+			string title;
+		}
+	}
+
+	Level2.Node node;
+	repeated Level2.Node nodes;
+}
+
+/**
+ * A top-level abstract root.
+ */
+abstract message Animal {
+	string name;
+}
+
+/**
+ * A container for sub-messages extending a top-level abstract message.
+ */
+message Zoo {
+	message Cat extends Animal {
+		bool indoor;
+	}
+
+	/** A nested abstract intermediate below a top-level root. */
+	abstract message Bird extends Animal {
+		double wingspan;
+	}
+
+	message Parrot extends Bird {
+		repeated string words;
+	}
+
+	repeated Animal animals;
+}
+
+/** A top-level message extending a nested abstract message. */
+message Triangle extends Outer.Shape {
+	int32 base;
+	int32 height;
+}
+
+/** A top-level holder of values of nested abstract types. */
+message Holder {
+	Outer.Shape shape;
+	repeated Outer.Shape shapes;
+	Level1.Level2.Node node;
+	repeated Animal animals;
+}

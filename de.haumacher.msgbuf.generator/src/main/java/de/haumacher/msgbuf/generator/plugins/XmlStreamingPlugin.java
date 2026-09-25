@@ -442,7 +442,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			}
 
 			String xmlTypeNameRef(MessageDef def) {
-				return implName(def) + "." + xmlTypeNameConstant(def);
+				// A nested specialization is not in scope by its simple name in the code of its generalization.
+				String implRef = def.getFile() == null ? qImplName(def) : implName(def);
+				return implRef + "." + xmlTypeNameConstant(def);
 			}
 		};
 	}
