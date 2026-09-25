@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.3
+## 1.3.0
 
 ### New Features
 - **TypeScript type definitions**: Generate a TypeScript module per `.proto` file describing its JSON

@@ -20,7 +20,7 @@ In contrast to `protobuf`, `msgbuf` supports:
 <dependency>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-api</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ To the `build/plugins` section add:
 <plugin>
     <groupId>de.haumacher.msgbuf</groupId>
     <artifactId>msgbuf-generator-maven-plugin</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0</version>
     
     <executions>
         <execution>
@@ -172,7 +172,7 @@ or its imports. A package must not define a top-level name twice, not even in di
 ### Transient fields
 
 Fields marked with `transient` are not serialized in any format (JSON, binary, XML). They exist only in the in-memory
-representation. Readers ignore values of transient fields, e.g. in XML documents written by versions before 1.2.3:
+representation. Readers ignore values of transient fields, e.g. in XML documents written by versions before 1.3.0:
 
 ```protobuf
 message A {
