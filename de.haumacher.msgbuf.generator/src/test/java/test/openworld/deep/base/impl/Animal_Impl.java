@@ -1,45 +1,45 @@
-package test.openworld.base.impl;
+package test.openworld.deep.base.impl;
 
 /**
- * Implementation of {@link test.openworld.base.SSEEvent}.
+ * Implementation of {@link test.openworld.deep.base.Animal}.
  */
-public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.openworld.base.SSEEvent {
+public abstract class Animal_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implements test.openworld.deep.base.Animal {
 
 	static {
 		de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();
 	}
 
-	private long _timestamp = 0L;
+	private String _name = "";
 
 	/**
-	 * Creates a {@link SSEEvent_Impl} instance.
+	 * Creates a {@link Animal_Impl} instance.
 	 */
-	public SSEEvent_Impl() {
+	public Animal_Impl() {
 		super();
 	}
 
 	@Override
-	public final long getTimestamp() {
-		return _timestamp;
+	public final String getName() {
+		return _name;
 	}
 
 	@Override
-	public test.openworld.base.SSEEvent setTimestamp(long value) {
-		internalSetTimestamp(value);
+	public test.openworld.deep.base.Animal setName(String value) {
+		internalSetName(value);
 		return this;
 	}
 
-	/** Internal setter for {@link #getTimestamp()} without chain call utility. */
-	protected final void internalSetTimestamp(long value) {
-		_listener.beforeSet(this, TIMESTAMP__PROP, value);
-		_timestamp = value;
-		_listener.afterChanged(this, TIMESTAMP__PROP);
+	/** Internal setter for {@link #getName()} without chain call utility. */
+	protected final void internalSetName(String value) {
+		_listener.beforeSet(this, NAME__PROP, value);
+		_name = value;
+		_listener.afterChanged(this, NAME__PROP);
 	}
 
 	protected de.haumacher.msgbuf.observer.Listener _listener = de.haumacher.msgbuf.observer.Listener.NONE;
 
 	@Override
-	public test.openworld.base.SSEEvent registerListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.openworld.deep.base.Animal registerListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalRegisterListener(l);
 		return this;
 	}
@@ -49,7 +49,7 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 	}
 
 	@Override
-	public test.openworld.base.SSEEvent unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
+	public test.openworld.deep.base.Animal unregisterListener(de.haumacher.msgbuf.observer.Listener l) {
 		internalUnregisterListener(l);
 		return this;
 	}
@@ -61,7 +61,7 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 	protected static final java.util.List<String> PROPERTIES;
 	static {
 		java.util.List<String> local = java.util.Arrays.asList(
-			TIMESTAMP__PROP);
+			NAME__PROP);
 		PROPERTIES = java.util.Collections.unmodifiableList(local);
 	}
 
@@ -86,15 +86,15 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 	@Override
 	public Object get(String field) {
 		switch (field) {
-			case TIMESTAMP__PROP: return getTimestamp();
-			default: return test.openworld.base.SSEEvent.super.get(field);
+			case NAME__PROP: return getName();
+			default: return test.openworld.deep.base.Animal.super.get(field);
 		}
 	}
 
 	@Override
 	public void set(String field, Object value) {
 		switch (field) {
-			case TIMESTAMP__PROP: internalSetTimestamp((long) value); break;
+			case NAME__PROP: internalSetName((String) value); break;
 		}
 	}
 
@@ -109,23 +109,23 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 	@Override
 	protected void writeFields(de.haumacher.msgbuf.json.JsonWriter out) throws java.io.IOException {
 		super.writeFields(out);
-		out.name(TIMESTAMP__PROP);
-		out.value(getTimestamp());
+		out.name(NAME__PROP);
+		out.value(getName());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
-			case TIMESTAMP__PROP: setTimestamp(in.nextLong()); break;
+			case NAME__PROP: setName(de.haumacher.msgbuf.json.JsonUtil.nextStringOptional(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
-	/** XML element name representing a {@link test.openworld.base.SSEEvent} type. */
-	public static final String SSEEVENT__XML_ELEMENT = "sseevent";
+	/** XML element name representing a {@link test.openworld.deep.base.Animal} type. */
+	public static final String ANIMAL__XML_ELEMENT = "animal";
 
-	/** XML attribute or element name of a {@link #getTimestamp} property. */
-	private static final String TIMESTAMP__XML_ATTR = "timestamp";
+	/** XML attribute or element name of a {@link #getName} property. */
+	private static final String NAME__XML_ATTR = "name";
 
 	@Override
 	public final void writeContent(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
@@ -135,7 +135,7 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 
 	/** Serializes all fields that are written as XML attributes. */
 	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
-		out.writeAttribute(TIMESTAMP__XML_ATTR, Long.toString(getTimestamp()));
+		out.writeAttribute(NAME__XML_ATTR, getName());
 	}
 
 	/** Serializes all fields that are written as XML elements. */
@@ -143,18 +143,22 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 		// No element fields.
 	}
 
-	/** Creates a new {@link test.openworld.base.SSEEvent} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
-	public static SSEEvent_Impl readSSEEvent_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
+	/** Creates a new {@link test.openworld.deep.base.Animal} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
+	public static Animal_Impl readAnimal_XmlContent(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
 		switch (in.getLocalName()) {
-			case TextEvent_Impl.TEXT_EVENT__XML_ELEMENT: {
-				return test.openworld.base.impl.TextEvent_Impl.readTextEvent_XmlContent(in);
+			case Sparrow_Impl.SPARROW__XML_ELEMENT: {
+				return test.openworld.deep.base.impl.Sparrow_Impl.readSparrow_XmlContent(in);
+			}
+
+			case Dog_Impl.DOG__XML_ELEMENT: {
+				return test.openworld.deep.base.impl.Dog_Impl.readDog_XmlContent(in);
 			}
 
 			default: {
-				de.haumacher.msgbuf.data.Factory<? extends test.openworld.base.SSEEvent> factory = test.openworld.base.SSEEvent.XML_REGISTRY.get(in.getLocalName());
-				test.openworld.base.SSEEvent instance = factory == null ? null : factory.create();
-				if (instance instanceof SSEEvent_Impl) {
-					SSEEvent_Impl result = (SSEEvent_Impl) instance;
+				de.haumacher.msgbuf.data.Factory<? extends test.openworld.deep.base.Animal> factory = test.openworld.deep.base.Animal.XML_REGISTRY.get(in.getLocalName());
+				test.openworld.deep.base.Animal instance = factory == null ? null : factory.create();
+				if (instance instanceof Animal_Impl) {
+					Animal_Impl result = (Animal_Impl) instance;
 					result.readContentXml(in);
 					return result;
 				}
@@ -187,8 +191,8 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 	/** Parses the given attribute value and assigns it to the field with the given name. */
 	protected void readFieldXmlAttribute(String name, String value) {
 		switch (name) {
-			case TIMESTAMP__XML_ATTR: {
-				setTimestamp(Long.parseLong(value));
+			case NAME__XML_ATTR: {
+				setName(value);
 				break;
 			}
 			default: {
@@ -200,8 +204,8 @@ public abstract class SSEEvent_Impl extends de.haumacher.msgbuf.data.AbstractDat
 	/** Reads the element under the cursor and assigns its contents to the field with the given name. */
 	protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
 		switch (localName) {
-			case TIMESTAMP__XML_ATTR: {
-				setTimestamp(Long.parseLong(in.getElementText()));
+			case NAME__XML_ATTR: {
+				setName(in.getElementText());
 				break;
 			}
 			default: {

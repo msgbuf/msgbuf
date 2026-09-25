@@ -95,6 +95,21 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		return new AbstractMessageGenerator(options) {
 			@Override
 			protected void generate() {
+				if (isOpenWorld(options) && def.isAbstract() && !def.hasExtends()) {
+					nl();
+					line("/** Registry for dynamically registered subtypes by their XML element names. */");
+					line("static final java.util.Map<String, de.haumacher.msgbuf.data.Factory<? extends " + qTypeName(def) + ">> " + XML_REGISTRY + " = new java.util.HashMap<>();");
+					nl();
+					line("/**");
+					line(" * Registers a subtype factory for reading elements with the given name in XML format.");
+					line(" */");
+					line("static void " + REGISTER_XML + "(String elementName, de.haumacher.msgbuf.data.Factory<? extends " + qTypeName(def) + "> factory) {");
+					{
+						line(XML_REGISTRY + ".put(elementName, factory);");
+					}
+					line("}");
+				}
+
 				nl();
 				line("/** Creates a new {@link " + typeName(def) + "} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */");
 				line("public static " + typeName(def) + " " + readerMethod(def) + "(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {");
@@ -254,6 +269,19 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 							
 							line("default: {");
 							{
+								if (isOpenWorld(options)) {
+									// Types of other files are only known through the registry of the hierarchy root.
+									String root = qTypeName(openWorldRoot(def));
+									line("de.haumacher.msgbuf.data.Factory<? extends " + root + "> factory = " + root + "." + XML_REGISTRY + ".get(in.getLocalName());");
+									line(root + " instance = factory == null ? null : factory.create();");
+									line("if (instance instanceof " + implName(def) + ") {");
+									{
+										line(implName(def) + " result = (" + implName(def) + ") instance;");
+										line("result.readContentXml(in);");
+										line("return result;");
+									}
+									line("}");
+								}
 								line("internalSkipUntilMatchingEndElement(in);");
 								line("return null;");
 							}
@@ -499,6 +527,37 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		};
 	}
 
+	/**
+	 * Name of the registry of XML element names in the root interface of an
+	 * <code>option OpenWorld</code> hierarchy.
+	 */
+	public static final String XML_REGISTRY = "XML_REGISTRY";
+
+	/**
+	 * Name of the method in the root interface of an <code>option OpenWorld</code> hierarchy
+	 * that registers a factory for an XML element name.
+	 */
+	public static final String REGISTER_XML = "registerXml";
+
+	/**
+	 * Name of the constant with the XML element name of the given message in its implementation class.
+	 */
+	public static String xmlElementConstant(MessageDef def) {
+		return CodeUtil.allUpperCase(def.getName()) + "__XML_ELEMENT";
+	}
+
+	private static boolean isOpenWorld(Map<String, Option> options) {
+		return AbstractMessageGenerator.isTrue(options.get("OpenWorld"), false);
+	}
+
+	private static MessageDef openWorldRoot(MessageDef def) {
+		MessageDef result = def;
+		while (result.getExtendedDef() != null) {
+			result = result.getExtendedDef();
+		}
+		return result;
+	}
+
 	private boolean noXml(Map<String, Option> options) {
 		return options.get("NoXml") != null;
 	}
@@ -669,7 +728,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 	}
 
 	String xmlTypeNameConstant(MessageDef def) {
-		return CodeUtil.allUpperCase(def.getName()) + "__XML_ELEMENT";
+		return xmlElementConstant(def);
 	}
 
 	String readListFieldMethod(Field field) {

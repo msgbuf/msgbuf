@@ -250,7 +250,7 @@ public class Generator {
 			}
 			List<MessageDef> crossFileExtensions = findCrossFileExtensions(file);
 			if (!crossFileExtensions.isEmpty()) {
-				String fqClassName = generateRegistrationClass(file, crossFileExtensions);
+				String fqClassName = generateRegistrationClass(file, crossFileExtensions, plugin);
 				registrationClasses.add(fqClassName);
 			}
 		}
@@ -856,15 +856,21 @@ public class Generator {
 		return result;
 	}
 
+	/**
+	 * Collects the concrete messages of the given file that must be registered with the registry of
+	 * an <code>option OpenWorld</code> hierarchy.
+	 *
+	 * <p>
+	 * These are all concrete messages with a generalization defined in another file with
+	 * <code>option OpenWorld</code>. The readers of this generalization (and of its generalizations)
+	 * only find these types through the registry of the hierarchy root. This includes messages
+	 * that extend a message of the same file that extends a message of another file, and messages
+	 * that extend a message of an extension file.
+	 * </p>
+	 */
 	private void collectCrossFileExtensions(MessageDef def, DefinitionFile file, List<MessageDef> result) {
-		MessageDef extended = def.getExtendedDef();
-		DefinitionFile extendedFile = extended == null ? null : Util.definingFile(extended);
-		if (extendedFile != null && extendedFile != file) {
-			if (Util.getFlag(extendedFile, "OpenWorld")) {
-				if (!def.isAbstract()) {
-					result.add(def);
-				}
-			}
+		if (!def.isAbstract() && hasOpenWorldGeneralizationInOtherFile(def, file)) {
+			result.add(def);
 		}
 		for (Definition inner : def.getDefinitions()) {
 			if (inner instanceof MessageDef) {
@@ -873,7 +879,27 @@ public class Generator {
 		}
 	}
 
-	private String generateRegistrationClass(DefinitionFile file, List<MessageDef> extensions) {
+	private static boolean hasOpenWorldGeneralizationInOtherFile(MessageDef def, DefinitionFile file) {
+		Set<MessageDef> seen = new HashSet<>();
+		for (MessageDef current = def.getExtendedDef(); current != null && seen.add(current); current = current.getExtendedDef()) {
+			DefinitionFile currentFile = Util.definingFile(current);
+			if (currentFile != file && Util.getFlag(currentFile, "OpenWorld")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static MessageDef hierarchyRoot(MessageDef def) {
+		Set<MessageDef> seen = new HashSet<>();
+		MessageDef result = def;
+		while (result.getExtendedDef() != null && seen.add(result)) {
+			result = result.getExtendedDef();
+		}
+		return result;
+	}
+
+	private String generateRegistrationClass(DefinitionFile file, List<MessageDef> extensions, GeneratorPlugin plugin) {
 		String packageName = CodeConvention.packageName(file.getPackage());
 		String[] parts = packageName.split("\\.");
 		String baseName = parts[parts.length - 1];
@@ -881,6 +907,8 @@ public class Generator {
 
 		File dir = mkdir(file.getPackage());
 		File out = new File(dir, className + ".java");
+
+		boolean xml = formats(file, plugin).contains(XmlStreamingPlugin.XML_FORMAT);
 
 		try (FileOutputStream os = new FileOutputStream(out)) {
 			try (PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "utf-8"))) {
@@ -895,15 +923,17 @@ public class Generator {
 				w.println("\t@Override");
 				w.println("\tpublic void register() {");
 				for (MessageDef ext : extensions) {
-					// Find the OpenWorld root type
-					MessageDef root = ext.getExtendedDef();
-					while (root.getExtendedDef() != null) {
-						root = root.getExtendedDef();
-					}
+					MessageDef root = hierarchyRoot(ext);
 					String rootQName = CodeConvention.qTypeName(root);
 					String extQName = CodeConvention.qTypeName(ext);
 					String typeConstant = CodeConvention.jsonTypeConstant(ext);
 					w.println("\t\t" + rootQName + ".register(" + extQName + "." + typeConstant + ", " + extQName + "::create);");
+					if (xml && formats(Util.definingFile(root), plugin).contains(XmlStreamingPlugin.XML_FORMAT)) {
+						// The XML readers of the hierarchy dispatch unknown element names through the registry of the root.
+						String extImplQName = CodeConvention.qImplName(CodeConvention.IMPL_PACKAGE_SUFFIX, ext);
+						w.println("\t\t" + rootQName + "." + XmlStreamingPlugin.REGISTER_XML + "(" + extImplQName + "."
+							+ XmlStreamingPlugin.xmlElementConstant(ext) + ", " + extQName + "::create);");
+					}
 				}
 				w.println("\t}");
 				w.println();

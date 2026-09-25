@@ -318,6 +318,13 @@ The base module's `.proto` files should be packaged as resources in its JAR (e.g
 The Maven plugin automatically resolves imports from compile-scope dependency JARs, so no file system paths
 to the base module are needed.
 
+Readers of the hierarchy (of the root and of abstract intermediates) resolve the types of all registered
+extension modules in JSON and XML format. The registration class registers the JSON type ID and, if XML is
+generated, the XML element name of each extension type with the root of the hierarchy. A reader of an abstract
+intermediate only accepts registered types that specialize the intermediate. An unknown type (or a registered
+type of another subtree) is skipped, and the reader returns `null`. An abstract message of an extension file can
+itself be extended in further files, if the extension file declares `option OpenWorld`, too.
+
 Implications:
 - Implies `option NoBinary` (only JSON and XML serialization are supported)
 - Cannot be combined with `option NoInterfaces`

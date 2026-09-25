@@ -66,6 +66,7 @@ public interface Events extends de.haumacher.msgbuf.data.DataObject, de.haumache
 			switch (type) {
 				case test.nested.owbase.Events.TextEvent.TEXT_EVENT__TYPE: result = test.nested.owbase.Events.TextEvent.readTextEvent(in); break;
 				default: {
+					de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();
 					de.haumacher.msgbuf.data.Factory<? extends test.nested.owbase.Events.Event> factory = test.nested.owbase.Events.Event.REGISTRY.get(type);
 					if (factory != null) {
 						result = factory.create();
@@ -78,6 +79,16 @@ public interface Events extends de.haumacher.msgbuf.data.DataObject, de.haumache
 			}
 			in.endArray();
 			return result;
+		}
+
+		/** Registry for dynamically registered subtypes by their XML element names. */
+		static final java.util.Map<String, de.haumacher.msgbuf.data.Factory<? extends test.nested.owbase.Events.Event>> XML_REGISTRY = new java.util.HashMap<>();
+
+		/**
+		 * Registers a subtype factory for reading elements with the given name in XML format.
+		 */
+		static void registerXml(String elementName, de.haumacher.msgbuf.data.Factory<? extends test.nested.owbase.Events.Event> factory) {
+			XML_REGISTRY.put(elementName, factory);
 		}
 
 		/** Creates a new {@link Event} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */

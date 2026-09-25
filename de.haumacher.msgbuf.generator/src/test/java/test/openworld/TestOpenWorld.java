@@ -1,6 +1,12 @@
 package test.openworld;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 
 import de.haumacher.msgbuf.io.StringR;
 import de.haumacher.msgbuf.json.JsonReader;
@@ -110,6 +116,18 @@ public class TestOpenWorld extends TestCase {
 		String json = "[\"CompletelyUnknown\", {}]";
 		SSEEvent result = readEvent(json);
 		assertNull(result);
+	}
+
+	public void testExtensionRegistrationXml() throws XMLStreamException {
+		GraphPatchEvent graph = GraphPatchEvent.create().setControlId("c1").setPatch("p").setTimestamp(1);
+		AnalyticsPatchEvent analytics = AnalyticsPatchEvent.create().setMetricName("cpu").setMetricValue(0.5).setTimestamp(2);
+		for (SSEEvent event : new SSEEvent[] { graph, analytics, TextEvent.create().setText("t") }) {
+			StringWriter buffer = new StringWriter();
+			event.writeTo(XMLOutputFactory.newDefaultFactory().createXMLStreamWriter(buffer));
+			SSEEvent copy = SSEEvent.readSSEEvent(XMLInputFactory.newFactory().createXMLStreamReader(new StringReader(buffer.toString())));
+			assertEquals(event.getClass(), copy.getClass());
+			assertEquals(event.toString(), copy.toString());
+		}
 	}
 
 	private SSEEvent readEvent(String json) throws IOException {

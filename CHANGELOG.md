@@ -42,6 +42,20 @@
   are rejected with an error instead of crashing the generator.
 - **Nested specializations of the outer message** (#32): A message nested in its own generalization (e.g.
   `abstract message Expr { message Sum extends Expr {…} }`) crashed the generator with a `StackOverflowError`.
+- **OpenWorld readers of abstract intermediates** (#26): The JSON reader of an abstract message below the root of an
+  `option OpenWorld` hierarchy (e.g. `Bird` in `Animal > Bird > Parrot`, top-level or nested) no longer fails to
+  compile. It reads the types of other files registered with the root, if they are specializations of the message; a
+  registered type of another subtree is skipped like an unknown type (the reader returns `null`). This also works for
+  abstract intermediates declared in extension files (which need `option OpenWorld` to be extended themselves), at any
+  depth. All concrete messages of an extension file below an OpenWorld message of another file are now registered,
+  also those extending a message of their own file. Visiting a type of an extension-file intermediate with a visitor
+  that does not know it calls `visitDefault()`, and such types return `null` from `kind()`. The JSON readers load the
+  type registrations themselves (before, reading an extension type returned `null` unless some implementation class
+  of the hierarchy had been initialized before).
+- **OpenWorld XML readers** (#27): The XML readers of an `option OpenWorld` hierarchy (root and abstract intermediates)
+  now read the types of other files. The generated registration class (e.g. `Ext1Types`) additionally registers the
+  XML element name of each extension type with the root (`registerXml()`, `XML_REGISTRY`), if the files generate XML.
+  The wire formats are unchanged.
 
 ## 1.2.1
 

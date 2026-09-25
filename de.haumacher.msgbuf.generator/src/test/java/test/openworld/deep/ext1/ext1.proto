@@ -1,0 +1,35 @@
+package test.openworld.deep.ext1;
+
+import "../base/base.proto";
+
+/* Declares an abstract intermediate that is extended in another file. */
+option OpenWorld;
+
+/** Leaf of another file below an abstract intermediate of the base file. */
+message Parrot extends test.openworld.deep.base.Bird {
+	string word;
+}
+
+/** Abstract intermediate declared in an extension file: a sibling subtree of Bird. */
+abstract message Fish extends test.openworld.deep.base.Animal {
+	int32 fins;
+}
+
+/** Leaf of the extension file below its own intermediate. */
+message Trout extends Fish {
+	bool rainbow;
+}
+
+/** Holder of values of the intermediate of this file. */
+message Pond {
+	Fish king;
+
+	repeated Fish school;
+}
+
+/** Nested leaf of a nested hierarchy of another file. */
+message Forest {
+	message Oak extends test.openworld.deep.base.Habitat.Tree {
+		int32 age;
+	}
+}
