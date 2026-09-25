@@ -223,9 +223,8 @@ public class TestNested extends TestCase {
 	 *
 	 * <p>
 	 * OpenWorld implies NoBinary, so only JSON and XML apply. The extension types are discovered
-	 * through the generated service descriptor in <code>src/test/resources/META-INF/services</code>.
-	 * XML is checked for the local type only: the generated XML reader of an OpenWorld root does not
-	 * consult the registry of extension types (for top-level roots neither).
+	 * through the generated service descriptor in <code>src/test/resources/META-INF/services</code>,
+	 * in JSON and in XML format (issue #27).
 	 * </p>
 	 */
 	public void testOpenWorldCrossFile() throws IOException, XMLStreamException {
@@ -251,9 +250,11 @@ public class TestNested extends TestCase {
 		assertTrue(copy.getEvents().get(1) instanceof Patches.PatchEvent);
 		assertTrue(copy.getEvents().get(2) instanceof CountEvent);
 
-		// XML: the local type of the base file is read back.
-		Events local = Events.create().addEvent(Events.TextEvent.create().setText("hi").setTimestamp(1));
-		assertEquals(local.toString(), Events.readEvents(xmlReader(xml(local))).toString());
+		// XML: the extension types are read back through the registry of XML element names.
+		Events xmlCopy = Events.readEvents(xmlReader(xml(events)));
+		assertEquals(expected, xmlCopy.toString());
+		assertTrue(xmlCopy.getEvents().get(1) instanceof Patches.PatchEvent);
+		assertTrue(xmlCopy.getEvents().get(2) instanceof CountEvent);
 
 		Events.Event.Visitor<String, Void, RuntimeException> visitor = new Patches.PatchEvent.Visitor<>() {
 			@Override

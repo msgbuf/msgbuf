@@ -664,8 +664,8 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 						kindLookupComment();
 						line("public abstract " + TYPE_KIND_NAME + " kind();");
 					}
-				} else if (isCrossFileExtension()) {
-					// Cross-file extensions are not in the base's TypeKind enum, return null
+				} else if (isOpenWorldExtension()) {
+					// Types of other files are not in the TypeKind enum of an OpenWorld root, return null
 					nl();
 					line("@Override");
 					line("public " + TYPE_KIND_NAME + " kind() {");
@@ -1374,11 +1374,26 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 					if (isOpenWorld()) {
 						line("default: {");
 						{
-							line("de.haumacher.msgbuf.data.Factory<? extends " + thisType() + "> factory = " + getOpenWorldRoot() + ".REGISTRY.get(type);");
-							line("if (factory != null) {");
-							{
-								line("result = factory.create();");
-								line("result.readContent(in);");
+							// Types of other files are only known through the registry of the hierarchy root,
+							// which is filled by the registrations found on the class path.
+							line("de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();");
+							String root = getOpenWorldRoot();
+							if (_def.getExtendedDef() == null) {
+								line("de.haumacher.msgbuf.data.Factory<? extends " + thisType() + "> factory = " + root + ".REGISTRY.get(type);");
+								line("if (factory != null) {");
+								{
+									line("result = factory.create();");
+									line("result.readContent(in);");
+								}
+							} else {
+								// The registry of the root may contain types that are no specializations of this type.
+								line("de.haumacher.msgbuf.data.Factory<? extends " + root + "> factory = " + root + ".REGISTRY.get(type);");
+								line(root + " instance = factory == null ? null : factory.create();");
+								line("if (instance instanceof " + thisType() + ") {");
+								{
+									line("result = (" + thisType() + ") instance;");
+									line("result.readContent(in);");
+								}
 							}
 							line("} else {");
 							{
@@ -2215,7 +2230,17 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 				line("public" + (_def.isAbstract() ? " final" : "") + " <R,A" + onVisitEx(",E extends Throwable") + "> R visit(" + qTypeName(gen) + ".Visitor<R,A" + onVisitEx(",E") + "> v, A arg) " + onVisitEx("throws E ") + "{");
 				{
 					if (_def.isAbstract()) {
-						line("return visit((" + qTypeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
+						if (isCrossFileExtension()) {
+							// The visitor of the generalization does not know this type.
+							line("if (v instanceof " + qTypeName(_def) + ".Visitor) {");
+							{
+								line("return visit((" + qTypeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
+							}
+							line("}");
+							line("return v.visitDefault(this, arg);");
+						} else {
+							line("return visit((" + qTypeName(_def) + ".Visitor<R,A" + onVisitEx(",E") + ">) v, arg);");
+						}
 					} else if (isCrossFileExtension()) {
 						line("if (v instanceof " + qTypeName(_def) + ".Visitor) {");
 						{
@@ -2362,6 +2387,21 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 		if (gen == null) return false;
 		DefinitionFile genFile = Util.definingFile(gen);
 		return genFile != Util.definingFile(_def) && Util.getFlag(genFile, "OpenWorld");
+	}
+
+	/**
+	 * Whether the generated type belongs to an OpenWorld hierarchy whose root is defined in
+	 * another file.
+	 *
+	 * <p>
+	 * Such a type is not known to the root, e.g. it is not listed in the root's TypeKind enum.
+	 * In contrast to {@link #isCrossFileExtension()}, this also holds for a type that extends a
+	 * message of its own file which in turn extends a message of another file.
+	 * </p>
+	 */
+	private boolean isOpenWorldExtension() {
+		DefinitionFile rootFile = Util.definingFile(getRoot(_def));
+		return rootFile != Util.definingFile(_def) && Util.getFlag(rootFile, "OpenWorld");
 	}
 
 	private List<MessageDef> localSpecializations(MessageDef def) {

@@ -1,0 +1,18 @@
+package test.openworld.deep.ext2;
+
+import "../base/base.proto";
+import "../ext1/ext1.proto";
+
+/** Leaf of a second extension file below the intermediate of the first extension file. */
+message Shark extends test.openworld.deep.ext1.Fish {
+	int32 teeth;
+}
+
+/** Abstract intermediate at depth three, below the intermediate of the base file. */
+abstract message Raptor extends test.openworld.deep.base.Bird {
+	double speed;
+}
+
+message Eagle extends Raptor {
+	bool bald;
+}

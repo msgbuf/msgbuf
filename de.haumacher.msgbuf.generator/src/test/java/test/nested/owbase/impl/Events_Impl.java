@@ -155,6 +155,13 @@ public class Events_Impl extends de.haumacher.msgbuf.data.AbstractDataObject imp
 				}
 
 				default: {
+					de.haumacher.msgbuf.data.Factory<? extends test.nested.owbase.Events.Event> factory = test.nested.owbase.Events.Event.XML_REGISTRY.get(in.getLocalName());
+					test.nested.owbase.Events.Event instance = factory == null ? null : factory.create();
+					if (instance instanceof Event_Impl) {
+						Event_Impl result = (Event_Impl) instance;
+						result.readContentXml(in);
+						return result;
+					}
 					internalSkipUntilMatchingEndElement(in);
 					return null;
 				}

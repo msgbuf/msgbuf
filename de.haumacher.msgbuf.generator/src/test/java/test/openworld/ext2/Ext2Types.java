@@ -8,6 +8,7 @@ public class Ext2Types implements de.haumacher.msgbuf.data.TypeRegistration {
 	@Override
 	public void register() {
 		test.openworld.base.SSEEvent.register(test.openworld.ext2.AnalyticsPatchEvent.ANALYTICS_PATCH_EVENT__TYPE, test.openworld.ext2.AnalyticsPatchEvent::create);
+		test.openworld.base.SSEEvent.registerXml(test.openworld.ext2.impl.AnalyticsPatchEvent_Impl.ANALYTICS_PATCH_EVENT__XML_ELEMENT, test.openworld.ext2.AnalyticsPatchEvent::create);
 	}
 
 	/**

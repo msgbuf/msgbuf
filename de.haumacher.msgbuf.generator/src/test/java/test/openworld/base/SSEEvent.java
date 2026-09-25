@@ -65,6 +65,7 @@ public interface SSEEvent extends de.haumacher.msgbuf.data.DataObject, de.haumac
 		switch (type) {
 			case TextEvent.TEXT_EVENT__TYPE: result = test.openworld.base.TextEvent.readTextEvent(in); break;
 			default: {
+				de.haumacher.msgbuf.data.TypeRegistryLoader.ensureLoaded();
 				de.haumacher.msgbuf.data.Factory<? extends test.openworld.base.SSEEvent> factory = test.openworld.base.SSEEvent.REGISTRY.get(type);
 				if (factory != null) {
 					result = factory.create();
@@ -77,6 +78,16 @@ public interface SSEEvent extends de.haumacher.msgbuf.data.DataObject, de.haumac
 		}
 		in.endArray();
 		return result;
+	}
+
+	/** Registry for dynamically registered subtypes by their XML element names. */
+	static final java.util.Map<String, de.haumacher.msgbuf.data.Factory<? extends test.openworld.base.SSEEvent>> XML_REGISTRY = new java.util.HashMap<>();
+
+	/**
+	 * Registers a subtype factory for reading elements with the given name in XML format.
+	 */
+	static void registerXml(String elementName, de.haumacher.msgbuf.data.Factory<? extends test.openworld.base.SSEEvent> factory) {
+		XML_REGISTRY.put(elementName, factory);
 	}
 
 	/** Creates a new {@link SSEEvent} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */

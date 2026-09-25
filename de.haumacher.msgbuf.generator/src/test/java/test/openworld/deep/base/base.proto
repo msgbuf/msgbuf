@@ -1,0 +1,61 @@
+package test.openworld.deep.base;
+
+option OpenWorld;
+
+/** Root of an OpenWorld hierarchy with abstract intermediates (issues #26, #27). */
+abstract message Animal {
+	string name;
+}
+
+/** Abstract intermediate of the base file, extended in other files. */
+abstract message Bird extends Animal {
+	double wingspan;
+}
+
+/** Local leaf below the intermediate. */
+message Sparrow extends Bird {
+	int32 flock;
+}
+
+/** Local leaf of a sibling subtree. */
+message Dog extends Animal {
+	bool good;
+}
+
+/** Holder of values of the hierarchy in single, repeated and nested fields. */
+message Zoo {
+	Animal star;
+
+	repeated Animal animals;
+
+	Bird favorite;
+
+	repeated Bird birds;
+
+	/** A nested message with fields of the hierarchy. */
+	message Aviary {
+		Bird boss;
+
+		repeated Bird residents;
+	}
+
+	Aviary aviary;
+}
+
+/** A nested OpenWorld hierarchy with an abstract intermediate. */
+message Habitat {
+	abstract message Plant {
+		string species;
+	}
+
+	abstract message Tree extends Plant {
+		int32 height;
+	}
+
+	message Birch extends Tree {
+	}
+
+	Tree tallest;
+
+	repeated Plant plants;
+}
