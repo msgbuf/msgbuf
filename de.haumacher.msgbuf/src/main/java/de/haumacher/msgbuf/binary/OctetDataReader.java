@@ -479,7 +479,7 @@ public class OctetDataReader implements DataReader {
 			if (data < 0) {
 				throw new IOException("End of stream received, while reading var int.");
 			}
-			result |= (data & MASK_7) << shift;
+			result |= ((long) (data & MASK_7)) << shift;
 			if ((data & BIT_8) == 0) {
 				return result;
 			}

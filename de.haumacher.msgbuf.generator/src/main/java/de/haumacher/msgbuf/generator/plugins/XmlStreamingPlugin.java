@@ -76,6 +76,13 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 	}
 
 	@Override
+	public void addTypeIds(Map<String, Option> options, MessageDef def, Map<String, String> typeIds) {
+		if (!noXml(options)) {
+			typeIds.put("XML element name (@XmlName)", xmlTypeName(def, noXmlNames(options)));
+		}
+	}
+
+	@Override
 	public void addInterfaces(Map<String, Option> options, MessageDef def, List<String> generalizations) {
 		if (noXml(options)) {
 			return;
@@ -180,7 +187,19 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 							continue;
 						}
 						if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
+							// A missing value is omitted (a missing JSON value is written as JSON null).
+							boolean omitMissing = Util.isNullable(field) && !isJson(field);
+							// The default value of a bytes field is null, even if it is not nullable.
+							boolean omitNull = !Util.isNullable(field) && Util.isSingleBytes(field);
+							if (omitMissing) {
+								line("if (" + CodeConvention.hasName(field) + "()) {");
+							} else if (omitNull) {
+								line("if (" + CodeConvention.getterName(field) + "() != null) {");
+							}
 							line("out.writeAttribute(" + xmlFieldNameConstant(field) + ", " + asString(field, CodeConvention.getterName(field) + "()") + ");");
+							if (omitMissing || omitNull) {
+								line("}");
+							}
 						}
 					}
 				}
@@ -513,15 +532,20 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			private void readPrimitiveXmlElement(Field field) {
 				line("case " + xmlFieldNameConstant(field) + ": {");
 				{
-					line(setterName(field) + "(" + fromString(field, "in.getElementText()") + ");");
+					if (field.isRepeated()) {
+						// The list parser evaluates its input twice.
+						line("String text = in.getElementText();");
+						line(setterName(field) + "(" + fromString(field, "text") + ");");
+					} else {
+						line(setterName(field) + "(" + fromString(field, "in.getElementText()") + ");");
+					}
 					line("break;");
 				}
 				line("}");
 			}
 
 			String xmlTypeNameRef(MessageDef def) {
-				// A nested specialization is not in scope by its simple name in the code of its generalization.
-				String implRef = def.getFile() == null ? qImplName(def) : implName(def);
+				String implRef = simpleNameInScopeOfGeneralizations(def) ? implName(def) : qImplName(def);
 				return implRef + "." + xmlTypeNameConstant(def);
 			}
 		};
@@ -571,6 +595,10 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 	}
 
 	String xmlTypeName(MessageDef def) {
+		return xmlTypeName(def, _noXmlNames);
+	}
+
+	private static String xmlTypeName(MessageDef def, boolean noXmlNames) {
 		Optional<Option> xmlName = Util.getOption(def, "XmlName");
 		if (xmlName.isPresent()) {
 			return ((StringOption) xmlName.get()).getValue();
@@ -579,7 +607,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		if (fieldName.isPresent()) {
 			return ((StringOption) fieldName.get()).getValue();
 		}
-		return xmlName(def.getName());
+		return noXmlNames ? def.getName() : CodeUtil.xmlName(def.getName());
 	}
 
 	String xmlFieldName(Field def) {
@@ -616,8 +644,16 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		}
 	}
 	
+	/**
+	 * Expression parsing a comma-separated list.
+	 *
+	 * <p>
+	 * The given value expression is evaluated twice, it must not have side effects. An empty value
+	 * is an empty list (as written for an empty list by {@link #toStringList(Type, String)}).
+	 * </p>
+	 */
 	String fromStringList(de.haumacher.msgbuf.generator.ast.Type type, String value) {
-		return "java.util.Arrays.stream(" + value + ".split(\"\\\\s*,\\\\s*\")).map(x -> " + fromStringSingle(type, "x")
+		return "java.util.Arrays.stream(" + value + ".isEmpty() ? new String[0] : " + value + ".split(\"\\\\s*,\\\\s*\")).map(x -> " + fromStringSingle(type, "x")
 				+ ").collect(java.util.stream.Collectors.toList())";
 	}
 
@@ -661,7 +697,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			return value;
 			
 		case BYTES:
-			return "java.util.Base64.getDecoder().decode(" + value + ");";
+			return "java.util.Base64.getDecoder().decode(" + value + ")";
 
 		case JSON:
 			// JSON values are encoded as JSON text strings in XML instead of using the JsonValue
@@ -690,7 +726,8 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			
 		case FIXED_32:
 		case UINT_32: 
-			return "(int) Long.toString(" + value + ")";
+			// Unsigned decimal, the inverse of fromStringSingle().
+			return "Long.toString(Integer.toUnsignedLong(" + value + "))";
 			
 		case FIXED_64:
 		case INT_64: 
@@ -709,7 +746,7 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 			return value;
 			
 		case BYTES:
-			return "java.util.Base64.getEncoder().encodeToString(" + value + ");";
+			return "java.util.Base64.getEncoder().encodeToString(" + value + ")";
 
 		case JSON:
 			// See fromStringSingle(): JSON values are transmitted as JSON text strings in XML.
@@ -719,6 +756,11 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 		throw new UnsupportedOperationException("Cannot read values of type: " + primitiveType);
 	}
 	
+	private static boolean isJson(Field field) {
+		Type type = field.getType();
+		return !field.isRepeated() && type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.JSON;
+	}
+
 	boolean isEnum(Type type) {
 		return type instanceof CustomType && ((CustomType) type).getDefinition() instanceof EnumDef;
 	}

@@ -356,7 +356,7 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 					break;
 				}
 				case SNIPPETS__XML_ATTR: {
-					setSnippets(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+					setSnippets(java.util.Arrays.stream(value.isEmpty() ? new String[0] : value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 					break;
 				}
 				default: {
@@ -377,7 +377,8 @@ public class SearchResponse_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 					break;
 				}
 				case SNIPPETS__XML_ATTR: {
-					setSnippets(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+					String text = in.getElementText();
+					setSnippets(java.util.Arrays.stream(text.isEmpty() ? new String[0] : text.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 					break;
 				}
 				default: {

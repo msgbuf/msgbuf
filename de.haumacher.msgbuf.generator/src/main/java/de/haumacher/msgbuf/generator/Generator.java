@@ -31,11 +31,13 @@ import de.haumacher.msgbuf.generator.ast.Field;
 import de.haumacher.msgbuf.generator.ast.Flag;
 import de.haumacher.msgbuf.generator.ast.MapType;
 import de.haumacher.msgbuf.generator.ast.MessageDef;
+import de.haumacher.msgbuf.generator.ast.NumberOption;
 import de.haumacher.msgbuf.generator.ast.Option;
 import de.haumacher.msgbuf.generator.ast.PrimitiveType;
 import de.haumacher.msgbuf.generator.ast.QName;
 import de.haumacher.msgbuf.generator.ast.StringOption;
 import de.haumacher.msgbuf.generator.ast.Type;
+import de.haumacher.msgbuf.generator.common.MsgBufJsonProtocol;
 import de.haumacher.msgbuf.generator.common.Util;
 import de.haumacher.msgbuf.generator.dart.DartLibGenerator;
 import de.haumacher.msgbuf.generator.parser.ParseException;
@@ -96,6 +98,7 @@ public class Generator {
 	private List<File> _includePaths = new ArrayList<>();
 	private ClassLoader _importClassLoader;
 	private Set<String> _loadedFiles = new HashSet<>();
+	private Map<String, DefinitionFile> _fileByPath = new HashMap<>();
 	private List<DefinitionFile> _importedFiles = new ArrayList<>();
 
 	public void setOut(File out) {
@@ -138,11 +141,20 @@ public class Generator {
 
 	public DefinitionFile load(File file)
 			throws ParseException, IOException, FileNotFoundException {
-		_loadedFiles.add(file.getCanonicalPath());
+		String canonical = file.getCanonicalPath();
+		DefinitionFile loaded = _fileByPath.get(canonical);
+		if (loaded != null) {
+			// The same file given twice, or given after being loaded as import of another file:
+			// Generate code for it, but do not enter its definitions again.
+			_importedFiles.remove(loaded);
+			return loaded;
+		}
+		_loadedFiles.add(canonical);
 		DefinitionFile content;
 		try (InputStream in = new FileInputStream(file)) {
 			content = load(parse(in));
 		}
+		_fileByPath.put(canonical, content);
 		_sourceNames.put(content, file.getName());
 		resolveImports(content, file);
 		return content;
@@ -176,6 +188,11 @@ public class Generator {
 		}
 
 		List<String> errors = new ArrayList<>();
+		// Duplicate definitions and ambiguous names.
+		errors.addAll(_table.drainErrors(this::sourceDescription));
+		if (!errors.isEmpty()) {
+			throw new GeneratorException(errors);
+		}
 		for (DefinitionFile file : _files) {
 			validateOpenWorld(file, errors);
 		}
@@ -200,6 +217,7 @@ public class Generator {
 				validateFormatReferences(file, plugin, errors);
 			}
 		}
+		validateHierarchyNames(plugin, errors);
 		if (!errors.isEmpty()) {
 			throw new GeneratorException(errors);
 		}
@@ -627,6 +645,210 @@ public class Generator {
 	}
 
 	/**
+	 * Rejects messages of a hierarchy whose identifiers in the generated code clash.
+	 *
+	 * <ul>
+	 * <li>The concrete specializations of an abstract message must have distinct type IDs in all
+	 * generated formats (the JSON type ID, explicit binary type IDs and plug-in identifiers such as
+	 * XML element names). The readers of the abstract message dispatch on these IDs (and the
+	 * registry of an <code>option OpenWorld</code> hierarchy is keyed by them), so equal IDs
+	 * produce duplicate case labels or ambiguous data.</li>
+	 * <li>The concrete messages of a hierarchy must have distinct constants in its
+	 * <code>TypeKind</code> enum, unless <code>option NoTypeKind</code> is given.</li>
+	 * <li>A message must not have the name of a nested definition of one of its generalizations:
+	 * In the generated class of the message, the name of the inherited nested class would shadow
+	 * the name of the class itself.</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * All loaded files are considered, so that a clash of an extension with a message of another
+	 * file of the hierarchy is found. A clash is only reported, if at least one of the messages is
+	 * generated.
+	 * </p>
+	 */
+	private void validateHierarchyNames(GeneratorPlugin plugin, List<String> errors) {
+		List<MessageDef> messages = new ArrayList<>();
+		for (DefinitionFile file : _files) {
+			for (Definition def : file.getDefinitions()) {
+				collectMessages(def, messages);
+			}
+		}
+
+		Set<String> reported = new HashSet<>();
+		for (MessageDef message : messages) {
+			if (message.isAbstract()) {
+				validateTypeIds(message, plugin, reported, errors);
+			}
+		}
+
+		for (MessageDef message : messages) {
+			if (message.getExtendedDef() == null && !message.getSpecializations().isEmpty()) {
+				validateTypeKinds(message, errors);
+			}
+		}
+
+		for (MessageDef message : messages) {
+			if (isGenerated(message)) {
+				validateInheritedNames(message, errors);
+			}
+		}
+	}
+
+	private static void collectMessages(Definition def, List<MessageDef> result) {
+		if (def instanceof MessageDef) {
+			MessageDef message = (MessageDef) def;
+			result.add(message);
+			for (Definition inner : message.getDefinitions()) {
+				collectMessages(inner, result);
+			}
+		}
+	}
+
+	private boolean isGenerated(Definition def) {
+		return !_importedFiles.contains(Util.definingFile(def));
+	}
+
+	private void validateTypeIds(MessageDef generalization, GeneratorPlugin plugin, Set<String> reported, List<String> errors) {
+		List<MessageDef> specializations = new ArrayList<>();
+		addConcreteSpecializations(generalization, specializations, new HashSet<>());
+		List<Map<String, String>> ids = new ArrayList<>();
+		for (MessageDef specialization : specializations) {
+			ids.add(typeIds(specialization, plugin));
+		}
+		for (int n = 1; n < specializations.size(); n++) {
+			MessageDef message = specializations.get(n);
+			for (int m = 0; m < n; m++) {
+				MessageDef other = specializations.get(m);
+				if (!isGenerated(message) && !isGenerated(other)) {
+					continue;
+				}
+				List<String> clashes = new ArrayList<>();
+				Set<String> annotations = new java.util.LinkedHashSet<>();
+				boolean renameHelps = false;
+				for (Map.Entry<String, String> entry : ids.get(n).entrySet()) {
+					if (!entry.getValue().equals(ids.get(m).get(entry.getKey()))) {
+						continue;
+					}
+					java.util.regex.Matcher matcher = TYPE_ID_KIND.matcher(entry.getKey());
+					String kind = matcher.matches() ? matcher.group(1) : entry.getKey();
+					if (matcher.matches()) {
+						annotations.add(matcher.group(2));
+					}
+					clashes.add("the same " + kind + " '" + entry.getValue() + "'");
+					renameHelps |= !entry.getKey().equals(BINARY_TYPE_ID);
+				}
+				if (clashes.isEmpty() || !reported.add(Util.protoName(other) + " " + Util.protoName(message))) {
+					continue;
+				}
+				MessageDef blamed = isGenerated(message) ? message : other;
+				errors.add(sourceDescription(Util.definingFile(blamed)) + ": In the hierarchy of '" + Util.protoName(generalization)
+					+ "', " + describe(other) + " and " + describe(message) + " have "
+					+ String.join(" and ", clashes) + ", so that the readers of '" + Util.protoName(generalization)
+					+ "' cannot distinguish them. "
+					+ (annotations.isEmpty() ? "Rename one of the messages."
+						: "Give one of the messages a distinct identifier with " + String.join(" or ", annotations)
+							+ (renameHelps ? ", or rename it." : "."))
+				);
+			}
+		}
+	}
+
+	/**
+	 * Description of a type ID: the kind of identifier and the annotation that sets it.
+	 */
+	private static final java.util.regex.Pattern TYPE_ID_KIND = java.util.regex.Pattern.compile("(.*) \\((@\\w+)\\)");
+
+	private static final String BINARY_TYPE_ID = "binary type ID (@type_id)";
+
+	/**
+	 * Adds the concrete specializations of the given message of all files in depth-first order.
+	 */
+	private static void addConcreteSpecializations(MessageDef def, List<MessageDef> result, Set<MessageDef> seen) {
+		for (MessageDef specialization : def.getSpecializations()) {
+			if (!seen.add(specialization)) {
+				continue;
+			}
+			if (!specialization.isAbstract()) {
+				result.add(specialization);
+			}
+			addConcreteSpecializations(specialization, result, seen);
+		}
+	}
+
+	/**
+	 * The identifiers of the given concrete message in polymorphic values of all generated formats,
+	 * indexed by a description of the identifier and the annotation that sets it.
+	 */
+	private Map<String, String> typeIds(MessageDef message, GeneratorPlugin plugin) {
+		DefinitionFile file = Util.definingFile(message);
+		Map<String, Option> options = file.getOptions();
+		Map<String, String> result = new java.util.LinkedHashMap<>();
+		if (MessageGenerator.isJson(options) || generatesTypeScript(file)) {
+			result.put("type ID (@Name)", MsgBufJsonProtocol.typeId(message));
+		}
+		if (MessageGenerator.isBinary(options)) {
+			Option typeId = message.getOptions().get("type_id");
+			if (typeId instanceof NumberOption) {
+				result.put(BINARY_TYPE_ID, Integer.toString((int) ((NumberOption) typeId).getValue()));
+			}
+		}
+		plugin.addTypeIds(options, message, result);
+		return result;
+	}
+
+	private String describe(Definition def) {
+		return "message '" + Util.protoName(def) + "' of '" + sourceDescription(Util.definingFile(def)) + "'";
+	}
+
+	/**
+	 * Rejects clashing constants in the <code>TypeKind</code> enum generated for the given hierarchy
+	 * root.
+	 */
+	private void validateTypeKinds(MessageDef root, List<String> errors) {
+		DefinitionFile rootFile = Util.definingFile(root);
+		if (!isGenerated(root) || MessageGenerator.isTrue(rootFile.getOptions().get("NoTypeKind"), false)) {
+			return;
+		}
+		Map<String, MessageDef> constants = new HashMap<>();
+		for (MessageDef message : AbstractMessageGenerator.concreteSpecializations(root)) {
+			String constant = CodeConvention.typeKindConstant(message);
+			MessageDef clash = constants.putIfAbsent(constant, message);
+			if (clash != null) {
+				errors.add(sourceDescription(Util.definingFile(message)) + ": In the hierarchy of '" + Util.protoName(root)
+					+ "', " + describe(clash) + " and " + describe(message) + " generate the same constant '" + constant
+					+ "' in the enum '" + Util.toString(root) + "." + CodeConvention.TYPE_KIND_NAME
+					+ "'. Rename one of the messages, or add 'option NoTypeKind;' to '" + sourceDescription(rootFile)
+					+ "'" + (Util.definingFile(message) != rootFile || Util.definingFile(clash) != rootFile
+						? " and all files extending its hierarchy" : "")
+					+ ".");
+			}
+		}
+	}
+
+	/**
+	 * Rejects a message with the name of a nested definition of one of its generalizations.
+	 */
+	private void validateInheritedNames(MessageDef message, List<String> errors) {
+		Set<MessageDef> seen = new HashSet<>();
+		seen.add(message);
+		for (MessageDef generalization = message.getExtendedDef(); generalization != null && seen.add(generalization);
+				generalization = generalization.getExtendedDef()) {
+			for (Definition member : generalization.getDefinitions()) {
+				if (member != message && member.getName().equals(message.getName())) {
+					errors.add(sourceDescription(Util.definingFile(message)) + ": Message '" + Util.protoName(message)
+						+ "' extends message '" + Util.protoName(generalization) + "' of '"
+						+ sourceDescription(Util.definingFile(generalization)) + "', which declares the nested "
+						+ (member instanceof EnumDef ? "enum" : "message") + " '" + Util.protoName(member)
+						+ "' with the same name. In the generated Java class of '" + Util.protoName(message)
+						+ "', the name '" + message.getName() + "' would refer to the inherited nested type instead of the"
+						+ " class itself. Rename one of them.");
+					return;
+				}
+			}
+		}
+	}
+
+	/**
 	 * Rejects references to definitions of other files that are generated without a serialization
 	 * format that the referencing code needs.
 	 *
@@ -802,6 +1024,7 @@ public class Generator {
 			if (resolved != null) {
 				String canonical = resolved.getCanonicalPath();
 				if (_loadedFiles.contains(canonical)) {
+					addImport(file, _fileByPath.get(canonical));
 					continue;
 				}
 				_loadedFiles.add(canonical);
@@ -809,6 +1032,8 @@ public class Generator {
 				try (InputStream in = new FileInputStream(resolved)) {
 					imported = parse(in);
 				}
+				_fileByPath.put(canonical, imported);
+				addImport(file, imported);
 				_sourceNames.put(imported, resolved.getName());
 				_files.add(imported);
 				_table.enter(imported);
@@ -821,6 +1046,7 @@ public class Generator {
 			if (_importClassLoader != null) {
 				String resourceKey = "classpath:" + importPath;
 				if (_loadedFiles.contains(resourceKey)) {
+					addImport(file, _fileByPath.get(resourceKey));
 					continue;
 				}
 				InputStream classpathStream = _importClassLoader.getResourceAsStream(importPath);
@@ -830,6 +1056,8 @@ public class Generator {
 					try (InputStream in = classpathStream) {
 						imported = parse(in);
 					}
+					_fileByPath.put(resourceKey, imported);
+					addImport(file, imported);
 					_sourceNames.put(imported, new File(importPath).getName());
 					_files.add(imported);
 					_table.enter(imported);
@@ -844,10 +1072,17 @@ public class Generator {
 		}
 	}
 
+	private void addImport(DefinitionFile file, DefinitionFile imported) {
+		if (imported != null && imported != file) {
+			_table.addImport(file, imported);
+		}
+	}
+
 	private void resolveImportsFromClasspath(DefinitionFile file) throws IOException, ParseException {
 		for (String importPath : file.getImports()) {
 			String resourceKey = "classpath:" + importPath;
 			if (_loadedFiles.contains(resourceKey)) {
+				addImport(file, _fileByPath.get(resourceKey));
 				continue;
 			}
 
@@ -859,6 +1094,8 @@ public class Generator {
 					try (InputStream in = classpathStream) {
 						imported = parse(in);
 					}
+					_fileByPath.put(resourceKey, imported);
+					addImport(file, imported);
 					_sourceNames.put(imported, new File(importPath).getName());
 					_files.add(imported);
 					_table.enter(imported);

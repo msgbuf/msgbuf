@@ -1,0 +1,5 @@
+package reject.hierarchy.open;
+
+option OpenWorld;
+
+abstract message Shape { }

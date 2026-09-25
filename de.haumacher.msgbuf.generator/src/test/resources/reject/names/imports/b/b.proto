@@ -1,0 +1,3 @@
+package reject.names.imports.b;
+
+message Node { int32 y; }

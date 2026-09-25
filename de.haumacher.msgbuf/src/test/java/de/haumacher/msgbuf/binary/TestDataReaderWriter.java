@@ -43,6 +43,37 @@ public class TestDataReaderWriter extends TestCase {
 		});
 	}
 	
+	public void testVarLongMessage() throws IOException {
+		long[] values = { 0L, 1L, -1L, Integer.MAX_VALUE + 1L, 1L << 35, Long.MIN_VALUE, Long.MAX_VALUE };
+		doTest(new IOTest() {
+			@Override
+			public void writeObject(OctetDataWriter out) throws IOException {
+				out.beginObject();
+				int id = 1;
+				for (long value : values) {
+					out.name(id++);
+					out.value(value);
+					out.name(id++);
+					out.valueSigned(value);
+				}
+				out.endObject();
+			}
+
+			@Override
+			public void readObject(OctetDataReader in) throws IOException {
+				in.beginObject();
+				int id = 1;
+				for (long value : values) {
+					assertEquals(id++, in.nextName());
+					assertEquals(value, in.nextLong());
+					assertEquals(id++, in.nextName());
+					assertEquals(value, in.nextLongSigned());
+				}
+				in.endObject();
+			}
+		});
+	}
+
 	public void testStringMessage() throws IOException {
 		doTest(new IOTest() {
 			@Override

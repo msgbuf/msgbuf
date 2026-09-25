@@ -1,0 +1,5 @@
+package reject.names.imports.a;
+
+message Node { string x; }
+
+message UseA { Node n; }

@@ -1,0 +1,7 @@
+package reject.names.imports.e;
+
+import "../a/a.proto";
+import "../b/b.proto";
+
+/** Both imported files define 'Node'. */
+message UseE { Node n; }

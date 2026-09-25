@@ -1,0 +1,6 @@
+package reject.names.imports.d;
+
+import "../c/c.proto";
+
+/** 'Node' is defined in 'a', which is imported indirectly (through 'c'). */
+message UseD { Node n; }

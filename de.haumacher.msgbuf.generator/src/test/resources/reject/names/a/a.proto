@@ -1,0 +1,21 @@
+package reject.names.a;
+
+/** Uses the unqualified name 'Node', also defined in package 'reject.names.b' (issue #46). */
+message User {
+	Node node;
+
+	message Inner {
+		repeated Node nodes;
+	}
+}
+
+/** See {@link Node}. */
+enum Color {
+	RED;
+}
+
+message Node {
+	string label;
+}
+
+message Special extends Node { }

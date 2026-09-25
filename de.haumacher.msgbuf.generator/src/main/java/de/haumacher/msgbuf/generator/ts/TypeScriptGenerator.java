@@ -560,15 +560,7 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 	 * the <code>.proto</code> file.
 	 */
 	private static String protoName(Definition def) {
-		List<String> names = new ArrayList<>();
-		for (Definition current = def; current != null; current = current.getOuter()) {
-			names.add(0, current.getName());
-		}
-		QName pkg = Util.definingFile(def).getPackage();
-		if (pkg != null) {
-			names.addAll(0, pkg.getNames());
-		}
-		return String.join(".", names);
+		return Util.protoName(def);
 	}
 
 	private static String renameHint() {
@@ -781,7 +773,8 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 			type = owner;
 		} else {
 			MessageDef lookupContext = owner instanceof MessageDef ? (MessageDef) owner : owner == null ? null : owner.getOuter();
-			type = _table.resolve(lookupContext, QName.create().setNames(Arrays.asList(typeName.split("\\."))));
+			DefinitionFile lookupFile = owner == null ? _proto : Util.definingFile(owner);
+			type = _table.resolve(lookupFile, lookupContext, QName.create().setNames(Arrays.asList(typeName.split("\\."))));
 		}
 
 		if (type != null) {

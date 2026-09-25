@@ -1,0 +1,5 @@
+package reject.names.twice;
+
+message Thing { }
+
+enum Thing { A; }
