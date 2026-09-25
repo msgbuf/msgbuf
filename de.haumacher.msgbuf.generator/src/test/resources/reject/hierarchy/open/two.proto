@@ -1,0 +1,5 @@
+package reject.hierarchy.two;
+
+import "base.proto";
+
+message Circle extends reject.hierarchy.open.Shape { }

@@ -69,6 +69,37 @@
   now read the types of other files. The generated registration class (e.g. `Ext1Types`) additionally registers the
   XML element name of each extension type with the root (`registerXml()`, `XML_REGISTRY`), if the files generate XML.
   The wire formats are unchanged.
+- **Primitive types in XML and binary format** (#44): `bytes`, `fixed32` and `uint32` fields no longer generate
+  uncompilable XML code (all versions since 1.1.0). `bytes` are written in Base64, `fixed32`/`uint32` as unsigned
+  decimal (the readers also accept the signed form). Nullable fields that are not set are omitted in XML format, and
+  `bytes` fields without a value in XML and binary format, instead of failing with a `NullPointerException`. An empty `repeated`
+  value (written as empty attribute) is read as empty list (before, reading failed for numbers, and a list of strings
+  contained one empty string). In binary format, `sint32`/`sint64` values are now written zig-zag encoded and
+  `fixed32`/`sfixed32`/`fixed64`/`sfixed64` values in fixed length, as the readers always expected, and 64 bit values
+  above 32 bits are read correctly (fix in `msgbuf-api`). **Wire format change:** the binary encoding of these six
+  types changes; values written before could not be read back correctly (except `0`), and writing a `repeated` field
+  of these types failed.
+- **Clashing type IDs in a hierarchy** (#45): Two concrete specializations of an abstract message with the same type
+  ID (by default the simple name, e.g. a top-level `Item` and a nested `Msg.Item`, or an equal `@Name`), the same XML
+  element name, or the same explicit `@type_id`, also in extension files of an `option OpenWorld` hierarchy generated
+  together, are rejected with an error naming both definitions. So are messages of one hierarchy with the same
+  `TypeKind` constant (fix: rename, or `option NoTypeKind`), and a message with the name of a nested definition of
+  one of its generalizations, which the generated class could not refer to. A top-level specialization whose simple
+  name is shadowed by a nested definition in the scope of its generalization is referenced by its qualified name in
+  the readers (before, the reader dispatched to the nested definition). **Source compatibility:** these definitions
+  generated uncompilable code before (or silently wrong readers), except equal type IDs in the `option OpenWorld`
+  registry of extensions of different files, where the last registered type won.
+- **Name resolution across packages** (#46): An unqualified type name resolves (after nested definitions of the
+  message using it and its outer messages) to a definition of the package of the file using it, then to a definition
+  of the files it imports (directly, then indirectly), and only then to a definition of any other file generated in
+  the same run, if it is unique (see README, "Type names and imports"). Before, one global table of simple names was
+  used, and the definition of the last file loaded won. So the resolution of a file's names no longer depends on
+  unrelated files generated together, as long as it uses definitions of its own package or its imports. Duplicate
+  definitions in a package (in one or several files) stop the generation with an error naming the files, instead of
+  only a message on the console. A file given to the generator twice, or given after it
+  has been loaded as an import, is loaded only once (and generated). **Source compatibility:** an unqualified name
+  that is defined in two imported files (at the same import depth), or not in the own package or imports but in
+  several other files generated together, is now rejected as ambiguous; use a qualified name.
 
 ## 1.2.1
 

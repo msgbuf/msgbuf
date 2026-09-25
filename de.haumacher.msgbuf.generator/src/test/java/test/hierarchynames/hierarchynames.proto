@@ -1,0 +1,43 @@
+syntax = "msgbuf";
+
+/**
+ * Messages of one hierarchy with equal simple names, made distinct with @Name and option NoTypeKind (issue #45).
+ */
+package test.hierarchynames.data;
+
+option NoTypeKind;
+
+abstract message Msg { }
+
+message A {
+	@Name("A.Item")
+	message Item extends Msg {
+		string a;
+	}
+}
+
+message B {
+	message Item extends Msg {
+		int32 b;
+	}
+}
+
+message Outer {
+	/** Not part of the hierarchy, but in scope in the code of Shape. */
+	message Item {
+		string other;
+	}
+
+	abstract message Shape { }
+}
+
+/** Referenced from the readers of Outer.Shape, where Outer.Item shadows its simple name. */
+@Name("TopItem")
+message Item extends Outer.Shape {
+	string top;
+}
+
+message Container {
+	Msg msg;
+	Outer.Shape shape;
+}

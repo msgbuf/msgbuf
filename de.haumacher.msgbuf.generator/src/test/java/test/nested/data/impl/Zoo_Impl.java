@@ -626,7 +626,7 @@ public class Zoo_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implem
 		protected void readFieldXmlAttribute(String name, String value) {
 			switch (name) {
 				case WORDS__XML_ATTR: {
-					setWords(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+					setWords(java.util.Arrays.stream(value.isEmpty() ? new String[0] : value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 					break;
 				}
 				default: {
@@ -639,7 +639,8 @@ public class Zoo_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implem
 		protected void readFieldXmlElement(javax.xml.stream.XMLStreamReader in, String localName) throws javax.xml.stream.XMLStreamException {
 			switch (localName) {
 				case WORDS__XML_ATTR: {
-					setWords(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+					String text = in.getElementText();
+					setWords(java.util.Arrays.stream(text.isEmpty() ? new String[0] : text.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 					break;
 				}
 				default: {

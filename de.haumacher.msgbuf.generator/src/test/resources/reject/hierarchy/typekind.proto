@@ -1,0 +1,21 @@
+package reject.hierarchy.typekind;
+
+/** Distinct type IDs, but the same TypeKind constant. */
+abstract message Msg { }
+
+message A {
+	@Name("A.Item")
+	message Item extends Msg { }
+}
+
+message B {
+	message Item extends Msg { }
+}
+
+/** A concrete root has a TypeKind enum, too. */
+message Root { }
+
+message FooBar extends Root { }
+
+@Name("Other")
+message FOO_BAR extends Root { }

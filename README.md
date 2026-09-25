@@ -150,6 +150,25 @@ message SearchResponse {
 }
 ```
 
+### Type names and imports
+
+Messages and enums of other `.proto` files are made available with `import "path/to/other.proto";` (resolved relative
+to the importing file, then in the include paths, then on the classpath). A type can always be referenced by its
+qualified name (`package.Type`, `package.Outer.Inner`). An unqualified name `Type` (or `Type.Inner`) is resolved in
+the following order; the first step that finds a definition wins:
+
+1. A nested definition of the message using the name, or of one of its outer messages (innermost first).
+2. A top-level definition of the package of the file using the name (in any file of that package generated in the same
+   run).
+3. A top-level definition of a file imported by that file. If none of the imported files defines the name, the files
+   they import are searched, and so on. Two definitions found in the same step are an error: use a qualified name.
+4. For compatibility, a top-level definition of any other file generated in the same run, if exactly one file defines
+   the name. Otherwise, the name is rejected as ambiguous.
+
+Because of step 3, adding an unrelated file to the files generated together (e.g. a new `.proto` file in a Maven
+project) does not change how the names of a file resolve, as long as the definitions it uses come from its own package
+or its imports. A package must not define a top-level name twice, not even in different files.
+
 ### Transient fields
 
 Fields marked with `transient` are not serialized in any format (JSON, binary, XML). They exist only in the in-memory

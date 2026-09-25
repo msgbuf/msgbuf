@@ -1,0 +1,77 @@
+syntax = "msgbuf";
+
+/**
+ * All primitive types in all serialization formats, singular, repeated and nullable (issue #44).
+ */
+package test.xmlprimitives.data;
+
+enum Color {
+	RED;
+	GREEN;
+}
+
+/** Every primitive type as singular field. */
+message Values {
+	bool vBool;
+	int32 vInt32;
+	sint32 vSint32;
+	uint32 vUint32;
+	fixed32 vFixed32;
+	sfixed32 vSfixed32;
+	int64 vInt64;
+	sint64 vSint64;
+	uint64 vUint64;
+	fixed64 vFixed64;
+	sfixed64 vSfixed64;
+	float vFloat;
+	double vDouble;
+	string vString;
+	bytes vBytes;
+	json vJson;
+	Color vColor;
+}
+
+/** Every primitive type as repeated field. */
+message Lists {
+	repeated bool lBool;
+	repeated int32 lInt32;
+	repeated sint32 lSint32;
+	repeated uint32 lUint32;
+	repeated fixed32 lFixed32;
+	repeated sfixed32 lSfixed32;
+	repeated int64 lInt64;
+	repeated sint64 lSint64;
+	repeated uint64 lUint64;
+	repeated fixed64 lFixed64;
+	repeated sfixed64 lSfixed64;
+	repeated float lFloat;
+	repeated double lDouble;
+	repeated string lString;
+	repeated bytes lBytes;
+	repeated Color lColor;
+}
+
+/** Every primitive type as nullable field. */
+message Nullables {
+	@Nullable bool nBool;
+	@Nullable int32 nInt32;
+	@Nullable sint32 nSint32;
+	@Nullable uint32 nUint32;
+	@Nullable fixed32 nFixed32;
+	@Nullable sfixed32 nSfixed32;
+	@Nullable int64 nInt64;
+	@Nullable sint64 nSint64;
+	@Nullable uint64 nUint64;
+	@Nullable fixed64 nFixed64;
+	@Nullable sfixed64 nSfixed64;
+	@Nullable float nFloat;
+	@Nullable double nDouble;
+	@Nullable string nString;
+	@Nullable bytes nBytes;
+	@Nullable json nJson;
+	@Nullable Color nColor;
+	@Nullable repeated int32 nlInt32;
+	@Nullable repeated uint32 nlUint32;
+	@Nullable repeated string nlString;
+	@Nullable repeated bytes nlBytes;
+}

@@ -1,0 +1,6 @@
+package reject.names.c;
+
+/** 'Node' is defined in two other packages, but not in this one. */
+message Use {
+	Node node;
+}

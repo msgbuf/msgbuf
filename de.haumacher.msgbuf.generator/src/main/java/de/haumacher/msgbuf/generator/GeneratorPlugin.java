@@ -100,6 +100,27 @@ public interface GeneratorPlugin {
 		// No additional formats by default.
 	}
 
+	/**
+	 * Adds the identifiers of the given concrete message in polymorphic values of the formats of
+	 * this plug-in.
+	 *
+	 * <p>
+	 * The generator rejects two concrete specializations of an abstract message with the same
+	 * identifier, since the readers of the abstract message cannot distinguish them.
+	 * </p>
+	 *
+	 * @param options
+	 *        The options of the file defining the message.
+	 * @param def
+	 *        The concrete message.
+	 * @param typeIds
+	 *        The identifiers to add to, indexed by a description of the identifier that names the
+	 *        annotation that sets it, e.g. <code>"XML element name (@XmlName)"</code>.
+	 */
+	default void addTypeIds(Map<String, Option> options, MessageDef def, Map<String, String> typeIds) {
+		// No additional identifiers by default.
+	}
+
 	/** 
 	 * {@link GeneratorPlugin} that does not generate any output.
 	 */
@@ -141,6 +162,12 @@ public interface GeneratorPlugin {
 			public void addFieldFormats(Map<String, Option> options, Field field, Set<String> formats) {
 				self.addFieldFormats(options, field, formats);
 				next.addFieldFormats(options, field, formats);
+			}
+
+			@Override
+			public void addTypeIds(Map<String, Option> options, MessageDef def, Map<String, String> typeIds) {
+				self.addTypeIds(options, def, typeIds);
+				next.addTypeIds(options, def, typeIds);
 			}
 			
 			@Override

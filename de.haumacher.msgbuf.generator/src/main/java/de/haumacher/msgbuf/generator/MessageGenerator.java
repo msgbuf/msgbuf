@@ -1890,8 +1890,12 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 							continue;
 						}
 						boolean nullable = Util.isNullable(field);
+						// The default value of a bytes field is null, which cannot be written.
+						boolean nullBytes = !nullable && Util.isSingleBytes(field);
 						if (nullable) {
 							line("if (" + hasName(field) + "()" + ") {");
+						} else if (nullBytes) {
+							line("if (" + getterCall(field) + " != null) {");
 						}
 						{
 							line("out.name(" + binaryConstant(field) + ");");
@@ -1912,7 +1916,7 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 								binaryWriteValue(field.getType(), getterCall(field));
 							}
 						}
-						if (nullable) {
+						if (nullable || nullBytes) {
 							line("}");
 						}
 					}
@@ -1924,10 +1928,24 @@ public class MessageGenerator extends AbstractMessageGenerator implements Defini
 
 	private void binaryWriteValue(Type type, String x) {
 		if (type instanceof PrimitiveType) {
-			if (((PrimitiveType) type).getKind() == Kind.JSON) {
-				line("de.haumacher.msgbuf.json.JsonUtil.toJsonValue(" + x + ").writeTo(out);");
-			} else {
-				line("out.value(" + x + ");");
+			switch (((PrimitiveType) type).getKind()) {
+				case JSON:
+					line("de.haumacher.msgbuf.json.JsonUtil.toJsonValue(" + x + ").writeTo(out);");
+					break;
+				case SINT_32:
+				case SINT_64:
+					// Zig-zag encoding, as read by mkBinaryReadValue() and announced by mkBinaryType().
+					line("out.valueSigned(" + x + ");");
+					break;
+				case FIXED_32:
+				case SFIXED_32:
+				case FIXED_64:
+				case SFIXED_64:
+					// Fixed-length encoding, as read by mkBinaryReadValue() and announced by mkBinaryType().
+					line("out.valueFixed(" + x + ");");
+					break;
+				default:
+					line("out.value(" + x + ");");
 			}
 		} else if (type instanceof CustomType) {
 			line(x + ".writeTo(out);");

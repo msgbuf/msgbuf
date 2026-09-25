@@ -600,13 +600,27 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 
 	/** Serializes all fields that are written as XML attributes. */
 	protected void writeAttributes(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
-		out.writeAttribute(INT__XML_ATTR, Integer.toString(getInt()));
-		out.writeAttribute(LONG__XML_ATTR, Long.toString(getLong()));
-		out.writeAttribute(BOOLEAN__XML_ATTR, Boolean.toString(getBoolean()));
-		out.writeAttribute(STRING__XML_ATTR, getString());
-		out.writeAttribute(INT_LIST__XML_ATTR, getIntList().stream().map(x -> Integer.toString(x)).collect(java.util.stream.Collectors.joining(", ")));
-		out.writeAttribute(STRING_LIST__XML_ATTR, getStringList().stream().map(x -> x).collect(java.util.stream.Collectors.joining(", ")));
-		out.writeAttribute(OPTIONAL_DECISION__XML_ATTR, getOptionalDecision().protocolName());
+		if (hasInt()) {
+			out.writeAttribute(INT__XML_ATTR, Integer.toString(getInt()));
+		}
+		if (hasLong()) {
+			out.writeAttribute(LONG__XML_ATTR, Long.toString(getLong()));
+		}
+		if (hasBoolean()) {
+			out.writeAttribute(BOOLEAN__XML_ATTR, Boolean.toString(getBoolean()));
+		}
+		if (hasString()) {
+			out.writeAttribute(STRING__XML_ATTR, getString());
+		}
+		if (hasIntList()) {
+			out.writeAttribute(INT_LIST__XML_ATTR, getIntList().stream().map(x -> Integer.toString(x)).collect(java.util.stream.Collectors.joining(", ")));
+		}
+		if (hasStringList()) {
+			out.writeAttribute(STRING_LIST__XML_ATTR, getStringList().stream().map(x -> x).collect(java.util.stream.Collectors.joining(", ")));
+		}
+		if (hasOptionalDecision()) {
+			out.writeAttribute(OPTIONAL_DECISION__XML_ATTR, getOptionalDecision().protocolName());
+		}
 	}
 
 	/** Serializes all fields that are written as XML elements. */
@@ -661,11 +675,11 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 				break;
 			}
 			case INT_LIST__XML_ATTR: {
-				setIntList(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> Integer.parseInt(x)).collect(java.util.stream.Collectors.toList()));
+				setIntList(java.util.Arrays.stream(value.isEmpty() ? new String[0] : value.split("\\s*,\\s*")).map(x -> Integer.parseInt(x)).collect(java.util.stream.Collectors.toList()));
 				break;
 			}
 			case STRING_LIST__XML_ATTR: {
-				setStringList(java.util.Arrays.stream(value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+				setStringList(java.util.Arrays.stream(value.isEmpty() ? new String[0] : value.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 				break;
 			}
 			case OPTIONAL_DECISION__XML_ATTR: {
@@ -698,11 +712,13 @@ public class NullableValues_Impl extends de.haumacher.msgbuf.data.AbstractDataOb
 				break;
 			}
 			case INT_LIST__XML_ATTR: {
-				setIntList(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> Integer.parseInt(x)).collect(java.util.stream.Collectors.toList()));
+				String text = in.getElementText();
+				setIntList(java.util.Arrays.stream(text.isEmpty() ? new String[0] : text.split("\\s*,\\s*")).map(x -> Integer.parseInt(x)).collect(java.util.stream.Collectors.toList()));
 				break;
 			}
 			case STRING_LIST__XML_ATTR: {
-				setStringList(java.util.Arrays.stream(in.getElementText().split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
+				String text = in.getElementText();
+				setStringList(java.util.Arrays.stream(text.isEmpty() ? new String[0] : text.split("\\s*,\\s*")).map(x -> x).collect(java.util.stream.Collectors.toList()));
 				break;
 			}
 			case OPTIONAL_DECISION__XML_ATTR: {

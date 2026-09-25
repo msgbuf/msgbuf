@@ -1,0 +1,18 @@
+package reject.hierarchy.shadow;
+
+option NoTypeKind;
+
+/** Messages named like nested definitions of their generalizations. */
+abstract message Base {
+	enum Kind { A; }
+
+	message Item extends Base { }
+}
+
+@Name("TopKind")
+message Kind extends Base { }
+
+message Outer {
+	@Name("Outer.Item")
+	message Item extends Base { }
+}

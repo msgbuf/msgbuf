@@ -279,9 +279,42 @@ public class CodeConvention {
 	}
 
 	public static String jsonTypeConstantRef(MessageDef def) {
-		// A nested specialization is not in scope by its simple name in the code of its generalization.
-		String typeRef = def.getFile() == null ? qTypeName(def) : typeName(def);
+		String typeRef = simpleNameInScopeOfGeneralizations(def) ? typeName(def) : qTypeName(def);
 		return typeRef + "." + jsonTypeConstant(def);
+	}
+
+	/**
+	 * Whether the given message can be referenced by its simple name (the simple name of its
+	 * interface or implementation class) from the generated code of its generalizations.
+	 *
+	 * <p>
+	 * A nested specialization is not in scope by its simple name in the code of its generalization.
+	 * A top-level specialization is in scope, unless a nested definition with the same name
+	 * shadows it: a nested definition of a generalization, of one of its outer messages, or of one
+	 * of their generalizations. In these cases, the qualified name must be used.
+	 * </p>
+	 */
+	public static boolean simpleNameInScopeOfGeneralizations(MessageDef def) {
+		if (def.getFile() == null) {
+			return false;
+		}
+		String name = def.getName();
+		java.util.Set<MessageDef> seen = new java.util.HashSet<>();
+		for (MessageDef generalization = def.getExtendedDef(); generalization != null && seen.add(generalization);
+				generalization = generalization.getExtendedDef()) {
+			for (MessageDef scope = generalization; scope != null; scope = scope.getOuter()) {
+				java.util.Set<MessageDef> seenInherited = new java.util.HashSet<>();
+				for (MessageDef inherited = scope; inherited != null && seenInherited.add(inherited);
+						inherited = inherited.getExtendedDef()) {
+					for (Definition member : inherited.getDefinitions()) {
+						if (member.getName().equals(name)) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	public static String mkBinaryTypeConstant(MessageDef def) {

@@ -1,0 +1,5 @@
+package reject.names.b;
+
+message Node {
+	int32 id;
+}

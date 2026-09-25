@@ -1,0 +1,9 @@
+package reject.hierarchy.issue;
+
+/** The definition from the issue report (#45). */
+abstract message Msg {
+	abstract message Group extends Msg { }
+	message Item extends Group { int32 n; }
+}
+
+message Item extends Msg { string s; }

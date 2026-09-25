@@ -78,6 +78,22 @@ public class Util {
 		}
 	}
 
+	/**
+	 * The name of the given definition qualified with its package and outer messages, as written in
+	 * the <code>.proto</code> file.
+	 */
+	public static String protoName(Definition def) {
+		List<String> names = new ArrayList<>();
+		for (Definition current = def; current != null; current = current.getOuter()) {
+			names.add(0, current.getName());
+		}
+		QName pkg = definingFile(def).getPackage();
+		if (pkg != null) {
+			names.addAll(0, pkg.getNames());
+		}
+		return String.join(".", names);
+	}
+
 	public static String toString(Part part) {
 		return toString(part.getOwner()) + "#" + part.getName();
 	}
@@ -93,6 +109,19 @@ public class Util {
 
 	public static boolean isNullable(Field field) {
 		return getFlag(field, "Nullable") || (!field.isRepeated() && isNullable(field.getType()));
+	}
+
+	/**
+	 * Whether the given field is a single (not repeated) <code>bytes</code> field.
+	 *
+	 * <p>
+	 * The default value of such field is <code>null</code>, even if the field is not nullable.
+	 * </p>
+	 */
+	public static boolean isSingleBytes(Field field) {
+		Type type = field.getType();
+		return !field.isRepeated() && type instanceof PrimitiveType
+			&& ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BYTES;
 	}
 
 	public static boolean isNullable(Type type) {

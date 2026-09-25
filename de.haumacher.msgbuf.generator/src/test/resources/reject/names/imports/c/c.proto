@@ -1,0 +1,6 @@
+package reject.names.imports.c;
+
+import "../a/a.proto";
+
+/** Imports only 'a', so 'Node' is 'a.Node', whether or not 'b' is generated in the same run. */
+message UseC { Node n; }
