@@ -1,0 +1,80 @@
+# Deploys a release to Maven Central when a release tag is pushed.
+#
+# The tag is created by `mvn release:clean release:prepare` (tag format msgbuf-api-<version>,
+# see tagNameFormat of the maven-release-plugin in pom.xml), which also pushes it. This workflow
+# then builds the tagged sources, signs the artifacts and publishes them through the Central
+# Portal (central-publishing-maven-plugin) - the part `mvn release:perform` did before.
+#
+# Required repository secrets:
+#   CENTRAL_USERNAME  - user name of a Central Portal user token (https://central.sonatype.com/account)
+#   CENTRAL_PASSWORD  - password of that user token
+#   GPG_PRIVATE_KEY   - ASCII-armored secret signing key (gpg --armor --export-secret-keys <key-id>)
+#   GPG_PASSPHRASE    - passphrase of that key
+#
+# A manual run (workflow_dispatch) builds and signs the current branch without deploying,
+# to check the build and the signing secrets before cutting a release.
+
+name: Release to Maven Central
+
+on:
+  push:
+    tags:
+      - 'msgbuf-api-*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Set up JDK, Maven settings and signing key
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          server-id: central
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Check that the tag matches the project version
+        if: github.event_name == 'push'
+        run: |
+          version=$(mvn -B -q -N help:evaluate -Dexpression=project.version -DforceStdout)
+          tag="${GITHUB_REF_NAME}"
+          echo "Tag: ${tag}, project version: ${version}"
+          if [ "${tag}" != "msgbuf-api-${version}" ]; then
+            echo "::error::Tag ${tag} does not match project version ${version} (expected msgbuf-api-${version})."
+            exit 1
+          fi
+          case "${version}" in
+            *-SNAPSHOT)
+              echo "::error::Refusing to release snapshot version ${version}."
+              exit 1
+              ;;
+          esac
+
+      - name: Build and sign (dry run)
+        if: github.event_name != 'push'
+        run: mvn -B -Possrh clean verify
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Deploy to Maven Central
+        if: github.event_name == 'push'
+        run: mvn -B -Possrh clean deploy
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
