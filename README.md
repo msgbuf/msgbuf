@@ -196,13 +196,21 @@ For binary serialization, json values are wrapped in a `JsonValue` message envel
 ## Global protocol options
 
 ### `option NoJson`
-Disables generation of read and write methods for the JSON format.
+Disables generation of read and write methods for the JSON format (for messages and enums).
 
 ### `option NoBinary`
-Disables generation of read and write methods for binary format.
+Disables generation of read and write methods for binary format (for messages and enums).
 
 ### `option NoXml`
 Disables generation of read and write methods for XML format.
+
+The format options apply to all messages and enums of a file. A message that references a message or enum of another
+file (as field type or with `extends`) needs the read and write methods of each format it generates itself in that
+other file. The generator rejects a reference to a definition generated without such a format, and generates no code
+in that case. Either disable the format in the referencing file as well, or enable it in the referenced one. The same
+holds for `option SharedGraph`, which has its own JSON methods for messages: a message can reference messages of
+another file only if both files use `option SharedGraph`, or neither does. Enums are not affected by
+`option SharedGraph`. `transient` fields are not written in JSON or binary format, so they don't need these formats.
 
 ### `option NoXmlNames`
 Disables generation of constants for the XML format.
