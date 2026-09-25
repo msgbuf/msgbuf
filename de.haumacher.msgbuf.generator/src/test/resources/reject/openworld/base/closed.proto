@@ -1,0 +1,6 @@
+package reject.ow.base;
+
+/** A closed hierarchy (no option OpenWorld). */
+abstract message Shape {
+	string name;
+}

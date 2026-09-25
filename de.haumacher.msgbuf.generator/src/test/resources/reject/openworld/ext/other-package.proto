@@ -1,0 +1,13 @@
+package reject.ow.ext;
+import "../base/closed.proto";
+
+/** Extends the closed hierarchy from another package (issue #25). */
+message Circle extends reject.ow.base.Shape {
+	int radius;
+}
+
+message Holder {
+	message Nested extends reject.ow.base.Shape {
+		int size;
+	}
+}

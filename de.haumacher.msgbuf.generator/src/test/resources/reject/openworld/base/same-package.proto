@@ -1,0 +1,7 @@
+package reject.ow.base;
+import "closed.proto";
+
+/** Splits the closed hierarchy into another file of the same package. */
+message Square extends Shape {
+	int side;
+}

@@ -1,0 +1,6 @@
+package reject.ow.ext;
+import "../mid/mid.proto";
+
+message Beep extends reject.ow.mid.Signal {
+	int duration;
+}
