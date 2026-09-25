@@ -90,6 +90,11 @@ message Group extends Shape {
 
 Passing these definitions to the `msgbuf` compiler gives you a class hierarchy with classes `Shape`, `Circle`, `Rectangle`, and `Group`. You can inspect the generation result in the test package [test.hierarchy](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data) of the compiler. The source of the example data class definitions can be seen in the [hierarchy.proto](https://github.com/msgbuf/msgbuf/tree/main/de.haumacher.msgbuf.generator/src/test/java/test/hierarchy/data/hierarchy.proto) file.
 
+A sub-message inherits all fields of its generalizations and cannot redeclare them, not even to narrow the type. The
+names of all fields of a message, including the inherited ones, must also generate distinct Java names: `foo_bar`
+and `fooBar` both generate `getFooBar()`. The generator rejects such definitions with an error naming the field and
+the message declaring the other one.
+
 ### Enum types
 
 Enums define a fixed set of named constants. Each constant is terminated with a semicolon. Constants can optionally
