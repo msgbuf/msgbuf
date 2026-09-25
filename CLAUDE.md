@@ -53,7 +53,7 @@ Key source locations:
 - Generator entry point: `de.haumacher.msgbuf.generator.Generator`
 - Code generators: `de.haumacher.msgbuf.generator.MessageGenerator`, `EnumGenerator`
 - Other targets: Dart (`generator.dart.DartLibGenerator`, `option DartLib`), TypeScript types (`generator.ts.TypeScriptGenerator`, `-ts <dir>` / Maven `typeScriptOutputDirectory` / `option TypeScript`; golden-file test `TestTypeScriptGenerator`, update expected files with `-Dmsgbuf.ts.update=true`)
-- JavaCC grammar: `de.haumacher.msgbuf.generator/src/main/javacc/protobuf.jj`
+- JavaCC grammar: `de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/parser/protobuf.jj` (next to the generated parser sources)
 - AST proto definition: `de.haumacher.msgbuf.generator/src/main/java/de/haumacher/msgbuf/generator/ast/proto.proto`
 
 ## Runtime API Architecture
@@ -85,7 +85,7 @@ Extensions beyond standard protobuf:
 
 - **Self-bootstrapping**: Changes to `generator/ast/proto.proto` require regenerating the AST Java classes with an existing generator, then rebuilding. Maven reactor handles this automatically.
 - **NoInterfaces mode**: When set, generates single classes instead of interface + impl. Changes package structure (no `impl` subpackage). Many conditionals in `MessageGenerator` depend on this flag.
-- **Polymorphic JSON**: Abstract types serialize as `[type, ...fields]` arrays. Concrete types in hierarchies use same format. Monomorphic references use `writeContent()` without type info.
+- **Polymorphic JSON**: In a hierarchy with an abstract root, a value is written as a two-element array `[typeId, {fields}]` (the root's final `writeTo()`). A field declared with a concrete type of such a hierarchy uses `writeContent()` and writes the plain object without type info. A hierarchy with a concrete root carries no type info at all.
 - **Field IDs**: Auto-synthesis starts at 1, skips manually assigned IDs, is inheritance-aware (child fields can't clash with parent IDs). Field ID 0 is reserved.
 - **Tests use JUnit 3 style** (`extends TestCase`) despite JUnit 4 dependency. Tests exercise generated code, not the generator itself directly.
 - **GWT constraint**: No Java I/O classes in `msgbuf-api`. No Java 8+ features in generated code.
@@ -105,5 +105,5 @@ Maven plugin integration tests: `msgbuf-generator-maven-plugin/src/it/`
 
 - Java 11+ required (`maven.compiler.source/target = 11`)
 - Generated code must be GWT-compatible (no `java.io` usage in `msgbuf-api`)
-- Generator uses JavaCC — regenerate parser after grammar changes to `protobuf.jj`
+- Generator uses JavaCC — the `javacc-maven-plugin` regenerates the parser into `src/main/java` during the build after grammar changes to `protobuf.jj`; the generated parser sources are checked in and must be committed with the grammar change
 - Different licenses: API is Apache-2.0, Generator is GPL-3.0-or-later (generated code is not GPL-encumbered)
