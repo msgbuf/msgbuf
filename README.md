@@ -498,8 +498,9 @@ message MyMessage {
 ### TypeScript type definitions
 
 The generator can create a TypeScript module with type definitions for the JSON format of each `.proto` file. The
-modules contain types only (no readers, writers or other runtime code) and let a TypeScript client share the protocol
-contract with the Java side.
+modules let a TypeScript client share the protocol contract with the Java side. Besides the types, they only contain
+small helper functions for type-tagged polymorphic values (visitor dispatch, tagging, tag guards, see below) that
+operate on the plain values of `JSON.parse()`: no classes, no readers or writers, no runtime library.
 
 Since the types describe the JSON format and not the data itself, a top-level type is named after its definition with
 the suffix `Json`, e.g. `ShapeJson` for `message Shape`. This keeps the plain names free for types representing the
@@ -543,6 +544,8 @@ Mapping of protocol definitions:
 | `map<K, V>` (other key types) | `Array<{ key: K; value: V }>` |
 | Nested definitions | Declarations in a namespace named after the outer message, keeping their names, e.g. `OuterJson.Inner` |
 | Types from imported `.proto` files | `import type { ... } from '<relative module path>';` |
+| `abstract message A` with `AnyAJson` | Visitor interface `AJsonVisitor<R>`, dispatch function `visitAJson(value, visitor)`, type guard `isAnyAJson(value)` |
+| `message C extends A` (in a hierarchy with abstract root) | Function `tagC(self: CJson): ['TypeIdOfC', CJson]` creating the type-tagged tuple |
 
 Details:
 
@@ -572,6 +575,48 @@ Details:
   generated and used as type of fields referencing `A`. For `option OpenWorld` hierarchies, the union additionally
   contains `[string, AJson]` for extension types from other modules. References to concrete messages (and all messages
   in a hierarchy with a concrete root) are written without type information and use the interface directly.
+* **Helpers for polymorphic values**: For each union `AnyAJson`, a visitor interface with one method per concrete
+  type of the union, a dispatch function and a type guard are generated, and a tag function for each concrete type
+  of such a hierarchy:
+
+  ```ts
+  export interface SSEEventJsonVisitor<R> {
+      visitPatchEvent(self: PatchEventJson): R;
+      visitStateEvent(self: StateEventJson): R;
+  }
+  export function visitSSEEventJson<R>(value: AnySSEEventJson, visitor: SSEEventJsonVisitor<R>): R;
+  export function isAnySSEEventJson(value: unknown): value is AnySSEEventJson;
+  export function tagPatchEvent(self: PatchEventJson): ['PatchEvent', PatchEventJson];
+  ```
+
+  Usage:
+
+  ```ts
+  const event: unknown = JSON.parse(data);
+  if (isAnySSEEventJson(event)) {
+      visitSSEEventJson(event, {
+          visitPatchEvent: patch => applyPatch(patch),
+          visitStateEvent: state => replaceState(state),
+      });
+  }
+  socket.send(JSON.stringify(tagPatchEvent({ timestamp: Date.now(), patch: '...' })));
+  ```
+
+  * The name part of a helper (`SSEEvent`, `PatchEvent`) is the message name qualified with the names of its outer
+    messages, joined with `_`, first letter in upper case, e.g. `visitGroup_Info` and `tagGroup_Info` for message
+    `Info` nested in `Group`. The package is not part of the name. All helpers are declared at the top level of the
+    module, also for nested messages (a namespace containing functions is not erasable TypeScript syntax). The
+    generator rejects a `.proto` file whose helper names clash, i.e. two concrete types of one hierarchy (also from
+    different files) or two messages of one file with the same name part, e.g. `message A_B` and `A.B`.
+  * A visitor method has the same name in the visitors of all abstract types of a hierarchy, so a visitor of the root
+    can also be passed to the dispatch function of an abstract intermediate type.
+  * The dispatch function of a closed hierarchy is checked for exhaustiveness by the compiler and throws an `Error`
+    for an unknown type ID. For `option OpenWorld` hierarchies, the visitor has an additional required method
+    `visitDefault(self: AJson, typeId: string)` that receives values of types not known to the module (like the
+    `visitDefault()` of the Java visitor).
+  * The type guard checks the type tag only: an array of two elements, the first a known type ID (any string for
+    `option OpenWorld`), the second an object. The properties of the object are not validated.
+  * Tag functions return the exact tuple type, which is assignable to each `Any...Json` union containing the type.
 * **Documentation**: Doc comments become TSDoc comments. JavaDoc inline tags are translated: `{@code x}` becomes
   `` `x` ``, `{@link Type}`, `{@link #field}` and `{@link Type#field label}` become links to the TypeScript type or
   property (`{@link Type.prop label}`, using the JSON property name), a link to an enum constant becomes its protocol
@@ -583,7 +628,7 @@ Details:
   at the location the same generator configuration would produce for it (its `option TypeScript`, or its package
   path within the TypeScript output directory).
 * **Limitations**: The JSON format of `option SharedGraph` protocols (objects as `[type, id, {...}]`, references as
-  IDs, incremental updates) is not described by the generated types. A generated `AnyAJson` union type may clash with
+  IDs, incremental updates) is not described by the generated types, no helper functions are generated for them. A generated `AnyAJson` union type may clash with
   a message named `AnyA`.
 
 ## Installation in Eclipse

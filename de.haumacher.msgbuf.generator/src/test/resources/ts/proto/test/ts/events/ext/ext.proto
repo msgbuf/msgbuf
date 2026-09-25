@@ -1,0 +1,35 @@
+/**
+ * Extensions of the OpenWorld hierarchy of another file.
+ */
+syntax = "msgbuf";
+
+package test.ts.events.ext;
+
+import "../base/base.proto";
+
+/* Same format options as the base file. */
+option NoXml;
+
+/** Specialization of the intermediate of another file. */
+message Remove extends test.ts.events.base.Change {
+}
+
+/** An abstract intermediate of the extension file. */
+abstract message Notice extends test.ts.events.base.Event {
+	string text;
+}
+
+/** Specialization of the local intermediate. */
+message Alert extends Notice {
+	int32 level;
+}
+
+/** Outer message of a nested extension. */
+message Outer {
+	/** A nested extension named like a type of the base file. */
+	@Name("Outer.Ping")
+	message Ping extends test.ts.events.base.Event {
+	}
+
+	repeated Notice notices;
+}

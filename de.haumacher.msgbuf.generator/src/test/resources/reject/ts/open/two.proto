@@ -1,0 +1,7 @@
+package reject.ts.two;
+
+import "base.proto";
+
+@Name("two.Circle")
+message Circle extends reject.ts.open.Shape {
+}

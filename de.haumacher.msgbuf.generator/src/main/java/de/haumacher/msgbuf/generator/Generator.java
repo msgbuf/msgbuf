@@ -217,6 +217,15 @@ public class Generator {
 		}
 
 		for (DefinitionFile file : _files) {
+			if (!_importedFiles.contains(file) && generatesTypeScript(file)) {
+				TypeScriptGenerator.validate(file, this::sourceDescription, errors);
+			}
+		}
+		if (!errors.isEmpty()) {
+			throw new GeneratorException(errors);
+		}
+
+		for (DefinitionFile file : _files) {
 			if (_importedFiles.contains(file)) {
 				continue; // Imported for type resolution only, don't generate code
 			}
@@ -235,7 +244,7 @@ public class Generator {
 				new DartLibGenerator(new File(_out, ((StringOption) dartLib).getValue()), file).run();
 			}
 
-			if (_tsOut != null || file.getOptions().get(TYPESCRIPT_OPTION) != null) {
+			if (generatesTypeScript(file)) {
 				File tsFile = typeScriptModule(file);
 				new TypeScriptGenerator(tsFile, file, sourceDescription(file),
 					other -> moduleSpecifier(tsFile, typeScriptModule(other)), _table).run();
@@ -257,6 +266,13 @@ public class Generator {
 		if (!registrationClasses.isEmpty() && _resourceOut != null) {
 			generateServiceDescriptor(registrationClasses);
 		}
+	}
+
+	/**
+	 * Whether a TypeScript module is generated for the given definitions.
+	 */
+	private boolean generatesTypeScript(DefinitionFile file) {
+		return _tsOut != null || file.getOptions().get(TYPESCRIPT_OPTION) != null;
 	}
 
 	/**

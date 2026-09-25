@@ -1,0 +1,127 @@
+/**
+ * Commands for testing the TypeScript helpers of polymorphic values in a closed hierarchy.
+ */
+syntax = "msgbuf";
+
+package test.ts.commands;
+
+option NoXml;
+
+/* The Java TypeKind enums would contain the constants ITEM and WAIT twice (nested messages with equal names). */
+option NoTypeKind;
+
+/** Root of a closed hierarchy. */
+abstract message Command {
+	/** The command ID. */
+	string id;
+}
+
+/** Abstract intermediate at level two. */
+abstract message Edit extends Command {
+	/** The edited element. */
+	string target;
+}
+
+/** Abstract intermediate at level three. */
+abstract message StyledEdit extends Edit {
+	/** The style to apply. */
+	string style;
+}
+
+/** A concrete edit at level three. */
+message Insert extends Edit {
+	string text;
+}
+
+/** A concrete type specializing a concrete type. */
+message Replace extends Insert {
+	int32 length;
+}
+
+/** A concrete edit at level four. */
+message Bold extends StyledEdit {
+}
+
+/** A message whose name is a reserved word in TypeScript. */
+message `delete` extends Edit {
+	int32 count;
+}
+
+/** A message with polymorphic collections. */
+message Script extends Command {
+	/** A polymorphic list. */
+	repeated Command steps;
+
+	/** A polymorphic map. */
+	map<string, Command> named;
+
+	/** A polymorphic map with a key that is not a string. */
+	map<int32, Edit> numbered;
+
+	/** An optional polymorphic value of an intermediate. */
+	@Nullable
+	StyledEdit style;
+}
+
+/** Container of a nested message named like one in {@link Macro}. */
+message Batch extends Command {
+	/** Nested specialization of the root. */
+	@Name("Batch.Item")
+	message Item extends Command {
+		string note;
+	}
+
+	/** Monomorphic references. */
+	repeated Item items;
+}
+
+/** Container of a nested message named like one in {@link Batch}, and of a nested hierarchy. */
+message Macro extends Command {
+	/** Nested specialization of an intermediate. */
+	@Name("Macro.Item")
+	message Item extends Edit {
+		int32 repeat;
+	}
+
+	/** Root of a nested hierarchy. */
+	abstract message Step {
+	}
+
+	/** Specialization in the nested hierarchy. */
+	message Wait extends Step {
+		int32 millis;
+	}
+
+	/** Specialization in the nested hierarchy nested in another nested message. */
+	message Group {
+		/** Needs a type ID different from the one of {@link Macro.Wait}. */
+		@Name("Group.Wait")
+		message Wait extends Step {
+			int32 count;
+		}
+	}
+
+	/** Steps of the nested hierarchy. */
+	repeated Step steps;
+
+	/** Items of the intermediate. */
+	repeated Edit edits;
+}
+
+/** An abstract root without concrete types. */
+abstract message Empty {
+}
+
+/** Concrete root of a hierarchy without type tags: no helpers. */
+message Plain {
+	string name;
+}
+
+/** Specialization of a concrete root: no helpers. */
+message Fancy extends Plain {
+	string color;
+}
+
+/** An abstract message below a concrete root: no helpers. */
+abstract message Abstracted extends Plain {
+}

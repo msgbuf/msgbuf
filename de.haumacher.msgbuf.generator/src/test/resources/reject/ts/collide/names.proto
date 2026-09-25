@@ -1,0 +1,15 @@
+package reject.ts.collide;
+
+abstract message Root {
+}
+
+/** Helper name part 'A_B'. */
+message A_B extends Root {
+}
+
+message A {
+	/** Helper name part 'A_B' as well. */
+	@Name("A.B")
+	message B extends Root {
+	}
+}

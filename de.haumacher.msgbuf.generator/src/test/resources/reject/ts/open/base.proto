@@ -1,0 +1,6 @@
+package reject.ts.open;
+
+option OpenWorld;
+
+abstract message Shape {
+}
