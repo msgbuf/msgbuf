@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import de.haumacher.msgbuf.generator.parser.ParseException;
 import de.haumacher.msgbuf.generator.parser.ProtobufParser;
 import de.haumacher.msgbuf.generator.parser.ProtobufParserConstants;
 import de.haumacher.msgbuf.generator.parser.Token;
+import de.haumacher.msgbuf.generator.ts.TypeScriptGenerator;
 import de.haumacher.msgbuf.generator.util.FileGenerator;
 
 /**
@@ -57,9 +59,37 @@ public class Generator {
 	 */
 	public static final String RESOURCE_DIR_ARG = "-resources";
 
+	/**
+	 * Argument giving the output directory for TypeScript type definitions.
+	 *
+	 * <p>
+	 * If given, a TypeScript module is generated for each <code>.proto</code> file, see
+	 * {@link #setTypeScriptOut(File)}.
+	 * </p>
+	 */
+	public static final String TYPESCRIPT_DIR_ARG = "-ts";
+
+	/**
+	 * File option giving the location of the TypeScript module to generate for a
+	 * <code>.proto</code> file (relative to the output directory).
+	 */
+	public static final String TYPESCRIPT_OPTION = "TypeScript";
+
+	/**
+	 * File extension of generated TypeScript modules.
+	 */
+	private static final String TS_EXTENSION = ".ts";
+
+	/**
+	 * Module name for a <code>.proto</code> file whose file name is unknown.
+	 */
+	private static final String DEFAULT_MODULE_NAME = "index";
+
 	private NameTable _table = new NameTable();
 	private File _out = new File(".");
 	private File _resourceOut;
+	private File _tsOut;
+	private Map<DefinitionFile, String> _sourceNames = new HashMap<>();
 	private List<DefinitionFile> _files = new ArrayList<>();
 	private List<File> _includePaths = new ArrayList<>();
 	private ClassLoader _importClassLoader;
@@ -72,6 +102,20 @@ public class Generator {
 
 	public void setResourceOut(File resourceOut) {
 		_resourceOut = resourceOut;
+	}
+
+	/**
+	 * Sets the root directory for TypeScript type definitions.
+	 *
+	 * <p>
+	 * If set, a TypeScript module with type definitions for the JSON format is generated for each
+	 * <code>.proto</code> file. The module for a file <code>name.proto</code> with
+	 * <code>package a.b.c;</code> is written to <code>a/b/c/name.ts</code> within the given
+	 * directory.
+	 * </p>
+	 */
+	public void setTypeScriptOut(File tsOut) {
+		_tsOut = tsOut;
 	}
 
 	public void addIncludePath(File path) {
@@ -97,6 +141,7 @@ public class Generator {
 		try (InputStream in = new FileInputStream(file)) {
 			content = load(parse(in));
 		}
+		_sourceNames.put(content, file.getName());
 		resolveImports(content, file);
 		return content;
 	}
@@ -167,6 +212,12 @@ public class Generator {
 			if (dartLib != null) {
 				new DartLibGenerator(new File(_out, ((StringOption) dartLib).getValue()), file).run();
 			}
+
+			if (_tsOut != null || file.getOptions().get(TYPESCRIPT_OPTION) != null) {
+				File tsFile = typeScriptModule(file);
+				new TypeScriptGenerator(tsFile, file, sourceDescription(file),
+					other -> moduleSpecifier(tsFile, typeScriptModule(other)), _table).run();
+			}
 		}
 
 		// Generate registration classes and service loader descriptors for extension modules
@@ -184,6 +235,62 @@ public class Generator {
 		if (!registrationClasses.isEmpty() && _resourceOut != null) {
 			generateServiceDescriptor(registrationClasses);
 		}
+	}
+
+	/**
+	 * The TypeScript module file for the given definitions.
+	 *
+	 * <p>
+	 * An explicit {@link #TYPESCRIPT_OPTION} is resolved against the output directory. Otherwise,
+	 * the module is placed in the directory of the file's package (within the TypeScript output
+	 * directory, or the output directory, if none is set) and named after the <code>.proto</code>
+	 * file.
+	 * </p>
+	 */
+	private File typeScriptModule(DefinitionFile file) {
+		Option explicit = file.getOptions().get(TYPESCRIPT_OPTION);
+		if (explicit != null) {
+			return new File(_out, ((StringOption) explicit).getValue()).toPath().normalize().toFile();
+		}
+		File result = _tsOut != null ? _tsOut : _out;
+		if (file.getPackage() != null) {
+			for (String name : file.getPackage().getNames()) {
+				result = new File(result, name);
+			}
+		}
+		return new File(result, moduleName(file) + TS_EXTENSION);
+	}
+
+	private String moduleName(DefinitionFile file) {
+		String sourceName = _sourceNames.get(file);
+		if (sourceName == null) {
+			return DEFAULT_MODULE_NAME;
+		}
+		int dot = sourceName.lastIndexOf('.');
+		return dot > 0 ? sourceName.substring(0, dot) : sourceName;
+	}
+
+	private String sourceDescription(DefinitionFile file) {
+		String sourceName = _sourceNames.get(file);
+		if (file.getPackage() == null) {
+			return sourceName == null ? "<unknown>" : sourceName;
+		}
+		String packagePath = String.join("/", file.getPackage().getNames());
+		return sourceName == null ? packagePath : packagePath + "/" + sourceName;
+	}
+
+	/**
+	 * The relative module specifier (without file extension) to reference the given target module
+	 * from the given module.
+	 */
+	private static String moduleSpecifier(File from, File to) {
+		java.nio.file.Path fromDir = from.getAbsoluteFile().toPath().normalize().getParent();
+		java.nio.file.Path target = to.getAbsoluteFile().toPath().normalize();
+		String relative = fromDir.relativize(target).toString().replace(File.separatorChar, '/');
+		if (relative.endsWith(TS_EXTENSION)) {
+			relative = relative.substring(0, relative.length() - TS_EXTENSION.length());
+		}
+		return relative.startsWith("../") ? relative : "./" + relative;
 	}
 
 	private void validateOpenWorld(DefinitionFile file) {
@@ -232,6 +339,7 @@ public class Generator {
 				try (InputStream in = new FileInputStream(resolved)) {
 					imported = parse(in);
 				}
+				_sourceNames.put(imported, resolved.getName());
 				_files.add(imported);
 				_table.enter(imported);
 				_importedFiles.add(imported);
@@ -252,6 +360,7 @@ public class Generator {
 					try (InputStream in = classpathStream) {
 						imported = parse(in);
 					}
+					_sourceNames.put(imported, new File(importPath).getName());
 					_files.add(imported);
 					_table.enter(imported);
 					_importedFiles.add(imported);
@@ -280,6 +389,7 @@ public class Generator {
 					try (InputStream in = classpathStream) {
 						imported = parse(in);
 					}
+					_sourceNames.put(imported, new File(importPath).getName());
 					_files.add(imported);
 					_table.enter(imported);
 					_importedFiles.add(imported);
@@ -565,6 +675,8 @@ public class Generator {
 				out = new File(args[n++]);
 			} else if (arg.equals(RESOURCE_DIR_ARG)) {
 				generator.setResourceOut(new File(args[n++]));
+			} else if (arg.equals(TYPESCRIPT_DIR_ARG)) {
+				generator.setTypeScriptOut(new File(args[n++]));
 			} else if (arg.equals("-h")) {
 				printHelp();
 				return;
@@ -606,7 +718,7 @@ public class Generator {
 	}
 
 	private static void printHelp() {
-		System.err.println("Usage: java -jar " + Generator.class.getName() + " -out <java-output-dir> <protocol-definition.proto>*");
+		System.err.println("Usage: java -jar " + Generator.class.getName() + " -out <java-output-dir> [-resources <resource-output-dir>] [-ts <typescript-output-dir>] [-I <include-dir>]* [-cp <classpath>] <protocol-definition.proto>*");
 	}
 
 	private static File findBase(File protoFile, DefinitionFile content) {

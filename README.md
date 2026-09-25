@@ -444,6 +444,89 @@ message MyMessage {
 }
 ```
 
+### TypeScript type definitions
+
+The generator can create a TypeScript module with type definitions for the JSON format of each `.proto` file. The
+modules contain types only (no readers, writers or other runtime code) and let a TypeScript client share the protocol
+contract with the Java side.
+
+TypeScript output is enabled in one of the following ways:
+
+* **Output directory for all files**: Set the Maven plugin parameter `typeScriptOutputDirectory` (user property
+  `typeScriptOutputDir`), or pass `-ts <dir>` on the command line. A module is generated for each `.proto` file.
+  The module for a file `name.proto` with `package a.b.c;` is written to `a/b/c/name.ts` within that directory.
+* **Per file**: `option TypeScript = "path/to/module.ts";` in a `.proto` file. The path is relative to the generator
+  output directory (like `option DartLib`) and takes precedence over the output directory.
+
+```xml
+<plugin>
+    <groupId>de.haumacher.msgbuf</groupId>
+    <artifactId>msgbuf-generator-maven-plugin</artifactId>
+    <version>...</version>
+    <configuration>
+        <typeScriptOutputDirectory>${project.basedir}/src/main/ts/protocol</typeScriptOutputDirectory>
+    </configuration>
+    ...
+</plugin>
+```
+
+Mapping of protocol definitions:
+
+| Protocol definition | TypeScript |
+|---|---|
+| `message M { ... }` | `export interface M { ... }` with the JSON property names of the fields (`@Name` is honored) |
+| `message M extends B` | `export interface M extends B` |
+| `abstract message A` | `export interface A`, plus `export type AnyA = ['TypeIdOfC1', C1] \| ...` if the hierarchy root is abstract (see below) |
+| `enum E { ... }` | `export type E = 'A' \| 'B';` with the protocol names of the constants (`@Name` is honored) |
+| `string`, `bytes` | `string` (bytes are Base64 encoded) |
+| `bool` | `boolean` |
+| `int32`, `int64`, `float`, `double`, ... | `number` |
+| `json` | `unknown` |
+| `repeated T` | `T[]` |
+| `map<string, V>` | `Record<string, V>` |
+| `map<K, V>` (other key types) | `Array<{ key: K; value: V }>` |
+| Nested definitions | Declarations in a namespace named after the outer message, e.g. `Outer.Inner` |
+| Types from imported `.proto` files | `import type { ... } from '<relative module path>';` |
+
+Details:
+
+* **Optional properties**: All properties are optional (`name?: T`). The JSON reader accepts any subset of properties
+  and uses the field's default value for a missing one. Fields that are unset and nullable (`@Nullable`, references
+  to messages) are omitted from the JSON output instead of being written as `null`. Explicit default values of fields
+  are documented with a `@defaultValue` tag.
+* **Enum values**: An enum constant is written as its name exactly as spelled in the `.proto` file (e.g. `ICON_ONLY`),
+  unless a custom name is given with `@Name`:
+
+  ```protobuf
+  enum DisplayMode {
+      @Name("icon-only")
+      ICON_ONLY;
+      @Name("label-only")
+      LABEL_ONLY;
+  }
+  ```
+
+  generates `export type DisplayMode = | 'icon-only' | 'label-only';`.
+* **Polymorphism**: A value of an abstract message type in a hierarchy with an abstract root is written as a tuple
+  of its type ID and its properties, `["Circle", {"r": 5}]` (see [Polymorphic JSON serialization](#polymorphic-json-serialization)).
+  For each such abstract message `A`, a union type `AnyA` of the tuples of all known concrete specializations is
+  generated and used as type of fields referencing `A`. For `option OpenWorld` hierarchies, the union additionally
+  contains `[string, A]` for extension types from other modules. References to concrete messages (and all messages
+  in a hierarchy with a concrete root) are written without type information and use the interface directly.
+* **Documentation**: Doc comments become TSDoc comments. JavaDoc inline tags are translated: `{@code x}` becomes
+  `` `x` ``, `{@link Type}`, `{@link #field}` and `{@link Type#field label}` become links to the TypeScript type or
+  property (`{@link Type.prop label}`, using the JSON property name), a link to an enum constant becomes its protocol
+  name in back ticks, and an unresolvable link becomes its label or the target in back ticks. The doc comment
+  (`/** ... */`) before the `syntax` or `package` declaration of a `.proto` file becomes the module's
+  `@packageDocumentation` comment.
+* **Module paths**: Imports use relative module specifiers without file extension (e.g. `'../common/common'`), as
+  resolved by bundlers and `moduleResolution: "bundler"`. An imported `.proto` file is expected to have its module
+  at the location the same generator configuration would produce for it (its `option TypeScript`, or its package
+  path within the TypeScript output directory).
+* **Limitations**: The JSON format of `option SharedGraph` protocols (objects as `[type, id, {...}]`, references as
+  IDs, incremental updates) is not described by the generated types. A generated `AnyA` union type may clash with a
+  message of the same name.
+
 ## Installation in Eclipse
 
 There is an Eclipse plugin providing a project builder that automatically generates corresponding Java files whenever you create or modify a `*.proto` definition file. To install and enable the plugin with the following steps:

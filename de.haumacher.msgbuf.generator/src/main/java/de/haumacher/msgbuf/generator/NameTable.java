@@ -117,6 +117,23 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 	 * TODO
 	 */
 	public Definition lookup(MessageDef context, QName name) {
+		Definition result = resolve(context, name);
+		if (result == null) {
+			error("Name cannot be resolved" + (context == null ? "" : " in '" + context.getName() + "'") + ": " + CodeConvention.qTypeName(name));
+		}
+		return result;
+	}
+
+	/**
+	 * Resolves the given name in the given context without reporting an error.
+	 *
+	 * @param context
+	 *        The message in which the name is used, <code>null</code> for top-level usage.
+	 * @param name
+	 *        The name to resolve.
+	 * @return The resolved definition, or <code>null</code> if the name cannot be resolved.
+	 */
+	public Definition resolve(MessageDef context, QName name) {
 		String baseName = name.getNames().get(0);
 
 		Definition base = lookupBase(context, baseName);
@@ -158,7 +175,6 @@ public class NameTable implements Definition.Visitor<Void, Void> {
 			}
 		}
 
-		error("Name cannot be resolved" + (context == null ? "" : " in '" + context.getName() + "'") + ": " + CodeConvention.qTypeName(name));
 		return null;
 	}
 

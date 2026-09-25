@@ -1,0 +1,50 @@
+/* Plain block comment, not a documentation comment. */
+syntax = "msgbuf";
+
+/**
+ * Common types, documented at the package declaration.
+ */
+package test.ts.common;
+
+/** Display modes of a button. */
+enum DisplayMode {
+	/** Only the icon is shown. */
+	@Name("icon-only")
+	ICON_ONLY;
+
+	/** Only the label is shown. */
+	@Name("label-only")
+	LABEL_ONLY;
+
+	/** Constant without custom name, combines {@link #ICON_ONLY} and {@link #LABEL_ONLY}. */
+	BOTH;
+}
+
+/** A point in the plane. */
+message Point {
+	/** The X coordinate. */
+	@Name("x")
+	int32 xCoordinate;
+
+	/** The Y coordinate. */
+	@Name("y")
+	int32 yCoordinate;
+}
+
+/** Abstract base of a polymorphic hierarchy with an abstract root. */
+abstract message Node {
+	/** The node ID. */
+	string id;
+}
+
+/** A leaf node. */
+message Leaf extends Node {
+	/** The value. */
+	double value;
+}
+
+/** An inner node. */
+message Inner extends Node {
+	/** The children, written as type-tagged tuples. */
+	repeated Node children;
+}

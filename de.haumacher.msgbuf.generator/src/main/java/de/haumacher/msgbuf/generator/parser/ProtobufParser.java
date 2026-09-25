@@ -13,12 +13,14 @@ public class ProtobufParser implements ProtobufParserConstants {
   final public DefinitionFile file() throws ParseException {DefinitionFile result = DefinitionFile.create();
   QName pkgName;
   Definition def;
+  Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case SYNTAX:{
-      jj_consume_token(SYNTAX);
+      t = jj_consume_token(SYNTAX);
       jj_consume_token(37);
       jj_consume_token(STRING);
       jj_consume_token(38);
+result.setComment(Util.stripComment(t));
       break;
       }
     default:
@@ -27,7 +29,10 @@ public class ProtobufParser implements ProtobufParserConstants {
     }
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case PACKAGE:{
-      jj_consume_token(PACKAGE);
+      t = jj_consume_token(PACKAGE);
+if (result.getComment().isEmpty()) {
+        result.setComment(Util.stripComment(t));
+      }
       pkgName = qName();
       jj_consume_token(38);
 result.setPackage(pkgName);

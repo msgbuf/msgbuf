@@ -1,0 +1,160 @@
+/**
+ * Shapes and button states for testing the TypeScript generator.
+ *
+ * <p>See {@link ButtonState}, {@link Group#shapes the shapes of a group} and {@link #nothing}.</p>
+ */
+syntax = "msgbuf";
+
+package test.ts.shapes;
+
+import "../common/common.proto";
+
+/** A local point clashing with the imported one. */
+message Point {
+	/** A coordinate pair. */
+	test.ts.common.Point value;
+}
+
+/** A label. */
+message Label {
+	string text;
+}
+
+/**
+ * State of a button.
+ *
+ * <p>Refers to {@link Label}.</p>
+ */
+message ButtonState {
+	/** The label. */
+	string label;
+
+	/**
+	 * Whether the button is disabled, see {@link #label} and {@link #label the label}.
+	 *
+	 * Code: {@code if (x) { y(); }}, literal: {@literal a<b}, unknown tag {@value #size}.
+	 */
+	bool disabled;
+
+	/**
+	 * How the button is displayed, e.g. {@link test.ts.common.DisplayMode#ICON_ONLY} or
+	 * {@link test.ts.common.DisplayMode#LABEL_ONLY only the label}, see {@link test.ts.common.DisplayMode}.
+	 */
+	test.ts.common.DisplayMode mode;
+
+	/**
+	 * A property whose JSON name is not an identifier: {@link #dataKey}, unlike
+	 * {@link #cache}, {@link #unknown()} and {@link String}.
+	 */
+	@Name("data-key")
+	string dataKey;
+
+	/** Not serialized. */
+	transient string cache;
+
+	/** A number with default value. */
+	int32 size = 13;
+
+	/** A 64 bit number. */
+	int64 timestamp;
+
+	/** A float. */
+	float ratio;
+
+	/** Binary data (Base64). */
+	bytes data;
+
+	/** Arbitrary JSON. */
+	json extra;
+
+	/** Optional nested message. */
+	@Nullable
+	Label caption;
+
+	/** Tags. */
+	repeated string tags;
+
+	/** Labels by key. */
+	map<string, Label> labels;
+
+	/** Ratings by number. */
+	map<int32, string> ratings;
+
+	/** A polymorphic reference to another file. */
+	test.ts.common.Node root;
+
+	/** Local points, see {@link Point#value} and {@link test.ts.common.Point#xCoordinate}, inherited {@link Circle#origin}. */
+	repeated Point points;
+}
+
+/** Concrete base class: JSON has no type information. */
+message Base {
+	string name;
+}
+
+/** Specialization of a concrete base. */
+message Derived extends Base {
+	int32 extra;
+}
+
+/** Abstract shape. */
+abstract message Shape {
+	/** The origin. */
+	test.ts.common.Point origin;
+}
+
+/** Abstract intermediate class. */
+abstract message Rounded extends Shape {
+}
+
+/** A circle. */
+@Name("circle")
+message Circle extends Rounded {
+	/** The radius. */
+	@Name("r")
+	double radius;
+}
+
+/** A rectangle. */
+message Rectangle extends Shape {
+	double width;
+	double height;
+}
+
+/** A group of shapes. */
+message Group extends Shape {
+	/** Contents written polymorphically. */
+	repeated Shape shapes;
+
+	/** Monomorphic reference to a concrete type in a hierarchy. */
+	Circle main;
+
+	/** Reference to an abstract intermediate type. */
+	Rounded rounded;
+
+	/** A label local to groups. */
+	message Label {
+		/** Group label kind. */
+		enum Kind {
+			PRIMARY;
+			SECONDARY;
+		}
+
+		Kind kind;
+	}
+
+	/** Nested message referencing the shadowed top-level type {@link test.ts.shapes.Label} and {@link Label}. */
+	message Info {
+		/** The top-level label. */
+		test.ts.shapes.Label global;
+
+		/** The nested label. */
+		Label local;
+	}
+
+	Info info;
+}
+
+/** An empty enum. */
+enum Nothing {
+}
