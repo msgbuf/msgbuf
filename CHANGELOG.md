@@ -12,6 +12,13 @@
 - **File documentation comment**: A doc comment before the `syntax` or `package` declaration is kept as the documentation
   of the `.proto` file (`DefinitionFile.comment`) and emitted as TSDoc `@packageDocumentation` of the TypeScript module.
 
+### Bug Fixes
+- **Nested polymorphic hierarchies** (#16): An abstract message nested in another message no longer crashes the
+  generator with a `NullPointerException`. Nested sub-messages of a top-level abstract message are referenced by
+  their qualified names in the generated JSON and XML readers (previously uncompilable). For `option OpenWorld`, the
+  "same file" test for local subtypes and the implied `NoBinary` of extension files now also hold for nested
+  definitions.
+
 ## 1.2.1
 
 ### Bug Fixes

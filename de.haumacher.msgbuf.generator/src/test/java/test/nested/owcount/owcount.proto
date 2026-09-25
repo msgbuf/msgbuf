@@ -1,0 +1,8 @@
+package test.nested.owcount;
+
+import "../owbase/owbase.proto";
+
+/** A top-level extension of a nested OpenWorld root declared in another file. */
+message CountEvent extends test.nested.owbase.Events.Event {
+	int32 count;
+}
