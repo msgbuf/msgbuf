@@ -1,0 +1,15 @@
+package reject.opt.ext;
+import "../base/events.proto";
+import "../base/quiet.proto";
+
+option NoJson;
+option NoVisitor;
+option NoTypeKind;
+
+message Ping extends reject.opt.base.Event {
+	int count;
+}
+
+message Loud extends reject.opt.base.Quiet {
+	int volume;
+}

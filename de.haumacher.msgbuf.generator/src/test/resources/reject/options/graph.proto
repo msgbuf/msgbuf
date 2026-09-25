@@ -1,0 +1,9 @@
+package reject.opt.graph;
+
+option OpenWorld;
+option SharedGraph;
+option NoInterfaces;
+
+abstract message Node {
+	string name;
+}

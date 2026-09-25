@@ -1,0 +1,13 @@
+package test.openworld.novisitor.base;
+
+option OpenWorld;
+option NoVisitor;
+
+/** An OpenWorld hierarchy without visitors (issue #39). */
+abstract message Shape {
+	string name;
+}
+
+message Circle extends Shape {
+	int radius;
+}

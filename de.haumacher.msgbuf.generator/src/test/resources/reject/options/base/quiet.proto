@@ -1,0 +1,9 @@
+package reject.opt.base;
+
+option OpenWorld;
+option NoReflection;
+option NoListener;
+
+abstract message Quiet {
+	string source;
+}
