@@ -275,12 +275,6 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	/** XML attribute or element name of a {@link #getName} property. */
 	private static final String NAME__XML_ATTR = "name";
 
-	/** XML attribute or element name of a {@link #getInBs} property. */
-	private static final String IN_BS__XML_ATTR = "in-bs";
-
-	/** XML attribute or element name of a {@link #getInB} property. */
-	private static final String IN_B__XML_ATTR = "in-b";
-
 	@Override
 	public String getXmlTagName() {
 		return B__XML_ELEMENT;
@@ -299,16 +293,7 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 
 	/** Serializes all fields that are written as XML elements. */
 	protected void writeElements(javax.xml.stream.XMLStreamWriter out) throws javax.xml.stream.XMLStreamException {
-		out.writeStartElement(IN_BS__XML_ATTR);
-		for (test.references.data.A element : getInBs()) {
-			element.writeTo(out);
-		}
-		out.writeEndElement();
-		out.writeStartElement(IN_B__XML_ATTR);
-		for (test.references.data.A element : getInB()) {
-			element.writeTo(out);
-		}
-		out.writeEndElement();
+		// No element fields.
 	}
 
 	/** Creates a new {@link test.references.data.B} and reads properties from the content (attributes and inner tags) of the currently open element in the given {@link javax.xml.stream.XMLStreamReader}. */
@@ -358,14 +343,6 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 				setName(in.getElementText());
 				break;
 			}
-			case IN_BS__XML_ATTR: {
-				internalReadInBsListXml(in);
-				break;
-			}
-			case IN_B__XML_ATTR: {
-				internalReadInBListXml(in);
-				break;
-			}
 			default: {
 				internalSkipUntilMatchingEndElement(in);
 			}
@@ -379,28 +356,6 @@ public class B_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 				case javax.xml.stream.XMLStreamConstants.START_ELEMENT: level++; break;
 				case javax.xml.stream.XMLStreamConstants.END_ELEMENT: if (level == 0) { return; } else { level--; break; }
 			}
-		}
-	}
-
-	private void internalReadInBsListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		while (true) {
-			int event = in.nextTag();
-			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
-				break;
-			}
-
-			addInBs(test.references.data.impl.A_Impl.readA_XmlContent(in));
-		}
-	}
-
-	private void internalReadInBListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		while (true) {
-			int event = in.nextTag();
-			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
-				break;
-			}
-
-			addInB(test.references.data.impl.A_Impl.readA_XmlContent(in));
 		}
 	}
 

@@ -692,12 +692,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 	/** XML attribute or element name of a {@link #getOthers} property. */
 	private static final String OTHERS__XML_ATTR = "others";
 
-	/** XML attribute or element name of a {@link #getInOther} property. */
-	private static final String IN_OTHER__XML_ATTR = "in-other";
-
-	/** XML attribute or element name of a {@link #getInOthers} property. */
-	private static final String IN_OTHERS__XML_ATTR = "in-others";
-
 	@Override
 	public String getXmlTagName() {
 		return A__XML_ELEMENT;
@@ -743,16 +737,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 		}
 		out.writeStartElement(OTHERS__XML_ATTR);
 		for (test.references.data.A element : getOthers()) {
-			element.writeTo(out);
-		}
-		out.writeEndElement();
-		out.writeStartElement(IN_OTHER__XML_ATTR);
-		for (test.references.data.A element : getInOther()) {
-			element.writeTo(out);
-		}
-		out.writeEndElement();
-		out.writeStartElement(IN_OTHERS__XML_ATTR);
-		for (test.references.data.A element : getInOthers()) {
 			element.writeTo(out);
 		}
 		out.writeEndElement();
@@ -829,14 +813,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 				internalReadOthersListXml(in);
 				break;
 			}
-			case IN_OTHER__XML_ATTR: {
-				internalReadInOtherListXml(in);
-				break;
-			}
-			case IN_OTHERS__XML_ATTR: {
-				internalReadInOthersListXml(in);
-				break;
-			}
 			default: {
 				internalSkipUntilMatchingEndElement(in);
 			}
@@ -883,28 +859,6 @@ public class A_Impl extends de.haumacher.msgbuf.data.AbstractDataObject implemen
 			}
 
 			addOthers(test.references.data.impl.A_Impl.readA_XmlContent(in));
-		}
-	}
-
-	private void internalReadInOtherListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		while (true) {
-			int event = in.nextTag();
-			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
-				break;
-			}
-
-			addInOther(test.references.data.impl.A_Impl.readA_XmlContent(in));
-		}
-	}
-
-	private void internalReadInOthersListXml(javax.xml.stream.XMLStreamReader in) throws javax.xml.stream.XMLStreamException {
-		while (true) {
-			int event = in.nextTag();
-			if (event == javax.xml.stream.XMLStreamConstants.END_ELEMENT) {
-				break;
-			}
-
-			addInOthers(test.references.data.impl.A_Impl.readA_XmlContent(in));
 		}
 	}
 

@@ -56,10 +56,23 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 
 	@Override
 	public void addFieldFormats(Map<String, Option> options, Field field, Set<String> formats) {
-		// All fields except maps are written and read, including transient ones.
-		if (!noXml(options) && field.getType().kind() != Type.TypeKind.MAP_TYPE) {
+		// Maps are not supported in XML.
+		if (!noXml(options) && xmlSerialized(field) && field.getType().kind() != Type.TypeKind.MAP_TYPE) {
 			formats.add(XML_FORMAT);
 		}
+	}
+
+	/**
+	 * Whether the given field is written and read in XML format.
+	 *
+	 * <p>
+	 * Like in JSON and binary format, transient and derived fields (container and reverse
+	 * references) are not serialized. Readers skip such attributes and elements in documents of
+	 * earlier versions.
+	 * </p>
+	 */
+	static boolean xmlSerialized(Field field) {
+		return !field.isTransient() && !field.isDerived();
 	}
 
 	@Override
@@ -108,6 +121,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 				line("public static final String " + xmlTypeNameConstant(def) + " = \"" + xmlTypeName(def) + "\";");
 				
 				for (Field field : def.getFields()) {
+					if (!xmlSerialized(field)) {
+						continue;
+					}
 					nl();
 					line("/** XML attribute or element name of a {@link #" + getterName(field) + "} property. */");
 					line("private static final String " + xmlFieldNameConstant(field) + " = \"" + xmlFieldName(field) + "\";");
@@ -145,6 +161,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 						line("super.writeAttributes(out);");
 					}
 					for (Field field : def.getFields()) {
+						if (!xmlSerialized(field)) {
+							continue;
+						}
 						if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
 							line("out.writeAttribute(" + xmlFieldNameConstant(field) + ", " + asString(field, CodeConvention.getterName(field) + "()") + ");");
 						}
@@ -165,6 +184,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 
 					boolean hasElementFields = false;
 					for (Field field : def.getFields()) {
+						if (!xmlSerialized(field)) {
+							continue;
+						}
 						Type type = field.getType();
 						switch (type.kind()) {
 							case PRIMITIVE_TYPE: {
@@ -290,6 +312,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					line("switch (name) {");
 					{
 						for (Field field : def.getFields()) {
+							if (!xmlSerialized(field)) {
+								continue;
+							}
 							if (field.getType().kind() == Type.TypeKind.PRIMITIVE_TYPE || isEnum(field.getType())) {
 								line("case " + xmlFieldNameConstant(field) + ": {");
 								{
@@ -328,6 +353,9 @@ public class XmlStreamingPlugin implements GeneratorPlugin {
 					{
 						Set<String> names = new HashSet<>();
 						for (Field field : def.getFields()) {
+							if (!xmlSerialized(field)) {
+								continue;
+							}
 							if (!names.add(xmlFieldName(field))) {
 								System.err.println("ERROR: Ambiguous element name '" + xmlFieldName(field) + "' in type '" + def.getName() + "'.");
 								continue;
