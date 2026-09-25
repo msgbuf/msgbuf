@@ -450,6 +450,10 @@ The generator can create a TypeScript module with type definitions for the JSON 
 modules contain types only (no readers, writers or other runtime code) and let a TypeScript client share the protocol
 contract with the Java side.
 
+Since the types describe the JSON format and not the data itself, a top-level type is named after its definition with
+the suffix `Json`, e.g. `ShapeJson` for `message Shape`. This keeps the plain names free for types representing the
+data in the TypeScript application.
+
 TypeScript output is enabled in one of the following ways:
 
 * **Output directory for all files**: Set the Maven plugin parameter `typeScriptOutputDirectory` (user property
@@ -474,26 +478,30 @@ Mapping of protocol definitions:
 
 | Protocol definition | TypeScript |
 |---|---|
-| `message M { ... }` | `export interface M { ... }` with the JSON property names of the fields (`@Name` is honored) |
-| `message M extends B` | `export interface M extends B` |
-| `abstract message A` | `export interface A`, plus `export type AnyA = ['TypeIdOfC1', C1] \| ...` if the hierarchy root is abstract (see below) |
-| `enum E { ... }` | `export type E = 'A' \| 'B';` with the protocol names of the constants (`@Name` is honored) |
-| `string`, `bytes` | `string` (bytes are Base64 encoded) |
+| `message M { ... }` | `export interface MJson { ... }` with the JSON property names of the fields (`@Name` is honored) |
+| `message M extends B` | `export interface MJson extends BJson` |
+| `abstract message A` | `export interface AJson`, plus `export type AnyAJson = ['TypeIdOfC1', C1Json] \| ...` if the hierarchy root is abstract (see below) |
+| `enum E { ... }` | `export type EJson = 'A' \| 'B';` with the protocol names of the constants (`@Name` is honored) |
+| `string` | `string` |
+| `bytes` | `string \| null` (Base64 encoded, see below) |
 | `bool` | `boolean` |
 | `int32`, `int64`, `float`, `double`, ... | `number` |
 | `json` | `unknown` |
 | `repeated T` | `T[]` |
 | `map<string, V>` | `Record<string, V>` |
 | `map<K, V>` (other key types) | `Array<{ key: K; value: V }>` |
-| Nested definitions | Declarations in a namespace named after the outer message, e.g. `Outer.Inner` |
+| Nested definitions | Declarations in a namespace named after the outer message, keeping their names, e.g. `OuterJson.Inner` |
 | Types from imported `.proto` files | `import type { ... } from '<relative module path>';` |
 
 Details:
 
-* **Optional properties**: All properties are optional (`name?: T`). The JSON reader accepts any subset of properties
-  and uses the field's default value for a missing one. Fields that are unset and nullable (`@Nullable`, references
-  to messages) are omitted from the JSON output instead of being written as `null`. Explicit default values of fields
-  are documented with a `@defaultValue` tag.
+* **Required and optional properties**: The types describe the JSON the Java side writes. A property is required
+  (`name: T`), if it is always written. Fields that are nullable (`@Nullable`, non-repeated references to messages,
+  `json`) are omitted from the JSON output when unset instead of being written as `null`, their properties are
+  optional (`name?: T`). A non-nullable `bytes` field has no value by default and is written as `null` then, it is
+  typed `string | null`. Note that the JSON reader is more lenient: it accepts any subset of properties and uses the
+  field's default value for a missing one. Explicit default values of fields are documented with a `@defaultValue`
+  tag.
 * **Enum values**: An enum constant is written as its name exactly as spelled in the `.proto` file (e.g. `ICON_ONLY`),
   unless a custom name is given with `@Name`:
 
@@ -506,12 +514,12 @@ Details:
   }
   ```
 
-  generates `export type DisplayMode = | 'icon-only' | 'label-only';`.
+  generates `export type DisplayModeJson = | 'icon-only' | 'label-only';`.
 * **Polymorphism**: A value of an abstract message type in a hierarchy with an abstract root is written as a tuple
   of its type ID and its properties, `["Circle", {"r": 5}]` (see [Polymorphic JSON serialization](#polymorphic-json-serialization)).
-  For each such abstract message `A`, a union type `AnyA` of the tuples of all known concrete specializations is
+  For each such abstract message `A`, a union type `AnyAJson` of the tuples of all known concrete specializations is
   generated and used as type of fields referencing `A`. For `option OpenWorld` hierarchies, the union additionally
-  contains `[string, A]` for extension types from other modules. References to concrete messages (and all messages
+  contains `[string, AJson]` for extension types from other modules. References to concrete messages (and all messages
   in a hierarchy with a concrete root) are written without type information and use the interface directly.
 * **Documentation**: Doc comments become TSDoc comments. JavaDoc inline tags are translated: `{@code x}` becomes
   `` `x` ``, `{@link Type}`, `{@link #field}` and `{@link Type#field label}` become links to the TypeScript type or
@@ -524,8 +532,8 @@ Details:
   at the location the same generator configuration would produce for it (its `option TypeScript`, or its package
   path within the TypeScript output directory).
 * **Limitations**: The JSON format of `option SharedGraph` protocols (objects as `[type, id, {...}]`, references as
-  IDs, incremental updates) is not described by the generated types. A generated `AnyA` union type may clash with a
-  message of the same name.
+  IDs, incremental updates) is not described by the generated types. A generated `AnyAJson` union type may clash with
+  a message named `AnyA`.
 
 ## Installation in Eclipse
 

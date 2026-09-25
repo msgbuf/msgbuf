@@ -5,81 +5,81 @@
 /**
  * Shapes and button states for testing the TypeScript generator.
  *
- * <p>See {@link ButtonState}, {@link Group.shapes the shapes of a group} and `nothing`.</p>
+ * <p>See {@link ButtonStateJson}, {@link GroupJson.shapes the shapes of a group} and `nothing`.</p>
  *
  * @packageDocumentation
  */
 
-import type { Point as common_Point, DisplayMode, AnyNode } from '../common/common';
+import type { PointJson as common_PointJson, DisplayModeJson, AnyNodeJson } from '../common/common';
 
 /**
  * A local point clashing with the imported one.
  */
-export interface Point {
+export interface PointJson {
 	/**
 	 * A coordinate pair.
 	 */
-	value?: common_Point;
+	value?: common_PointJson;
 }
 
 /**
  * A label.
  */
-export interface Label {
-	text?: string;
+export interface LabelJson {
+	text: string;
 }
 
 /**
  * State of a button.
  *
- * <p>Refers to {@link Label}.</p>
+ * <p>Refers to {@link LabelJson}.</p>
  */
-export interface ButtonState {
+export interface ButtonStateJson {
 	/**
 	 * The label.
 	 */
-	label?: string;
+	label: string;
 
 	/**
-	 * Whether the button is disabled, see {@link ButtonState.label} and {@link ButtonState.label the label}.
+	 * Whether the button is disabled, see {@link ButtonStateJson.label} and {@link ButtonStateJson.label the label}.
 	 *
 	 * Code: `if (x) { y(); }`, literal: a<b, unknown tag {@value #size}.
 	 */
-	disabled?: boolean;
+	disabled: boolean;
 
 	/**
 	 * How the button is displayed, e.g. `'icon-only'` or
-	 * only the label, see {@link DisplayMode}.
+	 * only the label, see {@link DisplayModeJson}.
 	 */
-	mode?: DisplayMode;
+	mode: DisplayModeJson;
 
 	/**
 	 * A property whose JSON name is not an identifier: `data-key`, unlike
 	 * `cache`, `unknown()` and `String`.
 	 */
-	'data-key'?: string;
+	'data-key': string;
 
 	/**
 	 * A number with default value.
 	 *
 	 * @defaultValue 13
 	 */
-	size?: number;
+	size: number;
 
 	/**
 	 * A 64 bit number.
 	 */
-	timestamp?: number;
+	timestamp: number;
 
 	/**
 	 * A float.
 	 */
-	ratio?: number;
+	ratio: number;
 
 	/**
 	 * Binary data (Base64).
 	 */
-	data?: string;
+	data: string | null;
 
 	/**
 	 * Arbitrary JSON.
@@ -89,46 +89,51 @@ export interface ButtonState {
 	/**
 	 * Optional nested message.
 	 */
-	caption?: Label;
+	caption?: LabelJson;
+
+	/**
+	 * Optional string, omitted when not set.
+	 */
+	hint?: string;
 
 	/**
 	 * Tags.
 	 */
-	tags?: string[];
+	tags: string[];
 
 	/**
 	 * Labels by key.
 	 */
-	labels?: Record<string, Label>;
+	labels: Record<string, LabelJson>;
 
 	/**
 	 * Ratings by number.
 	 */
-	ratings?: Array<{ key: number; value: string }>;
+	ratings: Array<{ key: number; value: string }>;
 
 	/**
 	 * A polymorphic reference to another file.
 	 */
-	root?: AnyNode;
+	root?: AnyNodeJson;
 
 	/**
-	 * Local points, see {@link Point.value} and {@link common_Point.x}, inherited {@link Shape.origin}.
+	 * Local points, see {@link PointJson.value} and {@link common_PointJson.x}, inherited {@link ShapeJson.origin}.
 	 */
-	points?: Point[];
+	points: PointJson[];
 }
 
 /**
  * Concrete base class: JSON has no type information.
  */
-export interface Base {
-	name?: string;
+export interface BaseJson {
+	name: string;
 }
 
 /**
  * Specialization of a concrete base.
  */
-export interface Derived extends Base {
-	extra?: number;
+export interface DerivedJson extends BaseJson {
+	extra: number;
 }
 
 /**
@@ -136,77 +141,77 @@ export interface Derived extends Base {
  *
  * Abstract type, the properties are only present in the JSON of its concrete specializations.
  */
-export interface Shape {
+export interface ShapeJson {
 	/**
 	 * The origin.
 	 */
-	origin?: common_Point;
+	origin?: common_PointJson;
 }
 
 /**
- * Polymorphic JSON representation of a {@link Shape}: a tuple of the type ID and the properties of a concrete type.
+ * Polymorphic JSON representation of a {@link ShapeJson}: a tuple of the type ID and the properties of a concrete type.
  */
-export type AnyShape = ['Rectangle', Rectangle] | ['Group', Group] | ['circle', Circle];
+export type AnyShapeJson = ['Rectangle', RectangleJson] | ['Group', GroupJson] | ['circle', CircleJson];
 
 /**
  * Abstract intermediate class.
  *
  * Abstract type, the properties are only present in the JSON of its concrete specializations.
  */
-export interface Rounded extends Shape {}
+export interface RoundedJson extends ShapeJson {}
 
 /**
- * Polymorphic JSON representation of a {@link Rounded}: a tuple of the type ID and the properties of a concrete type.
+ * Polymorphic JSON representation of a {@link RoundedJson}: a tuple of the type ID and the properties of a concrete type.
  */
-export type AnyRounded = ['circle', Circle];
+export type AnyRoundedJson = ['circle', CircleJson];
 
 /**
  * A circle.
  */
-export interface Circle extends Rounded {
+export interface CircleJson extends RoundedJson {
 	/**
 	 * The radius.
 	 */
-	r?: number;
+	r: number;
 }
 
 /**
  * A rectangle.
  */
-export interface Rectangle extends Shape {
-	width?: number;
+export interface RectangleJson extends ShapeJson {
+	width: number;
 
-	height?: number;
+	height: number;
 }
 
 /**
  * A group of shapes.
  */
-export interface Group extends Shape {
+export interface GroupJson extends ShapeJson {
 	/**
 	 * Contents written polymorphically.
 	 */
-	shapes?: AnyShape[];
+	shapes: AnyShapeJson[];
 
 	/**
 	 * Monomorphic reference to a concrete type in a hierarchy.
 	 */
-	main?: Circle;
+	main?: CircleJson;
 
 	/**
 	 * Reference to an abstract intermediate type.
 	 */
-	rounded?: AnyRounded;
+	rounded?: AnyRoundedJson;
 
-	info?: Group.Info;
+	info?: GroupJson.Info;
 }
 
-export namespace Group {
+export namespace GroupJson {
 	/**
 	 * A label local to groups.
 	 */
 	export interface Label {
-		kind?: Group.Label.Kind;
+		kind: GroupJson.Label.Kind;
 	}
 
 	export namespace Label {
@@ -219,24 +224,29 @@ export namespace Group {
 	}
 
 	/**
-	 * Nested message referencing the shadowed top-level type {@link __Label} and {@link Group.Label}.
+	 * Nested message whose name clashes with the TypeScript name of the top-level {@link __LabelJson}.
+	 */
+	export interface LabelJson {}
+
+	/**
+	 * Nested message referencing the shadowed top-level type {@link __LabelJson} and {@link GroupJson.Label}.
 	 */
 	export interface Info {
 		/**
 		 * The top-level label.
 		 */
-		global?: __Label;
+		global?: __LabelJson;
 
 		/**
 		 * The nested label.
 		 */
-		local?: Group.Label;
+		local?: GroupJson.Label;
 	}
 }
 
 /**
  * An empty enum.
  */
-export type Nothing = never;
+export type NothingJson = never;
 
-type __Label = Label;
+type __LabelJson = LabelJson;

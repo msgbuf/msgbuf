@@ -2,19 +2,19 @@
 //
 // Type definitions for the msgbuf JSON format of the protocol (types only, no runtime code).
 
-import type { DisplayMode, Leaf } from '../test/ts/common/common';
+import type { DisplayModeJson, LeafJson } from '../test/ts/common/common';
 
 /**
  * A message placed in an explicitly configured module.
  */
-export interface Explicit {
+export interface ExplicitJson {
 	/**
 	 * Mode.
 	 */
-	mode?: DisplayMode;
+	mode: DisplayModeJson;
 
 	/**
 	 * Leaves.
 	 */
-	leaves?: Leaf[];
+	leaves: LeafJson[];
 }

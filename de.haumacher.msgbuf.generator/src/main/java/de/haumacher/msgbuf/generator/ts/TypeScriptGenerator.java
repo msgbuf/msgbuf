@@ -40,20 +40,28 @@ import de.haumacher.msgbuf.generator.util.AbstractTypeScriptGenerator;
  * format of all messages and enums of a <code>.proto</code> file.
  *
  * <p>
- * The module contains types only (no runtime code):
+ * The module contains types only (no runtime code). Since the types describe the JSON format and
+ * not the data itself, the name of a top-level type is the name of its definition with the suffix
+ * {@value #JSON_SUFFIX}, e.g. <code>ShapeJson</code> for <code>message Shape</code>:
  * </p>
  * <ul>
  * <li>A message becomes an <code>interface</code> whose properties are named with the JSON
- * property names of the message's fields. All properties are optional, since the <code>msgbuf</code>
- * JSON reader accepts any subset of properties and uses the field default for a missing one.</li>
+ * property names of the message's fields. A property is required, if the Java writer always emits
+ * it, and optional (<code>?</code>), if the Java writer omits it when the value is
+ * <code>null</code> (fields marked <code>@Nullable</code> and non-repeated fields with message or
+ * <code>json</code> type). A non-nullable <code>bytes</code> field is written as <code>null</code>
+ * when it has no value and is therefore typed <code>string | null</code>. Note that the
+ * <code>msgbuf</code> JSON reader is more lenient and accepts any subset of properties, using the
+ * field default for a missing one.</li>
  * <li>A message that inherits from another message <code>extends</code> the interface of its
  * generalization.</li>
  * <li>An abstract message in a hierarchy with an abstract root is serialized polymorphically as
  * <code>[typeId, {...}]</code>. For such message, an additional union type
- * <code>Any&lt;Name&gt;</code> of type-tagged tuples of all known concrete specializations is
+ * <code>Any&lt;Name&gt;Json</code> of type-tagged tuples of all known concrete specializations is
  * generated and used for fields referencing the abstract message.</li>
  * <li>An enum becomes a union of string literal types with the protocol names of its constants.</li>
- * <li>Nested definitions are placed in a namespace named after the outer message.</li>
+ * <li>Nested definitions are placed in a namespace named after the outer message and keep their
+ * names, e.g. <code>GroupJson.Info</code>.</li>
  * <li>Types from other <code>.proto</code> files are imported with <code>import type</code>.</li>
  * </ul>
  */
@@ -63,6 +71,16 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 	 * Prefix of the name of the union type describing polymorphic values of an abstract message.
 	 */
 	public static final String POLYMORPHIC_PREFIX = "Any";
+
+	/**
+	 * Suffix of the names of top-level types.
+	 *
+	 * <p>
+	 * The generated types describe the JSON format only. The suffix keeps the plain names free for
+	 * types that represent the data itself.
+	 * </p>
+	 */
+	public static final String JSON_SUFFIX = "Json";
 
 	private static final Pattern IDENTIFIER = Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*");
 
@@ -195,7 +213,7 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 	 */
 	private void resolveReferences() {
 		for (Definition def : _proto.getDefinitions()) {
-			_topLevelNames.add(def.getName());
+			_topLevelNames.add(jsonTypeName(def));
 			if (hasPolymorphicType(def)) {
 				_topLevelNames.add(polymorphicName(def));
 			}
@@ -261,9 +279,9 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 		docComment(doc(def.getComment(), def));
 		List<Constant> constants = def.getConstants();
 		if (constants.isEmpty()) {
-			line("export type " + def.getName() + " = never;");
+			line("export type " + jsonTypeName(def) + " = never;");
 		} else {
-			line("export type " + def.getName() + " =");
+			line("export type " + jsonTypeName(def) + " =");
 			for (int n = 0, cnt = constants.size(); n < cnt; n++) {
 				Constant constant = constants.get(n);
 				indentedDocComment(doc(constant.getComment(), def));
@@ -289,9 +307,9 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 		String extendsClause = extendedDef == null ? "" : " extends " + ref(extendedDef, def);
 		List<Field> fields = jsonFields(def);
 		if (fields.isEmpty()) {
-			line("export interface " + def.getName() + extendsClause + " {}");
+			line("export interface " + jsonTypeName(def) + extendsClause + " {}");
 		} else {
-			line("export interface " + def.getName() + extendsClause + " {");
+			line("export interface " + jsonTypeName(def) + extendsClause + " {");
 			boolean first = true;
 			for (Field field : fields) {
 				if (first) {
@@ -300,20 +318,20 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 					nl();
 				}
 				docComment(fieldComment(field, def));
-				line(propertyName(field) + "?: " + typeExpr(field, def) + ";");
+				line(propertyName(field) + (Util.isNullable(field) ? "?: " : ": ") + propertyType(field, def) + ";");
 			}
 			line("}");
 		}
 
 		if (hasPolymorphicType(def)) {
 			separate();
-			docComment("Polymorphic JSON representation of a {@link " + def.getName() + "}: a tuple of the type ID and the properties of a concrete type.");
+			docComment("Polymorphic JSON representation of a {@link " + jsonTypeName(def) + "}: a tuple of the type ID and the properties of a concrete type.");
 			line("export type " + polymorphicName(def) + " = " + polymorphicType(def) + ";");
 		}
 
 		if (!def.getDefinitions().isEmpty()) {
 			separate();
-			line("export namespace " + def.getName() + " {");
+			line("export namespace " + jsonTypeName(def) + " {");
 			_separate = false;
 			for (Definition inner : def.getDefinitions()) {
 				generateDefinition(inner);
@@ -496,7 +514,19 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 	}
 
 	private static String polymorphicName(Definition def) {
-		return POLYMORPHIC_PREFIX + def.getName();
+		return POLYMORPHIC_PREFIX + jsonTypeName(def);
+	}
+
+	/**
+	 * The name of the TypeScript type describing the JSON format of the given definition.
+	 *
+	 * <p>
+	 * Top-level types get the {@link #JSON_SUFFIX}. Nested types keep their name, since they are
+	 * qualified with the namespace of their (suffixed) top-level type.
+	 * </p>
+	 */
+	private static String jsonTypeName(Definition def) {
+		return def.getOuter() == null ? def.getName() + JSON_SUFFIX : def.getName();
 	}
 
 	private String polymorphicType(MessageDef def) {
@@ -509,6 +539,23 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 			alternatives.add("[string, " + ref(def, def) + "]");
 		}
 		return alternatives.isEmpty() ? "never" : String.join(" | ", alternatives);
+	}
+
+	/**
+	 * The type of the property for the given field, including <code>null</code> if the Java
+	 * writer emits a <code>null</code> value for it.
+	 */
+	private String propertyType(Field field, MessageDef context) {
+		String type = typeExpr(field, context);
+		if (!field.isRepeated() && !Util.isNullable(field) && isBytes(field.getType())) {
+			// Written with JsonUtil.writeBinaryOptional(), the default value is null.
+			return type + " | null";
+		}
+		return type;
+	}
+
+	private static boolean isBytes(Type type) {
+		return type instanceof PrimitiveType && ((PrimitiveType) type).getKind() == PrimitiveType.Kind.BYTES;
 	}
 
 	private String typeExpr(Field field, MessageDef context) {
@@ -621,7 +668,7 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 		}
 		for (MessageDef scope = context.getOuter(); scope != null; scope = scope.getOuter()) {
 			for (Definition inner : scope.getDefinitions()) {
-				if (inner.getName().equals(topLevelName)) {
+				if (jsonTypeName(inner).equals(topLevelName)) {
 					return true;
 				}
 				if (hasPolymorphicType(inner) && polymorphicName(inner).equals(topLevelName)) {
@@ -669,7 +716,7 @@ public class TypeScriptGenerator extends AbstractTypeScriptGenerator {
 	private static List<String> path(Definition def) {
 		List<String> result = new ArrayList<>();
 		for (Definition current = def; current != null; current = current.getOuter()) {
-			result.add(0, current.getName());
+			result.add(0, jsonTypeName(current));
 		}
 		return result;
 	}

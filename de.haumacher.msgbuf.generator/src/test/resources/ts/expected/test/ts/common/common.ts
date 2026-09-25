@@ -11,7 +11,7 @@
 /**
  * Display modes of a button.
  */
-export type DisplayMode =
+export type DisplayModeJson =
 	/**
 	 * Only the icon is shown.
 	 */
@@ -28,16 +28,16 @@ export type DisplayMode =
 /**
  * A point in the plane.
  */
-export interface Point {
+export interface PointJson {
 	/**
 	 * The X coordinate.
 	 */
-	x?: number;
+	x: number;
 
 	/**
 	 * The Y coordinate.
 	 */
-	y?: number;
+	y: number;
 }
 
 /**
@@ -45,34 +45,34 @@ export interface Point {
  *
  * Abstract type, the properties are only present in the JSON of its concrete specializations.
  */
-export interface Node {
+export interface NodeJson {
 	/**
 	 * The node ID.
 	 */
-	id?: string;
+	id: string;
 }
 
 /**
- * Polymorphic JSON representation of a {@link Node}: a tuple of the type ID and the properties of a concrete type.
+ * Polymorphic JSON representation of a {@link NodeJson}: a tuple of the type ID and the properties of a concrete type.
  */
-export type AnyNode = ['Leaf', Leaf] | ['Inner', Inner];
+export type AnyNodeJson = ['Leaf', LeafJson] | ['Inner', InnerJson];
 
 /**
  * A leaf node.
  */
-export interface Leaf extends Node {
+export interface LeafJson extends NodeJson {
 	/**
 	 * The value.
 	 */
-	value?: number;
+	value: number;
 }
 
 /**
  * An inner node.
  */
-export interface Inner extends Node {
+export interface InnerJson extends NodeJson {
 	/**
 	 * The children, written as type-tagged tuples.
 	 */
-	children?: AnyNode[];
+	children: AnyNodeJson[];
 }

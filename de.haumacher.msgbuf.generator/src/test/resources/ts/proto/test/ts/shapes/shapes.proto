@@ -71,6 +71,10 @@ message ButtonState {
 	@Nullable
 	Label caption;
 
+	/** Optional string, omitted when not set. */
+	@Nullable
+	string hint;
+
 	/** Tags. */
 	repeated string tags;
 
@@ -141,6 +145,10 @@ message Group extends Shape {
 		}
 
 		Kind kind;
+	}
+
+	/** Nested message whose name clashes with the TypeScript name of the top-level {@link test.ts.shapes.Label}. */
+	message LabelJson {
 	}
 
 	/** Nested message referencing the shadowed top-level type {@link test.ts.shapes.Label} and {@link Label}. */
