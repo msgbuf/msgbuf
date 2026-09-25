@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -15,7 +16,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.haumacher.msgbuf.generator.Generator;
+import de.haumacher.msgbuf.generator.GeneratorException;
 import de.haumacher.msgbuf.generator.GeneratorPlugin;
+import de.haumacher.msgbuf.generator.parser.ParseException;
 import junit.framework.TestCase;
 
 /**
@@ -35,6 +38,8 @@ public class TestTypeScriptGenerator extends TestCase {
 	private static final File PROTO_DIR = new File(BASE, "proto");
 
 	private static final File EXPECTED_DIR = new File(BASE, "expected");
+
+	private static final File REJECT_DIR = new File("src/test/resources/reject/ts");
 
 	public void testGolden() throws Exception {
 		File outDir = new File("target/ts-test");
@@ -70,6 +75,44 @@ public class TestTypeScriptGenerator extends TestCase {
 			assertEquals("Content of '" + name + "'.",
 				read(EXPECTED_DIR.toPath().resolve(name)),
 				read(tsOut.toPath().resolve(name)));
+		}
+	}
+
+	/** Helper names generated for different messages of a module or hierarchy must not clash. */
+	public void testHelperNameClash() throws Exception {
+		String hint = " Rename one of the messages (TypeScript helper names are derived from the message name qualified with"
+			+ " the names of its outer messages, joined with '_', without the package).";
+		assertEquals(Arrays.asList(
+			"reject/ts/collide/names.proto: The TypeScript visitor 'RootJsonVisitor' of message 'reject.ts.collide.Root' requires a method 'visitA_B' for message 'reject.ts.collide.A_B' of 'reject/ts/collide/names.proto' and for message 'reject.ts.collide.A.B' of 'reject/ts/collide/names.proto'." + hint,
+			"reject/ts/collide/names.proto: The TypeScript declaration 'tagA_B' is generated for message 'reject.ts.collide.A_B' and for message 'reject.ts.collide.A.B'." + hint),
+			reject("collide/names.proto"));
+	}
+
+	/** Visitor method names must be unique in a hierarchy across files. */
+	public void testVisitorMethodClashAcrossFiles() throws Exception {
+		assertEquals(Arrays.asList(
+			"reject/ts/open/base.proto: The TypeScript visitor 'ShapeJsonVisitor' of message 'reject.ts.open.Shape' requires a method 'visitCircle' for message 'reject.ts.one.Circle' of 'reject/ts/one/one.proto' and for message 'reject.ts.two.Circle' of 'reject/ts/two/two.proto'. Rename one of the messages (TypeScript helper names are derived from the message name qualified with the names of its outer messages, joined with '_', without the package)."),
+			reject("open/base.proto", "open/one.proto", "open/two.proto"));
+	}
+
+	private List<String> reject(String... protos) throws IOException, ParseException {
+		File target = new File("target");
+		target.mkdirs();
+		File out = Files.createTempDirectory(target.toPath(), getName()).toFile();
+		Generator generator = new Generator();
+		generator.setOut(new File(out, "java"));
+		generator.setTypeScriptOut(new File(out, "ts"));
+		for (String proto : protos) {
+			generator.load(new File(REJECT_DIR, proto));
+		}
+		try {
+			generator.generate(GeneratorPlugin.none());
+			fail("Expected rejection of " + Arrays.toString(protos) + ".");
+			return null;
+		} catch (GeneratorException ex) {
+			String[] written = out.list();
+			assertTrue("No code must be generated for rejected definitions.", written == null || written.length == 0);
+			return ex.getErrors();
 		}
 	}
 

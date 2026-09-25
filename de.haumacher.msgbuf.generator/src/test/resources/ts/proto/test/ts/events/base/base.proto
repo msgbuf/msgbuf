@@ -1,0 +1,40 @@
+/**
+ * An OpenWorld hierarchy extended in another file.
+ */
+syntax = "msgbuf";
+
+package test.ts.events.base;
+
+option OpenWorld;
+
+/* Maps are not supported in XML. */
+option NoXml;
+
+/** Root of an open hierarchy. */
+abstract message Event {
+	/** Time of the event. */
+	int64 timestamp;
+}
+
+/** A local concrete type. */
+message Ping extends Event {
+}
+
+/** An abstract intermediate, extended in another file. */
+abstract message Change extends Event {
+	/** The changed key. */
+	string key;
+}
+
+/** A local concrete type of the intermediate. */
+@Name("set")
+message Update extends Change {
+	string value;
+}
+
+/** Polymorphic collections of the open hierarchy. */
+message Log {
+	repeated Event events;
+
+	map<string, Change> latest;
+}

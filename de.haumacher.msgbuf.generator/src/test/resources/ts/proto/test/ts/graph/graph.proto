@@ -1,0 +1,15 @@
+syntax = "msgbuf";
+
+package test.ts.graph;
+
+option SharedGraph;
+
+/** Root of a hierarchy of a shared graph: no helpers. */
+abstract message Element {
+	string name;
+}
+
+/** A concrete element. */
+message Vertex extends Element {
+	repeated Element children;
+}
